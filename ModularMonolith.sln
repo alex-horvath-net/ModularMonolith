@@ -35,6 +35,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Billing.Infrastructure", "s
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Billing.API", "src\Modules\Billing\Billing.API\Billing.API.csproj", "{DA807FD3-CEDA-4866-BA6D-CDB4B8E3C05F}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Orders.Extensions", "src\Modules\Orders\Orders.Extensions\Orders.Extensions.csproj", "{4FFB325F-FB7C-4B2F-A6B4-59C7CBF45E0A}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -85,6 +87,10 @@ Global
 		{DA807FD3-CEDA-4866-BA6D-CDB4B8E3C05F}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{DA807FD3-CEDA-4866-BA6D-CDB4B8E3C05F}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{DA807FD3-CEDA-4866-BA6D-CDB4B8E3C05F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{4FFB325F-FB7C-4B2F-A6B4-59C7CBF45E0A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{4FFB325F-FB7C-4B2F-A6B4-59C7CBF45E0A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{4FFB325F-FB7C-4B2F-A6B4-59C7CBF45E0A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{4FFB325F-FB7C-4B2F-A6B4-59C7CBF45E0A}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -103,6 +109,7 @@ Global
 		{26E59995-DBB7-4B0B-B227-2F792DAF6A8F} = {802A7EF9-9862-4CD2-8A55-4D8EB10E11FB}
 		{C0950D2D-38C7-4160-B464-E64FDE12A815} = {802A7EF9-9862-4CD2-8A55-4D8EB10E11FB}
 		{DA807FD3-CEDA-4866-BA6D-CDB4B8E3C05F} = {802A7EF9-9862-4CD2-8A55-4D8EB10E11FB}
+		{4FFB325F-FB7C-4B2F-A6B4-59C7CBF45E0A} = {6EF24DDD-7DC3-4918-8261-FD032BDE3CE1}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {9F153098-1BFD-4764-842C-EF44352D968A}

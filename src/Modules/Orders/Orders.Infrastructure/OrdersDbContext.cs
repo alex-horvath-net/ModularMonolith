@@ -2,11 +2,14 @@
 
 namespace Orders.Infrastructure;
 
-public sealed class OrdersDbContext(DbContextOptions<OrdersDbContext> options)
-    : DbContext(options) {
+// one DbContext per module
+// This keeps migrations small and focused.
+// Billing can’t “just query” Orders tables without going through a contract or a read model you publish.
+public sealed class OrdersDbContext(DbContextOptions<OrdersDbContext> options) : DbContext(options) {
     public DbSet<Order> Orders => Set<Order>();
 
     protected override void OnModelCreating(ModelBuilder modelBuilder) {
+        // one schema per module
         modelBuilder.HasDefaultSchema("orders");
 
         modelBuilder.Entity<Order>(entity => {

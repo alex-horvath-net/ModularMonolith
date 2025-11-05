@@ -1,21 +1,29 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 
 namespace Common;
-public interface IEvent { }
 
-public interface IEventHandler<in TEvent> where TEvent : IEvent {
-    Task Handle(TEvent businessEvent, CancellationToken ct = default);
+// events, error type, nothing business-specific
+// You don’t need a broker to keep modules decoupled.
+// Start with a tiny in-process dispatcher.
+public interface IBusinessEvent { }
+
+public interface IBusinessEventHandler<in TEvent> where TEvent : IBusinessEvent {
+    Task Handle(TEvent businessEvent, CancellationToken token = default);
 }
 
-public interface IEventBus {
-    Task Publish<T>(T @event, CancellationToken ct = default) where T : IEvent;
+public interface IBusinessEventBus {
+    Task Publish<T>(T @event, CancellationToken token = default) where T : IBusinessEvent;
 }
 
-public sealed class InProcessEventBus(IServiceProvider sp) : IEventBus {
-    public async Task Publish<T>(T businessEvent, CancellationToken ct = default) where T : IEvent {
-        var handlers = sp.GetServices<IEventHandler<T>>();
-        foreach (var h in handlers)
-            await h.Handle(businessEvent, ct);
+public sealed class InProcessEventBus(IServiceProvider services) : IBusinessEventBus {
+    public async Task Publish<T>(T businessEvent, CancellationToken token = default) where T : IBusinessEvent {
+        var handlers = services.GetServices<IBusinessEventHandler<T>>();
+        foreach (var handler in handlers)
+            await handler.Handle(businessEvent, token);
     }
 }
 
+public static class BusinessEventExtensions {
+    public static IServiceCollection AddCommon(this IServiceCollection services) =>
+        services.AddScoped<IBusinessEventBus, InProcessEventBus>();
+}

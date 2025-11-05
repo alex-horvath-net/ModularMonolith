@@ -1,22 +1,17 @@
 using Billing.Application;
 using Common;
-using Orders.API;
-using Orders.Contracts;
+using Orders.Extensions;
 
 var builder = WebApplication.CreateBuilder(args);
 
-builder.Services.AddSingleton<IEventBus, InProcessEventBus>();
+// Host wires it up without touching internals
+builder.Services
+    .AddCommon()
+    .AddOrders(builder.Configuration);
 
-builder.Services.AddScoped<IEventHandler<OrderPlaced>, InvoiceOnOrderPlaced>();
-
-
-
-//builder.Services.AddOrdersInfrastructure(builder.Configuration);
-//builder.Services.AddOrdersApplication();
+builder.Services.AddBillingApplication();
 
 builder.Services.AddOpenApi();
-
-
 
 var app = builder.Build();
 
@@ -26,6 +21,6 @@ if (app.Environment.IsDevelopment()) {
 
 app.UseHttpsRedirection();
 
-app.MapOrders();
+app.MapOrders()    ;
 
 app.Run();
