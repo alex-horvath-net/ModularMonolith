@@ -1,3 +1,4 @@
+using Orders; // bring in Orders module assembly for routes
 using WebPortal.Components;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -5,6 +6,9 @@ var builder = WebApplication.CreateBuilder(args);
 // Add services to the container.
 builder.Services.AddRazorComponents()
     .AddInteractiveServerComponents();
+
+// HttpClient for Orders components calling WebApi endpoints
+builder.Services.AddHttpClient();
 
 var app = builder.Build();
 
@@ -23,6 +27,7 @@ app.UseAntiforgery();
 
 app.MapStaticAssets();
 app.MapRazorComponents<App>()
-    .AddInteractiveServerRenderMode();
+    .AddInteractiveServerRenderMode()
+    .AddAdditionalAssemblies(typeof(OrdersModuleExtensions).Assembly);
 
 app.Run();
