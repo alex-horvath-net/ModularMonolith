@@ -1,6 +1,7 @@
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.AspNetCore.Routing;
+using Billing.API; // endpoint mapping
 
 namespace Billing;
 
@@ -14,8 +15,5 @@ public static class BillingModuleExtensions
  }
 
  public static IEndpointRouteBuilder MapBilling(this IEndpointRouteBuilder app)
- {
- // Placeholder for future Billing endpoints
- return app;
- }
+ => BillingEndpoints.MapBilling(app);
 }

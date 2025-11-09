@@ -1,31 +1,31 @@
 <Project Sdk="Microsoft.NET.Sdk.Razor">
 
  <PropertyGroup>
-  <TargetFramework>net9.0</TargetFramework>
-  <ImplicitUsings>enable</ImplicitUsings>
-  <Nullable>enable</Nullable>
-  <RazorLangVersion>9.0</RazorLangVersion>
+ <TargetFramework>net9.0</TargetFramework>
+ <ImplicitUsings>enable</ImplicitUsings>
+ <Nullable>enable</Nullable>
+ <RazorLangVersion>9.0</RazorLangVersion>
  </PropertyGroup>
 
  <ItemGroup>
-  <FrameworkReference Include="Microsoft.AspNetCore.App" />
+ <FrameworkReference Include="Microsoft.AspNetCore.App" />
  </ItemGroup>
 
  <ItemGroup>
-  <PackageReference Include="Microsoft.EntityFrameworkCore" Version="9.0.10" />
-  <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="9.0.10" />
+ <PackageReference Include="Microsoft.EntityFrameworkCore" Version="9.0.10" />
+ <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="9.0.10" />
  </ItemGroup>
 
  <ItemGroup>
-  <ProjectReference Include="..\..\Common\Common\Common.csproj" />
+ <ProjectReference Include="..\..\Common\Common\Common.csproj" />
  </ItemGroup>
 
- <!-- Keep obj/bin exclusions only -->
+ <!-- Exclude obj/bin only -->
  <ItemGroup>
-  <Compile Remove="**\obj\**\*.cs" />
-  <Compile Remove="**\bin\**\*.cs" />
-  <Content Remove="**\obj\**\*.*" />
-  <None Remove="**\obj\**\*.*" />
+ <Compile Remove="**\obj\**\*.cs" />
+ <Compile Remove="**\bin\**\*.cs" />
+ <Content Remove="**\obj\**\*.*" />
+ <None Remove="**\obj\**\*.*" />
  </ItemGroup>
 
 </Project>
