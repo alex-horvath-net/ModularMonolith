@@ -1,25 +1,30 @@
 version: "3.9"
+
 services:
- sqlserver:
- image: mcr.microsoft.com/mssql/server:2022-latest
- environment:
- - ACCEPT_EULA=Y
- - MSSQL_SA_PASSWORD=Your_password123
- ports:
- - "1433:1433"
- healthcheck:
- test: ["CMD", "/opt/mssql-tools/bin/sqlcmd", "-S", "localhost", "-U", "sa", "-P", "Your_password123", "-Q", "SELECT1"]
- interval:10s
- retries:10
- webapi:
- build:
- context: .
- dockerfile: src/Hosts/WebApi/Dockerfile
- environment:
- - ASPNETCORE_URLS=http://+:8080
- - ConnectionStrings__Default=Server=sqlserver;Database=ModularMonolith;User ID=sa;Password=Your_password123;TrustServerCertificate=True;Encrypt=False
- depends_on:
- sqlserver:
- condition: service_healthy
- ports:
- - "8080:8080"
+  devsqlserver:
+    image: mcr.microsoft.com/mssql/server:2022-latest
+    environment:
+      - ACCEPT_EULA=Y
+      - MSSQL_SA_PASSWORD=Dev!Pass123
+    ports:
+      - "1433:1433"
+    healthcheck:
+      test: ["CMD-SHELL", "/opt/mssql-tools/bin/sqlcmd -S localhost -U sa -P Dev!Pass123 -Q 'SELECT 1' || exit 1"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+      start_period: 20s
+
+  webapi:
+    build:
+      context: .
+      dockerfile: src/Hosts/WebApi/Dockerfile
+    environment:
+      - ASPNETCORE_URLS=http://+:8080
+      - ConnectionStrings__OrdersDB=Server=DevSqlServer;Database=OrdersDB;User ID=sa;Password=Dev!Pass123;Encrypt=True;TrustServerCertificate=True;
+      - ConnectionStrings__BillingDB=Server=DevSqlServer;Database=BillingDB;User ID=sa;Password=Dev!Pass123;Encrypt=True;TrustServerCertificate=True;
+    depends_on:
+      devsqlserver:
+        condition: service_healthy
+    ports:
+      - "8080:8080"
