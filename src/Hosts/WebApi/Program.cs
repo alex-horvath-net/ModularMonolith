@@ -1,6 +1,6 @@
+using Billing; // unified Billing module
 using Common;
 using Orders; // unified Orders module
-using Billing; // unified Billing module
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -12,6 +12,7 @@ builder.Services
 builder.Services.AddOpenApi();
 
 var app = builder.Build();
+
 
 if (app.Environment.IsDevelopment())
 {
