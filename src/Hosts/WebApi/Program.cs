@@ -4,10 +4,9 @@ using Orders;
 
 var builder = WebApplication.CreateBuilder(args);
 
-builder.Services
- .AddCommon()
- .AddOrders(builder.Configuration)
- .AddBilling(builder.Configuration);
+builder.Services.AddCommon();
+builder.Services.AddOrders(builder.Configuration);
+builder.Services.AddBilling(builder.Configuration);
 
 builder.Services.AddOpenApi();
 

@@ -1,4 +1,3 @@
-using Orders; // bring in Orders module assembly for routes
 using WebPortal.Components;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -28,6 +27,6 @@ app.UseAntiforgery();
 app.MapStaticAssets();
 app.MapRazorComponents<App>()
     .AddInteractiveServerRenderMode()
-    .AddAdditionalAssemblies(typeof(OrdersModuleExtensions).Assembly);
+    .AddAdditionalAssemblies(typeof(Orders.Extensions).Assembly);
 
 app.Run();
