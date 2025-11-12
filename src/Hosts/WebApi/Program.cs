@@ -1,6 +1,6 @@
-using Billing; // unified Billing module
+using Billing;
 using Common;
-using Orders; // unified Orders module
+using Orders;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -14,9 +14,8 @@ builder.Services.AddOpenApi();
 var app = builder.Build();
 
 
-if (app.Environment.IsDevelopment())
-{
- app.MapOpenApi();
+if (app.Environment.IsDevelopment()) {
+    app.MapOpenApi();
 }
 
 app.UseHttpsRedirection();

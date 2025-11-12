@@ -7,13 +7,13 @@ using Orders.Contracts.DTOs; // For swagger metadata
 namespace Orders.API;
 
 public static class OrdersEndpoints {
-    public static IEndpointRouteBuilder MapOrders(this IEndpointRouteBuilder app) {
+    public static IEndpointRouteBuilder MapOrdersEndpoints(this IEndpointRouteBuilder app) {
         var group = app.MapGroup("/orders").WithTags("Orders");
 
         // GET /orders (list)
         group.MapGet("", async (GetOrdersQueryHandler handler) => {
             var orders = await handler.Handle();
-            // Always return200 with (possibly empty) list
+            // Always return200 with (possibly empty) list 
             return TypedResults.Ok(orders);
         })
         .Produces<List<OrderDto>>(StatusCodes.Status200OK);
