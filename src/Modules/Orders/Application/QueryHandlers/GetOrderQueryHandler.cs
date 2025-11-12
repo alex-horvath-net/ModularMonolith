@@ -1,7 +1,7 @@
-using Orders.Infrastructure;
 using Orders.Contracts.DTOs;
+using Orders.Infrastructure.Data;
 
-namespace Orders.Application;
+namespace Orders.Application.QueryHandlers;
 
 public sealed class GetOrderQueryHandler(OrdersDbContext db) {
     public async Task<OrderDto?> Handle(Guid id) {

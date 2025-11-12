@@ -1,8 +1,8 @@
-using Orders.Infrastructure;
 using Orders.Contracts.Services;
 using Orders.Contracts.DTOs;
+using Orders.Infrastructure.Data;
 
-namespace Orders.Application;
+namespace Orders.Application.QueryServices;
 
 internal sealed class ReadOrderService(OrdersDbContext db) : IReadOrderService {
     public async Task<OrderDto?> GetById(Guid id) {

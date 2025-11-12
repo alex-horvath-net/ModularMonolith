@@ -11,11 +11,11 @@ public interface IBusinessEventHandler<in TEvent> where TEvent : IBusinessEvent 
     Task Handle(TEvent businessEvent, CancellationToken token = default);
 }
 
-public interface IBusinessEventBus {
-    Task Publish<T>(T @event, CancellationToken token = default) where T : IBusinessEvent;
+public interface IBusinessEventPublisher {
+    Task Publish<T>(T businessEvent, CancellationToken token = default) where T : IBusinessEvent;
 }
 
-public sealed class InProcessEventBus(IServiceProvider services) : IBusinessEventBus {
+public sealed class InProcessEventBus(IServiceProvider services) : IBusinessEventPublisher {
     public async Task Publish<T>(T businessEvent, CancellationToken token = default) where T : IBusinessEvent {
         var handlers = services.GetServices<IBusinessEventHandler<T>>();
         foreach (var handler in handlers)
@@ -25,5 +25,5 @@ public sealed class InProcessEventBus(IServiceProvider services) : IBusinessEven
 
 public static class BusinessEventExtensions {
     public static IServiceCollection AddCommon(this IServiceCollection services) =>
-        services.AddScoped<IBusinessEventBus, InProcessEventBus>();
+        services.AddScoped<IBusinessEventPublisher, InProcessEventBus>();
 }
