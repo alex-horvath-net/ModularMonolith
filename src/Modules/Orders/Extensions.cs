@@ -30,8 +30,9 @@ public static class Extensions {
                 options.EnableSensitiveDataLogging();
             }
 
-            options.UseSqlServer(configuration.GetConnectionString("OrdersDB"), sql => {
+            options.UseSqlServer(configuration.GetConnectionString("AppDB"), sql => {
                 sql.EnableRetryOnFailure(5, TimeSpan.FromSeconds(2), null);
+                sql.MigrationsHistoryTable("__EFMigrationsHistory", "orders");
                 sql.CommandTimeout(30);
             });
         });

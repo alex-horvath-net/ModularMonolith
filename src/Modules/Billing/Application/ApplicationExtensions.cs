@@ -1,3 +1,5 @@
+using Billing.Infrastructure.Data;
+using Billing.Infrastructure.Data.Models;
 using Common;
 using Microsoft.Extensions.DependencyInjection;
 using Orders.Contracts.Events; // Adjust when Orders contracts flattened

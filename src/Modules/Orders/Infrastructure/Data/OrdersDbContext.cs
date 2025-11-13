@@ -8,7 +8,7 @@ public sealed class OrdersDbContext(DbContextOptions<OrdersDbContext> options) :
     public DbSet<Order> Orders => Set<Order>();
 
     protected override void OnModelCreating(ModelBuilder modelBuilder) {
-        var assembly = Assembly.GetExecutingAssembly();
-        modelBuilder.ApplyConfigurationsFromAssembly(assembly);
+        modelBuilder.HasDefaultSchema("orders");
+        modelBuilder.ApplyConfigurationsFromAssembly(Assembly.GetExecutingAssembly());
     }
 }

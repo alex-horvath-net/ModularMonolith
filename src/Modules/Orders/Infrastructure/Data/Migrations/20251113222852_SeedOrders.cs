@@ -7,6 +7,7 @@ namespace Orders.Infrastructure.Data.Migrations {
         protected override void Up(MigrationBuilder migrationBuilder) {
             // Orders
             migrationBuilder.InsertData(
+                schema: "orders",
                 table: "Orders",
                 columns: new[] { "Id", "CustomerId" },
                 values: new object[,]
@@ -18,6 +19,7 @@ namespace Orders.Infrastructure.Data.Migrations {
 
             // Order lines
             migrationBuilder.InsertData(
+                schema: "orders",
                 table: "OrderLines",
                 columns: new[] { "Id", "OrderId", "ProductId", "Quantity", "UnitPrice" },
                 values: new object[,]
@@ -34,16 +36,16 @@ namespace Orders.Infrastructure.Data.Migrations {
         }
 
         protected override void Down(MigrationBuilder migrationBuilder) {
-            migrationBuilder.DeleteData("OrderLines", "Id", new Guid("20000000-0000-0000-0000-000000000001"));
-            migrationBuilder.DeleteData("OrderLines", "Id", new Guid("20000000-0000-0000-0000-000000000002"));
-            migrationBuilder.DeleteData("OrderLines", "Id", new Guid("20000000-0000-0000-0000-000000000003"));
-            migrationBuilder.DeleteData("OrderLines", "Id", new Guid("20000000-0000-0000-0000-000000000004"));
-            migrationBuilder.DeleteData("OrderLines", "Id", new Guid("20000000-0000-0000-0000-000000000005"));
-            migrationBuilder.DeleteData("OrderLines", "Id", new Guid("20000000-0000-0000-0000-000000000006"));
+            migrationBuilder.DeleteData("orders", "OrderLines", "Id", new Guid("20000000-0000-0000-0000-000000000001"));
+            migrationBuilder.DeleteData("orders", "OrderLines", "Id", new Guid("20000000-0000-0000-0000-000000000002"));
+            migrationBuilder.DeleteData("orders", "OrderLines", "Id", new Guid("20000000-0000-0000-0000-000000000003"));
+            migrationBuilder.DeleteData("orders", "OrderLines", "Id", new Guid("20000000-0000-0000-0000-000000000004"));
+            migrationBuilder.DeleteData("orders", "OrderLines", "Id", new Guid("20000000-0000-0000-0000-000000000005"));
+            migrationBuilder.DeleteData("orders", "OrderLines", "Id", new Guid("20000000-0000-0000-0000-000000000006"));
 
-            migrationBuilder.DeleteData("Orders", "Id", new Guid("10000000-0000-0000-0000-000000000001"));
-            migrationBuilder.DeleteData("Orders", "Id", new Guid("10000000-0000-0000-0000-000000000002"));
-            migrationBuilder.DeleteData("Orders", "Id", new Guid("10000000-0000-0000-0000-000000000003"));
+            migrationBuilder.DeleteData("orders", "Orders", "Id", new Guid("10000000-0000-0000-0000-000000000001"));
+            migrationBuilder.DeleteData("orders", "Orders", "Id", new Guid("10000000-0000-0000-0000-000000000002"));
+            migrationBuilder.DeleteData("orders", "Orders", "Id", new Guid("10000000-0000-0000-0000-000000000003"));
         }
     }
 }

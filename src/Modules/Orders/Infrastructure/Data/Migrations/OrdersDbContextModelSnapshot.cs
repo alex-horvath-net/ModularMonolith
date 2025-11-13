@@ -17,6 +17,7 @@ namespace Orders.Infrastructure.Data.Migrations
         {
 #pragma warning disable 612, 618
             modelBuilder
+                .HasDefaultSchema("orders")
                 .HasAnnotation("ProductVersion", "9.0.10")
                 .HasAnnotation("Relational:MaxIdentifierLength", 128);
 
@@ -28,6 +29,11 @@ namespace Orders.Infrastructure.Data.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier");
 
+                    b.Property<DateTime>("CreatedUtc")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("datetime2(3)")
+                        .HasDefaultValueSql("SYSUTCDATETIME()");
+
                     b.Property<Guid>("CustomerId")
                         .HasColumnType("uniqueidentifier");
 
@@ -36,9 +42,22 @@ namespace Orders.Infrastructure.Data.Migrations
                         .ValueGeneratedOnAddOrUpdate()
                         .HasColumnType("rowversion");
 
+                    b.Property<DateTime>("UpdatedUtc")
+                        .ValueGeneratedOnAddOrUpdate()
+                        .HasColumnType("datetime2(3)")
+                        .HasDefaultValueSql("SYSUTCDATETIME()");
+
                     b.HasKey("Id");
 
-                    b.ToTable("Orders", (string)null);
+                    b.HasIndex("CustomerId")
+                        .HasDatabaseName("IX_Orders_CustomerId");
+
+                    b.ToTable("Orders", "orders", t =>
+                        {
+                            t.HasCheckConstraint("CK_Orders_CustomerId_NotEmpty", "[CustomerId] <> '00000000-0000-0000-0000-000000000000'");
+
+                            t.HasCheckConstraint("CK_Orders_UpdatedUtc_NotBeforeCreatedUtc", "[UpdatedUtc] >= [CreatedUtc]");
+                        });
                 });
 
             modelBuilder.Entity("Orders.Infrastructure.Data.Models.Order", b =>
@@ -59,13 +78,20 @@ namespace Orders.Infrastructure.Data.Migrations
                                 .HasColumnType("int");
 
                             b1.Property<decimal>("UnitPrice")
-                                .HasColumnType("decimal(18,2)");
+                                .HasPrecision(19, 4)
+                                .HasColumnType("decimal(19,4)");
 
                             b1.HasKey("Id");
 
-                            b1.HasIndex("OrderId");
+                            b1.HasIndex("OrderId")
+                                .HasDatabaseName("IX_OrderLines_OrderId");
 
-                            b1.ToTable("OrderLines", (string)null);
+                            b1.ToTable("OrderLines", "orders", t =>
+                                {
+                                    t.HasCheckConstraint("CK_OrderLines_Quantity_Positive", "[Quantity] > 0");
+
+                                    t.HasCheckConstraint("CK_OrderLines_UnitPrice_NonNegative", "[UnitPrice] >= 0");
+                                });
 
                             b1.WithOwner()
                                 .HasForeignKey("OrderId");

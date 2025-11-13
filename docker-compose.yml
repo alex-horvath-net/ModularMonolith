@@ -24,8 +24,7 @@ services:
       dockerfile: src/Hosts/WebApi/Dockerfile
     environment:
       - ASPNETCORE_URLS=http://+:5001
-      - ConnectionStrings__OrdersDB=Server=devsqlserver;Database=OrdersDB;User ID=sa;Password=Dev!Pass123;Encrypt=True;TrustServerCertificate=True;
-      - ConnectionStrings__BillingDB=Server=devsqlserver;Database=BillingDB;User ID=sa;Password=Dev!Pass123;Encrypt=True;TrustServerCertificate=True;
+      - ConnectionStrings__AppDB=Server=devsqlserver;Database=AppDB;User ID=sa;Password=Dev!Pass123;Encrypt=True;TrustServerCertificate=True;
     depends_on:
       devsqlserver:
         condition: service_healthy
