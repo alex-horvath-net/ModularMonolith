@@ -1,5 +1,6 @@
 using Microsoft.AspNetCore.Builder; // MapGroup extension
 using Microsoft.AspNetCore.Http; // IResult, TypedResults
+using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Routing;
 using Orders.Application.CommandHandlers;
 using Orders.Application.QueryHandlers;
@@ -14,11 +15,7 @@ public static class OrdersEndpoints {
             ; // define policy at startup
 
         // GET /orders (list)
-        group.MapGet("", async (GetOrdersQueryHandler handler, CancellationToken token) => {
-            var orders = await handler.Handle(token);
-            return TypedResults.Ok(orders);
-        })
-        .Produces<List<OrderDto>>(StatusCodes.Status200OK);
+        group.MapGet("", GetOrders).Produces<List<OrderDto>>(StatusCodes.Status200OK);
 
         // GET /orders/{id}
         group.MapGet("/{id:guid}", async Task<IResult> (Guid id, GetOrderQueryHandler handler) => {
@@ -36,5 +33,11 @@ public static class OrdersEndpoints {
         .Produces(StatusCodes.Status201Created);
 
         return app;
+    }
+
+    private static async Task<Ok<List<OrderDto>>> GetOrders(GetOrdersQueryHandler handler, CancellationToken token) {
+        var orders = await handler.Handle(token);
+        return TypedResults.Ok(orders);
+
     }
 }
