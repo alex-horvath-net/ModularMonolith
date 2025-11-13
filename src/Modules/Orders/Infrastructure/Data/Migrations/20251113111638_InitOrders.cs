@@ -25,7 +25,7 @@ namespace Orders.Infrastructure.Data.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "OrderLine",
+                name: "OrderLines",
                 columns: table => new
                 {
                     Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
@@ -36,9 +36,9 @@ namespace Orders.Infrastructure.Data.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_OrderLine", x => x.Id);
+                    table.PrimaryKey("PK_OrderLines", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_OrderLine_Orders_OrderId",
+                        name: "FK_OrderLines_Orders_OrderId",
                         column: x => x.OrderId,
                         principalTable: "Orders",
                         principalColumn: "Id",
@@ -46,8 +46,8 @@ namespace Orders.Infrastructure.Data.Migrations
                 });
 
             migrationBuilder.CreateIndex(
-                name: "IX_OrderLine_OrderId",
-                table: "OrderLine",
+                name: "IX_OrderLines_OrderId",
+                table: "OrderLines",
                 column: "OrderId");
         }
 
@@ -55,7 +55,7 @@ namespace Orders.Infrastructure.Data.Migrations
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropTable(
-                name: "OrderLine");
+                name: "OrderLines");
 
             migrationBuilder.DropTable(
                 name: "Orders");

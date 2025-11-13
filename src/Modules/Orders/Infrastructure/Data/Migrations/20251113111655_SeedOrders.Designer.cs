@@ -12,8 +12,8 @@ using Orders.Infrastructure.Data;
 namespace Orders.Infrastructure.Data.Migrations
 {
     [DbContext(typeof(OrdersDbContext))]
-    [Migration("20251112230948_InitOrders")]
-    partial class InitOrders
+    [Migration("20251113111655_SeedOrders")]
+    partial class SeedOrders
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -41,7 +41,7 @@ namespace Orders.Infrastructure.Data.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Orders");
+                    b.ToTable("Orders", (string)null);
                 });
 
             modelBuilder.Entity("Orders.Infrastructure.Data.Models.Order", b =>
@@ -68,7 +68,7 @@ namespace Orders.Infrastructure.Data.Migrations
 
                             b1.HasIndex("OrderId");
 
-                            b1.ToTable("OrderLine");
+                            b1.ToTable("OrderLines", (string)null);
 
                             b1.WithOwner()
                                 .HasForeignKey("OrderId");
