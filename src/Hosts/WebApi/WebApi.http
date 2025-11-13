@@ -19,7 +19,7 @@ Accept: application/json
 
 
 ### Orders - Get by id
-@orderId =6D4E93DB-B029-4947-9A60-A2A7C33C0AE1
+@orderId =10000000-0000-0000-0000-000000000002
 GET {{WebApi_HostAddress}}/orders/{{orderId}}
 Accept: application/json
 
