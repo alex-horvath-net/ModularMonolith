@@ -24,4 +24,7 @@
  <Content Remove="**\obj\**\*.*" />
  <None Remove="**\obj\**\*.*" />
  </ItemGroup>
+ <ItemGroup>
+   <Folder Include="Application\CommandHandlers\" />
+ </ItemGroup>
 </Project>

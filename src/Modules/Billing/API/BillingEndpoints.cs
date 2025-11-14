@@ -2,14 +2,19 @@ using Billing.Application.QueryHandlers;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Routing;
+using Orders.Contracts.DTOs;
 
 namespace Billing.API;
 
 public static class BillingEndpoints {
     public static IEndpointRouteBuilder MapBilling(this IEndpointRouteBuilder app) {
-        var group = app.MapGroup("/billing");
+        var group = app.MapGroup("/billing")
+            .WithTags("Billing")
+            .RequireAuthorization("Billing.Read");
 
-        group.MapGet("/invoices/{id:guid}", GetInvoice);
+        group.MapGet("/invoices/{id:guid}", GetInvoice)
+            .Produces<OrderDto>(StatusCodes.Status200OK)
+            .Produces(StatusCodes.Status404NotFound);
 
         return app;
     }

@@ -11,7 +11,8 @@ namespace Orders.API;
 public static class OrdersEndpoints {
     public static IEndpointRouteBuilder MapOrdersEndpoints(this IEndpointRouteBuilder app) {
         var group = app.MapGroup("/orders")
-            .WithTags("Orders");
+            .WithTags("Orders")
+            .RequireAuthorization("Orders.Read");
 
         group.MapGet("", GetOrders)
             .Produces<List<OrderDto>>(StatusCodes.Status200OK);
