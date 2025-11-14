@@ -7,21 +7,21 @@ using Orders.Application.QueryHandlers;
 using Orders.Contracts.DTOs; // For swagger metadata
 
 namespace Orders.API;
-
 public static class OrdersEndpoints {
     public static IEndpointRouteBuilder MapOrdersEndpoints(this IEndpointRouteBuilder app) {
-        var group = app.MapGroup("/orders")
-            .WithTags("Orders")
-            .RequireAuthorization("Orders.Read");
+        var group = app.MapGroup("/orders").WithTags("Orders");
 
         group.MapGet("", GetOrders)
+            .RequireAuthorization(OrdersConstants.Read)
             .Produces<List<OrderDto>>(StatusCodes.Status200OK);
 
         group.MapGet("/{id:guid}", GetOrder)
+            .RequireAuthorization(OrdersConstants.Read)
             .Produces<OrderDto>(StatusCodes.Status200OK)
             .Produces(StatusCodes.Status404NotFound);
 
         group.MapPost("/", CreateOrder)
+            .RequireAuthorization(OrdersConstants.Write)
             .Produces(StatusCodes.Status201Created);
 
         return app;

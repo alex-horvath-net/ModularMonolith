@@ -1,8 +1,11 @@
+using System.Diagnostics.Metrics;
+using System.Text;
 using Billing;
 using Common;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using Orders;
+using Orders.API;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -23,8 +26,8 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
     });
 
 builder.Services.AddAuthorizationBuilder()
-    .AddPolicy("Orders.Read", p => p.RequireClaim("scp", "orders.read").RequireAuthenticatedUser())
-    .AddPolicy("Orders.Write", p => p.RequireClaim("scp", "orders.write").RequireAuthenticatedUser())
+    .AddPolicy(OrdersConstants.Read, p => p.RequireClaim("scp", "orders.read").RequireAuthenticatedUser())
+    .AddPolicy(OrdersConstants.Write, p => p.RequireClaim("scp", "orders.write").RequireAuthenticatedUser())
     .AddPolicy("Billing.Read", p => p.RequireClaim("scp", "billing.read").RequireAuthenticatedUser());
 
 builder.Services.AddCommon();
@@ -43,12 +46,7 @@ app.UseHttpsRedirection();
 app.UseAuthentication();
 app.UseAuthorization();
 
-// Map endpoints then attach authorization at group level (Orders/Billing implement Map* returning route builder only)
-var ordersGroup = app.MapOrders();
-var billingGroup = app.MapBilling();
-
-// Apply policies to groups (convert to RouteGroupBuilder by re-grouping if needed)
-// If MapOrders returns IEndpointRouteBuilder, wrap endpoints directly:
-ordersGroup.MapGroup("/orders"); // placeholder if needed
+app.MapOrders();
+app.MapBilling();
 
 app.Run();
