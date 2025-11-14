@@ -8,16 +8,20 @@ using Microsoft.Extensions.Logging;
 using Orders.API;
 using Orders.Application.CommandHandlers;
 using Orders.Application.QueryHandlers;
+using Orders.Application.QueryServices;
+using Orders.Contracts.Services;
 using Orders.Infrastructure.Data;
 
 namespace Orders;
 
 public static class Extensions {
     public static IServiceCollection AddOrders(this IServiceCollection services, IConfiguration configuration) {
+        
         // Application
         services.AddScoped<GetOrdersQueryHandler>();
         services.AddScoped<GetOrderQueryHandler>();
         services.AddScoped<CreateOrderCommandHandler>();
+        services.AddScoped<IReadOrderService, ReadOrderService>();
 
         // Infrastructure
         services.AddDbContext<OrdersDbContext>((sp, options) => {

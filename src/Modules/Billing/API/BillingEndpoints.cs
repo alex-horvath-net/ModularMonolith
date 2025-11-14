@@ -1,23 +1,21 @@
-using Billing.Infrastructure.Data;
+using Billing.Application.QueryHandlers;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Routing;
-using Microsoft.EntityFrameworkCore;
 
 namespace Billing.API;
 
-public static class BillingEndpoints
-{
- public static IEndpointRouteBuilder MapBilling(this IEndpointRouteBuilder app)
- {
- var group = app.MapGroup("/billing");
+public static class BillingEndpoints {
+    public static IEndpointRouteBuilder MapBilling(this IEndpointRouteBuilder app) {
+        var group = app.MapGroup("/billing");
 
- group.MapGet("/invoices/{id:guid}", async Task<IResult> (Guid id, BillingDbContext db) =>
- {
- var invoice = await db.Invoices.AsNoTracking().FirstOrDefaultAsync(x => x.Id == id);
- return invoice is null ? Results.NotFound() : Results.Ok(invoice);
- });
+        group.MapGet("/invoices/{id:guid}", GetInvoice);
 
- return app;
- }
+        return app;
+    }
+
+    private static async Task<IResult> GetInvoice(GetInvoiceQueryHandler handler, Guid id, CancellationToken token) {
+        var invoice = await handler.Handle(id, token);
+        return invoice is null ? TypedResults.NotFound() : TypedResults.Ok(invoice);
+    }
 }

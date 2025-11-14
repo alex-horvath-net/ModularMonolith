@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk.Razor">
+﻿<Project Sdk="Microsoft.NET.Sdk.Razor">
 
   <PropertyGroup>
     <TargetFramework>net9.0</TargetFramework>
@@ -27,6 +27,9 @@
     <Compile Remove="**\bin\**\*.cs" />
     <Content Remove="**\obj\**\*.*" />
     <None Remove="**\obj\**\*.*" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Application\EventHandlers\" />
   </ItemGroup>
 
 </Project>
