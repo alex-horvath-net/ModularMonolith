@@ -1,54 +1,41 @@
 @WebApi_HostAddress = http://localhost:5001
 
-# ===== Authentication Settings (populate for local dev) =====
-# Azure AD (replace placeholders) OR local test issuer
-@TenantId = <tenant-id>
-@ClientId = <client-id>
-@ClientSecret = <client-secret>
-# Resource (API) Application ID URI or scope; for client credentials usually "api://<api-app-id>/.default"
-@Scope = api://<api-app-id>/.default
-@Auth_TokenEndpoint = https://login.microsoftonline.com/{{TenantId}}/oauth2/v2.0/token
 
 # After acquiring token, paste value into @accessToken below
-@accessToken = <paste-access-token-here>
+@accessToken = "eyJhbGciOiJSUzI1NiIsImtpZCI6IldkcTJHYnhmRlNpUUhzM3V3UVB1YmpzN3MwaTZQOFoxRUU5T24yT3VodXMiLCJ0eXAiOiJKV1QifQ.eyJzdWIiOiJkZXYtdXNlciIsInNjcCI6Im9yZGVycy5yZWFkIG9yZGVycy53cml0ZSBiaWxsaW5nLnJlYWQiLCJuYmYiOjE3NjMxMzMxNTQsImV4cCI6MTc2MzEzNDk1NCwiaWF0IjoxNzYzMTMzMTU0LCJpc3MiOiJodHRwOi8vbG9jYWxob3N0IiwiYXVkIjoibG9jYWwtYXBpIn0.ANfEwJnkWu_48TYDybvqFy6Addo6UFRhZYbFkbOVkEzUDsvNKXCuz1Ti_mue4_gsUImb5XQPcPvxac6KNcwOTMZ4gEoeQqkuKAQwpiz47eDRbGK3kM6Cs56H7l8DAHw-ftCC7Rzfo4m_iQnTUCofyqRBVFID_R3pD1zPENcUboDlsd4T5n7nfbhvhKfYGqqItzP-DOdW2cqHRBxXnYWHnYsLRNT_jVmxQCT5bFerjh-PGUYaPBngkj05aGnQfL2epT14w9PhRhuk8Fuat2HvbrwznATJzTRbmolSxv8jKiHUDfPuJWMgWSommgQObVHFPqj8m53V9S6hBlD0z7ybqw"
 
-### Auth - Acquire token (Client Credentials)
-# Send this request, copy access_token from JSON response, replace @accessToken above.
-POST {{Auth_TokenEndpoint}}
-Content-Type: application/x-www-form-urlencoded
+### Dev - Acquire local token (works when running in Development without Auth:Authority)
+POST {{WebApi_HostAddress}}/auth/dev-token
 Accept: application/json
-
-client_id={{ClientId}}&scope={{Scope}}&client_secret={{ClientSecret}}&grant_type=client_credentials
-
-### Orders - Create
-POST {{WebApi_HostAddress}}/orders/
-Authorization: Bearer {{accessToken}}
-Content-Type: application/json
-Accept: application/json
-
-{
- "customerId": "11111111-1111-1111-1111-111111111111",
- "lines": [
-  { "productId": "aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaaaa", "quantity":2, "unitPrice":10.50 },
-  { "productId": "bbbbbbbb-bbbb-bbbb-bbbb-bbbbbbbbbbbb", "quantity":1, "unitPrice":25.00 }
- ]
-}
 
 ### Orders - Get all
 GET {{WebApi_HostAddress}}/orders
-Authorization: Bearer {{accessToken}}
+#Authorization: Bearer "{{accessToken}}"
 Accept: application/json
 
 ### Orders - Get by id
 @orderId = 10000000-0000-0000-0000-000000000002
 GET {{WebApi_HostAddress}}/orders/{{orderId}}
-Authorization: Bearer {{accessToken}}
+#Authorization: Bearer "{{accessToken}}"
 Accept: application/json
+
+### Orders - Create
+POST {{WebApi_HostAddress}}/orders
+#Authorization: Bearer "{{accessToken}}"
+Content-Type: application/json
+Accept: application/json
+{
+  "customerId": "11111111-1111-1111-1111-111111111111",
+  "lines": [
+    { "productId": "aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaaaa", "quantity":2, "unitPrice":10.50 },
+    { "productId": "bbbbbbbb-bbbb-bbbb-bbbb-bbbbbbbbbbbb", "quantity":1, "unitPrice":25.00 }
+  ]
+}
 
 ### Billing - Get invoice by id
 @invoiceId = 00000000-0000-0000-0000-000000000000
 GET {{WebApi_HostAddress}}/billing/invoices/{{invoiceId}}
-Authorization: Bearer {{accessToken}}
+#Authorization: Bearer "{{accessToken}}"
 Accept: application/json
 
 ````````

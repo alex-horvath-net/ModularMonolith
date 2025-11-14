@@ -2,6 +2,9 @@
   "profiles": {
     "Docker Compose": {
       "commandName": "DockerCompose",
+      "environmentVariables": {
+        "ASPNETCORE_ENVIRONMENT": "Development"
+      },
       "commandVersion": "1.0",
       "serviceActions": {
         "webapi": "StartDebugging",
