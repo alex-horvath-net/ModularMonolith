@@ -12,7 +12,7 @@ using Microsoft.IdentityModel.Tokens;
 
 namespace Common;
 
-public static class BusinessEventExtensions {
+public static class Extensions {
     public static IServiceCollection AddCommon(this IServiceCollection services, IConfiguration configuration) {
 
         var audience = configuration["Auth:Audience"]!;
@@ -73,23 +73,23 @@ public static class BusinessEventExtensions {
         var audience = configuration["Auth:Audience"]!;
         var issuer = configuration["Auth:Issuer"]!;
         var devKey = configuration["Auth:DevKey"]!;
+        var devScopes = configuration.GetSection("Auth:DevScopes").Get<string[]>()!;  //  "DevScopes": [ "orders.read", "orders.write", "billing.read" ]
 
         var handler = new JwtSecurityTokenHandler();
 
-        var claims = new List<Claim> {
-            new("sub", "dev-user"),
-            new("scope", "orders.read"),
-            new("scope", "orders.write"),
-            new("scope", "billing.read")
-        };
+        var claims = new List<Claim>();
+        claims.Add(new Claim("sub", "dev-user"));
+        claims.AddRange(devScopes.Select(devScope => new Claim("scope", devScope)));
+        var subject = new ClaimsIdentity(claims);
+        var signingCredentials = new SigningCredentials(new SymmetricSecurityKey(Encoding.UTF8.GetBytes(devKey)), SecurityAlgorithms.HmacSha256);
 
         var token = handler.CreateJwtSecurityToken(
             issuer: issuer,
             audience: audience,
-            subject: new ClaimsIdentity(claims),
+            subject: subject,
             notBefore: DateTime.UtcNow,
             expires: DateTime.UtcNow.AddMinutes(60),
-            signingCredentials: new SigningCredentials(new SymmetricSecurityKey(Encoding.UTF8.GetBytes(devKey)), SecurityAlgorithms.HmacSha256)
+            signingCredentials: signingCredentials
         );
 
         return Results.Ok(new { access_token = handler.WriteToken(token), token_type = "Bearer", expires_in = 3600 });
