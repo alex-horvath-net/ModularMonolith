@@ -2,9 +2,6 @@
 
 namespace Common;
 
-// events, error type, nothing business-specific
-// You don’t need a broker to keep modules decoupled.
-// Start with a tiny in-process dispatcher.
 public interface IBusinessEvent { }
 
 public interface IBusinessEventHandler<in TEvent> where TEvent : IBusinessEvent {
@@ -15,7 +12,7 @@ public interface IBusinessEventPublisher {
     Task Publish<T>(T businessEvent, CancellationToken token = default) where T : IBusinessEvent;
 }
 
-public sealed class InProcessEventBus(IServiceProvider services) : IBusinessEventPublisher {
+public sealed class InProcessBusinessEventPublisher(IServiceProvider services) : IBusinessEventPublisher {
     public async Task Publish<T>(T businessEvent, CancellationToken token = default) where T : IBusinessEvent {
         var handlers = services.GetServices<IBusinessEventHandler<T>>();
         foreach (var handler in handlers)

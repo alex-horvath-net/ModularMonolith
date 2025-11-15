@@ -43,6 +43,11 @@ public static class Extensions
             });
         });
 
+        // Authorization policies local to Billing module
+        services
+            .AddAuthorizationBuilder()
+            .AddPolicy("Billing.Read", p => p.RequireClaim("scope", "billing.read"));
+
         return services;
     }
 

@@ -41,10 +41,11 @@ public static class Extensions {
             });
         });
 
+        // Authorization policies local to Orders module
         services
             .AddAuthorizationBuilder()
-            .AddPolicy("orders.read", p => p.RequireClaim("scope", "orders.read"));
-
+            .AddPolicy(OrdersConstants.Read,  p => p.RequireClaim("scope", "orders.read"))
+            .AddPolicy(OrdersConstants.Write, p => p.RequireClaim("scope", "orders.write"));
 
         return services;
     }
