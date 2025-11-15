@@ -59,11 +59,10 @@ public static class BusinessEventExtensions {
         app.UseAuthorization();
 
 
-        // All auth-related endpoints under /auth
-        var group = app.MapGroup("/auth").WithTags("Auth").AllowAnonymous();
-
-        // FIX: Map under /auth prefix and capture config values
-        group.MapPost("/dev-token", CreateDevToken);
+        if (app.Environment.IsDevelopment()) {
+            var group = app.MapGroup("/auth").WithTags("Auth").AllowAnonymous();
+            group.MapPost("/dev-token", CreateDevToken);
+        }
 
         return app;
     }
