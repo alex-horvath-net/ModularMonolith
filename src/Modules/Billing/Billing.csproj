@@ -1,30 +1,30 @@
 <Project Sdk="Microsoft.NET.Sdk.Razor">
- <PropertyGroup>
- <TargetFramework>net9.0</TargetFramework>
- <ImplicitUsings>enable</ImplicitUsings>
- <Nullable>enable</Nullable>
- <RazorLangVersion>9.0</RazorLangVersion>
- </PropertyGroup>
- <ItemGroup>
- <FrameworkReference Include="Microsoft.AspNetCore.App" />
- </ItemGroup>
- <ItemGroup>
- <PackageReference Include="Microsoft.EntityFrameworkCore" Version="9.0.10" />
- <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="9.0.10" />
- </ItemGroup>
- <ItemGroup>
- <ProjectReference Include="..\..\Common\Common\Common.csproj" />
- <ProjectReference Include="..\Orders\Orders.csproj" />
- </ItemGroup>
- <!-- Exclude legacy subprojects and obj/bin artifacts under this module root -->
- <ItemGroup>
- <Compile Remove="Billing.*\**\*.cs" />
- <Compile Remove="**\obj\**\*.cs" />
- <Compile Remove="**\bin\**\*.cs" />
- <Content Remove="**\obj\**\*.*" />
- <None Remove="**\obj\**\*.*" />
- </ItemGroup>
- <ItemGroup>
-   <Folder Include="Application\CommandHandlers\" />
- </ItemGroup>
+  <PropertyGroup>
+    <TargetFramework>net9.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+    <RazorLangVersion>9.0</RazorLangVersion>
+  </PropertyGroup>
+  <ItemGroup>
+    <FrameworkReference Include="Microsoft.AspNetCore.App" />
+  </ItemGroup>
+  <ItemGroup>
+    <PackageReference Include="Microsoft.EntityFrameworkCore" Version="9.0.10" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="9.0.10" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\Common\Common\Common.csproj" />
+    <ProjectReference Include="..\Orders\Orders.csproj" />
+  </ItemGroup>
+  <!-- Exclude legacy subprojects and obj/bin artifacts under this module root -->
+  <ItemGroup>
+    <Compile Remove="Billing.*\**\*.cs" />
+    <Compile Remove="**\obj\**\*.cs" />
+    <Compile Remove="**\bin\**\*.cs" />
+    <Content Remove="**\obj\**\*.*" />
+    <None Remove="**\obj\**\*.*" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Application\CommandHandlers\" />
+  </ItemGroup>
 </Project>

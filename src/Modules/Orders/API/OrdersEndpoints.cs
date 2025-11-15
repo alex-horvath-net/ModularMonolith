@@ -12,16 +12,14 @@ public static class OrdersEndpoints {
         var group = app.MapGroup("/orders").WithTags("Orders");
 
         group.MapGet("", GetOrders)
-            //.RequireAuthorization(OrdersConstants.Read)
+            .RequireAuthorization("orders.read")
             .Produces<List<OrderDto>>(StatusCodes.Status200OK);
 
         group.MapGet("/{id:guid}", GetOrder)
-            //.RequireAuthorization(OrdersConstants.Read)
             .Produces<OrderDto>(StatusCodes.Status200OK)
             .Produces(StatusCodes.Status404NotFound);
 
         group.MapPost("/", CreateOrder)
-            //.RequireAuthorization(OrdersConstants.Write)
             .Produces(StatusCodes.Status201Created);
 
         return app;

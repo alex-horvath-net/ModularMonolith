@@ -22,8 +22,3 @@ public sealed class InProcessEventBus(IServiceProvider services) : IBusinessEven
             await handler.Handle(businessEvent, token);
     }
 }
-
-public static class BusinessEventExtensions {
-    public static IServiceCollection AddCommon(this IServiceCollection services) =>
-        services.AddScoped<IBusinessEventPublisher, InProcessEventBus>();
-}

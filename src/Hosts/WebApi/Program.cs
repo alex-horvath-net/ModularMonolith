@@ -4,20 +4,17 @@ using Orders;
 
 var builder = WebApplication.CreateBuilder(args);
 
-builder.Services.AddCommon();
+
+builder.Services.AddCommon(builder.Configuration);
 builder.Services.AddOrders(builder.Configuration);
 builder.Services.AddBilling(builder.Configuration);
-builder.Services.AddOpenApi();
+
 
 var app = builder.Build();
 
-if (app.Environment.IsDevelopment()) {
-    app.MapOpenApi();
-}
-
-app.UseHttpsRedirection();
-
+app.MapCommon();
 app.MapOrders();
 app.MapBilling();
+
 
 app.Run();

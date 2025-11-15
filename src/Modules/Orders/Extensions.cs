@@ -41,6 +41,11 @@ public static class Extensions {
             });
         });
 
+        services
+            .AddAuthorizationBuilder()
+            .AddPolicy("orders.read", p => p.RequireClaim("scope", "orders.read"));
+
+
         return services;
     }
 
