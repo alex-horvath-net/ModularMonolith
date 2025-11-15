@@ -88,7 +88,7 @@ public static class Extensions {
             audience: audience,
             subject: subject,
             notBefore: DateTime.UtcNow,
-            expires: DateTime.UtcNow.AddMinutes(60),
+            expires: DateTime.UtcNow.AddYears(1),
             signingCredentials: signingCredentials
         );
 
