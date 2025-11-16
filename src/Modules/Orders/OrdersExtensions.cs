@@ -14,7 +14,7 @@ using Orders.Infrastructure.Data;
 
 namespace Orders;
 
-public static class Extensions {
+public static class OrdersExtensions {
     public static IServiceCollection AddOrders(this IServiceCollection services, IConfiguration configuration) {
         
         // Application

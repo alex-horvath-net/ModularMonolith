@@ -14,7 +14,7 @@ using Orders.Contracts.Events;
 
 namespace Billing;
 
-public static class Extensions
+public static class BillingExtensions
 {
     public static IServiceCollection AddBilling(this IServiceCollection services, IConfiguration configuration)
     {
