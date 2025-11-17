@@ -5,6 +5,17 @@
 POST {{WebApi_HostAddress}}/auth/dev-token
 Accept: application/json
 
+### Health - Live
+GET {{WebApi_HostAddress}}/health/live
+Authorization: Bearer {{devToken.response.body.$.access_token}}
+Accept: application/json
+
+### Health - Ready
+GET {{WebApi_HostAddress}}/health/ready
+Authorization: Bearer {{devToken.response.body.$.access_token}}
+Accept: application/json
+
+
 ### Orders - Get all
 GET {{WebApi_HostAddress}}/orders
 Authorization: Bearer {{devToken.response.body.$.access_token}}
@@ -36,12 +47,3 @@ GET {{WebApi_HostAddress}}/billing/invoices/{{invoiceId}}
 Authorization: Bearer {{devToken.response.body.$.access_token}}
 Accept: application/json
 
-### Health - Live
-GET {{WebApi_HostAddress}}/health/live
-Authorization: Bearer {{devToken.response.body.$.access_token}}
-Accept: application/json
-
-### Health - Ready
-GET {{WebApi_HostAddress}}/health/ready
-Authorization: Bearer {{devToken.response.body.$.access_token}}
-Accept: application/json

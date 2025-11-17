@@ -1,6 +1,12 @@
 using WebPortal.Components;
+using Microsoft.AspNetCore.DataProtection;
 
 var builder = WebApplication.CreateBuilder(args);
+
+// Persist data protection keys for cookie protection across restarts
+builder.Services.AddDataProtection()
+    .PersistKeysToFileSystem(new DirectoryInfo(Path.Combine(builder.Environment.ContentRootPath, "dpkeys")))
+    .SetApplicationName("ModularMonolith");
 
 // Add services to the container.
 builder.Services.AddRazorComponents()

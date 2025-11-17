@@ -5,6 +5,8 @@ using Microsoft.AspNetCore.Routing; // IEndpointRouteBuilder
 using Orders.Application.CommandHandlers;
 using Orders.Application.QueryHandlers;
 using Orders.Contracts.DTOs; // For swagger metadata
+using FluentValidation;
+using Orders.Application.Validation;
 
 namespace Orders.API;
 public static class OrdersEndpoints {
@@ -22,7 +24,8 @@ public static class OrdersEndpoints {
 
         group.MapPost("/", CreateOrder)
             .RequireAuthorization(OrdersConstants.Write)
-            .Produces(StatusCodes.Status201Created);
+            .Produces(StatusCodes.Status201Created)
+            .RequireRateLimiting("writes");
 
         return app;
     }
@@ -37,7 +40,11 @@ public static class OrdersEndpoints {
         return order is null ? TypedResults.NotFound() : TypedResults.Ok(order);
     }
 
-    private static async Task<IResult> CreateOrder(CreateOrderCommandHandler handler, CreateOrderCommand command, CancellationToken token) {
+    private static async Task<IResult> CreateOrder(CreateOrderCommandHandler handler, IValidator<CreateOrderCommand> validator, CreateOrderCommand command, CancellationToken token) {
+        var validation = await validator.ValidateAsync(command, token);
+        if (!validation.IsValid) {
+            return TypedResults.BadRequest(new { errors = validation.Errors.Select(e => new { e.PropertyName, e.ErrorMessage }) });
+        }
         var id = await handler.Handle(command, token);
         return TypedResults.Created($"/orders/{id}", new { id });
     }

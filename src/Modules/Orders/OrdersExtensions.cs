@@ -1,3 +1,4 @@
+using FluentValidation;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Routing;
 using Microsoft.EntityFrameworkCore;
@@ -9,6 +10,7 @@ using Orders.API;
 using Orders.Application.CommandHandlers;
 using Orders.Application.QueryHandlers;
 using Orders.Application.QueryServices;
+using Orders.Application.Validation;
 using Orders.Contracts.Services;
 using Orders.Infrastructure.Data;
 
@@ -16,12 +18,15 @@ namespace Orders;
 
 public static class OrdersExtensions {
     public static IServiceCollection AddOrders(this IServiceCollection services, IConfiguration configuration) {
-        
+
         // Application
         services.AddScoped<GetOrdersQueryHandler>();
         services.AddScoped<GetOrderQueryHandler>();
         services.AddScoped<CreateOrderCommandHandler>();
         services.AddScoped<IReadOrderService, ReadOrderService>();
+
+        // Register validator so Minimal APIs resolve it from DI (not Body)
+        services.AddScoped<IValidator<CreateOrderCommand>, CreateOrderCommandValidator>();
 
         // Infrastructure
         services.AddDbContext<OrdersDbContext>((sp, options) => {
@@ -44,7 +49,7 @@ public static class OrdersExtensions {
         // Authorization policies local to Orders module
         services
             .AddAuthorizationBuilder()
-            .AddPolicy(OrdersConstants.Read,  p => p.RequireClaim("scope", "orders.read"))
+            .AddPolicy(OrdersConstants.Read, p => p.RequireClaim("scope", "orders.read"))
             .AddPolicy(OrdersConstants.Write, p => p.RequireClaim("scope", "orders.write"));
 
         return services;
