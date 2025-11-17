@@ -8,9 +8,9 @@ namespace Billing.API;
 
 public static class BillingEndpoints {
     public static IEndpointRouteBuilder MapBilling(this IEndpointRouteBuilder app) {
-        var group = app.MapGroup("/billing")
-            .WithTags("Billing")
-            .RequireAuthorization("Billing.Read");
+        var group = app.MapGroup("/billing").WithTags("Billing")
+            .RequireAuthorization("Billing.Read")
+            .RequireRateLimiting("fixed"); // Apply read throughput limiter to billing endpoints
 
         group.MapGet("/invoices/{id:guid}", GetInvoice)
             .Produces<OrderDto>(StatusCodes.Status200OK)

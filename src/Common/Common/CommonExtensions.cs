@@ -42,6 +42,7 @@ public static class CommonExtensions {
     public static IServiceCollection AddCommon(this IServiceCollection services, IConfiguration configuration, IHostEnvironment environment) {
 
         services.AddOpenApi();              // Registers OpenAPI/Swagger generation (dev only exposure later)
+       
         services.AddProblemDetails();       // Enables RFC7807 standardized error responses
 
         services.AddStrictHttpJson();     // Harden JSON input to mitigate resource exhaustion & ambiguity
@@ -60,10 +61,11 @@ public static class CommonExtensions {
         // Forwarded headers: trust reverse proxy for original scheme/client IP (ingress must sanitize/XFF chain)
         services.AddDefaultForwardedHeaders();
 
+        
+        services.AddAllowdIPsForHealthProbes(configuration);
+
         // Business event publisher (in-process) enables decoupled module interaction without direct references
         services.AddScoped<IBusinessEventPublisher, InProcessBusinessEventPublisher>();
-
-        services.AddAllowdIPsForHealthProbes(configuration);
 
         return services;
     }
@@ -73,14 +75,18 @@ public static class CommonExtensions {
         if (!app.Environment.IsDevelopment())
             app.UseHsts();
 
+        // Process X-Forwarded-* early so client IP/scheme are correct for rate limiting and redirects
+        app.UseForwardedHeaders();         // Process X-Forwarded-* headers from trusted proxy
+
         app.UseRateLimiter();          // Apply global rate limiting middleware
 
-        if (app.Environment.IsDevelopment())
-            app.MapOpenApi(); // Expose OpenAPI only in dev
+        if (app.Environment.IsDevelopment()) {
+            var openApi = app.MapOpenApi(); // Expose OpenAPI only in dev
+            openApi.DisableRateLimiting();  // Do not rate-limit Swagger/OpenAPI
+        }
 
         app.UseExceptionHandler(_ => { }); // Centralized exception handling -> ProblemDetails formatting
         app.UseHttpsRedirection();         // Redirect all HTTP -> HTTPS early
-        app.UseForwardedHeaders();         // Process X-Forwarded-* headers from trusted proxy
         app.UseCorrelationId();            // Inject/propagate correlation ID (X-Correlation-ID)
         app.UseSecurityHeaders(app.Environment.IsDevelopment()); // CSP + security headers (strict in prod)
         app.UseCors("DefaultCors");      // Apply configured CORS policy
@@ -101,6 +107,9 @@ public static class CommonExtensions {
             live.AddEndpointFilter(ipFilter);
             ready.AddEndpointFilter(ipFilter);
         }
+        // Exempt health checks from rate limiting
+        live.DisableRateLimiting();
+        ready.DisableRateLimiting();
 
         return app; // Return route builder for further chaining in host Program
     }
@@ -210,34 +219,38 @@ public static class CommonExtensions {
         return services;
     }
 
-    // Rate limiting policy extracted for reuse and cleanliness
+    // Rate limiting policy: global identity-aware sliding window + concurrency for writes
     public static IServiceCollection AddDefaultRateLimiting(this IServiceCollection services) {
         services.AddRateLimiter(options => {
-            // Time-based throughput control
-            options.AddFixedWindowLimiter("fixed", o => {
-                o.PermitLimit = 100;                       // Allow 100 executions per window
-                o.Window = TimeSpan.FromSeconds(10);       // Each window = 10 seconds
-                o.QueueProcessingOrder = QueueProcessingOrder.OldestFirst; // Fair: first waiting goes first
-                o.QueueLimit = 50;                         // Up to 50 over-limit requests can wait
-            });
-
-            // Simultaneous execution control (resource pressure safety)
+            // Concurrency guard for write endpoints
             options.AddConcurrencyLimiter("writes", o => {
-                o.PermitLimit = 10;    // At most 10 concurrent executions
-                o.QueueLimit = 20;     // Up to 20 more may wait for a slot
+                o.PermitLimit = 10;   // Max concurrent writes
+                o.QueueLimit = 10;    // Small queue to cap latency
             });
 
             options.RejectionStatusCode = StatusCodes.Status429TooManyRequests;
-            options.GlobalLimiter = PartitionedRateLimiter.Create<HttpContext, string>(httpContext =>
-            {
-                // Apply fixed window limiter globally (by client IP)
-                var clientIp = httpContext.Connection.RemoteIpAddress?.ToString() ?? "unknown";
-                return RateLimitPartition.GetFixedWindowLimiter(clientIp, _ => new FixedWindowRateLimiterOptions
-                {
+            options.OnRejected = async (ctx, token) => {
+                if (ctx.Lease.TryGetMetadata(MetadataName.RetryAfter, out var retryAfter))
+                    ctx.HttpContext.Response.Headers.RetryAfter = ((int)retryAfter.TotalSeconds).ToString();
+                await ctx.HttpContext.Response.WriteAsync("Too many requests", token);
+            };
+
+            // Global identity/tenant/user oriented throughput control (sliding window for smoothing)
+            options.GlobalLimiter = PartitionedRateLimiter.Create<HttpContext, string>(httpContext => {
+                var user = httpContext.User;
+                var identityKey =
+                    user?.FindFirst("sub")?.Value ??
+                    user?.FindFirst("client_id")?.Value ??
+                    user?.FindFirst(ClaimTypes.NameIdentifier)?.Value ??
+                    httpContext.Connection.RemoteIpAddress?.ToString() ??
+                    "anonymous";
+
+                return RateLimitPartition.GetSlidingWindowLimiter(identityKey, _ => new SlidingWindowRateLimiterOptions {
                     PermitLimit = 100,
                     Window = TimeSpan.FromSeconds(10),
+                    SegmentsPerWindow = 10,
                     QueueProcessingOrder = QueueProcessingOrder.OldestFirst,
-                    QueueLimit = 50
+                    QueueLimit = 20
                 });
             });
         });

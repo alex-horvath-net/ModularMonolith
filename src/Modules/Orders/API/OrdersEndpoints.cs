@@ -1,3 +1,4 @@
+using FluentValidation;
 using Microsoft.AspNetCore.Builder; // MapGroup extension
 using Microsoft.AspNetCore.Http; // IResult, TypedResults
 using Microsoft.AspNetCore.Http.HttpResults; // OK
@@ -5,8 +6,6 @@ using Microsoft.AspNetCore.Routing; // IEndpointRouteBuilder
 using Orders.Application.CommandHandlers;
 using Orders.Application.QueryHandlers;
 using Orders.Contracts.DTOs; // For swagger metadata
-using FluentValidation;
-using Orders.Application.Validation;
 
 namespace Orders.API;
 public static class OrdersEndpoints {
@@ -24,8 +23,8 @@ public static class OrdersEndpoints {
 
         group.MapPost("/", CreateOrder)
             .RequireAuthorization(OrdersConstants.Write)
-            .Produces(StatusCodes.Status201Created)
-            .RequireRateLimiting("writes");
+            .RequireRateLimiting("writes")
+            .Produces(StatusCodes.Status201Created);
 
         return app;
     }
