@@ -4,12 +4,7 @@ using Orders;
 
 var builder = WebApplication.CreateBuilder(args);
 
-builder.WebHost.UseKestrel(options =>
-{
-    options.Limits.MaxRequestBodySize = 10 * 1024 * 1024; // 10MB
-});
-
-
+builder.WebHost.UseSecureKerstel();
 
 builder.Services.AddCommon(builder.Configuration, builder.Environment);
 builder.Services.AddOrders(builder.Configuration);

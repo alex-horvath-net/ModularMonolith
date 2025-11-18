@@ -1,4 +1,5 @@
 ﻿using System.IdentityModel.Tokens.Jwt;
+using System.Security.Authentication;
 using System.Security.Claims;
 using System.Text;
 using System.Text.Json;
@@ -6,63 +7,87 @@ using System.Threading.RateLimiting;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Builder;
+using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.HttpLogging;
 using Microsoft.AspNetCore.HttpOverrides;
 using Microsoft.AspNetCore.RateLimiting;
 using Microsoft.AspNetCore.Routing;
+using Microsoft.AspNetCore.Server.Kestrel.Https;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Diagnostics.HealthChecks;
 using Microsoft.Extensions.Hosting;
 using Microsoft.IdentityModel.Tokens;
+using Microsoft.OpenApi.Models;
 
 namespace Common;
 
 public static class CommonExtensions {
-    // Plan (pseudocode):
-    // - Extract forwarded headers configuration (Configure<ForwardedHeadersOptions>) into a dedicated extension:
-    //     AddDefaultForwardedHeaders(IServiceCollection)
-    //   Why:
-    //     - Centralizes proxy trust settings to avoid copy/paste and drift across services.
-    //     - Keeps Program/Composition root concise and auditable.
-    //     - Ensures consistent security posture around X-Forwarded-* handling.
-    //   What:
-    //     - Enable processing of X-Forwarded-For and X-Forwarded-Proto headers.
-    //     - Clear KnownNetworks and KnownProxies to avoid implicit trusts (infra should control trusted sources).
-    //     - Leave UseForwardedHeaders() order unchanged in the request pipeline.
-    //   Risks / Guidance:
-    //     - Only enable forwarded headers when running behind a trusted reverse proxy (ingress/controller/LB).
-    //     - Infra (e.g., Nginx/Envoy/ALB) should sanitize/append X-Forwarded-* correctly to prevent spoofing.
-    //     - If you need to restrict to specific networks/proxies, configure KnownNetworks/KnownProxies explicitly.
-    // - Replace inline block in AddCommon with services.AddDefaultForwardedHeaders().
-    // - Keep all other code intact (rate limiting, auth, CORS, health checks, etc.).
+    
+    public static ConfigureWebHostBuilder UseSecureKerstel(this ConfigureWebHostBuilder wbHost) {
 
-    // Overload with environment to keep host Program.cs lean; delegates to primary AddCommon
-    public static IServiceCollection AddCommon(this IServiceCollection services, IConfiguration configuration, IHostEnvironment environment) {
+        wbHost.UseKestrel(options =>
+        {
+            options.AddServerHeader = false; // Hide Server header
+            options.Limits.MaxRequestBodySize = 10 * 1024 * 1024; // 10MB
 
-        services.AddOpenApi();              // Registers OpenAPI/Swagger generation (dev only exposure later)
-       
+            // Enforce TLS 1.2/1.3 only when HTTPS is enabled
+            options.ConfigureHttpsDefaults(https =>
+            { 
+                https.SslProtocols = SslProtocols.Tls13 | SslProtocols.Tls12;
+                https.CheckCertificateRevocation = true;
+                https.ClientCertificateMode = ClientCertificateMode.NoCertificate;
+            });
+        });
+
+        return wbHost;
+    }
+    public static IServiceCollection AddCommon(this IServiceCollection services, IConfiguration config, IHostEnvironment env) {
+        services.AddHttpsViaHsts();
+        services.AddClientHeadersInProxy();   // Forwarded headers: trust reverse proxy for original scheme/client IP (ingress must sanitize/XFF chain)
+        services.AddRateLimiting();   // Global + targeted rate limiting policies
+
+
+        services.AddOpenApi("document", options => {
+            // Add JWT Bearer security scheme so Swagger UI shows the Authorize button
+            options.AddDocumentTransformer((document, ctx, ct) => {
+                document.Components ??= new();
+                document.Components.SecuritySchemes["Bearer"] = new OpenApiSecurityScheme {
+                    Name = "Authorization",
+                    Type = SecuritySchemeType.Http,
+                    Scheme = "bearer",
+                    BearerFormat = "JWT",
+                    In = ParameterLocation.Header,
+                    Description = "Input: Bearer {token}"
+                };
+                return Task.CompletedTask;
+            });
+            options.AddOperationTransformer((operation, ctx, ct) => {
+                // Apply Bearer auth requirement to all operations (Swagger UI will send JWT when authorized)
+                operation.Security ??= new List<OpenApiSecurityRequirement>();
+                operation.Security.Add(new OpenApiSecurityRequirement {
+                    [
+                        new OpenApiSecurityScheme {
+                            Reference = new OpenApiReference {
+                                Type = ReferenceType.SecurityScheme,
+                                Id = "Bearer"
+                            }
+                        }
+                    ] = Array.Empty<string>()
+                });
+                return Task.CompletedTask;
+            });
+        });              // Registers OpenAPI/Swagger generation (dev only exposure later)
         services.AddProblemDetails();       // Enables RFC7807 standardized error responses
-
-        services.AddStrictHttpJson();     // Harden JSON input to mitigate resource exhaustion & ambiguity
-
-        services.AddAllowdOriginsForBrowser(configuration);
-
-        services.AddAuthenticationAndAuthorization(configuration); // JWT bearer authentication + strict validation
-
-        services.AddDefaultHttpLogging();   // HTTP logging: structured request/response metadata for audit & traceability 
-
-        services.AddDefaultRateLimiting();  // Global + targeted rate limiting policies
+        services.AddSecureHttpJson();       // Harden JSON input to mitigate resource exhaustion & ambiguity
+        services.AddSecureBrowser(config);  //
+        services.AddSecureToken(config, env);    // JWT bearer authentication + strict validation
+        services.AddSecureHttpLogging();    // HTTP logging: structured request/response metadata for audit & traceability 
 
         // Health checks: basic self check; dependency checks can be added externally for DB/cache etc.
         services.AddHealthChecks().AddCheck("self", () => HealthCheckResult.Healthy());
-
-        // Forwarded headers: trust reverse proxy for original scheme/client IP (ingress must sanitize/XFF chain)
-        services.AddDefaultForwardedHeaders();
-
-        
-        services.AddAllowdIPsForHealthProbes(configuration);
+        services.AddAllowdIPsForHealthProbes(config); // // IP allowlist filter for health probes
 
         // Business event publisher (in-process) enables decoupled module interaction without direct references
         services.AddScoped<IBusinessEventPublisher, InProcessBusinessEventPublisher>();
@@ -71,30 +96,36 @@ public static class CommonExtensions {
     }
 
     public static IEndpointRouteBuilder MapCommon(this WebApplication app) {
-        // Enforce HSTS (strict transport) in non-development environments
-        if (!app.Environment.IsDevelopment())
-            app.UseHsts();
 
-        // Process X-Forwarded-* early so client IP/scheme are correct for rate limiting and redirects
-        app.UseForwardedHeaders();         // Process X-Forwarded-* headers from trusted proxy
+        var isDev = app.Environment.IsDevelopment();
 
-        app.UseRateLimiter();          // Apply global rate limiting middleware
+        app.UseHttpsViaHsts(isDev);     // Enforce HSTS, so Https in non-development environments
+        app.UseClientHeadersInProxy();  // Preserve client headers behind proxy,  ratelimiting and redirects
+        app.UseRateLimiting();          // Apply global rate limiting middleware
 
-        if (app.Environment.IsDevelopment()) {
+        if (isDev) {
+            // /openapi/{documentName}.json
             var openApi = app.MapOpenApi(); // Expose OpenAPI only in dev
+            openApi.AllowAnonymous();       // Make OpenAPI spec accessible without auth
             openApi.DisableRateLimiting();  // Do not rate-limit Swagger/OpenAPI
+
+            // Serve Swagger UI at /swagger and point it to the OpenAPI document
+            app.UseSwaggerUI(c => {
+                c.SwaggerEndpoint("/openapi/document.json", "WebApi");
+                c.RoutePrefix = "swagger"; // UI at /swagger
+            });
         }
 
         app.UseExceptionHandler(_ => { }); // Centralized exception handling -> ProblemDetails formatting
         app.UseHttpsRedirection();         // Redirect all HTTP -> HTTPS early
         app.UseCorrelationId();            // Inject/propagate correlation ID (X-Correlation-ID)
-        app.UseSecurityHeaders(app.Environment.IsDevelopment()); // CSP + security headers (strict in prod)
+        app.UseSecurityHeaders(isDev); // CSP + security headers (strict in prod)
         app.UseCors("DefaultCors");      // Apply configured CORS policy
         app.UseHttpLogging();             // Request/response metadata logging for audit
         app.UseAuthentication();          // Validate JWT bearer tokens
         app.UseAuthorization();           // Enforce policies/fallback
 
-        if (app.Environment.IsDevelopment()) {
+        if (isDev) {
             var group = app.MapGroup("/auth").WithTags("Auth").AllowAnonymous(); // Dev-only auth helper
             group.MapPost("/dev-token", CreateDevToken);                         // Issue short-lived dev token
         }
@@ -111,11 +142,100 @@ public static class CommonExtensions {
         live.DisableRateLimiting();
         ready.DisableRateLimiting();
 
-        return app; // Return route builder for further chaining in host Program
+        return app; // Return route builder for further chaining in wbHost Program
     }
 
+
+    private static IServiceCollection AddHttpsViaHsts(this IServiceCollection services) {
+        services.AddHsts(options => {
+            options.MaxAge = TimeSpan.FromDays(365);
+            options.IncludeSubDomains = true;
+            options.Preload = true;
+        }
+        );
+
+        return services;
+    }
+    private static IEndpointRouteBuilder UseHttpsViaHsts(this WebApplication app, bool isDev) {
+
+        // Enforce HSTS (strict transport) in non-development environments
+        if (!isDev)
+            app.UseHsts();
+
+        return app;
+    }
+
+
+    public static IServiceCollection AddClientHeadersInProxy(this IServiceCollection services) {
+
+
+        services.Configure<ForwardedHeadersOptions>(options => {
+            options.ForwardedHeaders = ForwardedHeaders.XForwardedFor | ForwardedHeaders.XForwardedProto;
+            options.KnownNetworks.Clear(); // Explicit trust config handled at infrastructure level
+            options.KnownProxies.Clear();  // Avoid implicit trusts 
+            // NOTE: If required, you can add:
+            // options.KnownProxies.Add(IPAddress.Parse("10.0.0.10"));
+            // or:
+            // options.KnownNetworks.Add(new IPNetwork(IPAddress.Parse("10.0.0.0"), 8));
+        });
+        return services;
+    }
+    private static IEndpointRouteBuilder UseClientHeadersInProxy(this WebApplication app) {
+        // use before  auth, redirects,link generation midleware
+
+        app.UseForwardedHeaders();      // Preserve client headers across proxy,  ratelimiting and redirects
+
+        return app;
+    }
+
+
+    public static IServiceCollection AddRateLimiting(this IServiceCollection services) {
+        services.AddRateLimiter(options => {
+
+            // Concurrency guard for write endpoints
+            options.AddConcurrencyLimiter("writes", o => {
+                o.PermitLimit = 10;   // Max concurrent writes
+                o.QueueLimit = 10;    // Small queue to cap latency, =1 is rejected
+            });
+
+            // Global identity/tenant/user oriented throughput control (sliding window for smoothing)
+            options.GlobalLimiter = PartitionedRateLimiter.Create<HttpContext, string>(httpContext => {
+                var user = httpContext.User;
+                var identityKey =
+                    user?.FindFirst("sub")?.Value ??
+                    user?.FindFirst("client_id")?.Value ??
+                    user?.FindFirst(ClaimTypes.NameIdentifier)?.Value ??
+                    httpContext.Connection.RemoteIpAddress?.ToString() ??
+                    "anonymous";
+
+                return RateLimitPartition.GetSlidingWindowLimiter(identityKey, _ => new SlidingWindowRateLimiterOptions {
+                    PermitLimit = 100,
+                    Window = TimeSpan.FromSeconds(10),
+                    SegmentsPerWindow = 10,
+                    QueueProcessingOrder = QueueProcessingOrder.OldestFirst,
+                    QueueLimit = 20
+                });
+            });
+
+            options.RejectionStatusCode = StatusCodes.Status429TooManyRequests;
+
+            options.OnRejected = async (ctx, token) => {
+                if (ctx.Lease.TryGetMetadata(MetadataName.RetryAfter, out var retryAfter))
+                    ctx.HttpContext.Response.Headers.RetryAfter = ((int)retryAfter.TotalSeconds).ToString();
+                await ctx.HttpContext.Response.WriteAsync("Too many requests", token);
+            };
+        });
+        return services;
+    }
+    private static IEndpointRouteBuilder UseRateLimiting(this WebApplication app) {
+        app.UseRateLimiter();          // Apply global rate limiting middleware
+         
+        return app;
+    } 
+
+
     private static IResult CreateDevToken(IConfiguration configuration) {
-        // Extract token issuance parameters from configuration
+        // Extract token issuance parameters from config
         var audience = configuration["Auth:Audience"]!;
         var issuer = configuration["Auth:Issuer"]!;
         var devKey = configuration["Auth:DevKey"]!;
@@ -153,7 +273,7 @@ public static class CommonExtensions {
         return services;
     }
 
-    public static IServiceCollection AddAuthenticationAndAuthorization(this IServiceCollection services, IConfiguration configuration) {
+    public static IServiceCollection AddSecureToken(this IServiceCollection services, IConfiguration configuration, IHostEnvironment env) {
         var audience = configuration["Auth:Audience"]!;
         var issuer = configuration["Auth:Issuer"]!;
         var devKey = configuration["Auth:DevKey"]!;
@@ -162,7 +282,7 @@ public static class CommonExtensions {
             .AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
             .AddJwtBearer(options => {
                 options.MapInboundClaims = false;
-                options.RequireHttpsMetadata = false;
+                options.RequireHttpsMetadata = !env.IsDevelopment();
                 options.TokenValidationParameters = new TokenValidationParameters {
                     ValidateIssuer = true,
                     ValidIssuer = issuer,
@@ -185,7 +305,7 @@ public static class CommonExtensions {
         return services;
     }
 
-    private static IServiceCollection AddStrictHttpJson(this IServiceCollection services) {
+    private static IServiceCollection AddSecureHttpJson(this IServiceCollection services) {
         services.ConfigureHttpJsonOptions(o => {
             o.SerializerOptions.ReadCommentHandling = JsonCommentHandling.Disallow;
             o.SerializerOptions.MaxDepth = 32;
@@ -194,7 +314,7 @@ public static class CommonExtensions {
         return services;
     }
 
-    public static IServiceCollection AddAllowdOriginsForBrowser(this IServiceCollection services, IConfiguration configuration) {
+    public static IServiceCollection AddSecureBrowser(this IServiceCollection services, IConfiguration configuration) {
         var origins = configuration.GetSection("Cors:AllowedOrigins").Get<string[]>() ?? Array.Empty<string>();
 
         services.AddCors(options => {
@@ -209,7 +329,7 @@ public static class CommonExtensions {
         return services;
     }
 
-    public static IServiceCollection AddDefaultHttpLogging(this IServiceCollection services) {
+    public static IServiceCollection AddSecureHttpLogging(this IServiceCollection services) {
         services.AddHttpLogging(options => {
             options.LoggingFields =
                 HttpLoggingFields.Request |
@@ -219,67 +339,6 @@ public static class CommonExtensions {
         return services;
     }
 
-    // Rate limiting policy: global identity-aware sliding window + concurrency for writes
-    public static IServiceCollection AddDefaultRateLimiting(this IServiceCollection services) {
-        services.AddRateLimiter(options => {
-            // Concurrency guard for write endpoints
-            options.AddConcurrencyLimiter("writes", o => {
-                o.PermitLimit = 10;   // Max concurrent writes
-                o.QueueLimit = 10;    // Small queue to cap latency
-            });
 
-            options.RejectionStatusCode = StatusCodes.Status429TooManyRequests;
-            options.OnRejected = async (ctx, token) => {
-                if (ctx.Lease.TryGetMetadata(MetadataName.RetryAfter, out var retryAfter))
-                    ctx.HttpContext.Response.Headers.RetryAfter = ((int)retryAfter.TotalSeconds).ToString();
-                await ctx.HttpContext.Response.WriteAsync("Too many requests", token);
-            };
 
-            // Global identity/tenant/user oriented throughput control (sliding window for smoothing)
-            options.GlobalLimiter = PartitionedRateLimiter.Create<HttpContext, string>(httpContext => {
-                var user = httpContext.User;
-                var identityKey =
-                    user?.FindFirst("sub")?.Value ??
-                    user?.FindFirst("client_id")?.Value ??
-                    user?.FindFirst(ClaimTypes.NameIdentifier)?.Value ??
-                    httpContext.Connection.RemoteIpAddress?.ToString() ??
-                    "anonymous";
-
-                return RateLimitPartition.GetSlidingWindowLimiter(identityKey, _ => new SlidingWindowRateLimiterOptions {
-                    PermitLimit = 100,
-                    Window = TimeSpan.FromSeconds(10),
-                    SegmentsPerWindow = 10,
-                    QueueProcessingOrder = QueueProcessingOrder.OldestFirst,
-                    QueueLimit = 20
-                });
-            });
-        });
-        return services;
-    }
-
-    /// <summary>
-    /// Applies secure defaults for processing reverse-proxy forwarded headers.
-    /// Deep explanation:
-    /// - Purpose: Preserve original client IP and scheme when behind a proxy (Kestrel otherwise sees the proxy).
-    /// - Headers: X-Forwarded-For (client/public IP chain) and X-Forwarded-Proto (original scheme: http/https).
-    /// - Trust model: We clear KnownNetworks/KnownProxies to avoid accidental implicit trusts. Your ingress/
-    ///   gateway must strip untrusted X-Forwarded-* from the edge and append its own, ensuring integrity.
-    /// - Customization:
-    ///     * If your environment requires restricting the trusted sources, explicitly set KnownProxies or
-    ///       KnownNetworks here with IP ranges of your LB/ingress. Do not trust arbitrary sources.
-    /// - Pipeline: Keep app.UseForwardedHeaders() early in the middleware pipeline (before auth, redirects,
-    ///   link generation) so downstream components receive correct Scheme/RemoteIpAddress.
-    /// </summary>
-    public static IServiceCollection AddDefaultForwardedHeaders(this IServiceCollection services) {
-        services.Configure<ForwardedHeadersOptions>(options => {
-            options.ForwardedHeaders = ForwardedHeaders.XForwardedFor | ForwardedHeaders.XForwardedProto;
-            options.KnownNetworks.Clear(); // Explicit trust configuration handled at infrastructure level
-            options.KnownProxies.Clear();  // Avoid implicit trusts
-            // NOTE: If required, you can add:
-            // options.KnownProxies.Add(IPAddress.Parse("10.0.0.10"));
-            // or:
-            // options.KnownNetworks.Add(new IPNetwork(IPAddress.Parse("10.0.0.0"), 8));
-        });
-        return services;
-    }
 }
