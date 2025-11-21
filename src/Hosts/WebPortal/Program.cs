@@ -1,3 +1,4 @@
+using WebPortal; // added for WebApiOptions
 using WebPortal.Components;
 using Microsoft.AspNetCore.DataProtection;
 using System.Security.Cryptography.X509Certificates;
@@ -5,8 +6,16 @@ using Polly;
 using Polly.Extensions.Http;
 using System.Net.Http.Headers;
 using System.Net;
+using Microsoft.Extensions.Options;
 
 var builder = WebApplication.CreateBuilder(args);
+
+// Bind & validate WebApi options (fail fast if BaseUrl missing or invalid)
+builder.Services.AddOptions<WebApiOptions>()
+    .Bind(builder.Configuration.GetSection("WebApi"))
+    .Validate(o => !string.IsNullOrWhiteSpace(o.BaseUrl), "WebApi:BaseUrl missing")
+    .Validate(o => Uri.IsWellFormedUriString(o.BaseUrl!, UriKind.Absolute), "WebApi:BaseUrl invalid URI")
+    .ValidateOnStart();
 
 // Hardened Data Protection configuration
 var dataProtection = builder.Services.AddDataProtection()
@@ -59,10 +68,10 @@ IAsyncPolicy<HttpResponseMessage> circuitBreakerPolicy = HttpPolicyExtensions
 
 IAsyncPolicy<HttpResponseMessage> timeoutPolicy = Policy.TimeoutAsync<HttpResponseMessage>(TimeSpan.FromSeconds(4));
 
-// Register named resilient HttpClient
-builder.Services.AddHttpClient("WebApi", client => {
-    var baseUrl = builder.Configuration["WebApi:BaseUrl"] ?? "https://localhost:5001"; // fallback dev
-    client.BaseAddress = new Uri(baseUrl);
+// Register named resilient HttpClient without silent fallback
+builder.Services.AddHttpClient("WebApi", (sp, client) => {
+    var opts = sp.GetRequiredService<IOptions<WebApiOptions>>().Value;
+    client.BaseAddress = new Uri(opts.BaseUrl!); // validated
     client.Timeout = TimeSpan.FromSeconds(5);
     client.DefaultRequestVersion = HttpVersion.Version20;
     client.DefaultVersionPolicy = HttpVersionPolicy.RequestVersionOrHigher;
