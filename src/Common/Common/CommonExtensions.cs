@@ -10,11 +10,14 @@ namespace Common;
 public static class CommonExtensions {
     public static IServiceCollection AddCommon(this IServiceCollection services, IConfiguration config, IHostEnvironment env) {
 
+        
+
         services.AddHttps();                    // Enforce Https via HSTS in non-development environments          
         services.AddClientHeadersInProxy();     // Preserve client headers behind proxy, so ratelimiting and redirects can use them
         services.AddRateLimiting();             // Apply rate limiting 
         services.AddApiDocumentation();         // Apply OpenApi 
         services.AddApiAdmin();                 // Apply Swagger Admin
+        services.AddApiVersion();               // API Versioning
         services.AddErrorHandling();            // Apply global error handling with RFC7807 ProblemDetails
         services.AddBrowserRequestRestrictions(config);    // restrict incoming HttpRequests from browser
 

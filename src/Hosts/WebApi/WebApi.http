@@ -17,18 +17,18 @@ Accept: application/json
 
 
 ### Orders - Get all
-GET {{WebApi_HostAddress}}/orders
+GET {{WebApi_HostAddress}}/v1/orders
 Authorization: Bearer {{devToken.response.body.$.access_token}}
 Accept: application/json
 
 ### Orders - Get by id
 @orderId = 10000000-0000-0000-0000-000000000002
-GET {{WebApi_HostAddress}}/orders/{{orderId}}
+GET {{WebApi_HostAddress}}/v1/orders/{{orderId}}
 Authorization: Bearer {{devToken.response.body.$.access_token}}
 Accept: application/json
 
 ### Orders - Create
-POST {{WebApi_HostAddress}}/orders
+POST {{WebApi_HostAddress}}/v1/orders
 Authorization: Bearer {{devToken.response.body.$.access_token}}
 Content-Type: application/json
 Accept: application/json
@@ -43,7 +43,7 @@ Accept: application/json
 
 ### Billing - Get invoice by id
 @invoiceId = 00000000-0000-0000-0000-000000000000
-GET {{WebApi_HostAddress}}/billing/invoices/{{invoiceId}}
+GET {{WebApi_HostAddress}}/v1/billing/invoices/{{invoiceId}}
 Authorization: Bearer {{devToken.response.body.$.access_token}}
 Accept: application/json
 

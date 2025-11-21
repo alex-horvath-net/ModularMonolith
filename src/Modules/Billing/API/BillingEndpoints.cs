@@ -3,12 +3,16 @@ using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Routing;
 using Orders.Contracts.DTOs;
+using Asp.Versioning;
 
 namespace Billing.API;
 
 public static class BillingEndpoints {
     public static IEndpointRouteBuilder MapBilling(this IEndpointRouteBuilder app) {
-        var group = app.MapGroup("/billing").WithTags("Billing")
+        var versionSet = app.NewApiVersionSet().HasApiVersion(new ApiVersion(1,0)).ReportApiVersions().Build();
+        var group = app.MapGroup("/v{version:apiVersion}/billing")
+            .WithApiVersionSet(versionSet)
+            .WithTags("Billing")
             .RequireAuthorization("Billing.Read")
             .RequireRateLimiting("fixed"); // Apply read throughput limiter to billing endpoints
 

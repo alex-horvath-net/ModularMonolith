@@ -6,11 +6,15 @@ using Microsoft.AspNetCore.Routing; // IEndpointRouteBuilder
 using Orders.Application.CommandHandlers;
 using Orders.Application.QueryHandlers;
 using Orders.Contracts.DTOs; // For swagger metadata
+using Asp.Versioning; // API versioning
 
 namespace Orders.API;
 public static class OrdersEndpoints {
     public static IEndpointRouteBuilder MapOrdersEndpoints(this IEndpointRouteBuilder app) {
-        var group = app.MapGroup("/orders").WithTags("Orders");
+        var versionSet = app.NewApiVersionSet().HasApiVersion(new ApiVersion(1,0)).ReportApiVersions().Build();
+        var group = app.MapGroup("/v{version:apiVersion}/orders")
+            .WithApiVersionSet(versionSet)
+            .WithTags("Orders");
 
         group.MapGet("", GetOrders)
             .RequireAuthorization(OrdersConstants.Read)
@@ -45,6 +49,6 @@ public static class OrdersEndpoints {
             return TypedResults.BadRequest(new { errors = validation.Errors.Select(e => new { e.PropertyName, e.ErrorMessage }) });
         }
         var id = await handler.Handle(command, token);
-        return TypedResults.Created($"/orders/{id}", new { id });
+        return TypedResults.Created($"/v1/orders/{id}", new { id });
     }
 }
