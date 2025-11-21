@@ -24,7 +24,7 @@ public static class CommonExtensions {
         services.AddSecureHttpJson();           // Harden JSON input to mitigate resource exhaustion & ambiguity
         services.AddAuthentication(config, env);// JWT bearer authentication + strict validation
         services.AddRequestLogging();           // HTTP logging: structured request/response metadata for audit & traceability 
-
+        services.AddObservability(config, env);
         services.AddFullHealthCheck();          // Health checks: basic self check; dependency checks can be added externally for DB/cache etc.
         services.AddAllowedIPsForHealthProbes(config); // IP allowlist filter for health probes
 
