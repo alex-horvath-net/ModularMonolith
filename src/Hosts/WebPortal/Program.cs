@@ -1,27 +1,86 @@
 using WebPortal.Components;
 using Microsoft.AspNetCore.DataProtection;
+using System.Security.Cryptography.X509Certificates;
+using Polly;
+using Polly.Extensions.Http;
+using System.Net.Http.Headers;
+using System.Net;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// Persist data protection keys for cookie protection across restarts
-builder.Services.AddDataProtection()
-    .PersistKeysToFileSystem(new DirectoryInfo(Path.Combine(builder.Environment.ContentRootPath, "dpkeys")))
-    .SetApplicationName("ModularMonolith");
+// Hardened Data Protection configuration
+var dataProtection = builder.Services.AddDataProtection()
+    .SetApplicationName("ModularMonolith")
+    .SetDefaultKeyLifetime(TimeSpan.FromDays(90)); // rotation policy
+
+// Load encryption certificate (non-development) from configured path or store thumbprint
+if (!builder.Environment.IsDevelopment()) {
+    var certPath = builder.Configuration["DataProtection:CertificatePath"];
+    var certPassword = builder.Configuration["DataProtection:CertificatePassword"];
+    X509Certificate2? cert = null;
+    if (!string.IsNullOrWhiteSpace(certPath) && File.Exists(certPath)) {
+        cert = new X509Certificate2(certPath, certPassword, X509KeyStorageFlags.MachineKeySet);
+    } else {
+        var thumbprint = builder.Configuration["DataProtection:CertificateThumbprint"];
+        if (!string.IsNullOrWhiteSpace(thumbprint)) {
+            using var store = new X509Store(StoreName.My, StoreLocation.LocalMachine);
+            store.Open(OpenFlags.ReadOnly);
+            cert = store.Certificates.Find(X509FindType.FindByThumbprint, thumbprint, validOnly: false)
+                .OfType<X509Certificate2>()
+                .FirstOrDefault();
+        }
+    }
+    if (cert is null) {
+        throw new InvalidOperationException("Data Protection encryption certificate missing. Configure DataProtection:CertificatePath or DataProtection:CertificateThumbprint.");
+    }
+    dataProtection.ProtectKeysWithCertificate(cert);
+
+    // Persist keys to external shared directory (configure via env/secret); fallback retains existing path for dev only
+    var keyDir = builder.Configuration["DataProtection:KeyDirectory"];
+    if (string.IsNullOrWhiteSpace(keyDir)) {
+        throw new InvalidOperationException("Shared key directory not configured. Set DataProtection:KeyDirectory to a secured, shared location.");
+    }
+    Directory.CreateDirectory(keyDir);
+    dataProtection.PersistKeysToFileSystem(new DirectoryInfo(keyDir));
+} else {
+    // Development: local unencrypted store (acceptable only for dev)
+    dataProtection.PersistKeysToFileSystem(new DirectoryInfo(Path.Combine(builder.Environment.ContentRootPath, "dpkeys")));
+}
+
+// Policies
+IAsyncPolicy<HttpResponseMessage> retryPolicy = HttpPolicyExtensions
+    .HandleTransientHttpError()
+    .OrResult(r => r.StatusCode == HttpStatusCode.TooManyRequests)
+    .WaitAndRetryAsync(3, attempt => TimeSpan.FromMilliseconds(200 * Math.Pow(2, attempt)) + TimeSpan.FromMilliseconds(Random.Shared.Next(0, 50)));
+
+IAsyncPolicy<HttpResponseMessage> circuitBreakerPolicy = HttpPolicyExtensions
+    .HandleTransientHttpError()
+    .CircuitBreakerAsync(5, TimeSpan.FromSeconds(30));
+
+IAsyncPolicy<HttpResponseMessage> timeoutPolicy = Policy.TimeoutAsync<HttpResponseMessage>(TimeSpan.FromSeconds(4));
+
+// Register named resilient HttpClient
+builder.Services.AddHttpClient("WebApi", client => {
+    var baseUrl = builder.Configuration["WebApi:BaseUrl"] ?? "https://localhost:5001"; // fallback dev
+    client.BaseAddress = new Uri(baseUrl);
+    client.Timeout = TimeSpan.FromSeconds(5);
+    client.DefaultRequestVersion = HttpVersion.Version20;
+    client.DefaultVersionPolicy = HttpVersionPolicy.RequestVersionOrHigher;
+    client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+})
+    .AddPolicyHandler(retryPolicy)
+    .AddPolicyHandler(circuitBreakerPolicy)
+    .AddPolicyHandler(timeoutPolicy);
 
 // Add services to the container.
 builder.Services.AddRazorComponents()
     .AddInteractiveServerComponents();
 
-// HttpClient for Orders components calling WebApi endpoints
-builder.Services.AddHttpClient();
-
 // AuthN/Z for Blazor server-side endpoints and auth pipeline parity
-builder.Services.AddAuthentication(options =>
-{
+builder.Services.AddAuthentication(options => {
     options.DefaultAuthenticateScheme = Microsoft.AspNetCore.Authentication.Cookies.CookieAuthenticationDefaults.AuthenticationScheme;
     options.DefaultChallengeScheme = Microsoft.AspNetCore.Authentication.Cookies.CookieAuthenticationDefaults.AuthenticationScheme;
-}).AddCookie(o =>
-{
+}).AddCookie(o => {
     o.LoginPath = "/login";
     o.SlidingExpiration = true;
     o.ExpireTimeSpan = TimeSpan.FromMinutes(30);
@@ -35,17 +94,14 @@ builder.Services.AddAuthorization();
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
-if (!app.Environment.IsDevelopment())
-{
+if (!app.Environment.IsDevelopment()) {
     app.UseExceptionHandler("/Error", createScopeForErrors: true);
     app.UseHsts();
 }
 
 app.UseHttpsRedirection();
-
 app.UseAuthentication();
 app.UseAuthorization();
-
 app.UseAntiforgery();
 
 app.MapStaticAssets();

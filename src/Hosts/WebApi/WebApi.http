@@ -2,7 +2,7 @@
 
 ### Dev - Acquire local token
 # @name devToken
-POST {{WebApi_HostAddress}}/auth/dev-token
+POST {{WebApi_HostAddress}}/dev-token
 Accept: application/json
 
 ### Health - Live

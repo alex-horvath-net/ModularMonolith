@@ -4,16 +4,22 @@ using Microsoft.AspNetCore.Builder;
 namespace Common;
 
 public static class CorrelationIdMiddleware {
-    private const string HeaderName = "X-Correlation-ID";
 
     public static IApplicationBuilder UseCorrelationId(this IApplicationBuilder app) => app.Use(async (context, next) => {
-        var correlationID = context.Request.Headers.TryGetValue(HeaderName, out var values) && !string.IsNullOrWhiteSpace(values)
-            ? values.ToString()
-            : Activity.Current?.Id ?? Guid.NewGuid().ToString("N");
+        var key = "X-Correlation-ID";
+        var hasCorrelationIDHeader =
+            context.Request.Headers.TryGetValue(key, out var values) &&
+            values.Count == 1 &&
+            !string.IsNullOrWhiteSpace(values.SingleOrDefault()?.ToString());
 
-        context.TraceIdentifier = correlationID;
+        var correlationID = hasCorrelationIDHeader
+            ? values.SingleOrDefault()?.ToString()
+            : Activity.Current?.Id ??
+              Guid.NewGuid().ToString("N");
+
+        context.TraceIdentifier = correlationID!;
         context.Response.OnStarting(() => {
-            context.Response.Headers[HeaderName] = correlationID;
+            context.Response.Headers[key] = correlationID;
             return Task.CompletedTask;
         });
 
