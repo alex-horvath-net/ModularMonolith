@@ -72,6 +72,9 @@ builder.Services.AddHttpClient("WebApi", client => {
     .AddPolicyHandler(circuitBreakerPolicy)
     .AddPolicyHandler(timeoutPolicy);
 
+// Needed for accessing HttpContext to pull CSP nonce in components if required
+builder.Services.AddHttpContextAccessor();
+
 // Add services to the container.
 builder.Services.AddRazorComponents()
     .AddInteractiveServerComponents();
