@@ -27,6 +27,9 @@ public static class CommonExtensions {
         // Business event publisher (in-process) enables decoupled module interaction without direct references
         services.AddScoped<IBusinessEventPublisher, InProcessBusinessEventPublisher>();
 
+        // Validate critical secrets/config and fail fast in non-development
+        services.ValidateSecretsOnStart(config, env);
+
         return services;
     }
 
