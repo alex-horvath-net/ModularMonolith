@@ -1,5 +1,4 @@
-﻿using System.Text.Json;
-using Microsoft.AspNetCore.Builder;
+﻿using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Routing;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -10,8 +9,6 @@ namespace Common;
 public static class CommonExtensions {
     public static IServiceCollection AddCommon(this IServiceCollection services, IConfiguration config, IHostEnvironment env) {
 
-        
-
         services.AddHttps();                    // Enforce Https via HSTS in non-development environments          
         services.AddClientHeadersInProxy();     // Preserve client headers behind proxy, so ratelimiting and redirects can use them
         services.AddRateLimiting();             // Apply rate limiting 
@@ -20,8 +17,7 @@ public static class CommonExtensions {
         services.AddApiVersion();               // API Versioning
         services.AddErrorHandling();            // Apply global error handling with RFC7807 ProblemDetails
         services.AddBrowserRequestRestrictions(config);    // restrict incoming HttpRequests from browser
-
-        services.AddSecureHttpJson();           // Harden JSON input to mitigate resource exhaustion & ambiguity
+        services.AddJson();           // Harden JSON input to mitigate resource exhaustion & ambiguity
         services.AddAuthentication(config, env);// JWT bearer authentication + strict validation
         services.AddRequestLogging();           // HTTP logging: structured request/response metadata for audit & traceability 
         services.AddObservability(config, env);
@@ -57,16 +53,5 @@ public static class CommonExtensions {
         app.MapApiAdmin();              // Apply Swagger Admin
 
         return app; // Return route builder for further chaining in wbHost Program
-    }
-
-
-
-    private static IServiceCollection AddSecureHttpJson(this IServiceCollection services) {
-        services.ConfigureHttpJsonOptions(o => {
-            o.SerializerOptions.ReadCommentHandling = JsonCommentHandling.Disallow;
-            o.SerializerOptions.MaxDepth = 32;
-            o.SerializerOptions.PropertyNameCaseInsensitive = false;
-        });
-        return services;
     }
 }
