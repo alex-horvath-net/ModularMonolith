@@ -52,7 +52,9 @@ public static class KerstelExtensions {
         var path = cfg["Certificates:Service:Path"] ?? cfg["Certificates:WebApi:Path"];
         var password = cfg["Certificates:Service:Password"] ?? cfg["Certificates:WebApi:Password"];
         if (!string.IsNullOrWhiteSpace(path) && System.IO.File.Exists(path)) {
+#pragma warning disable SYSLIB0057
             return new X509Certificate2(path!, password, X509KeyStorageFlags.MachineKeySet | X509KeyStorageFlags.EphemeralKeySet);
+#pragma warning restore SYSLIB0057
         }
         var thumbprint = cfg["Certificates:Service:Thumbprint"] ?? cfg["Certificates:WebApi:Thumbprint"];
         if (!string.IsNullOrWhiteSpace(thumbprint)) {

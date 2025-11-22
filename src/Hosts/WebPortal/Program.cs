@@ -1,14 +1,18 @@
-using WebPortal; // added for WebApiOptions
-using WebPortal.Components;
-using Microsoft.AspNetCore.DataProtection;
+using System.Net;
+using System.Net.Http.Headers;
 using System.Security.Cryptography.X509Certificates;
+using Common;
+using Microsoft.AspNetCore.DataProtection;
+using Microsoft.Extensions.Options;
 using Polly;
 using Polly.Extensions.Http;
-using System.Net.Http.Headers;
-using System.Net;
-using Microsoft.Extensions.Options;
+using WebPortal; // added for WebApiOptions
+using WebPortal.Components;
 
 var builder = WebApplication.CreateBuilder(args);
+
+// Bootstrap configuration: load secrets from Key Vault or user-secrets before any service registration
+builder.Configuration.AddSecretsFromStore(builder.Environment);
 
 // Bind & validate WebApi options (fail fast if BaseUrl missing or invalid)
 builder.Services.AddOptions<WebApiOptions>()

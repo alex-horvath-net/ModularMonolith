@@ -322,6 +322,27 @@ This document lists each cross‑cutting concern in the exact order they are reg
 
 ---
 
+## 16) Secrets bootstrap
+- Problem:<br>
+  Centralized secret management is required for production (Azure Key Vault) and development (user-secrets) to avoid sensitive data in source control and app settings.
+
+- Solution:<br>
+  Add `SecretConfigurationExtensions.AddSecretsFromStore` to bootstrap configuration from user-secrets in dev and Azure Key Vault in non-dev.
+
+- Service registration:<br>
+  N/A (configuration bootstrap).
+
+- Middleware mapping:<br>
+  N/A (configuration bootstrap).
+
+- Config keys:<br>
+  `Secrets:KeyVault:Uri` (production) and user-secrets (development).
+
+- Verification:<br>
+  - Run in dev with user-secrets set and in production simulation without KeyVault to confirm fail-fast; configure `Secrets:KeyVault:Uri` and confirm secrets retrieved from Key Vault.
+
+---
+
 ## Mapping Order (MapCommon) – exact sequence
 1. `app.UseHttps()` (→ HSTS in non‑dev)
 2. `app.UseClientHeadersInProxy()` (forwarded headers)
@@ -347,6 +368,12 @@ This document lists each cross‑cutting concern in the exact order they are reg
 3. Add `app.UseXFeature()` in `CommonExtensions.MapCommon` where ordering matters.
 4. Add configuration keys under `XFeature:*` and a `ValidateOnStart` check if critical.
 5. Add unit/integration tests verifying behavior and failure modes.
+
+---
+
+## Operational note: Design.md updates
+- Rule:<br>
+  When implementing changes described in this document, update the related `*Design.md` for the affected project(s) with a short change note: What changed, Why, Files modified, How to verify.
 
 ---
 
