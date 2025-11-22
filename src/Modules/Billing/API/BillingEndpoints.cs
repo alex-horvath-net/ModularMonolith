@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Routing;
 using Orders.Contracts.DTOs;
 using Asp.Versioning;
+using Billing.Contracts.DTOs;
 
 namespace Billing.API;
 
@@ -17,7 +18,7 @@ public static class BillingEndpoints {
             .RequireRateLimiting("fixed"); // Apply read throughput limiter to billing endpoints
 
         group.MapGet("/invoices/{id:guid}", GetInvoice)
-            .Produces<OrderDto>(StatusCodes.Status200OK)
+            .Produces<InvoiceDto>(StatusCodes.Status200OK)
             .Produces(StatusCodes.Status404NotFound);
 
         return app;
@@ -25,6 +26,8 @@ public static class BillingEndpoints {
 
     private static async Task<IResult> GetInvoice(GetInvoiceQueryHandler handler, Guid id, CancellationToken token) {
         var invoice = await handler.Handle(id, token);
-        return invoice is null ? TypedResults.NotFound() : TypedResults.Ok(invoice);
+        if (invoice is null) return TypedResults.NotFound();
+        var dto = new InvoiceDto(invoice.Id, invoice.OrderId, invoice.CustomerId, invoice.Total);
+        return TypedResults.Ok(dto);
     }
 }
