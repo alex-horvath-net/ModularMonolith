@@ -1,49 +1,49 @@
-# Common Project � Implementation?ready Concern Registry
+﻿# Common Project – Implementation‑ready Concern Registry
 
-This document is an implementation specification for the `Common` project. It lists each cross?cutting concern in the exact order they are registered/applied by `AddCommon` and `MapCommon`. Each concern includes:
-- Problem: the concrete issue to address.
-- Solution: precise behavioral solution.
-- Implementation: exact service and middleware calls, configuration keys, and minimal pseudocode / notes so a developer can implement the code without surprises.
-- Verification: how to validate correctness.
+This document is an implementation specification for the `Common` project. It lists each cross‑cutting concern in the exact order they are registered/applied by `AddCommon` and `MapCommon`. Each concern includes:
+
 
 ---
 
-## 1) HTTPS / HSTS
-- Problem:
-  - Browsers and intermediaries may access the service over plaintext (HTTP) or accept downgraded TLS ciphers, enabling SSL?strip and downgrade attacks; lack of HSTS means users can be tricked into using HTTP even after an admin intended to enforce HTTPS.
+## 1) HTTPS 
+- Problem:<br>
+  Users, who access our api via browsers could be tricked to use plain HTTP instead of secure HTTPS or accept downgraded TLS ciphers,<br> 
+  
+- Solution:<br>
+  Enforce HTTPS transport via HSTS in production environments only.
 
-- Solution:
-  - Enforce HTTPS transport and send Strict?Transport?Security header in production environments only.
+- Service registration:<br>
+  Call `services.AddHsts()` in `AddCommon` to register HSTS options with a long max-age (e.g., 1 year) and includeSubDomains.
 
-- Implementation:
-  - Service registration: call `services.AddHsts(options => { options.MaxAge = TimeSpan.FromDays(365); options.IncludeSubDomains = true; options.Preload = true; });` inside `services.AddHttps()`.
-  - Middleware mapping: in `MapCommon` call `app.UseHttps()` which executes `if (!env.IsDevelopment()) app.UseHsts();`
-  - Host must configure Kestrel TLS at host level (see `UseKestrel(config, env)` implementation in Common.KerstelExtensions) so that HTTPS actually terminates on the app.
-  - Ensure `UseHttpsRedirection()` is present (it is applied later in pipeline) to redirect HTTP ? HTTPS.
+- Middleware mapping:<br> 
+  Call `app.UseHttps()` in in `MapCommon` <br>
+  Host must configure Kestrel TLS at host level (see `UseKestrel(config, env)`) so that HTTPS actually terminates on the app.<br>
+  Ensure `UseHttpsRedirection()` is present (it is applied later in pipeline) to redirect HTTP → HTTPS.
 
-- Config keys: none required; environment determines behavior. Host must provide certificate config under `Certificates:*`.
+- Config keys:<br> 
+  none required; environment determines behavior. Host must provide certificate config under `Certificates:*`.
 
-- Verification:
-  - Start app in production mode; curl HTTP endpoint ? expect 301/307 redirect to HTTPS; final HTTPS response must include header `Strict-Transport-Security` with configured max-age and includeSubDomains.
+- Verification:<br>
+  - Start app in production mode; curl HTTP endpoint → expect 301/307 redirect to HTTPS; final HTTPS response must include header `Strict-Transport-Security` with configured max-age and includeSubDomains.
   - TLS scan (sslscan/ssllabs) reports TLS 1.2+ only and no weak ciphers.
 
 ---
 
-## 2) Client Headers (Forwarded Headers Preservation)
-- Problem:
-  - When running behind reverse proxies or load balancers, `HttpContext.Connection.RemoteIpAddress` and `Request.Scheme` may reflect the proxy not the original client; this breaks rate limiting, accurate logging, and ip?based access control.
+## 2) Client Request Headers 
+- Problem:<br>
+  When running behind reverse proxies or load balancers, `HttpContext.Connection.RemoteIpAddress` and `Request.Scheme` may reflect the proxy not the original client; this breaks rate limiting, accurate logging, and ip‑based access control.
 
-- Solution:
-  - Configure forwarded header processing and normalize client address/scheme early in the pipeline.
+- Solution:<br>
+  Configure forwarded header processing and normalize client address/scheme early in the pipeline.
 
-- Implementation:
-  - Service registration: `services.AddClientHeadersInProxy()` should configure `ForwardedHeadersOptions` (e.g., `ForwardedHeaders = ForwardedHeaders.XForwardedFor | ForwardedHeaders.XForwardedProto`) and optionally set KnownProxies/KnownNetworks from configuration if running in restricted infra.
-  - Middleware mapping: `app.UseClientHeadersInProxy()` must be invoked before any component that uses `RemoteIpAddress`, especially before rate limiting and security checks.
-  - Example code:
-    - services.AddClientHeadersInProxy() { services.Configure<ForwardedHeadersOptions>(opts => { opts.ForwardedHeaders = ...; /* optionally add KnownProxies from config */ }); }
-    - app.UseForwardedHeaders(); // inside UseClientHeadersInProxy
+- Service registration:<br>
+  Call `services.AddClientHeadersInProxy()`. It will preserv IP and protocol.
 
-- Config keys: optional `ForwardedHeaders:KnownProxies` / `ForwardedHeaders:KnownNetworks`
+- Middleware mapping:<br>
+  Call `app.UseClientHeadersInProxy()` before any component that uses `RemoteIpAddress`, or Protocol. Such a comonent rate limiting and security checks.
+  
+- Config keys:<br>
+  optional `ForwardedHeaders:KnownProxies` / `ForwardedHeaders:KnownNetworks`
 
 - Verification:
   - Send request via reverse proxy adding `X-Forwarded-For` and `X-Forwarded-Proto`; inside request handler, log `HttpContext.Connection.RemoteIpAddress` and ensure it matches the forwarded value.
@@ -92,14 +92,14 @@ This document is an implementation specification for the `Common` project. It li
 
 ## 5) API Admin (Swagger Admin UI)
 - Problem:
-  - Ops/developers need read?only interactive interface for debugging; must not be enabled in prod.
+  - Ops/developers need read‑only interactive interface for debugging; must not be enabled in prod.
 
 - Solution:
-  - Provide a gated admin UI mapped by `MapApiAdmin()` only in non?production or behind internal network.
+  - Provide a gated admin UI mapped by `MapApiAdmin()` only in non‑production or behind internal network.
 
 - Implementation:
   - Service registration: `services.AddApiAdmin()` configures the UI endpoint.
-  - Mapping: `app.MapApiAdmin()` executed in `MapCommon` but conditional on `env.IsDevelopment()` (or further gating via config). Place behind rate limiting and auth in non?dev scenarios if required.
+  - Mapping: `app.MapApiAdmin()` executed in `MapCommon` but conditional on `env.IsDevelopment()` (or further gating via config). Place behind rate limiting and auth in non‑dev scenarios if required.
 
 - Verification:
   - Confirm UI accessible in dev and inaccessible in prod environment.
@@ -108,7 +108,7 @@ This document is an implementation specification for the `Common` project. It li
 
 ## 6) API Versioning
 - Problem:
-  - Breaking changes require a versioning strategy to allow side?by?side support and graceful deprecation.
+  - Breaking changes require a versioning strategy to allow side‑by‑side support and graceful deprecation.
 
 - Solution:
   - Configure API versioning with default version, URL segment and header readers, and API explorer grouping.
@@ -130,7 +130,7 @@ This document is an implementation specification for the `Common` project. It li
   - Centralize exception handling to normalize errors to RFC7807 ProblemDetails with safe fields (status, title, traceId, correlationId, details when safe).
 
 - Implementation:
-  - Service registration: `services.AddErrorHandling()` registers ProblemDetails options and maps known exceptions (ValidationException ? 400, UnauthorizedAccessException ? 403, etc.).
+  - Service registration: `services.AddErrorHandling()` registers ProblemDetails options and maps known exceptions (ValidationException → 400, UnauthorizedAccessException → 403, etc.).
   - Middleware mapping: `app.UseErrorHandling()` placed early so it can format exceptions from any middleware or endpoint.
   - Include `traceId` (HttpContext.TraceIdentifier) and correlation id in ProblemDetails `extensions` for audit linkage.
 
@@ -141,7 +141,7 @@ This document is an implementation specification for the `Common` project. It li
 
 ## 8) Browser Request Restrictions (CORS)
 - Problem:
-  - Unrestricted cross?origin requests may allow malicious client pages to call APIs.
+  - Unrestricted cross‑origin requests may allow malicious client pages to call APIs.
 
 - Solution:
   - Provide a configurable CORS policy named `DefaultCors` using `Cors:AllowedOrigins`.
@@ -151,13 +151,13 @@ This document is an implementation specification for the `Common` project. It li
   - Middleware mapping: `app.UseBrowserRequestRestrictions()` invokes `app.UseCors("DefaultCors")`.
 
 - Verification:
-  - Browser front?end served from configured origin can call API; calls from other origins are blocked by browser (CORS preflight fails).
+  - Browser front‑end served from configured origin can call API; calls from other origins are blocked by browser (CORS preflight fails).
 
 ---
 
 ## 9) JSON Hardening
 - Problem:
-  - Comment?rich or extremely nested JSON bodies can be abused to cause excessive CPU/memory usage or ambiguous binding.
+  - Comment‑rich or extremely nested JSON bodies can be abused to cause excessive CPU/memory usage or ambiguous binding.
 
 - Solution:
   - Harden System.Text.Json options: disallow comments, set MaxDepth=32, enforce property name case sensitivity.
@@ -166,7 +166,7 @@ This document is an implementation specification for the `Common` project. It li
   - In `AddJson()` call `services.ConfigureHttpJsonOptions(o => { o.SerializerOptions.ReadCommentHandling = JsonCommentHandling.Disallow; o.SerializerOptions.MaxDepth = 32; o.SerializerOptions.PropertyNameCaseInsensitive = false; });`
 
 - Verification:
-  - Submit a JSON payload with comments ? request rejected; very deep nested payload truncated or rejected per MaxDepth.
+  - Submit a JSON payload with comments → request rejected; very deep nested payload truncated or rejected per MaxDepth.
 
 ---
 
@@ -251,7 +251,7 @@ This document is an implementation specification for the `Common` project. It li
   - Mapping: `MapFullHealthCheck()` applies the filter to readiness endpoints.
 
 - Verification:
-  - Requests to health endpoints from non?allowed IPs return 403; allowed IPs succeed.
+  - Requests to health endpoints from non‑allowed IPs return 403; allowed IPs succeed.
 
 ---
 
@@ -260,19 +260,19 @@ This document is an implementation specification for the `Common` project. It li
   - Modules need to publish domain events without tight coupling or direct references.
 
 - Solution:
-  - Provide an in?process `IBusinessEventPublisher` implementation registered scoped so modules can publish events; later replaceable by distributed bus.
+  - Provide an in‑process `IBusinessEventPublisher` implementation registered scoped so modules can publish events; later replaceable by distributed bus.
 
 - Implementation:
   - Service registration: `services.AddScoped<IBusinessEventPublisher, InProcessBusinessEventPublisher>();`
-  - Publisher interface: `Task PublishAsync<T>(T evt);` that dispatches to in?process handlers.
+  - Publisher interface: `Task PublishAsync<T>(T evt);` that dispatches to in‑process handlers.
 
 - Verification:
   - Publish an event in Orders module and have Billing handler receive it in same process (unit/integration test).
 
 ---
 
-## Mapping Order (MapCommon) � exact sequence
-1. `app.UseHttps()` (? HSTS in non?dev)
+## Mapping Order (MapCommon) – exact sequence
+1. `app.UseHttps()` (→ HSTS in non‑dev)
 2. `app.UseClientHeadersInProxy()` (forwarded headers)
 3. `app.UseCorrelationId()` (establish correlation)
 4. `app.UseSecurityHeaders()` (CSP + security headers)
@@ -290,7 +290,7 @@ This document is an implementation specification for the `Common` project. It li
 
 ---
 
-## How to extend / add a new cross?cutting concern
+## How to extend / add a new cross‑cutting concern
 1. Create `XFeatureExtensions` with `AddXFeature(IServiceCollection, IConfiguration)` and `UseXFeature(WebApplication)` if middleware is needed.
 2. Add a single line call inside `CommonExtensions.AddCommon` at the correct ordering point.
 3. Add `app.UseXFeature()` in `CommonExtensions.MapCommon` where ordering matters.

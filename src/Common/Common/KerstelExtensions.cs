@@ -15,14 +15,17 @@ public static class KerstelExtensions {
     public static ConfigureWebHostBuilder UseKestrel(this ConfigureWebHostBuilder webHost, IConfiguration config, IHostEnvironment env) {
         webHost.ConfigureKestrel(options => {
             options.AddServerHeader = false;
+           
             options.Limits.MaxRequestBodySize = 10_000_000; // 10MB cap
             options.Limits.MinRequestBodyDataRate = new MinDataRate(240, TimeSpan.FromSeconds(5));
             options.Limits.MinResponseDataRate = new MinDataRate(240, TimeSpan.FromSeconds(5));
+            
             options.ConfigureHttpsDefaults(https => {
                 https.SslProtocols = SslProtocols.Tls13 | SslProtocols.Tls12;
                 https.CheckCertificateRevocation = true;
                 https.ClientCertificateMode = ClientCertificateMode.NoCertificate;
             });
+            
             if (env.IsDevelopment()) {
                 // Dev HTTPS listener (self-signed dev cert handled automatically by ASP.NET)
                 options.ListenAnyIP(5001, lo => lo.UseHttps(https => {

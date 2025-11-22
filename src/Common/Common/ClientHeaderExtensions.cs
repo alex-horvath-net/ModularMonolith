@@ -10,13 +10,11 @@ internal static class ClientHeaderExtensions {
 
 
         services.Configure<ForwardedHeadersOptions>(options => {
-            options.ForwardedHeaders = ForwardedHeaders.XForwardedFor | ForwardedHeaders.XForwardedProto;
+            options.ForwardedHeaders = ForwardedHeaders.XForwardedFor | ForwardedHeaders.XForwardedProto; // IP and Protocol
             options.KnownNetworks.Clear(); // Explicit trust config handled at infrastructure level
+            //options.KnownNetworks.Add(new IPNetwork(IPAddress.Parse("10.0.0.0"), 8));
             options.KnownProxies.Clear();  // Avoid implicit trusts 
-                                           // NOTE: If required, you can add:
-                                           // options.KnownProxies.Add(IPAddress.Parse("10.0.0.10"));
-                                           // or:
-                                           // options.KnownNetworks.Add(new IPNetwork(IPAddress.Parse("10.0.0.0"), 8));
+            //options.KnownProxies.Add(IPAddress.Parse("10.0.0.10"));
         });
         return services;
     }
