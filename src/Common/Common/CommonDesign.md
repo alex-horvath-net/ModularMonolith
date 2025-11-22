@@ -1,273 +1,324 @@
 ﻿# Common Project – Implementation‑ready Concern Registry
 
-This document is an implementation specification for the `Common` project. It lists each cross‑cutting concern in the exact order they are registered/applied by `AddCommon` and `MapCommon`. Each concern includes:
-
-
----
-
-## 1) HTTPS 
-- Problem:<br>
-  Users, who access our api via browsers could be tricked to use plain HTTP instead of secure HTTPS or accept downgraded TLS ciphers,<br> 
-  
-- Solution:<br>
-  Enforce HTTPS transport via HSTS in production environments only.
-
-- Service registration:<br>
-  Call `services.AddHsts()` in `AddCommon` to register HSTS options with a long max-age (e.g., 1 year) and includeSubDomains.
-
-- Middleware mapping:<br> 
-  Call `app.UseHttps()` in in `MapCommon` <br>
-  Host must configure Kestrel TLS at host level (see `UseKestrel(config, env)`) so that HTTPS actually terminates on the app.<br>
-  Ensure `UseHttpsRedirection()` is present (it is applied later in pipeline) to redirect HTTP → HTTPS.
-
-- Config keys:<br> 
-  none required; environment determines behavior. Host must provide certificate config under `Certificates:*`.
-
-- Verification:<br>
-  - Start app in production mode; curl HTTP endpoint → expect 301/307 redirect to HTTPS; final HTTPS response must include header `Strict-Transport-Security` with configured max-age and includeSubDomains.
-  - TLS scan (sslscan/ssllabs) reports TLS 1.2+ only and no weak ciphers.
+This document lists each cross‑cutting concern in the exact order they are registered/applied by `AddCommon` and `MapCommon`. Each concern is presented in a consistent, implementation‑ready format: Problem, Solution, Service registration, Middleware mapping, Config keys, Verification.
 
 ---
 
-## 2) Client Request Headers 
+## 1) HTTPS / HSTS
 - Problem:<br>
-  When running behind reverse proxies or load balancers, `HttpContext.Connection.RemoteIpAddress` and `Request.Scheme` may reflect the proxy not the original client; this breaks rate limiting, accurate logging, and ip‑based access control.
+  Users and intermediaries may access the service over plaintext (HTTP) or accept downgraded TLS ciphers, enabling SSL‑strip and downgrade attacks.
 
 - Solution:<br>
-  Configure forwarded header processing and normalize client address/scheme early in the pipeline.
+  Enforce HTTPS transport and send Strict‑Transport‑Security header in production environments only.
 
 - Service registration:<br>
-  Call `services.AddClientHeadersInProxy()`. It will preserv IP and protocol.
+  Call `services.AddHsts(options => { options.MaxAge = TimeSpan.FromDays(365); options.IncludeSubDomains = true; options.Preload = true; });` in `AddCommon` (via `services.AddHttps()`).
 
 - Middleware mapping:<br>
-  Call `app.UseClientHeadersInProxy()` before any component that uses `RemoteIpAddress`, or Protocol. Such a comonent rate limiting and security checks.
-  
-- Config keys:<br>
-  optional `ForwardedHeaders:KnownProxies` / `ForwardedHeaders:KnownNetworks`
+  Call `app.UseHttps()` in `MapCommon` which will call `app.UseHsts()` when not in development. Host must configure TLS (Kestrel) via `UseKestrel(config, env)` so HTTPS terminates on the app. Ensure `UseHttpsRedirection()` is applied (it is mapped later in the pipeline).
 
-- Verification:
-  - Send request via reverse proxy adding `X-Forwarded-For` and `X-Forwarded-Proto`; inside request handler, log `HttpContext.Connection.RemoteIpAddress` and ensure it matches the forwarded value.
+- Config keys:<br>
+  None required. Host must provide certificate configuration under `Certificates:*`.
+
+- Verification:<br>
+  - In production mode, request `http://` endpoint → expect redirect to `https://` and response contains `Strict-Transport-Security` header with configured values.
+  - Run TLS scan (SSL Labs or equivalent) and confirm TLS 1.2+ only and no weak ciphers.
+
+---
+
+## 2) Client Request Headers (Forwarded Headers Preservation)
+- Problem:<br>
+  Reverse proxies/load balancers can hide original client IP and scheme, breaking rate limiting, logs, and IP‑based controls.
+
+- Solution:<br>
+  Configure forwarded header processing early so the app sees original `RemoteIpAddress` and scheme.
+
+- Service registration:<br>
+  Implement `services.AddClientHeadersInProxy()` which configures `ForwardedHeadersOptions` (e.g. `X-Forwarded-For`, `X-Forwarded-Proto`) and optionally loads known proxies/networks from config.
+
+- Middleware mapping:<br>
+  Call `app.UseClientHeadersInProxy()` before any component relying on client IP or scheme (rate limiting, auth, logging).
+
+- Config keys:<br>
+  Optional: `ForwardedHeaders:KnownProxies`, `ForwardedHeaders:KnownNetworks`.
+
+- Verification:<br>
+  - Send a proxied request with `X-Forwarded-For`/`X-Forwarded-Proto` and confirm `HttpContext.Connection.RemoteIpAddress` and `Request.Scheme` reflect forwarded values.
 
 ---
 
 ## 3) Rate Limiting
-- Problem:
-  - Unbounded client traffic or repeated write requests can exhaust resources (DoS) and degrade availability.
+- Problem:<br>
+  Unbounded traffic or repeated write requests can exhaust CPU/memory or database resources (DoS) and degrade availability.
 
-- Solution:
-  - Global sliding-window limiter partitioned by identity + concurrency limiter for critical write endpoints.
+- Solution:<br>
+  Apply a global sliding‑window limiter partitioned by identity and a named concurrency limiter for write endpoints.
 
-- Implementation:
-  - Service registration: `services.AddRateLimiting()` registers `AddRateLimiter` with:
-    - Global `PartitionedRateLimiter.Create<HttpContext, string>(...)` keyed by identity derived from claims or remote IP (fall back to IP).
-    - `options.GlobalLimiter = <sliding-window>` configured with PermitLimit, Window and QueueLimit.
-    - Named `options.AddConcurrencyLimiter("writes", o => { o.PermitLimit = 10; o.QueueLimit = 10; });`
-  - Middleware mapping: `app.UseRateLimiting()` placed early, after HTTP logging, so rejections are logged.
-  - Endpoint binding: apply `.RequireRateLimiting("writes")` on POST/create endpoints.
+- Service registration:<br>
+  `services.AddRateLimiting()` registers `AddRateLimiter` with:
+  - Global partitioned sliding window keyed by identity (claims or remote IP fallback).
+  - Named concurrency limiter `writes` (e.g., PermitLimit=10, QueueLimit=10).
 
-- Config keys: externalize thresholds in `RateLimiting:*` for future tuning.
+- Middleware mapping:<br>
+  Call `app.UseRateLimiting()` early (after logging) so rejections are recorded. Apply `.RequireRateLimiting("writes")` to write endpoints.
 
-- Verification:
-  - Run load tests to exceed limits and confirm 429 responses and `Retry-After` header when provided. Confirm concurrent write limiter rejects beyond permit+queue.
+- Config keys:<br>
+  Optional `RateLimiting:Writes:PermitLimit`, `RateLimiting:Writes:QueueLimit`, `RateLimiting:Global:*` for future tuning.
+
+- Verification:<br>
+  - Run load tests to exceed limits and observe 429 responses and optional `Retry-After` header; verify write concurrency is limited.
 
 ---
 
 ## 4) API Documentation (OpenAPI)
-- Problem:
-  - Developers need machine-readable API contracts and a secured Swagger UI for local testing; however, exposing docs in production increases attack surface.
+- Problem:<br>
+  Developers need machine‑readable API contracts and an interactive UI for local testing; docs must not be exposed in production.
 
-- Solution:
-  - Generate OpenAPI documents and expose UI only in development.
+- Solution:<br>
+  Generate OpenAPI documents and expose UI only in development environments.
 
-- Implementation:
-  - Service registration: `services.AddApiDocumentation()` adds OpenAPI/NSwag/Swashbuckle registration and a document transformer that injects a Bearer security scheme.
-  - Middleware mapping: `app.MapApiDocumentation()` only maps the `/openapi/{document}.json` and related UI when `env.IsDevelopment()`.
+- Service registration:<br>
+  `services.AddApiDocumentation()` registers OpenAPI generation and injects a Bearer security scheme into the document.
 
-- Config keys: none required.
+- Middleware mapping:<br>
+  `app.MapApiDocumentation()` maps `/openapi/{document}.json` and UI only when `env.IsDevelopment()`.
 
-- Verification:
-  - In dev, navigate to `/swagger` or configured UI and confirm Bearer scheme present and docs reflect endpoints and DTOs.
+- Config keys:<br>
+  None.
+
+- Verification:<br>
+  - In dev, open Swagger UI and confirm the Bearer security scheme and that endpoints/DTOs are documented.
 
 ---
 
-## 5) API Admin (Swagger Admin UI)
-- Problem:
-  - Ops/developers need read‑only interactive interface for debugging; must not be enabled in prod.
+## 5) API Admin (Swagger UI / Admin)
+- Problem:<br>
+  Ops and developers need an interactive, read‑only view for troubleshooting; must be restricted from production.
 
-- Solution:
-  - Provide a gated admin UI mapped by `MapApiAdmin()` only in non‑production or behind internal network.
+- Solution:<br>
+  Provide an admin UI mapped conditionally (dev or internal network) and gate it as needed.
 
-- Implementation:
-  - Service registration: `services.AddApiAdmin()` configures the UI endpoint.
-  - Mapping: `app.MapApiAdmin()` executed in `MapCommon` but conditional on `env.IsDevelopment()` (or further gating via config). Place behind rate limiting and auth in non‑dev scenarios if required.
+- Service registration:<br>
+  `services.AddApiAdmin()` configures the Swagger UI endpoints.
 
-- Verification:
-  - Confirm UI accessible in dev and inaccessible in prod environment.
+- Middleware mapping:<br>
+  `app.MapApiAdmin()` maps the UI when allowed by environment/config; protect with rate limiting/auth if exposed to internal networks.
+
+- Config keys:<br>
+  Optional gating keys for environment or network restrictions.
+
+- Verification:<br>
+  - UI accessible in dev; inaccessible in production or remote networks as configured.
 
 ---
 
 ## 6) API Versioning
-- Problem:
-  - Breaking changes require a versioning strategy to allow side‑by‑side support and graceful deprecation.
+- Problem:<br>
+  Breaking changes require a versioning strategy to support clients concurrently and allow deprecation.
 
-- Solution:
-  - Configure API versioning with default version, URL segment and header readers, and API explorer grouping.
+- Solution:<br>
+  Configure API Versioning with default, URL segment and header readers, and ApiExplorer grouping.
 
-- Implementation:
-  - Service registration: `services.AddApiVersioning(o => { o.DefaultApiVersion = new ApiVersion(1,0); o.AssumeDefaultVersionWhenUnspecified = true; o.ReportApiVersions = true; o.ApiVersionReader = ApiVersionReader.Combine(new UrlSegmentApiVersionReader(), new HeaderApiVersionReader("X-API-Version")); }).AddApiExplorer(o => { o.GroupNameFormat = "'v'VVV"; o.SubstituteApiVersionInUrl = true; });`
-  - Endpoint usage: modules create `var versionSet = app.NewApiVersionSet().HasApiVersion(new ApiVersion(1,0)).Build();` and map groups under `/v{version:apiVersion}/...`.
+- Service registration:<br>
+  `services.AddApiVersioning(...)` with DefaultApiVersion 1.0, `AssumeDefaultVersionWhenUnspecified=true`, `ReportApiVersions=true`, and combined `UrlSegmentApiVersionReader` + `HeaderApiVersionReader("X-API-Version")`. Chain `.AddApiExplorer(...)` for grouping.
 
-- Verification:
-  - Call `/v1/orders` and verify success; call `/orders` without version honors default; check response headers `api-supported-versions`.
+- Middleware mapping / Endpoint usage:<br>
+  Modules create `versionSet = app.NewApiVersionSet().HasApiVersion(new ApiVersion(1,0)).Build();` and map groups under `/v{version:apiVersion}/...`.
+
+- Config keys:<br>
+  None.
+
+- Verification:<br>
+  - Confirm `/v1/orders` works, `/orders` falls back to default, and response headers include `api-supported-versions`.
 
 ---
 
 ## 7) Error Handling (RFC7807)
-- Problem:
-  - Applications returning inconsistent error shapes complicate client handling and auditing; raw stack traces may leak sensitive data.
+- Problem:<br>
+  Inconsistent error shapes and leaked stack traces make client handling and auditing unreliable and insecure.
 
-- Solution:
-  - Centralize exception handling to normalize errors to RFC7807 ProblemDetails with safe fields (status, title, traceId, correlationId, details when safe).
+- Solution:<br>
+  Centralize exception handling to return RFC7807 ProblemDetails with safe fields and audit linkage (traceId, correlationId).
 
-- Implementation:
-  - Service registration: `services.AddErrorHandling()` registers ProblemDetails options and maps known exceptions (ValidationException → 400, UnauthorizedAccessException → 403, etc.).
-  - Middleware mapping: `app.UseErrorHandling()` placed early so it can format exceptions from any middleware or endpoint.
-  - Include `traceId` (HttpContext.TraceIdentifier) and correlation id in ProblemDetails `extensions` for audit linkage.
+- Service registration:<br>
+  `services.AddErrorHandling()` configures ProblemDetails mapping for known exceptions (validation → 400, unauthorized → 401/403, etc.).
 
-- Verification:
-  - Force an exception; examine response body JSON conforms to RFC7807 and includes `traceId`/`correlationId` but no stack trace in prod.
+- Middleware mapping:<br>
+  `app.UseErrorHandling()` placed early to convert exceptions from any layer into ProblemDetails. Ensure it enriches `extensions` with `traceId` and `correlationId`.
+
+- Config keys:<br>
+  None.
+
+- Verification:<br>
+  - Trigger exceptions and confirm responses follow RFC7807, contain `traceId`/`correlationId`, and do not include stack traces in production builds.
 
 ---
 
 ## 8) Browser Request Restrictions (CORS)
-- Problem:
-  - Unrestricted cross‑origin requests may allow malicious client pages to call APIs.
+- Problem:<br>
+  Unrestricted CORS can allow malicious webpages to call backend APIs from other origins.
 
-- Solution:
-  - Provide a configurable CORS policy named `DefaultCors` using `Cors:AllowedOrigins`.
+- Solution:<br>
+  Provide a configurable `DefaultCors` policy using `Cors:AllowedOrigins`.
 
-- Implementation:
-  - Service registration: `services.AddBrowserRequestRestrictions(configuration)` reads `Cors:AllowedOrigins` and registers policy: `builder.WithOrigins(origins).AllowAnyHeader().AllowAnyMethod().AllowCredentials()` only when origins present.
-  - Middleware mapping: `app.UseBrowserRequestRestrictions()` invokes `app.UseCors("DefaultCors")`.
+- Service registration:<br>
+  `services.AddBrowserRequestRestrictions(config)` reads `Cors:AllowedOrigins` and registers `DefaultCors` with `WithOrigins(origins).AllowAnyHeader().AllowAnyMethod()` when origins exist.
 
-- Verification:
-  - Browser front‑end served from configured origin can call API; calls from other origins are blocked by browser (CORS preflight fails).
+- Middleware mapping:<br>
+  `app.UseBrowserRequestRestrictions()` calls `app.UseCors("DefaultCors")` early enough to affect incoming requests.
+
+- Config keys:<br>
+  `Cors:AllowedOrigins` (array).
+
+- Verification:<br>
+  - Requests from allowed origins succeed; browser blocks requests from disallowed origins (CORS preflight fails).
 
 ---
 
 ## 9) JSON Hardening
-- Problem:
-  - Comment‑rich or extremely nested JSON bodies can be abused to cause excessive CPU/memory usage or ambiguous binding.
+- Problem:<br>
+  Malicious or malformed JSON (comments, extreme depth, case ambiguity) can cause resource exhaustion or incorrect binding.
 
-- Solution:
-  - Harden System.Text.Json options: disallow comments, set MaxDepth=32, enforce property name case sensitivity.
+- Solution:<br>
+  Harden System.Text.Json options: disallow comments, limit depth, enforce case sensitivity.
 
-- Implementation:
-  - In `AddJson()` call `services.ConfigureHttpJsonOptions(o => { o.SerializerOptions.ReadCommentHandling = JsonCommentHandling.Disallow; o.SerializerOptions.MaxDepth = 32; o.SerializerOptions.PropertyNameCaseInsensitive = false; });`
+- Service registration:<br>
+  In `AddJson()` call `services.ConfigureHttpJsonOptions(o => { o.SerializerOptions.ReadCommentHandling = JsonCommentHandling.Disallow; o.SerializerOptions.MaxDepth = 32; o.SerializerOptions.PropertyNameCaseInsensitive = false; });`
 
-- Verification:
-  - Submit a JSON payload with comments → request rejected; very deep nested payload truncated or rejected per MaxDepth.
+- Middleware mapping:<br>
+  N/A (applies at formatter level).
+
+- Config keys:<br>
+  None (tunable constants may be externalized later).
+
+- Verification:<br>
+  - Send JSON with comments or extreme depth and confirm rejection or controlled failure.
 
 ---
 
 ## 10) Authentication (JWT)
-- Problem:
-  - Need robust token validation (issuer, audience, signature) and support for development tokens without weakening prod security.
+- Problem:<br>
+  Need reliable token validation and developer convenience of local tokens without weakening production security.
 
-- Solution:
-  - Configure JWT Bearer authentication with strict validation parameters and provide a dev-only token issuance endpoint.
+- Solution:<br>
+  Configure strict JWT Bearer validation and expose a dev-only token endpoint when in development.
 
-- Implementation:
-  - Service registration: `services.AddAuthentication(config, env)` binds `Auth:Issuer`, `Auth:Audience` and uses `TokenValidationParameters` with valid issuer, audience and issuer signing key (production: from cert/keystore; development: `Auth:DevKey`).
-  - Middleware mapping: `app.UseAuthentication(); app.UseAuthorization();` (already present in MapCommon).
-  - Dev helper: `MapDevToken()` only when `env.IsDevelopment()` issues short lived tokens (10 min) signed with `Auth:DevKey`.
+- Service registration:<br>
+  `services.AddAuthentication(config, env)` binds `Auth:Issuer`, `Auth:Audience`, configures `TokenValidationParameters` (issuer, audience, signing key). In dev, support `Auth:DevKey` for token issuance.
 
-- Config keys: `Auth:Audience`, `Auth:Issuer`, `Auth:DevKey`, `Auth:DevScopes`.
+- Middleware mapping:<br>
+  `app.UseAuthentication()` and `app.UseAuthorization()` are invoked in MapCommon. `app.MapDevToken()` is mapped only in development.
 
-- Verification:
-  - Acquire dev token in dev and call protected endpoint; call same in prod should fail (endpoint not mapped).
+- Config keys:<br>
+  `Auth:Audience`, `Auth:Issuer`, `Auth:DevKey`, `Auth:DevScopes`.
+
+- Verification:<br>
+  - Obtain dev token in dev and call protected endpoints; in prod dev token endpoint should not exist and calls without valid tokens return 401.
 
 ---
 
 ## 11) Request Logging (HTTP Logging)
-- Problem:
-  - Need structured request/response telemetry for audit while preventing sensitive data leakage.
+- Problem:<br>
+  Need structured request/response logs for auditing but must avoid logging secrets.
 
-- Solution:
-  - Use `HttpLoggingMiddleware` capturing request/response metadata and selected headers; explicitly exclude Authorization, Cookie and Set-Cookie.
+- Solution:<br>
+  Use HttpLogging middleware to record fields (method, path, duration, selected headers) and explicitly exclude sensitive headers.
 
-- Implementation:
-  - Service registration: `services.AddRequestLogging()` configures `HttpLoggingFields` and `RequestHeaders`/`ResponseHeaders` to capture; add `X-Correlation-ID` to captured headers.
-  - Middleware mapping: `app.UseHttpLogging()` early to capture raw request details before other transformations.
+- Service registration:<br>
+  `services.AddRequestLogging()` configures `HttpLoggingFields` and adds request/response headers to capture; ensure `Authorization`, `Cookie`, `Set-Cookie` are not captured.
 
-- Verification:
-  - Make requests and confirm logs include method/path/duration and `X-Correlation-ID`, but do not include Authorization header values.
+- Middleware mapping:<br>
+  `app.UseHttpLogging()` placed early to capture raw request/response before modifications.
+
+- Config keys:<br>
+  Logging levels under `Logging:*`.
+
+- Verification:<br>
+  - Inspect logs for request/response metadata and `X-Correlation-ID`, confirm no Authorization header values are logged.
 
 ---
 
 ## 12) Observability (OpenTelemetry)
-- Problem:
-  - Lack of unified traces and metrics across services impairs root-cause analysis.
+- Problem:<br>
+  Missing distributed traces and metrics impede investigations and SLA measurement.
 
-- Solution:
-  - Register OpenTelemetry tracing and metrics instrumentation and export to OTLP collector; fail startup if OTLP endpoint required but missing.
+- Solution:<br>
+  Instrument ASP.NET Core and HttpClient, collect runtime metrics, and export to OTLP collector; enforce fail‑fast when OTLP endpoint is required in production.
 
-- Implementation:
-  - Service registration: `services.AddObservability(config, env)` builds `ResourceBuilder`, adds `AddAspNetCoreInstrumentation`, `AddHttpClientInstrumentation`, `AddRuntimeInstrumentation`, and `AddOtlpExporter` using `Observability:OtlpEndpoint`.
-  - Ensure spans add attributes for `traceId` and correlation id via middleware/enrichers.
+- Service registration:<br>
+  `services.AddObservability(config, env)` constructs a ResourceBuilder, registers `AddAspNetCoreInstrumentation()`, `AddHttpClientInstrumentation()`, `AddRuntimeInstrumentation()`, and configures OTLP exporter with `Observability:OtlpEndpoint`.
 
-- Config keys: `Observability:OtlpEndpoint` (required when not development).
+- Middleware mapping:<br>
+  Ensure correlation ID middleware enriches spans; no extra middleware needed for basic instrumentation.
 
-- Verification:
-  - Start app with OTLP endpoint and confirm traces appear in collector for requests and errors; missing endpoint in prod causes startup exception.
+- Config keys:<br>
+  `Observability:OtlpEndpoint` (required in non‑dev).
+
+- Verification:<br>
+  - Start app with OTLP collector configured and confirm traces/metrics reach the collector. Missing endpoint in prod should cause startup error.
 
 ---
 
 ## 13) Health Checks
-- Problem:
-  - Orchestrators need quick liveness/readiness checks.
+- Problem:<br>
+  Orchestrators require liveness and readiness endpoints to manage lifecycle and routing.
 
-- Solution:
-  - Register health checks; map `/health/live` and `/health/ready` endpoints.
+- Solution:<br>
+  Register health checks and map `/health/live` and `/health/ready` (readiness includes dependency checks).
 
-- Implementation:
-  - Service registration: `services.AddFullHealthCheck()` adds `AddHealthChecks()` and basic self check; allow modules to register their own checks (DB, cache) in their `Add*` methods.
-  - Mapping: `app.MapFullHealthCheck()` maps endpoints with optional IP filter.
+- Service registration:<br>
+  `services.AddFullHealthCheck()` registers base health checks; modules may add DB/cache checks in their own `Add*` methods.
 
-- Verification:
-  - GET `/health/live` returns 200 when app alive; `/health/ready` returns 200 only when all registered checks pass.
+- Middleware mapping:<br>
+  `app.MapFullHealthCheck()` maps endpoints; apply IP filter if configured.
+
+- Config keys:<br>
+  None for base checks; modules may add their own keys.
+
+- Verification:<br>
+  - `/health/live` returns 200 when app running; `/health/ready` returns 200 only when all registered checks are healthy.
 
 ---
 
 ## 14) Allowed IPs for Health Probes
-- Problem:
-  - Readiness endpoints may expose internal application state to the public internet.
+- Problem:<br>
+  Readiness endpoints may leak internal state if publicly accessible.
 
-- Solution:
-  - Use `IpEndpointFilter` on health endpoints to allow only configured IPs (supports "localhost"), otherwise deny with 403.
+- Solution:<br>
+  Use `IpEndpointFilter` to restrict health endpoints to an allowlist.
 
-- Implementation:
-  - Service registration: `services.AddAllowedIPsForHealthProbes(config)` reads `Health:AllowedIps` and registers an `IpEndpointFilter` instance for health routes.
-  - Mapping: `MapFullHealthCheck()` applies the filter to readiness endpoints.
+- Service registration:<br>
+  `services.AddAllowedIPsForHealthProbes(config)` reads `Health:AllowedIps` and registers the filter.
 
-- Verification:
-  - Requests to health endpoints from non‑allowed IPs return 403; allowed IPs succeed.
+- Middleware mapping:<br>
+  Apply `IpEndpointFilter` to `/health/ready` routes during `MapFullHealthCheck()`.
+
+- Config keys:<br>
+  `Health:AllowedIps` (array supporting `localhost`, IPv4, IPv6, mapped IPv4).
+
+- Verification:<br>
+  - Requests from non‑allowed IPs receive 403; allowed IPs succeed.
 
 ---
 
 ## 15) Business Event Publisher
-- Problem:
-  - Modules need to publish domain events without tight coupling or direct references.
+- Problem:<br>
+  Modules need to publish domain events without compile‑time coupling to each other.
 
-- Solution:
-  - Provide an in‑process `IBusinessEventPublisher` implementation registered scoped so modules can publish events; later replaceable by distributed bus.
+- Solution:<br>
+  Offer an in‑process `IBusinessEventPublisher` for decoupled dispatch; later replace with an external message bus.
 
-- Implementation:
-  - Service registration: `services.AddScoped<IBusinessEventPublisher, InProcessBusinessEventPublisher>();`
-  - Publisher interface: `Task PublishAsync<T>(T evt);` that dispatches to in‑process handlers.
+- Service registration:<br>
+  `services.AddScoped<IBusinessEventPublisher, InProcessBusinessEventPublisher>();` where `InProcessBusinessEventPublisher.PublishAsync<T>(T evt)` dispatches to local handlers.
 
-- Verification:
-  - Publish an event in Orders module and have Billing handler receive it in same process (unit/integration test).
+- Middleware mapping:<br>
+  Not applicable (service only).
+
+- Config keys:<br>
+  None.
+
+- Verification:<br>
+  - Unit/integration test: publish an event in Orders and assert Billing handler receives it within the same process.
 
 ---
 
@@ -299,4 +350,4 @@ This document is an implementation specification for the `Common` project. It li
 
 ---
 
-This specification is intentionally prescriptive: follow the Implementation sections to make changes in code with minimal surprises for maintainers and auditors.
+This specification is prescriptive and implementation‑ready. Follow the Implementation sections to make changes in code with minimal surprises for maintainers and auditors.
