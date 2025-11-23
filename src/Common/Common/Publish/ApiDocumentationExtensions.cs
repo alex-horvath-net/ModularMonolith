@@ -5,7 +5,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.OpenApi.Models;
 
-namespace Common; 
+namespace Common.Publish; 
 
 internal static class ApiDocumentationExtensions {
 

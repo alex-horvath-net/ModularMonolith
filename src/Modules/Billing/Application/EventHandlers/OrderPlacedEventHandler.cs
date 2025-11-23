@@ -1,6 +1,6 @@
 using Billing.Infrastructure.Data;
 using Billing.Infrastructure.Data.Models;
-using Common;
+using Common.Events;
 using Orders.Contracts.Events; // Adjust when Orders contracts flattened
 
 namespace Billing.Application.EventHandlers;

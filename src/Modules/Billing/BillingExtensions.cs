@@ -2,7 +2,7 @@ using Billing.API;
 using Billing.Application.EventHandlers;
 using Billing.Application.QueryHandlers;
 using Billing.Infrastructure.Data;
-using Common;
+using Common.Events;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Routing;
 using Microsoft.EntityFrameworkCore;

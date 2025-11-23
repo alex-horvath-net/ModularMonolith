@@ -1,7 +1,7 @@
 using System.Diagnostics;
 using Microsoft.AspNetCore.Builder;
 
-namespace Common;
+namespace Common.Observability;
 
 public static class CorrelationIdMiddleware {
 

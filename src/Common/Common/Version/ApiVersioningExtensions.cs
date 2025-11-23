@@ -1,7 +1,7 @@
 ﻿using Asp.Versioning;
 using Microsoft.Extensions.DependencyInjection;
 
-namespace Common;
+namespace Common.Version;
 public static class ApiVersioningExtensions {
 
     public static IServiceCollection AddApiVersion(this IServiceCollection services) {

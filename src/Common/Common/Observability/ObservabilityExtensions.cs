@@ -5,7 +5,7 @@ using OpenTelemetry.Metrics;
 using OpenTelemetry.Resources;
 using OpenTelemetry.Trace;
 
-namespace Common;
+namespace Common.Observability;
 
 public static class ObservabilityExtensions {
     public static IServiceCollection AddObservability(this IServiceCollection services, IConfiguration config, IHostEnvironment env) {

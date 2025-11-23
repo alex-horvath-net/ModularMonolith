@@ -2,7 +2,7 @@
 using Serilog;
 using Serilog.Events;
 
-namespace Common;
+namespace Common.Observability;
 
 public static class LogExtensions {
     public static ConfigureHostBuilder UseLogger(this ConfigureHostBuilder host) {

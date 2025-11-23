@@ -1,4 +1,4 @@
-using Common;
+using Common.Events;
 
 namespace Orders.Contracts.Events;
 

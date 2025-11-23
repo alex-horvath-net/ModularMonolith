@@ -2,7 +2,7 @@ using Azure.Identity;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Hosting;
 
-namespace Common;
+namespace Common.Security;
 
 public static class SecretConfigurationExtensions
 {
@@ -14,7 +14,7 @@ public static class SecretConfigurationExtensions
             // Use user secrets when running locally (if available)
             try
             {
-                builder.AddUserSecrets<System.Object>(optional: true);
+                builder.AddUserSecrets<object>(optional: true);
             }
             catch
             {

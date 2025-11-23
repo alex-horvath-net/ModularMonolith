@@ -1,7 +1,7 @@
 ﻿using Microsoft.AspNetCore.HttpLogging;
 using Microsoft.Extensions.DependencyInjection;
 
-namespace Common {
+namespace Common.Observability {
     internal static class RequestLoggingExtensions {
 
         public static IServiceCollection AddRequestLogging(this IServiceCollection services) {

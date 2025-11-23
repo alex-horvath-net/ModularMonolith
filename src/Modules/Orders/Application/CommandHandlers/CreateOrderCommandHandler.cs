@@ -1,4 +1,4 @@
-using Common;
+using Common.Events;
 using Orders.Contracts.Events;
 using Orders.Infrastructure.Data;
 using Orders.Infrastructure.Data.Models;

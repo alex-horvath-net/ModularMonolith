@@ -1,7 +1,7 @@
 using System.Net;
 using System.Net.Http.Headers;
 using System.Security.Cryptography.X509Certificates;
-using Common;
+using Common.Security;
 using Microsoft.AspNetCore.DataProtection;
 using Microsoft.Extensions.Options;
 using Polly;

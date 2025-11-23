@@ -5,14 +5,14 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Diagnostics.HealthChecks;
 
-namespace Common;
+namespace Common.HealhCheck;
 
 internal static class HealthCheckExtensions {
 
     public static IServiceCollection AddAllowedIPsForHealthProbes(this IServiceCollection services, IConfiguration configuration) {
         // Rename from AddAllowdIPsForHealthProbes; register concrete filter so generic AddEndpointFilter<T>() can resolve it directly.
         var allowedIps = configuration.GetSection("Health:AllowedIps").Get<string[]>() ?? Array.Empty<string>();
-        services.AddSingleton<IpEndpointFilter>(new IpEndpointFilter(allowedIps));
+        services.AddSingleton(new IpEndpointFilter(allowedIps));
         return services;
     }
 

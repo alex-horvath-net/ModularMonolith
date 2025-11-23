@@ -9,7 +9,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Hosting;
 using Microsoft.IdentityModel.Tokens;
 
-namespace Common;
+namespace Common.Authentication;
 
 internal static class DevTokenExtensions {
 

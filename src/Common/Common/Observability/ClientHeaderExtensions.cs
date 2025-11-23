@@ -3,7 +3,7 @@ using Microsoft.AspNetCore.HttpOverrides;
 using Microsoft.AspNetCore.Routing;
 using Microsoft.Extensions.DependencyInjection;
 
-namespace Common;
+namespace Common.Observability;
 internal static class ClientHeaderExtensions {
 
     internal static IServiceCollection AddClientHeadersInProxy(this IServiceCollection services) {

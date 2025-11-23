@@ -3,7 +3,7 @@ using Microsoft.Extensions.Hosting;
 using System.Security.Cryptography;
 using System.Text;
 
-namespace Common;
+namespace Common.Security;
 
 public static class SecurityHeadersMiddleware {
     public static IApplicationBuilder UseSecurityHeaders(this WebApplication app) => app.Use(async (context, next) => {

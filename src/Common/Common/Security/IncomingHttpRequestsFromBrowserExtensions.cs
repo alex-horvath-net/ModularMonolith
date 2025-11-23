@@ -2,7 +2,7 @@
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 
-namespace Common {
+namespace Common.Security {
     internal static class IncomingHttpRequestsFromBrowserExtensions {
 
         internal static IServiceCollection AddBrowserRequestRestrictions(this IServiceCollection services, IConfiguration configuration) {

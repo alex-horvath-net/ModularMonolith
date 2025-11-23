@@ -1,5 +1,7 @@
 using Billing;
 using Common;
+using Common.Observability;
+using Common.Security;
 using Orders;
 
 var builder = WebApplication.CreateBuilder(args);
