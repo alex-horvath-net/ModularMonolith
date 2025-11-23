@@ -1,4 +1,5 @@
 ﻿using Common.Authentication;
+using Common.Configuration;
 using Common.Error;
 using Common.Events;
 using Common.HealhCheck;

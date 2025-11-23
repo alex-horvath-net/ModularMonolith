@@ -6,8 +6,9 @@ using Microsoft.AspNetCore.Server.Kestrel.Https;
 using System.Security.Cryptography.X509Certificates;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Hosting;
+using Common.Security;
 
-namespace Common; 
+namespace Common.Security; 
 public static class KerstelExtensions {
 
 
@@ -51,7 +52,7 @@ public static class KerstelExtensions {
         // Generic service certificate keys allow reuse; fallback to WebApi-specific keys for backward compatibility
         var path = cfg["Certificates:Service:Path"] ?? cfg["Certificates:WebApi:Path"];
         var password = cfg["Certificates:Service:Password"] ?? cfg["Certificates:WebApi:Password"];
-        if (!string.IsNullOrWhiteSpace(path) && System.IO.File.Exists(path)) {
+        if (!string.IsNullOrWhiteSpace(path) && File.Exists(path)) {
 #pragma warning disable SYSLIB0057
             return new X509Certificate2(path!, password, X509KeyStorageFlags.MachineKeySet | X509KeyStorageFlags.EphemeralKeySet);
 #pragma warning restore SYSLIB0057
