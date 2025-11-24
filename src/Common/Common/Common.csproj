@@ -29,5 +29,14 @@
     <PackageReference Include="OpenTelemetry.Instrumentation.Http" Version="1.14.0" />
     <PackageReference Include="OpenTelemetry.Instrumentation.Runtime" Version="1.14.0" />
   </ItemGroup>
+  
+  <ItemGroup>
+    <Folder Include="AccessManagement\" />
+    <Folder Include="Authorization\" />
+    <Folder Include="Identity\" />
+    <Folder Include="KeyManagemen\" />
+    <Folder Include="Concerns\" />
+    <Folder Include="Token\" />
+  </ItemGroup>
 
 </Project>
