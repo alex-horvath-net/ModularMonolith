@@ -5,6 +5,7 @@ using Common.Events;
 using Common.HealhCheck;
 using Common.Observability;
 using Common.Publish;
+using Common.RateLimiting;
 using Common.Security;
 using Common.Version;
 using Microsoft.AspNetCore.Builder;

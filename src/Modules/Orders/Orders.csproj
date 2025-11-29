@@ -19,10 +19,6 @@
     <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="9.0.10" />
   </ItemGroup>
 
-  <ItemGroup>
-    <ProjectReference Include="..\..\Common\Common\Common.csproj" />
-  </ItemGroup>
-
   <!-- Exclude obj/bin only -->
   <ItemGroup>
     <Compile Remove="**\obj\**\*.cs" />
@@ -32,6 +28,9 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Application\EventHandlers\" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\Common\Common.csproj" />
   </ItemGroup>
 
 </Project>

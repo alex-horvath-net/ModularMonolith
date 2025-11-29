@@ -14,7 +14,6 @@
     <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="9.0.10" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\Common\Common\Common.csproj" />
     <ProjectReference Include="..\Orders\Orders.csproj" />
   </ItemGroup>
   <!-- Exclude legacy subprojects and obj/bin artifacts under this module root -->

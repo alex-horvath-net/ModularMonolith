@@ -6,7 +6,7 @@ using Microsoft.AspNetCore.RateLimiting;
 using Microsoft.AspNetCore.Routing;
 using Microsoft.Extensions.DependencyInjection;
 
-namespace Common; 
+namespace Common.RateLimiting; 
 internal static class RateLimitingExtensions {
 
     internal static IServiceCollection AddRateLimiting(this IServiceCollection services) {
