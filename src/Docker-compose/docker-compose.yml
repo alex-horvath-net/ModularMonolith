@@ -20,8 +20,10 @@ services:
 
   webapi:
     build:
-      context: .
-      dockerfile: src/Hosts/WebApi/Dockerfile
+      # Use the repository src directory as the build context (one level up from this compose file)
+      context: ..
+      # Dockerfile path is relative to the build context above
+      dockerfile: Hosts/WebApi/Dockerfile
     environment:
       - ASPNETCORE_URLS=http://+:5001
       - ConnectionStrings__AppDB=Server=devsqlserver;Database=AppDB;User ID=sa;Password=Dev!Pass123;Encrypt=True;TrustServerCertificate=True;
