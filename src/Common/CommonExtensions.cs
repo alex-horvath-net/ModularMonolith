@@ -57,8 +57,7 @@ public static class CommonExtensions {
         //app.UseErrorHandling();         // Apply global error handling with RFC7807 ProblemDetails
         //app.UseHttpsRedirection();      // Redirect all HTTP -> HTTPS early
         //app.UseBrowserRequestRestrictions();     // restrict incoming HttpRequests From browser
-        app.UseAuthentication();        // Validate JWT bearer tokens
-        app.UseAuthorization();         // Enforce policies/fallback
+        app.MapAuthentication();        // Validate JWT bearer tokens and  Enforce policies/fallback
 
         app.MapDevToken();
         //app.MapFullHealthCheck();

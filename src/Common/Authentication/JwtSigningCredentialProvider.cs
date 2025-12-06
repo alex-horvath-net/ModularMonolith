@@ -7,6 +7,11 @@ using Microsoft.IdentityModel.Tokens;
 
 namespace Common.Authentication;
 
+internal interface IJwtSigningCredentialProvider {
+    public SecurityKey GetValidationKey();
+}
+
+
 internal sealed class JwtSigningCredentialProvider : IJwtSigningCredentialProvider {
     private readonly IOptionsMonitor<JwtOptions> _optionsMonitor;
     private readonly IHostEnvironment _env;
@@ -60,7 +65,7 @@ internal sealed class JwtSigningCredentialProvider : IJwtSigningCredentialProvid
                     }
 
                     _logger.LogError("No certificate could be resolved but a certificate is required for JWT validation.");
-                    throw new InvalidOperationException("Production JWT validation requires a certificate. Configure Auth:CertificateThumbprint or Auth:CertificatePath (PFX) and ensure the certificate is accessible (Key Vault / LocalMachine).");
+                    throw new InvalidOperationException("Production JWT validation requires a certificate. Configure Authentication:CertificateThumbprint or Authentication:CertificatePath (PFX) and ensure the certificate is accessible (Key Vault / LocalMachine).");
                 }
 
                 if (options.AllowDevSymmetricKey) {
@@ -80,7 +85,7 @@ internal sealed class JwtSigningCredentialProvider : IJwtSigningCredentialProvid
                 }
 
                 _logger.LogError("No valid JWT signing key configuration found.");
-                throw new InvalidOperationException("No valid JWT signing key configuration found. For non-production: set Auth:AllowDevSymmetricKey=true with Auth:DevKey (in user-secrets) or configure certificate-based signing.");
+                throw new InvalidOperationException("No valid JWT signing key configuration found. For non-production: set Authentication:AllowDevSymmetricKey=true with Authentication:DevKey (in user-secrets) or configure certificate-based signing.");
             }
             catch {
                 // On failure ensure we don't leave a partially initialized cached key
@@ -98,19 +103,19 @@ internal sealed class JwtSigningCredentialProvider : IJwtSigningCredentialProvid
 
     private static void ValidateRequiredOptions(JwtOptions options) {
         if (string.IsNullOrWhiteSpace(options.Issuer))
-            throw new InvalidOperationException("Auth:Issuer is not configured.");
+            throw new InvalidOperationException("Authentication:Issuer is not configured.");
 
         if (string.IsNullOrWhiteSpace(options.Audience))
-            throw new InvalidOperationException("Auth:Audience is not configured.");
+            throw new InvalidOperationException("Authentication:Audience is not configured.");
     }
 
     private static SecurityKey CreateSymmetricKey(string? devKey) {
         if (string.IsNullOrWhiteSpace(devKey))
-            throw new InvalidOperationException("Auth:AllowDevSymmetricKey is true but Auth:DevKey is empty.");
+            throw new InvalidOperationException("Authentication:AllowDevSymmetricKey is true but Authentication:DevKey is empty.");
 
         // Enforce minimum entropy: require 32 characters (256-bit) for symmetric dev keys
         if (devKey.Length < 32)
-            throw new InvalidOperationException("Auth:DevKey must be at least 32 characters for acceptable entropy.");
+            throw new InvalidOperationException("Authentication:DevKey must be at least 32 characters for acceptable entropy.");
 
         var bytes = Encoding.UTF8.GetBytes(devKey);
         return new SymmetricSecurityKey(bytes);

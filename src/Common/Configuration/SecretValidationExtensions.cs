@@ -46,7 +46,7 @@ public static class SecretValidationExtensions
         }
 
         // Signing certificate / auth key: do not allow DevKey in non-dev
-        var authDevKey = config["Auth:DevKey"]; // development-only
+        var authDevKey = config["Authentication:DevKey"]; // development-only
         var certThumb = config["Certificates:Service:Thumbprint"] ?? config["Certificates:WebApi:Thumbprint"] ?? config["DataProtection:CertificateThumbprint"];
         if (!env.IsDevelopment())
         {

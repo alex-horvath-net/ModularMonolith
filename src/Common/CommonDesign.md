@@ -204,13 +204,13 @@ This document lists each cross‑cutting concern in the exact order they are reg
   Configure strict JWT Bearer validation and expose a dev-only token endpoint when in development.
 
 - Service registration:<br>
-  `services.AddAuthentication(config, env)` binds `Auth:Issuer`, `Auth:Audience`, configures `TokenValidationParameters` (issuer, audience, signing key). In dev, support `Auth:DevKey` for token issuance.
+  `services.AddAuthentication(config, env)` binds `Authentication:Issuer`, `Authentication:Audience`, configures `TokenValidationParameters` (issuer, audience, signing key). In dev, support `Authentication:DevKey` for token issuance.
 
 - Middleware mapping:<br>
   `app.UseAuthentication()` and `app.UseAuthorization()` are invoked in MapCommon. `app.MapDevToken()` is mapped only in development.
 
 - Config keys:<br>
-  `Auth:Audience`, `Auth:Issuer`, `Auth:DevKey`, `Auth:DevScopes`.
+  `Authentication:Audience`, `Authentication:Issuer`, `Authentication:DevKey`, `Authentication:DevScopes`.
 
 - Verification:<br>
   - Obtain dev token in dev and call protected endpoints; in prod dev token endpoint should not exist and calls without valid tokens return 401.

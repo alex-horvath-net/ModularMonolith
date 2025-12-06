@@ -1,17 +1,27 @@
 ﻿using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Routing;
 using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 
 namespace Common.Authentication;
 
 public static class DevTokenExtensions {
+
+    public static IServiceCollection AddDevToken(this IServiceCollection services, IConfiguration configuration, IHostEnvironment env) {
+
+
+        return services;
+    }
 
 
     public static IEndpointRouteBuilder MapDevToken(this WebApplication app) {
@@ -27,10 +37,10 @@ public static class DevTokenExtensions {
 
     private static IResult CreateDevToken(IConfiguration configuration) {
         // Extract token issuance parameters from config
-        var audience = configuration["Auth:Audience"]!;
-        var issuer = configuration["Auth:Issuer"]!;
-        var devKey = configuration["Auth:DevKey"]!;
-        var devScopes = configuration.GetSection("Auth:DevScopes").Get<string[]>() ?? Array.Empty<string>(); // Scoped permissions for dev token
+        var audience = configuration["Authentication:Audience"]!;
+        var issuer = configuration["Authentication:Issuer"]!;
+        var devKey = configuration["Authentication:DevKey"]!;
+        var devScopes = configuration.GetSection("Authentication:DevScopes").Get<string[]>() ?? Array.Empty<string>(); // Scoped permissions for dev token
 
         var handler = new JwtSecurityTokenHandler();
 

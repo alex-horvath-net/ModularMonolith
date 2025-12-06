@@ -27,10 +27,7 @@ internal sealed class JwtBearerPostConfigure : IPostConfigureOptions<JwtBearerOp
         options.MapInboundClaims = false;
         options.RequireHttpsMetadata = !_env.IsDevelopment();
 
-        // Validate required auth options
-        var issuer = _jwtOptions.Issuer ?? throw new InvalidOperationException("Auth:Issuer is not configured.");
-        var audience = _jwtOptions.Audience ?? throw new InvalidOperationException("Auth:Audience is not configured.");
-
+        
         // Resolve signing key via DI-backed provider (may throw on misconfiguration)
         var key = _provider.GetValidationKey();
 
@@ -41,16 +38,20 @@ internal sealed class JwtBearerPostConfigure : IPostConfigureOptions<JwtBearerOp
 
         options.TokenValidationParameters = new TokenValidationParameters {
             ValidateIssuer = true,
-            ValidIssuer = issuer,
+            ValidIssuer = _jwtOptions.Issuer,
+             
             ValidateAudience = true,
-            ValidAudience = audience,
+            ValidAudience = _jwtOptions.Audience,
+            
             ValidateLifetime = true,
             RequireExpirationTime = true,
+            
             ValidateIssuerSigningKey = true,
             IssuerSigningKey = key,
+
             ClockSkew = TimeSpan.FromSeconds(30),
-            ValidTypes = new[] { "JWT", "at+jwt" },
-            ValidAlgorithms = new[] { SecurityAlgorithms.HmacSha256, SecurityAlgorithms.RsaSha256, SecurityAlgorithms.RsaSha512 }
+            ValidTypes = ["JWT", "at+jwt"],
+            ValidAlgorithms = [SecurityAlgorithms.HmacSha256, SecurityAlgorithms.RsaSha256, SecurityAlgorithms.RsaSha512]
         };
 
         // Instrument authentication pipeline with structured, non-sensitive logs.
