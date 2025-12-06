@@ -13,17 +13,17 @@ internal static class AuthenticationExtensions {
 
     public static IServiceCollection AddAuthentication(this IServiceCollection services, IConfiguration configuration, IHostEnvironment env) {
 
-        services.AddSingleton<IValidateOptions<JwtOptions>, JwtOptionsValidator>();
-        services.AddOptions<JwtOptions>()
-                .Bind(configuration.GetSection(JwtOptions.SectionName))
-                .ValidateOnStart();
+        //services.AddOptions<JwtOptions>()
+        //        .Bind(configuration.GetSection(JwtOptions.SectionName))
+        //        .ValidateOnStart();
+        //services.AddSingleton<IValidateOptions<JwtOptions>, JwtOptionsValidator>();
 
-        // Register resolver and provider (resolver first)
-        services.AddSingleton<ICertificateResolver, CertificateResolver>();
-        services.AddSingleton<IJwtSigningCredentialProvider, JwtSigningCredentialProvider>();
+        //// Register resolver and provider (resolver first)
+        //services.AddSingleton<ICertificateResolver, CertificateResolver>();
+        //services.AddSingleton<IJwtSigningCredentialProvider, JwtSigningCredentialProvider>();
 
-        // Register the post-configure which runs against the real container after DI composition
-        services.AddSingleton<IPostConfigureOptions<JwtBearerOptions>, JwtBearerPostConfigure>();
+        //// Register the post-configure which runs against the real container after DI composition
+        //services.AddSingleton<IPostConfigureOptions<JwtBearerOptions>, JwtBearerPostConfigure>();
 
         // Configure authentication middleware; TokenValidationParameters will be set by the post-configure
         services

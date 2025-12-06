@@ -4,6 +4,12 @@
 # @name devToken
 POST {{WebApi_HostAddress}}/devtokens
 Accept: application/json
+Content-Type: application/json
+{
+  "clientId": "dev",
+  "clientSecret": "dev"
+}
+
 
 ### Health - Live
 GET {{WebApi_HostAddress}}/health/live

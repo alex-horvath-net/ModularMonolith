@@ -11,10 +11,10 @@ using Microsoft.IdentityModel.Tokens;
 
 namespace Common.Authentication;
 
-internal static class DevTokenExtensions {
+public static class DevTokenExtensions {
 
 
-    internal static IEndpointRouteBuilder MapDevToken(this WebApplication app) {
+    public static IEndpointRouteBuilder MapDevToken(this WebApplication app) {
 
         if (app.Environment.IsDevelopment()) {
 
