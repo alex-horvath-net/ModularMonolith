@@ -1,4 +1,5 @@
-﻿using System.Security.Cryptography;
+﻿using System;
+using System.Security.Cryptography;
 using System.Text;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Hosting;
@@ -23,29 +24,37 @@ internal sealed class JwtBearerPostConfigure : IPostConfigureOptions<JwtBearerOp
     }
 
     public void PostConfigure(string name, JwtBearerOptions options) {
+
+        _logger.LogInformation($"{nameof(PostConfigure)} is called");
+
+        _logger.LogInformation("Configuring JwtBearerOptions for authentication; issuer={Issuer}, audience={Audience}, environment={Environment}", _jwtOptions.Issuer, _jwtOptions.Audience, _env.EnvironmentName);
+
         // Standard middleware settings
         options.MapInboundClaims = false;
         options.RequireHttpsMetadata = !_env.IsDevelopment();
 
-        
+
+
         // Resolve signing key via DI-backed provider (may throw on misconfiguration)
-        var key = _provider.GetValidationKey();
+        SecurityKey key = _provider.GetValidationKey();
 
         // Enforce production prohibition of symmetric keys
         if (_env.IsProduction() && key is SymmetricSecurityKey) {
             throw new InvalidOperationException("Symmetric signing keys must not be used in production. Configure an X.509 certificate or HSM-backed key for JWT signing.");
         }
 
+
+
         options.TokenValidationParameters = new TokenValidationParameters {
             ValidateIssuer = true,
             ValidIssuer = _jwtOptions.Issuer,
-             
+
             ValidateAudience = true,
             ValidAudience = _jwtOptions.Audience,
-            
+
             ValidateLifetime = true,
             RequireExpirationTime = true,
-            
+
             ValidateIssuerSigningKey = true,
             IssuerSigningKey = key,
 
@@ -80,26 +89,31 @@ internal sealed class JwtBearerPostConfigure : IPostConfigureOptions<JwtBearerOp
                 return Task.CompletedTask;
             },
 
-            OnChallenge = context => {
-                var correlationId = GetCorrelationId(context.HttpContext);
-                _logger.LogWarning("JwtBearer.OnChallenge; error={Error}, description={Description}, correlationId={CorrelationId}, activityId={ActivityId}",
-                    context.Error, context.ErrorDescription, correlationId, System.Diagnostics.Activity.Current?.Id);
-                return Task.CompletedTask;
-            },
-
-            OnForbidden = context => {
-                var correlationId = GetCorrelationId(context.HttpContext);
-                _logger.LogWarning("JwtBearer.OnForbidden; path={Path}, correlationId={CorrelationId}, activityId={ActivityId}",
-                    context.HttpContext?.Request?.Path, correlationId, System.Diagnostics.Activity.Current?.Id);
-                return Task.CompletedTask;
-            }
+            OnChallenge = OnChallenge,
+            OnForbidden = OnForbidden
         };
     }
 
+    private Task OnChallenge(JwtBearerChallengeContext context) {
+        var correlationId = GetCorrelationId(context.HttpContext);
+        _logger.LogWarning("JwtBearer.OnChallenge; error={Error}, description={Description}, correlationId={CorrelationId}, activityId={ActivityId}", context.Error, context.ErrorDescription, correlationId, System.Diagnostics.Activity.Current?.Id);
+        return Task.CompletedTask;
+    }
+
+    private Task OnForbidden(ForbiddenContext context) {
+        var correlationId = GetCorrelationId(context.HttpContext);
+        _logger.LogWarning("JwtBearer.OnForbidden; path={Path}, correlationId={CorrelationId}, activityId={ActivityId}",
+            context.HttpContext?.Request?.Path, correlationId, System.Diagnostics.Activity.Current?.Id);
+        return Task.CompletedTask;
+    }
+
     private static string? GetCorrelationId(Microsoft.AspNetCore.Http.HttpContext? ctx) {
-        if (ctx == null) return null;
-        if (ctx.Request.Headers.TryGetValue("X-Correlation-ID", out var v) && !string.IsNullOrWhiteSpace(v)) return v.ToString();
-        if (ctx.Request.Headers.TryGetValue("Correlation-Id", out v) && !string.IsNullOrWhiteSpace(v)) return v.ToString();
+        if (ctx == null)
+            return null;
+        if (ctx.Request.Headers.TryGetValue("X-Correlation-ID", out var v) && !string.IsNullOrWhiteSpace(v))
+            return v.ToString();
+        if (ctx.Request.Headers.TryGetValue("Correlation-Id", out v) && !string.IsNullOrWhiteSpace(v))
+            return v.ToString();
         return System.Diagnostics.Activity.Current?.Id;
     }
 

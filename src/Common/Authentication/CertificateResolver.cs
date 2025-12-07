@@ -20,6 +20,8 @@ internal sealed class CertificateResolver : ICertificateResolver {
     }
 
     public X509Certificate2? ResolveCertificate(JwtOptions options) {
+        _logger.LogDebug($"{nameof(ResolveCertificate)} is called.");
+        
         if (options == null) {
             _logger.LogDebug("ResolveCertificate called with null options.");
             return null;
@@ -28,6 +30,7 @@ internal sealed class CertificateResolver : ICertificateResolver {
         // 1) Thumbprint in LocalMachine (preferred)
         if (!string.IsNullOrWhiteSpace(options.CertificateThumbprint)) {
             try {
+                _logger.LogDebug("Attempting to resolve certificate by thumbprint {Thumbprint}", options.CertificateThumbprint);
                 var thumb = options.CertificateThumbprint.Replace(" ", string.Empty);
                 using var store = new X509Store(StoreLocation.LocalMachine);
                 store.Open(OpenFlags.ReadOnly);
@@ -49,6 +52,7 @@ internal sealed class CertificateResolver : ICertificateResolver {
         // 2) Subject distinguished name in LocalMachine
         if (!string.IsNullOrWhiteSpace(options.CertificateSubjectName)) {
             try {
+                _logger.LogDebug("Attempting to resolve certificate by subject {Subject}", options.CertificateSubjectName);
                 using var store = new X509Store(StoreLocation.LocalMachine);
                 store.Open(OpenFlags.ReadOnly);
                 var found = store.Certificates.Find(X509FindType.FindBySubjectDistinguishedName, options.CertificateSubjectName, validOnly: false);
@@ -69,6 +73,7 @@ internal sealed class CertificateResolver : ICertificateResolver {
         // 3) PFX path fallback (local file) — prefer KeyVault in production
         if (!string.IsNullOrWhiteSpace(options.CertificatePath)) {
             try {
+                _logger.LogDebug("Attempting to load certificate from PFX path {Path}", options.CertificatePath);
                 var cert = new X509Certificate2(options.CertificatePath, options.CertificatePassword, X509KeyStorageFlags.MachineKeySet | X509KeyStorageFlags.PersistKeySet);
                 if (cert != null) {
                     if (IsValidForJwtValidation(cert, options, out var reason)) {

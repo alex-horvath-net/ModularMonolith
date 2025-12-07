@@ -1,4 +1,5 @@
 ﻿using Microsoft.Extensions.Hosting;
+using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 
 namespace Common.Authentication;
@@ -24,13 +25,17 @@ internal sealed class JwtOptions {
 }
 
 internal sealed class JwtOptionsValidator : IValidateOptions<JwtOptions> {
-    private readonly IHostEnvironment _env;
+    private readonly IHostEnvironment env;
+    private readonly ILogger<JwtOptionsValidator> logger;
 
-    public JwtOptionsValidator(IHostEnvironment env) {
-        _env = env;
+    public JwtOptionsValidator(IHostEnvironment env, ILogger<JwtOptionsValidator> logger) {
+        this.env = env ?? throw new ArgumentNullException(nameof(env));
+        this.logger = logger ?? throw new ArgumentNullException(nameof(logger));
     }
 
     public ValidateOptionsResult Validate(string name, JwtOptions options) {
+        logger.LogInformation($"{nameof(Validate)} is called");
+
         if (options == null)
             return ValidateOptionsResult.Fail("JwtOptions is null.");
 
@@ -38,9 +43,9 @@ internal sealed class JwtOptionsValidator : IValidateOptions<JwtOptions> {
             return ValidateOptionsResult.Fail("Authentication:Issuer must be configured.");
 
         if (string.IsNullOrWhiteSpace(options.Audience))
-            return ValidateOptionsResult.Fail("Authentication:Audience must be configured."); 
+            return ValidateOptionsResult.Fail("Authentication:Audience must be configured.");
 
-        if (_env.IsProduction()) {
+        if (env.IsProduction()) {
             if (!options.UseCertificateForJwtSigning)
                 return ValidateOptionsResult.Fail("In Production, Authentication:UseCertificateForJwtSigning must be true.");
 

@@ -36,6 +36,7 @@ internal sealed class JwtSigningCredentialProvider : IJwtSigningCredentialProvid
     }
 
     public SecurityKey GetValidationKey() {
+        _logger.LogInformation($"{nameof(GetValidationKey)} is called.");
         // Fast path: return cached key if present
         var key = _cachedKey;
         if (key != null) {
@@ -57,6 +58,8 @@ internal sealed class JwtSigningCredentialProvider : IJwtSigningCredentialProvid
 
             try {
                 if (mustUseCertificate) {
+                    _logger.LogInformation("Resolving certificate for JWT signing key as required by environment or configuration.");
+
                     var cert = _certResolver.ResolveCertificate(options);
                     if (cert != null) {
                         _cachedKey = new X509SecurityKey(cert);
@@ -69,6 +72,7 @@ internal sealed class JwtSigningCredentialProvider : IJwtSigningCredentialProvid
                 }
 
                 if (options.AllowDevSymmetricKey) {
+                    _logger.LogInformation("Using development symmetric key for JWT signing as allowed by configuration.");
                     _cachedKey = CreateSymmetricKey(options.DevKey);
                     _logger.LogInformation("Loaded symmetric signing key for JWT validation (development key).");
                     return _cachedKey;
@@ -76,6 +80,7 @@ internal sealed class JwtSigningCredentialProvider : IJwtSigningCredentialProvid
 
                 // If certificate is optional but configured, try one last time
                 if (options.UseCertificateForJwtSigning) {
+                    _logger.LogInformation("Resolving optional certificate for JWT signing key as configured.");
                     var cert = _certResolver.ResolveCertificate(options);
                     if (cert != null) {
                         _cachedKey = new X509SecurityKey(cert);
