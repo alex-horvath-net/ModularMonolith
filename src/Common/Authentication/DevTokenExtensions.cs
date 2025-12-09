@@ -17,7 +17,7 @@ namespace Common.Authentication;
 
 public static class DevTokenExtensions {
 
-    public static IServiceCollection AddDevToken(this IServiceCollection services, IConfiguration configuration, IHostEnvironment env) {
+    public static IServiceCollection AddDevToken(this IServiceCollection services) {
 
 
         return services;
@@ -35,36 +35,44 @@ public static class DevTokenExtensions {
         return app;
     }
 
-    private static IResult CreateDevToken(IConfiguration configuration) {
-        // Extract token issuance parameters from config
-        var audience = configuration["Authentication:Audience"]!;
-        var issuer = configuration["Authentication:Issuer"]!;
-        var devKey = configuration["Authentication:DevKey"]!;
-        var devScopes = configuration.GetSection("Authentication:DevScopes").Get<string[]>() ?? Array.Empty<string>(); // Scoped permissions for dev token
-
+    private static IResult CreateDevToken(IOptions<JwtOptions> options) {
+        var claims = GetClaims(options.Value.DevScopes);
+        var payload = new ClaimsIdentity(claims);
+        var signature = new SigningCredentials(new SymmetricSecurityKey(Encoding.UTF8.GetBytes(options.Value.DevKey!)), SecurityAlgorithms.HmacSha256);
+        
+        // Create short-lived access token
         var handler = new JwtSecurityTokenHandler();
 
-        // Standard claims set for minimal bearer token
-        var claims = new List<Claim> {
-            new(JwtRegisteredClaimNames.Sub, "dev-user"),
-            new(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString("N")),
-            new(JwtRegisteredClaimNames.Iat, EpochTime.GetIntDate(DateTime.UtcNow).ToString(), ClaimValueTypes.Integer64)
-        };
-        claims.AddRange(devScopes.Select(devScope => new Claim("scope", devScope)));
-        var subject = new ClaimsIdentity(claims);
-        var signingCredentials = new SigningCredentials(new SymmetricSecurityKey(Encoding.UTF8.GetBytes(devKey)), SecurityAlgorithms.HmacSha256);
 
-        // Create short-lived access token
         var token = handler.CreateJwtSecurityToken(
-            issuer: issuer,
-            audience: audience,
-            subject: subject,
+            issuer: options.Value.Issuer,
+            audience: options.Value.Audience,
             notBefore: DateTime.UtcNow,
             expires: DateTime.UtcNow.AddMinutes(10),
-            signingCredentials: signingCredentials
+            subject: payload,
+            signingCredentials: signature
         );
-
-        return Results.Ok(new { access_token = handler.WriteToken(token), token_type = "Bearer", expires_in = 600 });
+        
+        var access_token = handler.WriteToken(token);
+       
+        var result = new {
+            access_token,
+            token_type = "Bearer",
+            expires_in = 600
+        };
+        
+        return Results.Ok(result);
     }
 
+    private static List<Claim> GetClaims(string[] scopes) {
+        var claims = new List<Claim>();
+        claims.Add(new(JwtRegisteredClaimNames.Sub, "dev-user"));
+        claims.Add(new(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString("N")));
+        claims.Add(new(JwtRegisteredClaimNames.Iat, EpochTime.GetIntDate(DateTime.UtcNow).ToString(), ClaimValueTypes.Integer64));
+        foreach (var scope in scopes) {
+            claims.Add(new Claim("scope", scope));
+        }
+
+        return claims;
+    }
 }

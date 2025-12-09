@@ -1,0 +1,30 @@
+@page "/orders/{Id:guid}"
+@using Orders.Create.Contracts.DTOs
+@inject HttpClient Http
+
+<h3>Order Details</h3>
+
+@if (order is null) {
+    <p>Loading...</p>
+} else {
+    <div class="card">
+        <div class="card-body">
+            <h5 class="card-title">Order @order.Id</h5>
+            <p>Customer: @order.CustomerId</p>
+            <p>Total: @order.Total</p>
+        </div>
+    </div>
+}
+
+@code {
+    [Parameter] public Guid Id { get; set; }
+    private OrderDto? order;
+
+    protected override async Task OnParametersSetAsync() {
+        try {
+            order = await Http.GetFromJsonAsync<OrderDto>($"/orders/{Id}");
+        } catch {
+            order = null;
+        }
+    }
+}

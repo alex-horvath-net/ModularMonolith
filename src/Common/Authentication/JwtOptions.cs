@@ -6,13 +6,14 @@ namespace Common.Authentication;
 
 internal sealed class JwtOptions {
     public static string SectionName => "Authentication";
-    public string? Issuer { get; set; }
     public string? Audience { get; set; }
+    public string? Issuer { get; set; }
 
     // Development symmetric key (must only be used in non-production and when explicitly allowed)
     public string? DevKey { get; set; }
     public bool AllowDevSymmetricKey { get; set; } = false;
 
+    public string[] DevScopes { get; set; } = Array.Empty<string>();
     // Certificate-based signing options for production/HSM
     public bool UseCertificateForJwtSigning { get; set; } = false;
     public string? CertificateThumbprint { get; set; }

@@ -6,13 +6,13 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
-using Orders.API;
-using Orders.Application.CommandHandlers;
-using Orders.Application.QueryHandlers;
-using Orders.Application.QueryServices;
-using Orders.Application.Validation;
-using Orders.Contracts.Services;
-using Orders.Infrastructure.Data;
+using Orders.Create.API;
+using Orders.Create.Application.CommandHandlers;
+using Orders.Create.Application.QueryHandlers;
+using Orders.Create.Application.QueryServices;
+using Orders.Create.Application.Validation;
+using Orders.Create.Contracts.Services;
+using Orders.Create.Infrastructure.Data;
 
 namespace Orders;
 

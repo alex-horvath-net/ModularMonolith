@@ -1,7 +1,7 @@
 using Billing.Infrastructure.Data;
 using Billing.Infrastructure.Data.Models;
 using Common.Events;
-using Orders.Contracts.Events; // Adjust when Orders contracts flattened
+using Orders.Create.Contracts.Events; // Adjust when Orders contracts flattened
 
 namespace Billing.Application.EventHandlers;
 

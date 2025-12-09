@@ -1,10 +1,9 @@
+using Asp.Versioning;
 using Billing.Application.QueryHandlers;
+using Billing.Contracts.DTOs;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Routing;
-using Orders.Contracts.DTOs;
-using Asp.Versioning;
-using Billing.Contracts.DTOs;
 
 namespace Billing.API;
 

@@ -27,7 +27,7 @@
     <None Remove="**\obj\**\*.*" />
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="Application\EventHandlers\" />
+    <Folder Include="Create\Application\EventHandlers\" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\Common\Common.csproj" />
