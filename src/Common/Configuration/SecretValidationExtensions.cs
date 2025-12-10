@@ -45,8 +45,8 @@ public static class SecretValidationExtensions
             missing.Add("DataProtection:KeyDirectory or DataProtection:CertificatePath/DataProtection:CertificateThumbprint");
         }
 
-        // Signing certificate / auth key: do not allow DevKey in non-dev
-        var authDevKey = config["Authentication:DevKey"]; // development-only
+        // Signing certificate / auth key: do not allow SecurityKey in non-dev
+        var authDevKey = config["Authentication:SecurityKey"]; // development-only
         var certThumb = config["Certificates:Service:Thumbprint"] ?? config["Certificates:WebApi:Thumbprint"] ?? config["DataProtection:CertificateThumbprint"];
         if (!env.IsDevelopment())
         {

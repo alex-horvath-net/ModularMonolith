@@ -10,7 +10,7 @@ internal sealed class JwtOptions {
     public string? Issuer { get; set; }
 
     // Development symmetric key (must only be used in non-production and when explicitly allowed)
-    public string? DevKey { get; set; }
+    public string? SecurityKey { get; set; }
     public bool AllowDevSymmetricKey { get; set; } = false;
 
     public string[] DevScopes { get; set; } = Array.Empty<string>();

@@ -38,8 +38,9 @@ public static class DevTokenExtensions {
     private static IResult CreateDevToken(IOptions<JwtOptions> options) {
         var claims = GetClaims(options.Value.DevScopes);
         var payload = new ClaimsIdentity(claims);
-        var signature = new SigningCredentials(new SymmetricSecurityKey(Encoding.UTF8.GetBytes(options.Value.DevKey!)), SecurityAlgorithms.HmacSha256);
-        
+        var securityKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(options.Value.SecurityKey!));
+        var signature = new SigningCredentials(securityKey, SecurityAlgorithms.HmacSha256);
+
         // Create short-lived access token
         var handler = new JwtSecurityTokenHandler();
 
@@ -52,15 +53,15 @@ public static class DevTokenExtensions {
             subject: payload,
             signingCredentials: signature
         );
-        
+
         var access_token = handler.WriteToken(token);
-       
+
         var result = new {
             access_token,
             token_type = "Bearer",
             expires_in = 600
         };
-        
+
         return Results.Ok(result);
     }
 
