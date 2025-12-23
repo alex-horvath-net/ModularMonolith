@@ -4,7 +4,7 @@ using Microsoft.Extensions.Options;
 
 namespace Common.Authentication;
 
-internal sealed class JwtOptions {
+public sealed class JwtOptions {
     public static string SectionName => "Authentication";
     public string? Audience { get; set; }
     public string? Issuer { get; set; }

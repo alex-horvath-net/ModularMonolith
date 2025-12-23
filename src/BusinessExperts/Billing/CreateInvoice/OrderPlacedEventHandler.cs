@@ -3,7 +3,7 @@ using Billing.Infrastructure.Data.Models;
 using Common.Events;
 using Orders.Contracts.Events;
 
-namespace Billing.EventHandlers;
+namespace BusinessExperts.Billing.CreateInvoice;
 
 public sealed class OrderPlacedEventHandler(BillingDbContext db) : IBusinessEventHandler<OrderPlaced> {
     public async Task Handle(OrderPlaced orderPlaced, CancellationToken token = default) {

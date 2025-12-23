@@ -1,7 +1,7 @@
-using Billing.EventHandlers;
 using Billing.GetInvoice.API;
 using Billing.GetInvoice.QueryHandlers;
 using Billing.Infrastructure.Data;
+using BusinessExperts.Billing.CreateInvoice;
 using Common.Events;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Routing;

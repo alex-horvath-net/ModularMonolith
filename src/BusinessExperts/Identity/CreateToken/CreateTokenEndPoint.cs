@@ -1,35 +1,37 @@
 ﻿using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
-using Microsoft.AspNetCore.Authentication.JwtBearer;
-using Microsoft.AspNetCore.Authorization;
+using Asp.Versioning;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Routing;
-using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 
 namespace Common.Authentication;
 
-public static class DevTokenExtensions {
-
-    public static IServiceCollection AddDevToken(this IServiceCollection services) {
-
-
-        return services;
-    }
-
+public static class CreateTokenEndPoint {
 
     public static IEndpointRouteBuilder MapDevToken(this WebApplication app) {
 
         if (app.Environment.IsDevelopment()) {
 
-            var group = app.MapGroup("/devtokens").WithTags("DevToken").AllowAnonymous(); // Dev-only auth helper
-            group.MapPost("/", CreateDevToken);                         // Issue short-lived dev token
+            var version = app.NewApiVersionSet()
+                .HasApiVersion(new ApiVersion(1, 0))
+                .ReportApiVersions()
+                .Build();
+
+            var group = app.MapGroup("/v{version:apiVersion}/devtokens")
+                .WithApiVersionSet(version)
+                .WithTags("DevTokens");
+
+            group.MapPost("/", CreateDevToken)
+                .AllowAnonymous()
+                .RequireRateLimiting("writes")
+                .Produces(StatusCodes.Status201Created)
+                .ProducesValidationProblem();
         }
 
         return app;
@@ -41,11 +43,9 @@ public static class DevTokenExtensions {
         var securityKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(options.Value.SecurityKey!));
         var signature = new SigningCredentials(securityKey, SecurityAlgorithms.HmacSha256);
 
-        // Create short-lived access token
-        var handler = new JwtSecurityTokenHandler();
+        var tokenHandler = new JwtSecurityTokenHandler();
 
-
-        var token = handler.CreateJwtSecurityToken(
+        var token = tokenHandler.CreateJwtSecurityToken(
             issuer: options.Value.Issuer,
             audience: options.Value.Audience,
             notBefore: DateTime.UtcNow,
@@ -54,10 +54,8 @@ public static class DevTokenExtensions {
             signingCredentials: signature
         );
 
-        var access_token = handler.WriteToken(token);
-
         var result = new {
-            access_token,
+            access_token = tokenHandler.WriteToken(token),
             token_type = "Bearer",
             expires_in = 600
         };
