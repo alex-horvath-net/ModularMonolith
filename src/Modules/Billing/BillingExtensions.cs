@@ -1,6 +1,6 @@
-using Billing.API;
-using Billing.Application.EventHandlers;
-using Billing.Application.QueryHandlers;
+using Billing.EventHandlers;
+using Billing.GetInvoice.API;
+using Billing.GetInvoice.QueryHandlers;
 using Billing.Infrastructure.Data;
 using Common.Events;
 using Microsoft.AspNetCore.Builder;
@@ -10,7 +10,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
-using Orders.Create.Contracts.Events;
+using Orders.Contracts.Events;
 
 namespace Billing;
 

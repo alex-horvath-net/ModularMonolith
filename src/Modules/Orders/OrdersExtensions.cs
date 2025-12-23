@@ -6,13 +6,11 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
-using Orders.Create.API;
-using Orders.Create.Application.CommandHandlers;
-using Orders.Create.Application.QueryHandlers;
-using Orders.Create.Application.QueryServices;
-using Orders.Create.Application.Validation;
-using Orders.Create.Contracts.Services;
-using Orders.Create.Infrastructure.Data;
+using Orders.Contracts.Abstraction;
+using Orders.Featrures.Create;
+using Orders.Featrures.Create.Infrastructure.Data;
+using Orders.Featrures.GetAll;
+using Orders.Featrures.GetById;
 
 namespace Orders;
 
@@ -20,10 +18,10 @@ public static class OrdersExtensions {
     public static IServiceCollection AddOrders(this IServiceCollection services, IConfiguration configuration) {
 
         // Application
-        services.AddScoped<GetOrdersQueryHandler>();
+        services.AddScoped<GetAllOrderQueryHandler>();
         services.AddScoped<GetOrderQueryHandler>();
         services.AddScoped<CreateOrderCommandHandler>();
-        services.AddScoped<IReadOrderService, ReadOrderService>();
+        services.AddScoped<IReadOrderService, GetAllOrderService>();
 
         // Register validator so Minimal APIs resolve it from DI (not Body)
         services.AddScoped<IValidator<CreateOrderCommand>, CreateOrderCommandValidator>();
@@ -62,6 +60,9 @@ public static class OrdersExtensions {
             db.Database.Migrate();
         }
 
-        return app.MapOrdersEndpoints();
+        app.MapOrdersEndpoints();
+        app.MapCreateOrderEndpoint();
+
+        return app;
     }
 }
