@@ -1,4 +1,4 @@
 ﻿namespace WebApi.ApplicationUsres {
-    public class RandomUser {
+    public class RegisteredUser {
     }
 }

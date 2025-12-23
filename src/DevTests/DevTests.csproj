@@ -33,10 +33,6 @@
 
   <ItemGroup>
     <ProjectReference Include="..\Common\Common.csproj" />
-    <ProjectReference Include="..\Hosts\WebApi\WebApi.csproj" />
-    <ProjectReference Include="..\Hosts\WebPortal\WebPortal.csproj" />
-    <ProjectReference Include="..\Modules\Billing\Billing.csproj" />
-    <ProjectReference Include="..\Modules\Orders\Orders.csproj" />
   </ItemGroup>
 
 </Project>

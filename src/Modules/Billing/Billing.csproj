@@ -18,13 +18,14 @@
   </ItemGroup>
   <!-- Exclude legacy subprojects and obj/bin artifacts under this module root -->
   <ItemGroup>
+    <Compile Remove="Application\**" />
     <Compile Remove="Billing.*\**\*.cs" />
     <Compile Remove="**\obj\**\*.cs" />
     <Compile Remove="**\bin\**\*.cs" />
     <Content Remove="**\obj\**\*.*" />
+    <Content Remove="Application\**" />
+    <EmbeddedResource Remove="Application\**" />
     <None Remove="**\obj\**\*.*" />
-  </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Application\CommandHandlers\" />
+    <None Remove="Application\**" />
   </ItemGroup>
 </Project>
