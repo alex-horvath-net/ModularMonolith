@@ -36,6 +36,3 @@ public sealed class CreateTokenCommandHandler(IOptions<JwtOptions> options) {
     }
 }
 
-public sealed record CreateTokenCommand(
-    );
-
