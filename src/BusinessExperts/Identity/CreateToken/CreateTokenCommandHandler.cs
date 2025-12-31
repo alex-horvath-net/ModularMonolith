@@ -5,16 +5,18 @@ using Common.Authentication;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 
-namespace Orders.Featrures.Create;
+namespace BusinessExperts.Identity.CreateToken;
 
 public sealed class CreateTokenCommandHandler(IOptions<JwtOptions> options) {
     public async Task<string> Handle(CreateTokenCommand command) {
-        var claims = new List<Claim>();
-        claims.Add(new(JwtRegisteredClaimNames.Sub, "dev-user"));
-        claims.Add(new(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString("N")));
-        claims.Add(new(JwtRegisteredClaimNames.Iat, EpochTime.GetIntDate(DateTime.UtcNow).ToString(), ClaimValueTypes.Integer64));
+        var claims = new List<Claim> {
+            new(JwtRegisteredClaimNames.Sub, "dev-user"),
+            new(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString("N")),
+            new(JwtRegisteredClaimNames.Iat, EpochTime.GetIntDate(DateTime.UtcNow).ToString(), ClaimValueTypes.Integer64)
+        };
+
         foreach (var scope in options.Value.DevScopes) {
-            claims.Add(new Claim("scope", scope));
+            claims.Add(new("scope", scope));
         }
 
         var payload = new ClaimsIdentity(claims);

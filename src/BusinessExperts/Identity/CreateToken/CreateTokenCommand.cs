@@ -1,4 +1,4 @@
-namespace Orders.Featrures.Create;
+namespace BusinessExperts.Identity.CreateToken;
 
 public sealed record CreateTokenCommand(
     );

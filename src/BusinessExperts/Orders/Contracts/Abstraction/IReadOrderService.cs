@@ -1,6 +1,6 @@
 using Orders.Create.Contracts.DTOs;
 
-namespace Orders.Create.Contracts.Abstraction;
+namespace BusinessExperts.Orders.Contracts.Abstraction;
 
 public interface IReadOrderService {
     Task<OrderDto?> GetById(Guid id);

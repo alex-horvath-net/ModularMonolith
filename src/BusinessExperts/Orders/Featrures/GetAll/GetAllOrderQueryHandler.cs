@@ -1,8 +1,8 @@
+using BusinessExperts.Orders.Contracts.DTOs;
+using BusinessExperts.Orders.Featrures.Create.Infrastructure.Data;
 using Microsoft.EntityFrameworkCore;
-using Orders.Contracts.DTOs;
-using Orders.Featrures.Create.Infrastructure.Data;
 
-namespace Orders.Featrures.GetAll;
+namespace BusinessExperts.Orders.Featrures.GetAll;
 
 public sealed class GetAllOrderQueryHandler(OrdersDbContext db) {
     public async Task<List<OrderDto>> Handle(CancellationToken token = default) {

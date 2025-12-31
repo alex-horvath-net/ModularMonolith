@@ -4,10 +4,10 @@ using Microsoft.AspNetCore.Http.HttpResults; // OK
 using Microsoft.AspNetCore.Routing; // IEndpointRouteBuilder
 using Asp.Versioning;
 using Orders.Create.QueryHandlers;
-using Orders.Contracts.DTOs;
-using Orders.Featrures.GetById;
+using BusinessExperts.Orders.Contracts.DTOs;
+using BusinessExperts.Orders.Featrures.GetById;
 
-namespace Orders.Featrures.GetAll;
+namespace BusinessExperts.Orders.Featrures.GetAll;
 public static class GetAllOrderEndpoints {
     public static IEndpointRouteBuilder MapOrdersEndpoints(this IEndpointRouteBuilder app) {
         var versionSet = app.NewApiVersionSet().HasApiVersion(new ApiVersion(1,0)).ReportApiVersions().Build();

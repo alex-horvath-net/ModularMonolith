@@ -1,3 +1,3 @@
-namespace Orders.Contracts.DTOs;
+namespace BusinessExperts.Orders.Contracts.DTOs;
 
 public sealed record OrderDto(Guid Id, Guid CustomerId, decimal Total);

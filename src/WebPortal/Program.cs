@@ -1,13 +1,13 @@
 using System.Net;
 using System.Net.Http.Headers;
 using System.Security.Cryptography.X509Certificates;
-using ApplicationWebPortal;
+using ApplicationPortal;
 using Common.Security;
 using Microsoft.AspNetCore.DataProtection;
 using Microsoft.Extensions.Options;
 using Polly;
 using Polly.Extensions.Http;
-using WebPortal.Components;
+using ApplicationPortal.Components;
 
 var builder = WebApplication.CreateBuilder(args);
 

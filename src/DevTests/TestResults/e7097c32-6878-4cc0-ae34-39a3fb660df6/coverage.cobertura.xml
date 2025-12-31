@@ -5884,9 +5884,9 @@
         </class>
       </classes>
     </package>
-    <package name="WebPortal" line-rate="0" branch-rate="0" complexity="47">
+    <package name="ApplicationPortal" line-rate="0" branch-rate="0" complexity="47">
       <classes>
-        <class name="Program" filename="Hosts\WebPortal\Program.cs" line-rate="0" branch-rate="0" complexity="14">
+        <class name="Program" filename="Hosts\ApplicationPortal\Program.cs" line-rate="0" branch-rate="0" complexity="14">
           <methods>
             <method name="&lt;Main&gt;$" signature="(System.String[])" line-rate="0" branch-rate="0" complexity="14">
               <lines>
@@ -6114,7 +6114,7 @@
             <line number="127" hits="0" branch="False" />
           </lines>
         </class>
-        <class name="WebPortal.WebApiOptions" filename="Hosts\WebPortal\WebApiOptions.cs" line-rate="0" branch-rate="1" complexity="1">
+        <class name="ApplicationPortal.WebApiOptions" filename="Hosts\ApplicationPortal\WebApiOptions.cs" line-rate="0" branch-rate="1" complexity="1">
           <methods>
             <method name="get_BaseUrl" signature="()" line-rate="0" branch-rate="1" complexity="1">
               <lines>
@@ -6126,7 +6126,7 @@
             <line number="4" hits="0" branch="False" />
           </lines>
         </class>
-        <class name="WebPortal.Components.App" filename="Hosts\WebPortal\Components\App.razor" line-rate="0" branch-rate="0" complexity="7">
+        <class name="ApplicationPortal.Components.App" filename="Hosts\ApplicationPortal\Components\App.razor" line-rate="0" branch-rate="0" complexity="7">
           <methods>
             <method name="get_HttpContext" signature="()" line-rate="0" branch-rate="1" complexity="1">
               <lines>
@@ -6156,7 +6156,7 @@
             </line>
           </lines>
         </class>
-        <class name="WebPortal.Components.Layout.MainLayout" filename="Hosts\WebPortal\Components\Layout\MainLayout.razor" line-rate="0" branch-rate="1" complexity="1">
+        <class name="ApplicationPortal.Components.Layout.MainLayout" filename="Hosts\ApplicationPortal\Components\Layout\MainLayout.razor" line-rate="0" branch-rate="1" complexity="1">
           <methods>
             <method name="BuildRenderTree" signature="(Microsoft.AspNetCore.Components.Rendering.RenderTreeBuilder)" line-rate="0" branch-rate="1" complexity="1">
               <lines>
@@ -6168,7 +6168,7 @@
             <line number="14" hits="0" branch="False" />
           </lines>
         </class>
-        <class name="WebPortal.Components.Pages.Counter" filename="Hosts\WebPortal\Components\Pages\Counter.razor" line-rate="0" branch-rate="1" complexity="3">
+        <class name="ApplicationPortal.Components.Pages.Counter" filename="Hosts\ApplicationPortal\Components\Pages\Counter.razor" line-rate="0" branch-rate="1" complexity="3">
           <methods>
             <method name="BuildRenderTree" signature="(Microsoft.AspNetCore.Components.Rendering.RenderTreeBuilder)" line-rate="0" branch-rate="1" complexity="1">
               <lines>
@@ -6196,7 +6196,7 @@
             <line number="13" hits="0" branch="False" />
           </lines>
         </class>
-        <class name="WebPortal.Components.Pages.Error" filename="Hosts\WebPortal\Components\Pages\Error.razor" line-rate="0" branch-rate="0" complexity="11">
+        <class name="ApplicationPortal.Components.Pages.Error" filename="Hosts\ApplicationPortal\Components\Pages\Error.razor" line-rate="0" branch-rate="0" complexity="11">
           <methods>
             <method name="BuildRenderTree" signature="(Microsoft.AspNetCore.Components.Rendering.RenderTreeBuilder)" line-rate="0" branch-rate="0" complexity="2">
               <lines>
@@ -6258,7 +6258,7 @@
             </line>
           </lines>
         </class>
-        <class name="WebPortal.Components.Pages.Weather" filename="Hosts\WebPortal\Components\Pages\Weather.razor" line-rate="0" branch-rate="0" complexity="4">
+        <class name="ApplicationPortal.Components.Pages.Weather" filename="Hosts\ApplicationPortal\Components\Pages\Weather.razor" line-rate="0" branch-rate="0" complexity="4">
           <methods>
             <method name="BuildRenderTree" signature="(Microsoft.AspNetCore.Components.Rendering.RenderTreeBuilder)" line-rate="0" branch-rate="0" complexity="4">
               <lines>
@@ -6308,7 +6308,7 @@
             <line number="37" hits="0" branch="False" />
           </lines>
         </class>
-        <class name="WebPortal.Components.Pages.Weather/WeatherForecast" filename="Hosts\WebPortal\Components\Pages\Weather.razor" line-rate="0" branch-rate="1" complexity="4">
+        <class name="ApplicationPortal.Components.Pages.Weather/WeatherForecast" filename="Hosts\ApplicationPortal\Components\Pages\Weather.razor" line-rate="0" branch-rate="1" complexity="4">
           <methods>
             <method name="get_Date" signature="()" line-rate="0" branch-rate="1" complexity="1">
               <lines>
@@ -6338,7 +6338,7 @@
             <line number="62" hits="0" branch="False" />
           </lines>
         </class>
-        <class name="WebPortal.Components.Pages.Weather/&lt;&gt;c__DisplayClass2_0" filename="Hosts\WebPortal\Components\Pages\Weather.razor" line-rate="0" branch-rate="1" complexity="1">
+        <class name="ApplicationPortal.Components.Pages.Weather/&lt;&gt;c__DisplayClass2_0" filename="Hosts\ApplicationPortal\Components\Pages\Weather.razor" line-rate="0" branch-rate="1" complexity="1">
           <methods>
             <method name="&lt;OnInitializedAsync&gt;b__0" signature="(System.Int32)" line-rate="0" branch-rate="1" complexity="1">
               <lines>
@@ -6360,7 +6360,7 @@
             <line number="54" hits="0" branch="False" />
           </lines>
         </class>
-        <class name="WebPortal.Components.Pages.Weather/&lt;OnInitializedAsync&gt;d__2" filename="Hosts\WebPortal\Components\Pages\Weather.razor" line-rate="0" branch-rate="1" complexity="1">
+        <class name="ApplicationPortal.Components.Pages.Weather/&lt;OnInitializedAsync&gt;d__2" filename="Hosts\ApplicationPortal\Components\Pages\Weather.razor" line-rate="0" branch-rate="1" complexity="1">
           <methods>
             <method name="MoveNext" signature="()" line-rate="0" branch-rate="1" complexity="1">
               <lines>

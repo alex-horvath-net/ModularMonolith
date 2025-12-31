@@ -1,9 +1,9 @@
+using BusinessExperts.Orders.Featrures.Create.Infrastructure.Data;
+using BusinessExperts.Orders.Featrures.Create.Infrastructure.Data.Models;
 using Common.Events;
 using Orders.Create.Contracts.Events;
-using Orders.Featrures.Create.Infrastructure.Data;
-using Orders.Featrures.Create.Infrastructure.Data.Models;
 
-namespace Orders.Featrures.Create;
+namespace BusinessExperts.Orders.Featrures.Create;
 
 public sealed class CreateOrderCommandHandler(OrdersDbContext db, IBusinessEventPublisher bus) {
     public async Task<Guid> Handle(CreateOrderCommand command, CancellationToken token) {

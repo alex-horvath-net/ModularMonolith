@@ -1,6 +1,6 @@
 using FluentValidation;
 
-namespace Orders.Featrures.Create;
+namespace BusinessExperts.Orders.Featrures.Create;
 
 public sealed class CreateOrderCommandValidator : AbstractValidator<CreateOrderCommand>
 {

@@ -4,9 +4,8 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Routing;
 using Microsoft.Extensions.Hosting;
-using Orders.Featrures.Create;
 
-namespace Common.Authentication;
+namespace BusinessExperts.Identity.CreateToken;
 
 public static class CreateTokenEndPoint {
 

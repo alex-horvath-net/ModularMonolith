@@ -1,4 +1,4 @@
-namespace Orders.Featrures.Create.Infrastructure.Data.Models;
+namespace BusinessExperts.Orders.Featrures.Create.Infrastructure.Data.Models;
 
 public sealed class OrderLine {
     public Guid ProductId { get; private set; }

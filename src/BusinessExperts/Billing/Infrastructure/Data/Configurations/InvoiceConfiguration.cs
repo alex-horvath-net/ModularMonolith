@@ -1,8 +1,8 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
-using Billing.Infrastructure.Data.Models;
+using BusinessExperts.Billing.Infrastructure.Data.Models;
 
-namespace Billing.Infrastructure.Data.Configurations;
+namespace BusinessExperts.Billing.Infrastructure.Data.Configurations;
 
 public sealed class InvoiceConfiguration : IEntityTypeConfiguration<Invoice> {
     public void Configure(EntityTypeBuilder<Invoice> builder) {

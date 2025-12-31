@@ -5,7 +5,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Routing;
 using Orders.Create.CommandHandlers;
 
-namespace Orders.Create.API;
+namespace BusinessExperts.Orders.Featrures.Create;
 
 public static class CreateOrderEndpoint
 {

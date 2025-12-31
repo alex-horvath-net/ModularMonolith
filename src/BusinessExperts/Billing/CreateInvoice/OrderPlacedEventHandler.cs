@@ -1,5 +1,5 @@
-using Billing.Infrastructure.Data;
-using Billing.Infrastructure.Data.Models;
+using BusinessExperts.Billing.Infrastructure.Data;
+using BusinessExperts.Billing.Infrastructure.Data.Models;
 using Common.Events;
 using Orders.Contracts.Events;
 

@@ -1,7 +1,7 @@
-using Orders.Contracts.DTOs;
-using Orders.Featrures.Create.Infrastructure.Data;
+using BusinessExperts.Orders.Contracts.DTOs;
+using BusinessExperts.Orders.Featrures.Create.Infrastructure.Data;
 
-namespace Orders.Featrures.GetById;
+namespace BusinessExperts.Orders.Featrures.GetById;
 
 public sealed class GetOrderQueryHandler(OrdersDbContext db) {
     public async Task<OrderDto?> Handle(Guid id, CancellationToken token) {

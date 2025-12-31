@@ -1,8 +1,8 @@
 using Orders.Create.Infrastructure.Data;
 using Orders.Contracts.Abstraction;
-using Orders.Contracts.DTOs;
+using BusinessExperts.Orders.Contracts.DTOs;
 
-namespace Orders.Featrures.GetAll.Services;
+namespace BusinessExperts.Orders.Featrures.GetAll;
 
 internal sealed class ReadOrderService(OrdersDbContext db) : IReadOrderService {
     public async Task<OrderDto?> GetById(Guid id) {

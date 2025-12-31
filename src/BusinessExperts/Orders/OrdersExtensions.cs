@@ -1,3 +1,7 @@
+using BusinessExperts.Orders.Featrures.Create;
+using BusinessExperts.Orders.Featrures.Create.Infrastructure.Data;
+using BusinessExperts.Orders.Featrures.GetAll;
+using BusinessExperts.Orders.Featrures.GetById;
 using FluentValidation;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Routing;
@@ -7,12 +11,8 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Orders.Contracts.Abstraction;
-using Orders.Featrures.Create;
-using Orders.Featrures.Create.Infrastructure.Data;
-using Orders.Featrures.GetAll;
-using Orders.Featrures.GetById;
 
-namespace Orders;
+namespace BusinessExperts.Orders;
 
 public static class OrdersExtensions {
     public static IServiceCollection AddOrders(this IServiceCollection services, IConfiguration configuration) {

@@ -1,5 +1,5 @@
 using Common.Events;
 
-namespace Orders.Create.Contracts.Events;
+namespace BusinessExperts.Orders.Contracts.Events;
 
 public sealed record OrderPlaced(Guid OrderId, Guid CustomerId, decimal Total) : IBusinessEvent;

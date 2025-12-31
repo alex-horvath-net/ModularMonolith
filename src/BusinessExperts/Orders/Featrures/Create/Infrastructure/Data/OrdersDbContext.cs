@@ -1,8 +1,8 @@
 using System.Reflection;
+using BusinessExperts.Orders.Featrures.Create.Infrastructure.Data.Models;
 using Microsoft.EntityFrameworkCore;
-using Orders.Featrures.Create.Infrastructure.Data.Models;
 
-namespace Orders.Featrures.Create.Infrastructure.Data;
+namespace BusinessExperts.Orders.Featrures.Create.Infrastructure.Data;
 
 public sealed class OrdersDbContext(DbContextOptions<OrdersDbContext> options) : DbContext(options) {
     public DbSet<Order> Orders => Set<Order>();

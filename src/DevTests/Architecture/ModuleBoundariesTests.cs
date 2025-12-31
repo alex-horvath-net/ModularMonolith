@@ -34,11 +34,11 @@ public class ModuleBoundariesTests {
     [Fact]
     public void Modules_Must_Not_Depend_On_Hosts() {
         var orders = Types.InAssembly(typeof(Orders.OrdersExtensions).Assembly)
-            .Should().NotHaveDependencyOnAny("WebPortal", "WebApi")
+            .Should().NotHaveDependencyOnAny("ApplicationPortal", "WebApi")
             .GetResult();
 
         var billing = Types.InAssembly(typeof(Billing.BillingExtensions).Assembly)
-            .Should().NotHaveDependencyOnAny("WebPortal", "WebApi")
+            .Should().NotHaveDependencyOnAny("ApplicationPortal", "WebApi")
             .GetResult();
 
         var failures = new List<string>();

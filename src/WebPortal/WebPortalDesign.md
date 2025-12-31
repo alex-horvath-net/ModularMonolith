@@ -1,6 +1,6 @@
-# WebPortal Design – Implementation?ready Specification
+# ApplicationPortal Design – Implementation?ready Specification
 
-This document specifies the WebPortal host (server?side Blazor) behaviour, security, and operational requirements. It follows the same structured Problem/Solution/Service registration/Middleware mapping/Config keys/Verification format as the Common design.
+This document specifies the ApplicationPortal host (server?side Blazor) behaviour, security, and operational requirements. It follows the same structured Problem/Solution/Service registration/Middleware mapping/Config keys/Verification format as the Common design.
 
 ---
 
@@ -122,4 +122,4 @@ This document specifies the WebPortal host (server?side Blazor) behaviour, secur
 
 ---
 
-This specification ensures WebPortal is secure and interoperable with Common and WebApi; follow coding guidance closely to avoid runtime surprises.
+This specification ensures ApplicationPortal is secure and interoperable with Common and WebApi; follow coding guidance closely to avoid runtime surprises.
