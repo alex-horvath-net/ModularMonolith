@@ -1,13 +1,13 @@
 using System.Net;
 using System.Net.Http.Headers;
 using System.Security.Cryptography.X509Certificates;
-using ApplicationPortal;
 using Common.Security;
 using Microsoft.AspNetCore.DataProtection;
 using Microsoft.Extensions.Options;
 using Polly;
 using Polly.Extensions.Http;
 using ApplicationPortal.Components;
+using ApplicationPortal.Options;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -15,10 +15,10 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Configuration.AddSecretsFromStore(builder.Environment);
 
 // Bind & validate WebApi options (fail fast if BaseUrl missing or invalid)
-builder.Services.AddOptions<WebApiOptions>()
-    .Bind(builder.Configuration.GetSection("WebApi"))
-    .Validate(o => !string.IsNullOrWhiteSpace(o.BaseUrl), "WebApi:BaseUrl missing")
-    .Validate(o => Uri.IsWellFormedUriString(o.BaseUrl!, UriKind.Absolute), "WebApi:BaseUrl invalid URI")
+builder.Services.AddOptions<ApplicationApiOptions>()
+    .Bind(builder.Configuration.GetSection("ApplicationApi"))
+    .Validate(o => !string.IsNullOrWhiteSpace(o.BaseUrl), "ApplicationApi:BaseUrl is missing")
+    .Validate(o => Uri.IsWellFormedUriString(o.BaseUrl!, UriKind.Absolute), "ApplicationApi:BaseUrl is invalid URI")
     .ValidateOnStart();
 
 // Hardened Data Protection configuration
@@ -74,7 +74,7 @@ IAsyncPolicy<HttpResponseMessage> timeoutPolicy = Policy.TimeoutAsync<HttpRespon
 
 // Register named resilient HttpClient without silent fallback
 builder.Services.AddHttpClient("WebApi", (sp, client) => {
-    var opts = sp.GetRequiredService<IOptions<WebApiOptions>>().Value;
+    var opts = sp.GetRequiredService<IOptions<ApplicationApiOptions>>().Value;
     client.BaseAddress = new Uri(opts.BaseUrl!); // validated
     client.Timeout = TimeSpan.FromSeconds(5);
     client.DefaultRequestVersion = HttpVersion.Version20;
