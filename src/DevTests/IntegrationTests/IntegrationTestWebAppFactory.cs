@@ -1,6 +1,4 @@
-﻿using System.Collections.Generic;
-using BusinessExperts.Billing.Infrastructure.Data;
-using BusinessExperts.Billing.CreateInvoice;
+﻿using BusinessExperts.Billing.Infrastructure.Data;
 using BusinessExperts.Contracts.Events;
 using BusinessExperts.Orders.Featrures.Create.Infrastructure.Data;
 using Common.Events;
@@ -11,7 +9,6 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Testcontainers.MsSql;
-using Xunit;
 
 namespace DevTests.IntegrationTests;
 
