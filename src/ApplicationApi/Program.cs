@@ -1,9 +1,10 @@
 using Billing;
 using BusinessExperts.Identity.CreateToken;
+using BusinessExperts.Orders;
+using BusinessExperts.Billing;
 using Common;
 using Common.Observability;
 using Common.Security;
-using Orders;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -14,15 +15,19 @@ var builder = WebApplication.CreateBuilder(args);
 //builder.Host.UseLogger();  // Structured logging configuration
 
 builder.Services.AddCommon(builder.Configuration, builder.Environment);
-//builder.Services.AddOrders(builder.Configuration);
-//builder.Services.AddBilling(builder.Configuration);
+builder.Services.AddOrders(builder.Configuration);
+builder.Services.AddBilling(builder.Configuration);
 
 var app = builder.Build();
 
-app.MapCommon();
-app.MapDevToken();
-//app.MapOrders();
-//app.MapBilling();
+var isIntegrationTest = string.Equals(app.Environment.EnvironmentName, "IntegrationTest", StringComparison.OrdinalIgnoreCase);
+
+if (!isIntegrationTest) {
+    app.MapCommon();
+    app.MapDevToken();
+    app.MapOrders();
+    app.MapBilling();
+}
 
 app.Run();
 

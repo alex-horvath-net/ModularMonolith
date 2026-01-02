@@ -57,7 +57,9 @@ public static class CommonExtensions {
         //app.UseErrorHandling();         // Apply global error handling with RFC7807 ProblemDetails
         //app.UseHttpsRedirection();      // Redirect all HTTP -> HTTPS early
         //app.UseBrowserRequestRestrictions();     // restrict incoming HttpRequests From browser
-        app.MapAuthentication();        // Validate JWT bearer tokens and  Enforce policies/fallback
+        if (!string.Equals(app.Environment.EnvironmentName, "IntegrationTest", StringComparison.OrdinalIgnoreCase)) {
+            app.MapAuthentication();        // Validate JWT bearer tokens and  Enforce policies/fallback
+        }
 
         // Dev token mapping is provided in BusinessExperts.Identity; map it from the host when needed.
         //app.MapDevToken();

@@ -1,11 +1,13 @@
 ﻿using BusinessExperts.Orders.Featrures.Create;
 using FluentAssertions;
+using Xunit;
+
 namespace DevTests.IntegrationTests;
 
-public class ProductTests(IntegrationTestWebAppFactory factory) : BaseIntegrationTest(factory) {
+public class CreateOrderCommandHandlerTests(IntegrationTestWebAppFactory factory) : BaseIntegrationTest(factory) {
 
-    [Fact]
-    public async Task Create_ShouldCreateProduct() {
+    [Fact] 
+    public async Task CreateOrderCommandHandler_ShouldCreateOrder() {
         // Arrange
         var command = new CreateOrderCommand(
             CustomerId: Guid.NewGuid(),
@@ -17,9 +19,9 @@ public class ProductTests(IntegrationTestWebAppFactory factory) : BaseIntegratio
         // Act
         var id = await Handler.Handle(command, default);
 
-        // Assert
+        // Assert 
         var product = OrdersDB.Orders.FirstOrDefault(p => p.Id == id);
 
-        product.Should().NotBeNull();
+        product.Should().NotBeNull(); 
     }
 }
