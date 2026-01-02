@@ -54,11 +54,9 @@ public static class OrdersExtensions {
     }
 
     public static IEndpointRouteBuilder MapOrders(this WebApplication app) {
-        if (app.Environment.IsDevelopment()) {
-            using var scope = app.Services.CreateScope();
-            var db = scope.ServiceProvider.GetRequiredService<OrdersDbContext>();
-            db.Database.Migrate();
-        }
+        using var scope = app.Services.CreateScope();
+        var db = scope.ServiceProvider.GetRequiredService<OrdersDbContext>();
+        db.Database.Migrate();
 
         app.MapOrdersEndpoints();
         app.MapCreateOrderEndpoint();

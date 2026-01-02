@@ -1,10 +1,7 @@
-using Billing;
+using BusinessExperts.Billing;
 using BusinessExperts.Identity.CreateToken;
 using BusinessExperts.Orders;
-using BusinessExperts.Billing;
 using Common;
-using Common.Observability;
-using Common.Security;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -20,14 +17,10 @@ builder.Services.AddBilling(builder.Configuration);
 
 var app = builder.Build();
 
-var isIntegrationTest = string.Equals(app.Environment.EnvironmentName, "IntegrationTest", StringComparison.OrdinalIgnoreCase);
-
-if (!isIntegrationTest) {
-    app.MapCommon();
-    app.MapDevToken();
-    app.MapOrders();
-    app.MapBilling();
-}
+app.MapCommon();
+app.MapDevToken();
+app.MapOrders();
+app.MapBilling();
 
 app.Run();
 

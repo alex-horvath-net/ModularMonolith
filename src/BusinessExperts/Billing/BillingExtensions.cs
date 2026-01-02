@@ -53,12 +53,9 @@ public static class BillingExtensions
 
     public static IEndpointRouteBuilder MapBilling(this WebApplication app)
     {
-        if (app.Environment.IsDevelopment())
-        {
-            using var scope = app.Services.CreateScope();
-            var db = scope.ServiceProvider.GetRequiredService<BillingDbContext>();
-            db.Database.Migrate();
-        }
+        using var scope = app.Services.CreateScope();
+        var db = scope.ServiceProvider.GetRequiredService<BillingDbContext>();
+        db.Database.Migrate();
 
         return BillingEndpoints.MapBilling(app);
     }

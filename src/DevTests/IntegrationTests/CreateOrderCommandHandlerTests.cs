@@ -4,9 +4,9 @@ using Xunit;
 
 namespace DevTests.IntegrationTests;
 
-public class CreateOrderCommandHandlerTests(IntegrationTestWebAppFactory factory) : BaseIntegrationTest(factory) {
+public class CreateOrderCommandHandlerTests : BaseIntegrationTest {
 
-    [Fact] 
+    [Fact]
     public async Task CreateOrderCommandHandler_ShouldCreateOrder() {
         // Arrange
         var command = new CreateOrderCommand(

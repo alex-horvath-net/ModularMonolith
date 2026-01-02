@@ -1,5 +1,6 @@
 using Asp.Versioning;
 using FluentValidation;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Routing;
@@ -20,8 +21,8 @@ public static class CreateOrderEndpoint
             .WithTags("Orders");
 
         group.MapPost("/", Handle)
-            .RequireAuthorization(OrdersConstants.Write)
             .RequireRateLimiting("writes")
+            .RequireAuthorization(OrdersConstants.Write)
             .Produces(StatusCodes.Status201Created)
             .ProducesValidationProblem();
 
