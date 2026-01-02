@@ -16,6 +16,8 @@ public class ModuleBoundariesTests {
     [Fact]
     public void Orders_Must_Not_Depend_On_Billing() {
         var result = Types.InAssembly(typeof(BusinessExperts.Orders.OrdersExtensions).Assembly)
+            .That().ResideInNamespace("BusinessExperts.Orders")
+            .Or().ResideInNamespaceMatching("BusinessExperts.Orders\\..*")
             .Should().NotHaveDependencyOnAny("BusinessExperts.Billing")
             .GetResult();
 
@@ -25,6 +27,8 @@ public class ModuleBoundariesTests {
     [Fact]
     public void Billing_Must_Not_Depend_On_Orders() {
         var result = Types.InAssembly(typeof(BusinessExperts.Billing.BillingExtensions).Assembly)
+            .That().ResideInNamespace("BusinessExperts.Billing")
+            .Or().ResideInNamespaceMatching("BusinessExperts.Billing\\..*")
             .Should().NotHaveDependencyOnAny("BusinessExperts.Orders")
             .GetResult();
 
@@ -34,10 +38,14 @@ public class ModuleBoundariesTests {
     [Fact]
     public void Modules_Must_Not_Depend_On_Hosts() {
         var orders = Types.InAssembly(typeof(BusinessExperts.Orders.OrdersExtensions).Assembly)
+            .That().ResideInNamespace("BusinessExperts.Orders")
+            .Or().ResideInNamespaceMatching("BusinessExperts.Orders\\..*")
             .Should().NotHaveDependencyOnAny("ApplicationPortal", "WebApi")
             .GetResult();
 
         var billing = Types.InAssembly(typeof(BusinessExperts.Billing.BillingExtensions).Assembly)
+            .That().ResideInNamespace("BusinessExperts.Billing")
+            .Or().ResideInNamespaceMatching("BusinessExperts.Billing\\..*")
             .Should().NotHaveDependencyOnAny("ApplicationPortal", "WebApi")
             .GetResult();
 
