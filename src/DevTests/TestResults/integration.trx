@@ -1,0 +1,300 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TestRun id="95e7bc62-4425-4f91-8862-c6b948cb1d36" name="alada@ALADARLAPTOP 2026-01-02 23:54:32" runUser="ALADARLAPTOP\alada" xmlns="http://microsoft.com/schemas/VisualStudio/TeamTest/2010">
+  <Times creation="2026-01-02T23:54:32.1158629+00:00" queuing="2026-01-02T23:54:32.1158636+00:00" start="2026-01-02T23:54:19.7897764+00:00" finish="2026-01-02T23:54:32.1363867+00:00" />
+  <TestSettings name="default" id="05447e7d-2cc8-4c50-96a2-edf6b1c3c8bb">
+    <Deployment runDeploymentRoot="alada_ALADARLAPTOP_2026-01-02_23_54_32" />
+  </TestSettings>
+  <Results>
+    <UnitTestResult executionId="7925b66a-b2d6-488e-8500-91498d4d49da" testId="d009514b-702e-630e-be6e-93139c9fef68" testName="DevTests.IntegrationTests.CreateOrderEndpointTests.PostOrders_ShouldCreateOrder" computerName="ALADARLAPTOP" duration="00:00:00.0010000" startTime="2026-01-02T23:54:20.4962967+00:00" endTime="2026-01-02T23:54:31.9721985+00:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Failed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="7925b66a-b2d6-488e-8500-91498d4d49da">
+      <Output>
+        <ErrorInfo>
+          <Message>System.InvalidOperationException : No service for type 'Asp.Versioning.IReportApiVersions' has been registered.</Message>
+          <StackTrace>   at Microsoft.Extensions.DependencyInjection.ServiceProviderServiceExtensions.GetRequiredService(IServiceProvider provider, Type serviceType)&#xD;
+   at Microsoft.Extensions.DependencyInjection.ServiceProviderServiceExtensions.GetRequiredService[T](IServiceProvider provider)&#xD;
+   at Asp.Versioning.Builder.EndpointBuilderFinalizer.Finialize(EndpointBuilder endpointBuilder, ApiVersionSet versionSet)&#xD;
+   at Asp.Versioning.Builder.EndpointBuilderFinalizer.FinalizeEndpoints(EndpointBuilder endpointBuilder)&#xD;
+   at Microsoft.AspNetCore.Routing.RouteEndpointDataSource.CreateRouteEndpointBuilder(RouteEntry entry, RoutePattern groupPrefix, IReadOnlyList`1 groupConventions, IReadOnlyList`1 groupFinallyConventions)&#xD;
+   at Microsoft.AspNetCore.Routing.RouteEndpointDataSource.GetGroupedEndpoints(RouteGroupContext context)&#xD;
+   at Microsoft.AspNetCore.Routing.RouteGroupBuilder.GroupEndpointDataSource.GetGroupedEndpointsWithNullablePrefix(RoutePattern prefix, IReadOnlyList`1 conventions, IReadOnlyList`1 finallyConventions, IServiceProvider applicationServices)&#xD;
+   at Microsoft.AspNetCore.Routing.RouteGroupBuilder.GroupEndpointDataSource.get_Endpoints()&#xD;
+   at Microsoft.AspNetCore.Routing.CompositeEndpointDataSource.CreateEndpointsUnsynchronized()&#xD;
+   at Microsoft.AspNetCore.Routing.CompositeEndpointDataSource.EnsureEndpointsInitialized()&#xD;
+   at Microsoft.AspNetCore.Routing.CompositeEndpointDataSource.get_Endpoints()&#xD;
+   at Microsoft.AspNetCore.Routing.DataSourceDependentCache`1.Initialize()&#xD;
+   at System.Threading.LazyInitializer.EnsureInitializedCore[T](T&amp; target, Boolean&amp; initialized, Object&amp; syncLock, Func`1 valueFactory)&#xD;
+   at Microsoft.AspNetCore.Routing.DataSourceDependentCache`1.EnsureInitialized()&#xD;
+   at Microsoft.AspNetCore.Authorization.Policy.AuthorizationPolicyCache..ctor(EndpointDataSource dataSource)&#xD;
+   at System.RuntimeMethodHandle.InvokeMethod(Object target, Void** arguments, Signature sig, Boolean isConstructor)&#xD;
+   at System.Reflection.MethodBaseInvoker.InvokeDirectByRefWithFewArgs(Object obj, Span`1 copyOfArgs, BindingFlags invokeAttr)&#xD;
+   at System.Reflection.MethodBaseInvoker.InvokeWithOneArg(Object obj, BindingFlags invokeAttr, Binder binder, Object[] parameters, CultureInfo culture)&#xD;
+   at System.Reflection.RuntimeConstructorInfo.Invoke(BindingFlags invokeAttr, Binder binder, Object[] parameters, CultureInfo culture)&#xD;
+   at Microsoft.Extensions.DependencyInjection.ServiceLookup.CallSiteRuntimeResolver.VisitConstructor(ConstructorCallSite constructorCallSite, RuntimeResolverContext context)&#xD;
+   at Microsoft.Extensions.DependencyInjection.ServiceLookup.CallSiteVisitor`2.VisitCallSiteMain(ServiceCallSite callSite, TArgument argument)&#xD;
+   at Microsoft.Extensions.DependencyInjection.ServiceLookup.CallSiteRuntimeResolver.VisitRootCache(ServiceCallSite callSite, RuntimeResolverContext context)&#xD;
+   at Microsoft.Extensions.DependencyInjection.ServiceLookup.CallSiteVisitor`2.VisitCallSite(ServiceCallSite callSite, TArgument argument)&#xD;
+   at Microsoft.Extensions.DependencyInjection.ServiceLookup.CallSiteRuntimeResolver.Resolve(ServiceCallSite callSite, ServiceProviderEngineScope scope)&#xD;
+   at Microsoft.Extensions.DependencyInjection.ServiceProvider.CreateServiceAccessor(ServiceIdentifier serviceIdentifier)&#xD;
+   at System.Collections.Concurrent.ConcurrentDictionary`2.GetOrAdd(TKey key, Func`2 valueFactory)&#xD;
+   at Microsoft.Extensions.DependencyInjection.ServiceProvider.GetService(ServiceIdentifier serviceIdentifier, ServiceProviderEngineScope serviceProviderEngineScope)&#xD;
+   at Microsoft.Extensions.DependencyInjection.ServiceLookup.ServiceProviderEngineScope.GetService(Type serviceType)&#xD;
+   at Microsoft.Extensions.DependencyInjection.ServiceProviderServiceExtensions.GetService[T](IServiceProvider provider)&#xD;
+   at Microsoft.AspNetCore.Authorization.AuthorizationMiddleware..ctor(RequestDelegate next, IAuthorizationPolicyProvider policyProvider, IServiceProvider services)&#xD;
+   at Microsoft.AspNetCore.Authorization.AuthorizationMiddlewareInternal..ctor(RequestDelegate next, IServiceProvider services, IAuthorizationPolicyProvider policyProvider, ILogger`1 logger)&#xD;
+   at System.RuntimeMethodHandle.InvokeMethod(Object target, Void** arguments, Signature sig, Boolean isConstructor)&#xD;
+   at System.Reflection.ConstructorInvoker.InvokeDirectByRefWithFewArgs(Span`1 copyOfArgs)&#xD;
+   at System.Reflection.ConstructorInvoker.InvokeDirectByRef(Object arg1, Object arg2, Object arg3, Object arg4)&#xD;
+   at System.Reflection.ConstructorInvoker.InvokeImpl(Object arg1, Object arg2, Object arg3, Object arg4)&#xD;
+   at System.Reflection.ConstructorInvoker.Invoke(Span`1 arguments)&#xD;
+   at Microsoft.Extensions.DependencyInjection.ActivatorUtilities.ConstructorMatcher.CreateInstance(IServiceProvider provider)&#xD;
+   at Microsoft.Extensions.DependencyInjection.ActivatorUtilities.CreateInstance(IServiceProvider provider, Type instanceType, Object[] parameters)&#xD;
+   at Microsoft.AspNetCore.Builder.UseMiddlewareExtensions.ReflectionMiddlewareBinder.CreateMiddleware(RequestDelegate next)&#xD;
+   at Microsoft.AspNetCore.Builder.ApplicationBuilder.Build()&#xD;
+   at Microsoft.AspNetCore.Builder.ApplicationBuilder.Build()&#xD;
+   at Microsoft.AspNetCore.Hosting.GenericWebHostService.StartAsync(CancellationToken cancellationToken)&#xD;
+   at Microsoft.Extensions.Hosting.Internal.Host.&lt;StartAsync&gt;b__14_1(IHostedService service, CancellationToken token)&#xD;
+   at Microsoft.Extensions.Hosting.Internal.Host.ForeachService[T](IEnumerable`1 services, CancellationToken token, Boolean concurrent, Boolean abortOnFirstException, List`1 exceptions, Func`3 operation)&#xD;
+   at Microsoft.Extensions.Hosting.Internal.Host.StartAsync(CancellationToken cancellationToken)&#xD;
+   at DevTests.IntegrationTests.BaseIntegrationTest.InitializeAsync() in C:\src\github\alex-horvath-net\ModularMonolith\src\DevTests\IntegrationTests\BaseIntegrationTest.cs:line 73</StackTrace>
+        </ErrorInfo>
+      </Output>
+    </UnitTestResult>
+  </Results>
+  <TestDefinitions>
+    <UnitTest name="DevTests.IntegrationTests.CreateOrderEndpointTests.PostOrders_ShouldCreateOrder" storage="c:\src\github\alex-horvath-net\modularmonolith\src\devtests\bin\debug\net9.0\devtests.dll" id="d009514b-702e-630e-be6e-93139c9fef68">
+      <Execution id="7925b66a-b2d6-488e-8500-91498d4d49da" />
+      <TestMethod codeBase="C:\src\github\alex-horvath-net\ModularMonolith\src\DevTests\bin\Debug\net9.0\DevTests.dll" adapterTypeName="executor://xunit/VsTestRunner3/netcore/" className="DevTests.IntegrationTests.CreateOrderEndpointTests" name="PostOrders_ShouldCreateOrder" />
+    </UnitTest>
+  </TestDefinitions>
+  <TestEntries>
+    <TestEntry testId="d009514b-702e-630e-be6e-93139c9fef68" executionId="7925b66a-b2d6-488e-8500-91498d4d49da" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+  </TestEntries>
+  <TestLists>
+    <TestList name="Results Not in a List" id="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestList name="All Loaded Results" id="19431567-8539-422a-85d7-44ee4e166bda" />
+  </TestLists>
+  <ResultSummary outcome="Failed">
+    <Counters total="1" executed="1" passed="0" failed="1" error="0" timeout="0" aborted="0" inconclusive="0" passedButRunAborted="0" notRunnable="0" notExecuted="0" disconnected="0" warning="0" completed="0" inProgress="0" pending="0" />
+    <Output>
+      <StdOut>[xUnit.net 00:00:00.00] xUnit.net VSTest Adapter v3.1.5+1b188a7b0a (64-bit .NET 9.0.11)&#xD;
+[xUnit.net 00:00:00.09]   Discovering: DevTests&#xD;
+[xUnit.net 00:00:00.13]   Discovered:  DevTests&#xD;
+[xUnit.net 00:00:00.15]   Starting:    DevTests&#xD;
+[testcontainers.org 00:00:00.15] Connected to Docker:&#xD;
+  Host: tcp://127.0.0.1:62098/&#xD;
+  Server Version: 28.3.0 (via Testcontainers Desktop 1.19.0)&#xD;
+  Kernel Version: 5.15.167.4-microsoft-standard-WSL2&#xD;
+  API Version: 1.51&#xD;
+  Operating System: Docker Desktop&#xD;
+  Total Memory: 15.31 GB&#xD;
+  Labels: &#xD;
+    com.docker.desktop.address=npipe://\\.\pipe\docker_cli&#xD;
+[testcontainers.org 00:00:00.37] Docker container a600b6748831 created&#xD;
+[testcontainers.org 00:00:00.43] Start Docker container a600b6748831&#xD;
+[testcontainers.org 00:00:00.69] Wait for Docker container a600b6748831 to complete readiness checks&#xD;
+[testcontainers.org 00:00:00.70] Docker container a600b6748831 ready&#xD;
+[testcontainers.org 00:00:02.80] Docker container 0181b549496e created&#xD;
+[testcontainers.org 00:00:02.81] Start Docker container 0181b549496e&#xD;
+[testcontainers.org 00:00:03.02] Wait for Docker container 0181b549496e to complete readiness checks&#xD;
+[testcontainers.org 00:00:03.04] Execute "/bin/sh -c find /opt/mssql-tools*/bin/sqlcmd -type f -print -quit" at Docker container 0181b549496e&#xD;
+[testcontainers.org 00:00:03.10] Execute "/opt/mssql-tools18/bin/sqlcmd -C -Q SELECT 1;" at Docker container 0181b549496e&#xD;
+[testcontainers.org 00:00:09.70] Execute "/opt/mssql-tools18/bin/sqlcmd -C -Q SELECT 1;" at Docker container 0181b549496e&#xD;
+[testcontainers.org 00:00:09.80] Docker container 0181b549496e ready&#xD;
+info: Common.Authentication.JwtOptionsValidator[0]&#xD;
+      Validate is called&#xD;
+crit: Microsoft.AspNetCore.Hosting.Diagnostics[6]&#xD;
+      Application startup exception&#xD;
+      System.InvalidOperationException: No service for type 'Asp.Versioning.IReportApiVersions' has been registered.&#xD;
+         at Microsoft.Extensions.DependencyInjection.ServiceProviderServiceExtensions.GetRequiredService(IServiceProvider provider, Type serviceType)&#xD;
+         at Microsoft.Extensions.DependencyInjection.ServiceProviderServiceExtensions.GetRequiredService[T](IServiceProvider provider)&#xD;
+         at Asp.Versioning.Builder.EndpointBuilderFinalizer.Finialize(EndpointBuilder endpointBuilder, ApiVersionSet versionSet)&#xD;
+         at Asp.Versioning.Builder.EndpointBuilderFinalizer.FinalizeEndpoints(EndpointBuilder endpointBuilder)&#xD;
+         at Microsoft.AspNetCore.Routing.RouteEndpointDataSource.CreateRouteEndpointBuilder(RouteEntry entry, RoutePattern groupPrefix, IReadOnlyList`1 groupConventions, IReadOnlyList`1 groupFinallyConventions)&#xD;
+         at Microsoft.AspNetCore.Routing.RouteEndpointDataSource.GetGroupedEndpoints(RouteGroupContext context)&#xD;
+         at Microsoft.AspNetCore.Routing.RouteGroupBuilder.GroupEndpointDataSource.GetGroupedEndpointsWithNullablePrefix(RoutePattern prefix, IReadOnlyList`1 conventions, IReadOnlyList`1 finallyConventions, IServiceProvider applicationServices)&#xD;
+         at Microsoft.AspNetCore.Routing.RouteGroupBuilder.GroupEndpointDataSource.get_Endpoints()&#xD;
+         at Microsoft.AspNetCore.Routing.CompositeEndpointDataSource.CreateEndpointsUnsynchronized()&#xD;
+         at Microsoft.AspNetCore.Routing.CompositeEndpointDataSource.EnsureEndpointsInitialized()&#xD;
+         at Microsoft.AspNetCore.Routing.CompositeEndpointDataSource.get_Endpoints()&#xD;
+         at Microsoft.AspNetCore.Routing.DataSourceDependentCache`1.Initialize()&#xD;
+         at System.Threading.LazyInitializer.EnsureInitializedCore[T](T&amp; target, Boolean&amp; initialized, Object&amp; syncLock, Func`1 valueFactory)&#xD;
+         at Microsoft.AspNetCore.Routing.DataSourceDependentCache`1.EnsureInitialized()&#xD;
+         at Microsoft.AspNetCore.Authorization.Policy.AuthorizationPolicyCache..ctor(EndpointDataSource dataSource)&#xD;
+         at System.RuntimeMethodHandle.InvokeMethod(Object target, Void** arguments, Signature sig, Boolean isConstructor)&#xD;
+         at System.Reflection.MethodBaseInvoker.InvokeDirectByRefWithFewArgs(Object obj, Span`1 copyOfArgs, BindingFlags invokeAttr)&#xD;
+         at System.Reflection.MethodBaseInvoker.InvokeWithOneArg(Object obj, BindingFlags invokeAttr, Binder binder, Object[] parameters, CultureInfo culture)&#xD;
+         at System.Reflection.RuntimeConstructorInfo.Invoke(BindingFlags invokeAttr, Binder binder, Object[] parameters, CultureInfo culture)&#xD;
+         at Microsoft.Extensions.DependencyInjection.ServiceLookup.CallSiteRuntimeResolver.VisitConstructor(ConstructorCallSite constructorCallSite, RuntimeResolverContext context)&#xD;
+         at Microsoft.Extensions.DependencyInjection.ServiceLookup.CallSiteVisitor`2.VisitCallSiteMain(ServiceCallSite callSite, TArgument argument)&#xD;
+         at Microsoft.Extensions.DependencyInjection.ServiceLookup.CallSiteRuntimeResolver.VisitRootCache(ServiceCallSite callSite, RuntimeResolverContext context)&#xD;
+         at Microsoft.Extensions.DependencyInjection.ServiceLookup.CallSiteVisitor`2.VisitCallSite(ServiceCallSite callSite, TArgument argument)&#xD;
+         at Microsoft.Extensions.DependencyInjection.ServiceLookup.CallSiteRuntimeResolver.Resolve(ServiceCallSite callSite, ServiceProviderEngineScope scope)&#xD;
+         at Microsoft.Extensions.DependencyInjection.ServiceProvider.CreateServiceAccessor(ServiceIdentifier serviceIdentifier)&#xD;
+         at System.Collections.Concurrent.ConcurrentDictionary`2.GetOrAdd(TKey key, Func`2 valueFactory)&#xD;
+         at Microsoft.Extensions.DependencyInjection.ServiceProvider.GetService(ServiceIdentifier serviceIdentifier, ServiceProviderEngineScope serviceProviderEngineScope)&#xD;
+         at Microsoft.Extensions.DependencyInjection.ServiceLookup.ServiceProviderEngineScope.GetService(Type serviceType)&#xD;
+         at Microsoft.Extensions.DependencyInjection.ServiceProviderServiceExtensions.GetService[T](IServiceProvider provider)&#xD;
+         at Microsoft.AspNetCore.Authorization.AuthorizationMiddleware..ctor(RequestDelegate next, IAuthorizationPolicyProvider policyProvider, IServiceProvider services)&#xD;
+         at Microsoft.AspNetCore.Authorization.AuthorizationMiddlewareInternal..ctor(RequestDelegate next, IServiceProvider services, IAuthorizationPolicyProvider policyProvider, ILogger`1 logger)&#xD;
+         at System.RuntimeMethodHandle.InvokeMethod(Object target, Void** arguments, Signature sig, Boolean isConstructor)&#xD;
+         at System.Reflection.ConstructorInvoker.InvokeDirectByRefWithFewArgs(Span`1 copyOfArgs)&#xD;
+         at System.Reflection.ConstructorInvoker.InvokeDirectByRef(Object arg1, Object arg2, Object arg3, Object arg4)&#xD;
+         at System.Reflection.ConstructorInvoker.InvokeImpl(Object arg1, Object arg2, Object arg3, Object arg4)&#xD;
+         at System.Reflection.ConstructorInvoker.Invoke(Span`1 arguments)&#xD;
+         at Microsoft.Extensions.DependencyInjection.ActivatorUtilities.ConstructorMatcher.CreateInstance(IServiceProvider provider)&#xD;
+         at Microsoft.Extensions.DependencyInjection.ActivatorUtilities.CreateInstance(IServiceProvider provider, Type instanceType, Object[] parameters)&#xD;
+         at Microsoft.AspNetCore.Builder.UseMiddlewareExtensions.ReflectionMiddlewareBinder.CreateMiddleware(RequestDelegate next)&#xD;
+         at Microsoft.AspNetCore.Builder.ApplicationBuilder.Build()&#xD;
+         at Microsoft.AspNetCore.Builder.ApplicationBuilder.Build()&#xD;
+         at Microsoft.AspNetCore.Hosting.GenericWebHostService.StartAsync(CancellationToken cancellationToken)&#xD;
+fail: Microsoft.Extensions.Hosting.Internal.Host[11]&#xD;
+      Hosting failed to start&#xD;
+      System.InvalidOperationException: No service for type 'Asp.Versioning.IReportApiVersions' has been registered.&#xD;
+         at Microsoft.Extensions.DependencyInjection.ServiceProviderServiceExtensions.GetRequiredService(IServiceProvider provider, Type serviceType)&#xD;
+         at Microsoft.Extensions.DependencyInjection.ServiceProviderServiceExtensions.GetRequiredService[T](IServiceProvider provider)&#xD;
+         at Asp.Versioning.Builder.EndpointBuilderFinalizer.Finialize(EndpointBuilder endpointBuilder, ApiVersionSet versionSet)&#xD;
+         at Asp.Versioning.Builder.EndpointBuilderFinalizer.FinalizeEndpoints(EndpointBuilder endpointBuilder)&#xD;
+         at Microsoft.AspNetCore.Routing.RouteEndpointDataSource.CreateRouteEndpointBuilder(RouteEntry entry, RoutePattern groupPrefix, IReadOnlyList`1 groupConventions, IReadOnlyList`1 groupFinallyConventions)&#xD;
+         at Microsoft.AspNetCore.Routing.RouteEndpointDataSource.GetGroupedEndpoints(RouteGroupContext context)&#xD;
+         at Microsoft.AspNetCore.Routing.RouteGroupBuilder.GroupEndpointDataSource.GetGroupedEndpointsWithNullablePrefix(RoutePattern prefix, IReadOnlyList`1 conventions, IReadOnlyList`1 finallyConventions, IServiceProvider applicationServices)&#xD;
+         at Microsoft.AspNetCore.Routing.RouteGroupBuilder.GroupEndpointDataSource.get_Endpoints()&#xD;
+         at Microsoft.AspNetCore.Routing.CompositeEndpointDataSource.CreateEndpointsUnsynchronized()&#xD;
+         at Microsoft.AspNetCore.Routing.CompositeEndpointDataSource.EnsureEndpointsInitialized()&#xD;
+         at Microsoft.AspNetCore.Routing.CompositeEndpointDataSource.get_Endpoints()&#xD;
+         at Microsoft.AspNetCore.Routing.DataSourceDependentCache`1.Initialize()&#xD;
+         at System.Threading.LazyInitializer.EnsureInitializedCore[T](T&amp; target, Boolean&amp; initialized, Object&amp; syncLock, Func`1 valueFactory)&#xD;
+         at Microsoft.AspNetCore.Routing.DataSourceDependentCache`1.EnsureInitialized()&#xD;
+         at Microsoft.AspNetCore.Authorization.Policy.AuthorizationPolicyCache..ctor(EndpointDataSource dataSource)&#xD;
+         at System.RuntimeMethodHandle.InvokeMethod(Object target, Void** arguments, Signature sig, Boolean isConstructor)&#xD;
+         at System.Reflection.MethodBaseInvoker.InvokeDirectByRefWithFewArgs(Object obj, Span`1 copyOfArgs, BindingFlags invokeAttr)&#xD;
+         at System.Reflection.MethodBaseInvoker.InvokeWithOneArg(Object obj, BindingFlags invokeAttr, Binder binder, Object[] parameters, CultureInfo culture)&#xD;
+         at System.Reflection.RuntimeConstructorInfo.Invoke(BindingFlags invokeAttr, Binder binder, Object[] parameters, CultureInfo culture)&#xD;
+         at Microsoft.Extensions.DependencyInjection.ServiceLookup.CallSiteRuntimeResolver.VisitConstructor(ConstructorCallSite constructorCallSite, RuntimeResolverContext context)&#xD;
+         at Microsoft.Extensions.DependencyInjection.ServiceLookup.CallSiteVisitor`2.VisitCallSiteMain(ServiceCallSite callSite, TArgument argument)&#xD;
+         at Microsoft.Extensions.DependencyInjection.ServiceLookup.CallSiteRuntimeResolver.VisitRootCache(ServiceCallSite callSite, RuntimeResolverContext context)&#xD;
+         at Microsoft.Extensions.DependencyInjection.ServiceLookup.CallSiteVisitor`2.VisitCallSite(ServiceCallSite callSite, TArgument argument)&#xD;
+         at Microsoft.Extensions.DependencyInjection.ServiceLookup.CallSiteRuntimeResolver.Resolve(ServiceCallSite callSite, ServiceProviderEngineScope scope)&#xD;
+         at Microsoft.Extensions.DependencyInjection.ServiceProvider.CreateServiceAccessor(ServiceIdentifier serviceIdentifier)&#xD;
+         at System.Collections.Concurrent.ConcurrentDictionary`2.GetOrAdd(TKey key, Func`2 valueFactory)&#xD;
+         at Microsoft.Extensions.DependencyInjection.ServiceProvider.GetService(ServiceIdentifier serviceIdentifier, ServiceProviderEngineScope serviceProviderEngineScope)&#xD;
+         at Microsoft.Extensions.DependencyInjection.ServiceLookup.ServiceProviderEngineScope.GetService(Type serviceType)&#xD;
+         at Microsoft.Extensions.DependencyInjection.ServiceProviderServiceExtensions.GetService[T](IServiceProvider provider)&#xD;
+         at Microsoft.AspNetCore.Authorization.AuthorizationMiddleware..ctor(RequestDelegate next, IAuthorizationPolicyProvider policyProvider, IServiceProvider services)&#xD;
+         at Microsoft.AspNetCore.Authorization.AuthorizationMiddlewareInternal..ctor(RequestDelegate next, IServiceProvider services, IAuthorizationPolicyProvider policyProvider, ILogger`1 logger)&#xD;
+         at System.RuntimeMethodHandle.InvokeMethod(Object target, Void** arguments, Signature sig, Boolean isConstructor)&#xD;
+         at System.Reflection.ConstructorInvoker.InvokeDirectByRefWithFewArgs(Span`1 copyOfArgs)&#xD;
+         at System.Reflection.ConstructorInvoker.InvokeDirectByRef(Object arg1, Object arg2, Object arg3, Object arg4)&#xD;
+         at System.Reflection.ConstructorInvoker.InvokeImpl(Object arg1, Object arg2, Object arg3, Object arg4)&#xD;
+         at System.Reflection.ConstructorInvoker.Invoke(Span`1 arguments)&#xD;
+         at Microsoft.Extensions.DependencyInjection.ActivatorUtilities.ConstructorMatcher.CreateInstance(IServiceProvider provider)&#xD;
+         at Microsoft.Extensions.DependencyInjection.ActivatorUtilities.CreateInstance(IServiceProvider provider, Type instanceType, Object[] parameters)&#xD;
+         at Microsoft.AspNetCore.Builder.UseMiddlewareExtensions.ReflectionMiddlewareBinder.CreateMiddleware(RequestDelegate next)&#xD;
+         at Microsoft.AspNetCore.Builder.ApplicationBuilder.Build()&#xD;
+         at Microsoft.AspNetCore.Builder.ApplicationBuilder.Build()&#xD;
+         at Microsoft.AspNetCore.Hosting.GenericWebHostService.StartAsync(CancellationToken cancellationToken)&#xD;
+         at Microsoft.Extensions.Hosting.Internal.Host.&lt;StartAsync&gt;b__14_1(IHostedService service, CancellationToken token)&#xD;
+         at Microsoft.Extensions.Hosting.Internal.Host.ForeachService[T](IEnumerable`1 services, CancellationToken token, Boolean concurrent, Boolean abortOnFirstException, List`1 exceptions, Func`3 operation)&#xD;
+System.InvalidOperationException: No service for type 'Asp.Versioning.IReportApiVersions' has been registered.&#xD;
+   at Microsoft.Extensions.DependencyInjection.ServiceProviderServiceExtensions.GetRequiredService(IServiceProvider provider, Type serviceType)&#xD;
+   at Microsoft.Extensions.DependencyInjection.ServiceProviderServiceExtensions.GetRequiredService[T](IServiceProvider provider)&#xD;
+   at Asp.Versioning.Builder.EndpointBuilderFinalizer.Finialize(EndpointBuilder endpointBuilder, ApiVersionSet versionSet)&#xD;
+   at Asp.Versioning.Builder.EndpointBuilderFinalizer.FinalizeEndpoints(EndpointBuilder endpointBuilder)&#xD;
+   at Microsoft.AspNetCore.Routing.RouteEndpointDataSource.CreateRouteEndpointBuilder(RouteEntry entry, RoutePattern groupPrefix, IReadOnlyList`1 groupConventions, IReadOnlyList`1 groupFinallyConventions)&#xD;
+   at Microsoft.AspNetCore.Routing.RouteEndpointDataSource.GetGroupedEndpoints(RouteGroupContext context)&#xD;
+   at Microsoft.AspNetCore.Routing.RouteGroupBuilder.GroupEndpointDataSource.GetGroupedEndpointsWithNullablePrefix(RoutePattern prefix, IReadOnlyList`1 conventions, IReadOnlyList`1 finallyConventions, IServiceProvider applicationServices)&#xD;
+   at Microsoft.AspNetCore.Routing.RouteGroupBuilder.GroupEndpointDataSource.get_Endpoints()&#xD;
+   at Microsoft.AspNetCore.Routing.CompositeEndpointDataSource.CreateEndpointsUnsynchronized()&#xD;
+   at Microsoft.AspNetCore.Routing.CompositeEndpointDataSource.EnsureEndpointsInitialized()&#xD;
+   at Microsoft.AspNetCore.Routing.CompositeEndpointDataSource.get_Endpoints()&#xD;
+   at Microsoft.AspNetCore.Routing.DataSourceDependentCache`1.Initialize()&#xD;
+   at System.Threading.LazyInitializer.EnsureInitializedCore[T](T&amp; target, Boolean&amp; initialized, Object&amp; syncLock, Func`1 valueFactory)&#xD;
+   at Microsoft.AspNetCore.Routing.DataSourceDependentCache`1.EnsureInitialized()&#xD;
+   at Microsoft.AspNetCore.Authorization.Policy.AuthorizationPolicyCache..ctor(EndpointDataSource dataSource)&#xD;
+   at System.RuntimeMethodHandle.InvokeMethod(Object target, Void** arguments, Signature sig, Boolean isConstructor)&#xD;
+   at System.Reflection.MethodBaseInvoker.InvokeDirectByRefWithFewArgs(Object obj, Span`1 copyOfArgs, BindingFlags invokeAttr)&#xD;
+   at System.Reflection.MethodBaseInvoker.InvokeWithOneArg(Object obj, BindingFlags invokeAttr, Binder binder, Object[] parameters, CultureInfo culture)&#xD;
+   at System.Reflection.RuntimeConstructorInfo.Invoke(BindingFlags invokeAttr, Binder binder, Object[] parameters, CultureInfo culture)&#xD;
+   at Microsoft.Extensions.DependencyInjection.ServiceLookup.CallSiteRuntimeResolver.VisitConstructor(ConstructorCallSite constructorCallSite, RuntimeResolverContext context)&#xD;
+   at Microsoft.Extensions.DependencyInjection.ServiceLookup.CallSiteVisitor`2.VisitCallSiteMain(ServiceCallSite callSite, TArgument argument)&#xD;
+   at Microsoft.Extensions.DependencyInjection.ServiceLookup.CallSiteRuntimeResolver.VisitRootCache(ServiceCallSite callSite, RuntimeResolverContext context)&#xD;
+   at Microsoft.Extensions.DependencyInjection.ServiceLookup.CallSiteVisitor`2.VisitCallSite(ServiceCallSite callSite, TArgument argument)&#xD;
+   at Microsoft.Extensions.DependencyInjection.ServiceLookup.CallSiteRuntimeResolver.Resolve(ServiceCallSite callSite, ServiceProviderEngineScope scope)&#xD;
+   at Microsoft.Extensions.DependencyInjection.ServiceProvider.CreateServiceAccessor(ServiceIdentifier serviceIdentifier)&#xD;
+   at System.Collections.Concurrent.ConcurrentDictionary`2.GetOrAdd(TKey key, Func`2 valueFactory)&#xD;
+   at Microsoft.Extensions.DependencyInjection.ServiceProvider.GetService(ServiceIdentifier serviceIdentifier, ServiceProviderEngineScope serviceProviderEngineScope)&#xD;
+   at Microsoft.Extensions.DependencyInjection.ServiceLookup.ServiceProviderEngineScope.GetService(Type serviceType)&#xD;
+   at Microsoft.Extensions.DependencyInjection.ServiceProviderServiceExtensions.GetService[T](IServiceProvider provider)&#xD;
+   at Microsoft.AspNetCore.Authorization.AuthorizationMiddleware..ctor(RequestDelegate next, IAuthorizationPolicyProvider policyProvider, IServiceProvider services)&#xD;
+   at Microsoft.AspNetCore.Authorization.AuthorizationMiddlewareInternal..ctor(RequestDelegate next, IServiceProvider services, IAuthorizationPolicyProvider policyProvider, ILogger`1 logger)&#xD;
+   at System.RuntimeMethodHandle.InvokeMethod(Object target, Void** arguments, Signature sig, Boolean isConstructor)&#xD;
+   at System.Reflection.ConstructorInvoker.InvokeDirectByRefWithFewArgs(Span`1 copyOfArgs)&#xD;
+   at System.Reflection.ConstructorInvoker.InvokeDirectByRef(Object arg1, Object arg2, Object arg3, Object arg4)&#xD;
+   at System.Reflection.ConstructorInvoker.InvokeImpl(Object arg1, Object arg2, Object arg3, Object arg4)&#xD;
+   at System.Reflection.ConstructorInvoker.Invoke(Span`1 arguments)&#xD;
+   at Microsoft.Extensions.DependencyInjection.ActivatorUtilities.ConstructorMatcher.CreateInstance(IServiceProvider provider)&#xD;
+   at Microsoft.Extensions.DependencyInjection.ActivatorUtilities.CreateInstance(IServiceProvider provider, Type instanceType, Object[] parameters)&#xD;
+   at Microsoft.AspNetCore.Builder.UseMiddlewareExtensions.ReflectionMiddlewareBinder.CreateMiddleware(RequestDelegate next)&#xD;
+   at Microsoft.AspNetCore.Builder.ApplicationBuilder.Build()&#xD;
+   at Microsoft.AspNetCore.Builder.ApplicationBuilder.Build()&#xD;
+   at Microsoft.AspNetCore.Hosting.GenericWebHostService.StartAsync(CancellationToken cancellationToken)&#xD;
+   at Microsoft.Extensions.Hosting.Internal.Host.&lt;StartAsync&gt;b__14_1(IHostedService service, CancellationToken token)&#xD;
+   at Microsoft.Extensions.Hosting.Internal.Host.ForeachService[T](IEnumerable`1 services, CancellationToken token, Boolean concurrent, Boolean abortOnFirstException, List`1 exceptions, Func`3 operation)&#xD;
+   at Microsoft.Extensions.Hosting.Internal.Host.StartAsync(CancellationToken cancellationToken)&#xD;
+   at DevTests.IntegrationTests.BaseIntegrationTest.InitializeAsync() in C:\src\github\alex-horvath-net\ModularMonolith\src\DevTests\IntegrationTests\BaseIntegrationTest.cs:line 73&#xD;
+[xUnit.net 00:00:11.65]       System.InvalidOperationException : No service for type 'Asp.Versioning.IReportApiVersions' has been registered.&#xD;
+[xUnit.net 00:00:11.65]       Stack Trace:&#xD;
+[xUnit.net 00:00:11.65]            at Microsoft.Extensions.DependencyInjection.ServiceProviderServiceExtensions.GetRequiredService(IServiceProvider provider, Type serviceType)&#xD;
+[xUnit.net 00:00:11.66]            at Microsoft.Extensions.DependencyInjection.ServiceProviderServiceExtensions.GetRequiredService[T](IServiceProvider provider)&#xD;
+[xUnit.net 00:00:11.66]            at Asp.Versioning.Builder.EndpointBuilderFinalizer.Finialize(EndpointBuilder endpointBuilder, ApiVersionSet versionSet)&#xD;
+[xUnit.net 00:00:11.66]            at Asp.Versioning.Builder.EndpointBuilderFinalizer.FinalizeEndpoints(EndpointBuilder endpointBuilder)&#xD;
+[xUnit.net 00:00:11.66]            at Microsoft.AspNetCore.Routing.RouteEndpointDataSource.CreateRouteEndpointBuilder(RouteEntry entry, RoutePattern groupPrefix, IReadOnlyList`1 groupConventions, IReadOnlyList`1 groupFinallyConventions)&#xD;
+[xUnit.net 00:00:11.66]            at Microsoft.AspNetCore.Routing.RouteEndpointDataSource.GetGroupedEndpoints(RouteGroupContext context)&#xD;
+[xUnit.net 00:00:11.66]            at Microsoft.AspNetCore.Routing.RouteGroupBuilder.GroupEndpointDataSource.GetGroupedEndpointsWithNullablePrefix(RoutePattern prefix, IReadOnlyList`1 conventions, IReadOnlyList`1 finallyConventions, IServiceProvider applicationServices)&#xD;
+[xUnit.net 00:00:11.66]            at Microsoft.AspNetCore.Routing.RouteGroupBuilder.GroupEndpointDataSource.get_Endpoints()&#xD;
+[xUnit.net 00:00:11.66]            at Microsoft.AspNetCore.Routing.CompositeEndpointDataSource.CreateEndpointsUnsynchronized()&#xD;
+[xUnit.net 00:00:11.66]            at Microsoft.AspNetCore.Routing.CompositeEndpointDataSource.EnsureEndpointsInitialized()&#xD;
+[xUnit.net 00:00:11.66]            at Microsoft.AspNetCore.Routing.CompositeEndpointDataSource.get_Endpoints()&#xD;
+[xUnit.net 00:00:11.66]            at Microsoft.AspNetCore.Routing.DataSourceDependentCache`1.Initialize()&#xD;
+[xUnit.net 00:00:11.66]            at System.Threading.LazyInitializer.EnsureInitializedCore[T](T&amp; target, Boolean&amp; initialized, Object&amp; syncLock, Func`1 valueFactory)&#xD;
+[xUnit.net 00:00:11.66]            at Microsoft.AspNetCore.Routing.DataSourceDependentCache`1.EnsureInitialized()&#xD;
+[xUnit.net 00:00:11.66]            at Microsoft.AspNetCore.Authorization.Policy.AuthorizationPolicyCache..ctor(EndpointDataSource dataSource)&#xD;
+[xUnit.net 00:00:11.66]            at System.RuntimeMethodHandle.InvokeMethod(Object target, Void** arguments, Signature sig, Boolean isConstructor)&#xD;
+[xUnit.net 00:00:11.66]            at System.Reflection.MethodBaseInvoker.InvokeDirectByRefWithFewArgs(Object obj, Span`1 copyOfArgs, BindingFlags invokeAttr)&#xD;
+[xUnit.net 00:00:11.66]            at System.Reflection.MethodBaseInvoker.InvokeWithOneArg(Object obj, BindingFlags invokeAttr, Binder binder, Object[] parameters, CultureInfo culture)&#xD;
+[xUnit.net 00:00:11.66]            at System.Reflection.RuntimeConstructorInfo.Invoke(BindingFlags invokeAttr, Binder binder, Object[] parameters, CultureInfo culture)&#xD;
+[xUnit.net 00:00:11.66]            at Microsoft.Extensions.DependencyInjection.ServiceLookup.CallSiteRuntimeResolver.VisitConstructor(ConstructorCallSite constructorCallSite, RuntimeResolverContext context)&#xD;
+[xUnit.net 00:00:11.66]            at Microsoft.Extensions.DependencyInjection.ServiceLookup.CallSiteVisitor`2.VisitCallSiteMain(ServiceCallSite callSite, TArgument argument)&#xD;
+[xUnit.net 00:00:11.66]            at Microsoft.Extensions.DependencyInjection.ServiceLookup.CallSiteRuntimeResolver.VisitRootCache(ServiceCallSite callSite, RuntimeResolverContext context)&#xD;
+[xUnit.net 00:00:11.66]            at Microsoft.Extensions.DependencyInjection.ServiceLookup.CallSiteVisitor`2.VisitCallSite(ServiceCallSite callSite, TArgument argument)&#xD;
+[xUnit.net 00:00:11.66]            at Microsoft.Extensions.DependencyInjection.ServiceLookup.CallSiteRuntimeResolver.Resolve(ServiceCallSite callSite, ServiceProviderEngineScope scope)&#xD;
+[xUnit.net 00:00:11.66]            at Microsoft.Extensions.DependencyInjection.ServiceProvider.CreateServiceAccessor(ServiceIdentifier serviceIdentifier)&#xD;
+[xUnit.net 00:00:11.66]            at System.Collections.Concurrent.ConcurrentDictionary`2.GetOrAdd(TKey key, Func`2 valueFactory)&#xD;
+[xUnit.net 00:00:11.66]            at Microsoft.Extensions.DependencyInjection.ServiceProvider.GetService(ServiceIdentifier serviceIdentifier, ServiceProviderEngineScope serviceProviderEngineScope)&#xD;
+[xUnit.net 00:00:11.66]            at Microsoft.Extensions.DependencyInjection.ServiceLookup.ServiceProviderEngineScope.GetService(Type serviceType)&#xD;
+[xUnit.net 00:00:11.66]            at Microsoft.Extensions.DependencyInjection.ServiceProviderServiceExtensions.GetService[T](IServiceProvider provider)&#xD;
+[xUnit.net 00:00:11.66]            at Microsoft.AspNetCore.Authorization.AuthorizationMiddleware..ctor(RequestDelegate next, IAuthorizationPolicyProvider policyProvider, IServiceProvider services)&#xD;
+[xUnit.net 00:00:11.66]            at Microsoft.AspNetCore.Authorization.AuthorizationMiddlewareInternal..ctor(RequestDelegate next, IServiceProvider services, IAuthorizationPolicyProvider policyProvider, ILogger`1 logger)&#xD;
+[xUnit.net 00:00:11.66]            at System.RuntimeMethodHandle.InvokeMethod(Object target, Void** arguments, Signature sig, Boolean isConstructor)&#xD;
+[xUnit.net 00:00:11.66]            at System.Reflection.ConstructorInvoker.InvokeDirectByRefWithFewArgs(Span`1 copyOfArgs)&#xD;
+[xUnit.net 00:00:11.66]            at System.Reflection.ConstructorInvoker.InvokeDirectByRef(Object arg1, Object arg2, Object arg3, Object arg4)&#xD;
+[xUnit.net 00:00:11.66]            at System.Reflection.ConstructorInvoker.InvokeImpl(Object arg1, Object arg2, Object arg3, Object arg4)&#xD;
+[xUnit.net 00:00:11.66]            at System.Reflection.ConstructorInvoker.Invoke(Span`1 arguments)&#xD;
+[xUnit.net 00:00:11.66]            at Microsoft.Extensions.DependencyInjection.ActivatorUtilities.ConstructorMatcher.CreateInstance(IServiceProvider provider)&#xD;
+[xUnit.net 00:00:11.66]            at Microsoft.Extensions.DependencyInjection.ActivatorUtilities.CreateInstance(IServiceProvider provider, Type instanceType, Object[] parameters)&#xD;
+[xUnit.net 00:00:11.66]            at Microsoft.AspNetCore.Builder.UseMiddlewareExtensions.ReflectionMiddlewareBinder.CreateMiddleware(RequestDelegate next)&#xD;
+[xUnit.net 00:00:11.66]            at Microsoft.AspNetCore.Builder.ApplicationBuilder.Build()&#xD;
+[xUnit.net 00:00:11.66]            at Microsoft.AspNetCore.Builder.ApplicationBuilder.Build()&#xD;
+[xUnit.net 00:00:11.66]            at Microsoft.AspNetCore.Hosting.GenericWebHostService.StartAsync(CancellationToken cancellationToken)&#xD;
+[xUnit.net 00:00:11.66]            at Microsoft.Extensions.Hosting.Internal.Host.&lt;StartAsync&gt;b__14_1(IHostedService service, CancellationToken token)&#xD;
+[xUnit.net 00:00:11.66]            at Microsoft.Extensions.Hosting.Internal.Host.ForeachService[T](IEnumerable`1 services, CancellationToken token, Boolean concurrent, Boolean abortOnFirstException, List`1 exceptions, Func`3 operation)&#xD;
+[xUnit.net 00:00:11.66]            at Microsoft.Extensions.Hosting.Internal.Host.StartAsync(CancellationToken cancellationToken)&#xD;
+[xUnit.net 00:00:11.66]         C:\src\github\alex-horvath-net\ModularMonolith\src\DevTests\IntegrationTests\BaseIntegrationTest.cs(73,0): at DevTests.IntegrationTests.BaseIntegrationTest.InitializeAsync()&#xD;
+[xUnit.net 00:00:11.68]   Finished:    DevTests&#xD;
+</StdOut>
+    </Output>
+    <RunInfos>
+      <RunInfo computerName="ALADARLAPTOP" outcome="Error" timestamp="2026-01-02T23:54:31.9756599+00:00">
+        <Text>[xUnit.net 00:00:11.65]     DevTests.IntegrationTests.CreateOrderEndpointTests.PostOrders_ShouldCreateOrder [FAIL]</Text>
+      </RunInfo>
+    </RunInfos>
+  </ResultSummary>
+</TestRun>

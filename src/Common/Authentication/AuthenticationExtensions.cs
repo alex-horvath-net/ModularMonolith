@@ -23,6 +23,11 @@ internal static class AuthenticationExtensions {
                 options.RequireHttpsMetadata = !env.IsDevelopment();
             });
 
+        // Ensure authorization services are present with a fallback policy
+        services.AddAuthorization(options => {
+            options.FallbackPolicy = new AuthorizationPolicyBuilder().RequireAuthenticatedUser().Build();
+        });
+
         // Register the post-configure which runs against the real container after DI composition
         services.AddSingleton<IPostConfigureOptions<JwtBearerOptions>, JwtBearerPostConfigure>();
 
@@ -37,8 +42,7 @@ internal static class AuthenticationExtensions {
 
 
         services
-            .AddAuthorizationBuilder()
-            .SetFallbackPolicy(new AuthorizationPolicyBuilder().RequireAuthenticatedUser().Build());
+            .AddAuthorizationBuilder();
 
         return services;
     }
