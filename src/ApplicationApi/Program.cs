@@ -1,4 +1,5 @@
 using Billing;
+using BusinessExperts.Identity.CreateToken;
 using Common;
 using Common.Observability;
 using Common.Security;
@@ -19,7 +20,10 @@ builder.Services.AddCommon(builder.Configuration, builder.Environment);
 var app = builder.Build();
 
 app.MapCommon();
+app.MapDevToken();
 //app.MapOrders();
 //app.MapBilling();
 
 app.Run();
+
+public partial class Program { }

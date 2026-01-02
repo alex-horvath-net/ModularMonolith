@@ -59,7 +59,8 @@ public static class CommonExtensions {
         //app.UseBrowserRequestRestrictions();     // restrict incoming HttpRequests From browser
         app.MapAuthentication();        // Validate JWT bearer tokens and  Enforce policies/fallback
 
-        app.MapDevToken();
+        // Dev token mapping is provided in BusinessExperts.Identity; map it from the host when needed.
+        //app.MapDevToken();
         //app.MapFullHealthCheck();
         
         //app.MapApiDocumentation();      // Apply OpenApi 

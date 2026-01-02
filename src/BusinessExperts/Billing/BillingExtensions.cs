@@ -2,6 +2,7 @@ using BusinessExperts.Billing.CreateInvoice;
 using BusinessExperts.Billing.GetInvoice.API;
 using BusinessExperts.Billing.GetInvoice.QueryHandlers;
 using BusinessExperts.Billing.Infrastructure.Data;
+using BusinessExperts.Orders.Contracts.Events;
 using Common.Events;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Routing;
@@ -10,7 +11,6 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
-using Orders.Contracts.Events;
 
 namespace BusinessExperts.Billing;
 

@@ -1,7 +1,7 @@
+using BusinessExperts.Orders.Contracts.Events;
 using BusinessExperts.Orders.Featrures.Create.Infrastructure.Data;
 using BusinessExperts.Orders.Featrures.Create.Infrastructure.Data.Models;
 using Common.Events;
-using Orders.Create.Contracts.Events;
 
 namespace BusinessExperts.Orders.Featrures.Create;
 
