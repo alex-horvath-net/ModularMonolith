@@ -1,3 +1,4 @@
+using System.Net;
 using System.Net.Http.Json;
 using BusinessExperts.Billing.CreateInvoice;
 using BusinessExperts.Billing.Infrastructure.Data;
@@ -26,7 +27,7 @@ public class CreateOrderEndpointTests : IAsyncLifetime {
 
     public async Task InitializeAsync() {
         await _dbContainer.StartAsync();
-
+        WebApplication.CreateBuilder();
         var builder = WebApplication.CreateBuilder(new WebApplicationOptions {
             EnvironmentName = "IntegrationTest"
         });
@@ -82,6 +83,6 @@ public class CreateOrderEndpointTests : IAsyncLifetime {
         var response = await _client!.PostAsJsonAsync("/v1/orders", command);
 
         response.EnsureSuccessStatusCode();
-        response.StatusCode.Should().Be(System.Net.HttpStatusCode.Created);
+        response.StatusCode.Should().Be(HttpStatusCode.Created);
     }
 }

@@ -11,7 +11,7 @@ using Testcontainers.MsSql;
 
 namespace DevTests.IntegrationTests;
 
-public abstract partial class BaseIntegrationTest : IAsyncLifetime, IDisposable {
+public abstract class BaseIntegrationTest : IAsyncLifetime, IDisposable {
     private readonly MsSqlContainer _dbContainer = new MsSqlBuilder()
         .WithImage("mcr.microsoft.com/mssql/server:2022-latest")
         .WithPassword("Strong_password_123!")
@@ -21,6 +21,8 @@ public abstract partial class BaseIntegrationTest : IAsyncLifetime, IDisposable 
     private IServiceScope? _scope;
     protected CreateOrderCommandHandler Handler = default!;
     protected OrdersDbContext OrdersDB = default!;
+    protected BillingDbContext BillingDB = default!;
+    protected HttpClient _client = default!;
 
     public async Task InitializeAsync() {
         await _dbContainer.StartAsync();
@@ -37,10 +39,12 @@ public abstract partial class BaseIntegrationTest : IAsyncLifetime, IDisposable 
         _scope = _provider.CreateScope();
 
         Handler = _scope.ServiceProvider.GetRequiredService<CreateOrderCommandHandler>();
+
         OrdersDB = _scope.ServiceProvider.GetRequiredService<OrdersDbContext>();
         await OrdersDB.Database.EnsureCreatedAsync();
-        var billingDb = _scope.ServiceProvider.GetRequiredService<BillingDbContext>();
-        await billingDb.Database.EnsureCreatedAsync();
+
+        BillingDB = _scope.ServiceProvider.GetRequiredService<BillingDbContext>();
+        await BillingDB.Database.EnsureCreatedAsync();
     }
 
     public Task DisposeAsync() => _dbContainer.StopAsync();
