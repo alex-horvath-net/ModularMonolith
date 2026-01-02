@@ -1,6 +1,6 @@
 using System.Net.Http.Json;
-using Asp.Versioning;
 using BusinessExperts.Billing.CreateInvoice;
+using BusinessExperts.Billing.Infrastructure.Data;
 using BusinessExperts.Contracts.Events;
 using BusinessExperts.Orders;
 using BusinessExperts.Orders.Featrures.Create;
@@ -8,19 +8,15 @@ using BusinessExperts.Orders.Featrures.Create.Infrastructure.Data;
 using Common.Events;
 using FluentAssertions;
 using FluentValidation;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Builder;
-using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.TestHost;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Testcontainers.MsSql;
-using Xunit;
 
 namespace DevTests.IntegrationTests;
 
-public class CreateOrderEndpointTests : IAsyncLifetime
-{
+public class CreateOrderEndpointTests : IAsyncLifetime {
     private readonly MsSqlContainer _dbContainer = new MsSqlBuilder()
         .WithImage("mcr.microsoft.com/mssql/server:2022-latest")
         .WithPassword("Strong_password_123!")
@@ -28,28 +24,24 @@ public class CreateOrderEndpointTests : IAsyncLifetime
 
     private HttpClient? _client;
 
-    public async Task InitializeAsync()
-    {
+    public async Task InitializeAsync() {
         await _dbContainer.StartAsync();
 
-        var builder = WebApplication.CreateBuilder(new WebApplicationOptions
-        {
+        var builder = WebApplication.CreateBuilder(new WebApplicationOptions {
             EnvironmentName = "IntegrationTest"
         });
 
         builder.WebHost.UseTestServer();
 
-        builder.Services.AddDbContext<OrdersDbContext>(options =>
-            options.UseSqlServer(_dbContainer.GetConnectionString()));
+        builder.Services.AddDbContext<OrdersDbContext>(options => options.UseSqlServer(_dbContainer.GetConnectionString()));
+        builder.Services.AddDbContext<BillingDbContext>(options => options.UseSqlServer(_dbContainer.GetConnectionString()));
         builder.Services.AddScoped<CreateOrderCommandHandler>();
         builder.Services.AddScoped<IValidator<CreateOrderCommand>, CreateOrderCommandValidator>();
         builder.Services.AddScoped<IBusinessEventPublisher, InProcessBusinessEventPublisher>();
         builder.Services.AddScoped<IBusinessEventHandler<OrderPlaced>, OrderPlacedEventHandler>();
-        builder.Services.AddApiVersioning(options => options.ReportApiVersions = true)
-            .AddApiExplorer();
+        builder.Services.AddApiVersioning(options => options.ReportApiVersions = true).AddApiExplorer();
         builder.Services.AddEndpointsApiExplorer();
-        builder.Services.AddAuthorization(options =>
-        {
+        builder.Services.AddAuthorization(options => {
             options.AddPolicy(OrdersConstants.Write, policy => policy.RequireAssertion(_ => true));
             options.DefaultPolicy = options.GetPolicy(OrdersConstants.Write)!;
             options.FallbackPolicy = options.DefaultPolicy;
@@ -57,10 +49,12 @@ public class CreateOrderEndpointTests : IAsyncLifetime
 
         var app = builder.Build();
 
-        using (var scope = app.Services.CreateScope())
-        {
-            var db = scope.ServiceProvider.GetRequiredService<OrdersDbContext>();
-            await db.Database.EnsureCreatedAsync();
+        using (var scope = app.Services.CreateScope()) {
+            var orderDB = scope.ServiceProvider.GetRequiredService<OrdersDbContext>();
+            await orderDB.Database.EnsureCreatedAsync();
+
+            var billingDB = scope.ServiceProvider.GetRequiredService<BillingDbContext>();
+            await billingDB.Database.EnsureCreatedAsync();
         }
 
         app.UseAuthorization();
@@ -71,10 +65,8 @@ public class CreateOrderEndpointTests : IAsyncLifetime
         _client = app.GetTestClient();
     }
 
-    public async Task DisposeAsync()
-    {
-        if (_client is IAsyncDisposable asyncDisposable)
-        {
+    public async Task DisposeAsync() {
+        if (_client is IAsyncDisposable asyncDisposable) {
             await asyncDisposable.DisposeAsync();
         }
 
@@ -82,11 +74,10 @@ public class CreateOrderEndpointTests : IAsyncLifetime
     }
 
     [Fact]
-    public async Task PostOrders_ShouldCreateOrder()
-    {
+    public async Task PostOrders_ShouldCreateOrder() {
         var command = new CreateOrderCommand(
             CustomerId: Guid.NewGuid(),
-            Lines: [ new OrderLineRequest(Guid.NewGuid(), 1, 10.0m) ]);
+            Lines: [new OrderLineRequest(Guid.NewGuid(), 1, 10.0m)]);
 
         var response = await _client!.PostAsJsonAsync("/v1/orders", command);
 

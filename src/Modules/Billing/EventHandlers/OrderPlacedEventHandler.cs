@@ -1,7 +1,7 @@
 using Billing.Infrastructure.Data;
 using Billing.Infrastructure.Data.Models;
+using BusinessExperts.Contracts.Events;
 using Common.Events;
-using Orders.Contracts.Events;
 
 namespace Billing.EventHandlers;
 
@@ -15,5 +15,4 @@ public sealed class OrderPlacedEventHandler(BillingDbContext db) : IBusinessEven
         db.Add(invoice);
         await db.SaveChangesAsync(token);
     }
-}
- 
+} 

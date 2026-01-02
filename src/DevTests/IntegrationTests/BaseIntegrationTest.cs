@@ -1,4 +1,5 @@
 ﻿using BusinessExperts.Billing.CreateInvoice;
+using BusinessExperts.Billing.Infrastructure.Data;
 using BusinessExperts.Contracts.Events;
 using BusinessExperts.Orders.Featrures.Create;
 using BusinessExperts.Orders.Featrures.Create.Infrastructure.Data;
@@ -25,8 +26,8 @@ public abstract partial class BaseIntegrationTest : IAsyncLifetime, IDisposable 
         await _dbContainer.StartAsync();
 
         var services = new ServiceCollection();
-        services.AddDbContext<OrdersDbContext>(options =>
-            options.UseSqlServer(_dbContainer.GetConnectionString()));
+        services.AddDbContext<OrdersDbContext>(options => options.UseSqlServer(_dbContainer.GetConnectionString()));
+        services.AddDbContext<BillingDbContext>(options => options.UseSqlServer(_dbContainer.GetConnectionString()));
         services.AddScoped<CreateOrderCommandHandler>();
         services.AddScoped<IValidator<CreateOrderCommand>, CreateOrderCommandValidator>();
         services.AddScoped<IBusinessEventPublisher, InProcessBusinessEventPublisher>();
@@ -38,6 +39,8 @@ public abstract partial class BaseIntegrationTest : IAsyncLifetime, IDisposable 
         Handler = _scope.ServiceProvider.GetRequiredService<CreateOrderCommandHandler>();
         OrdersDB = _scope.ServiceProvider.GetRequiredService<OrdersDbContext>();
         await OrdersDB.Database.EnsureCreatedAsync();
+        var billingDb = _scope.ServiceProvider.GetRequiredService<BillingDbContext>();
+        await billingDb.Database.EnsureCreatedAsync();
     }
 
     public Task DisposeAsync() => _dbContainer.StopAsync();
