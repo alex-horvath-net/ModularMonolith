@@ -21,8 +21,7 @@ public class CreateOrderCommandHandlerTests : BaseIntegrationTest {
         var id = await handler.Handle(command, default);
 
         // Assert 
-        var product = db.Orders.FirstOrDefault(p => p.Id == id);
-
-        product.Should().NotBeNull(); 
+        var order = db.Orders.FirstOrDefault(p => p.Id == id);
+        order.Should().NotBeNull(); 
     }
 }
