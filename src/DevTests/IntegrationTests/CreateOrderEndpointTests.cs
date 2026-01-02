@@ -1,12 +1,13 @@
 using System.Net.Http.Json;
 using Asp.Versioning;
+using BusinessExperts.Billing.CreateInvoice;
 using BusinessExperts.Contracts.Events;
 using BusinessExperts.Orders;
 using BusinessExperts.Orders.Featrures.Create;
 using BusinessExperts.Orders.Featrures.Create.Infrastructure.Data;
 using Common.Events;
-using FluentValidation;
 using FluentAssertions;
+using FluentValidation;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -43,7 +44,7 @@ public class CreateOrderEndpointTests : IAsyncLifetime
         builder.Services.AddScoped<CreateOrderCommandHandler>();
         builder.Services.AddScoped<IValidator<CreateOrderCommand>, CreateOrderCommandValidator>();
         builder.Services.AddScoped<IBusinessEventPublisher, InProcessBusinessEventPublisher>();
-        builder.Services.AddScoped<IBusinessEventHandler<OrderPlaced>, NoOpOrderPlacedHandler>();
+        builder.Services.AddScoped<IBusinessEventHandler<OrderPlaced>, OrderPlacedEventHandler>();
         builder.Services.AddApiVersioning(options => options.ReportApiVersions = true)
             .AddApiExplorer();
         builder.Services.AddEndpointsApiExplorer();
@@ -91,10 +92,5 @@ public class CreateOrderEndpointTests : IAsyncLifetime
 
         response.EnsureSuccessStatusCode();
         response.StatusCode.Should().Be(System.Net.HttpStatusCode.Created);
-    }
-
-    private sealed class NoOpOrderPlacedHandler : IBusinessEventHandler<OrderPlaced>
-    {
-        public Task Handle(OrderPlaced businessEvent, CancellationToken token = default) => Task.CompletedTask;
     }
 }

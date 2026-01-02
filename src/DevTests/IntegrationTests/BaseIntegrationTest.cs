@@ -1,4 +1,5 @@
-﻿using BusinessExperts.Contracts.Events;
+﻿using BusinessExperts.Billing.CreateInvoice;
+using BusinessExperts.Contracts.Events;
 using BusinessExperts.Orders.Featrures.Create;
 using BusinessExperts.Orders.Featrures.Create.Infrastructure.Data;
 using Common.Events;
@@ -29,7 +30,7 @@ public abstract partial class BaseIntegrationTest : IAsyncLifetime, IDisposable 
         services.AddScoped<CreateOrderCommandHandler>();
         services.AddScoped<IValidator<CreateOrderCommand>, CreateOrderCommandValidator>();
         services.AddScoped<IBusinessEventPublisher, InProcessBusinessEventPublisher>();
-        services.AddScoped<IBusinessEventHandler<OrderPlaced>, NoOpOrderPlacedHandler>();
+        services.AddScoped<IBusinessEventHandler<OrderPlaced>, OrderPlacedEventHandler>();
 
         _provider = services.BuildServiceProvider();
         _scope = _provider.CreateScope();

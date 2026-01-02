@@ -1,4 +1,5 @@
 using System.Net.Http.Json;
+using BusinessExperts.Billing.CreateInvoice;
 using BusinessExperts.Contracts.Events;
 using BusinessExperts.Orders;
 using BusinessExperts.Orders.Featrures.Create;
@@ -35,7 +36,7 @@ public class CreateOrderEndpointDirectTests : IAsyncLifetime {
         builder.Services.AddScoped<CreateOrderCommandHandler>();
         builder.Services.AddScoped<IValidator<CreateOrderCommand>, CreateOrderCommandValidator>();
         builder.Services.AddScoped<IBusinessEventPublisher, InProcessBusinessEventPublisher>();
-        builder.Services.AddScoped<IBusinessEventHandler<OrderPlaced>, NoOpOrderPlacedHandler>();
+        builder.Services.AddScoped<IBusinessEventHandler<OrderPlaced>, OrderPlacedEventHandler>();
         builder.Services.AddApiVersioning(options => options.ReportApiVersions = true).AddApiExplorer();
         builder.Services.AddEndpointsApiExplorer();
         builder.Services.AddAuthorization(options => {
@@ -76,9 +77,5 @@ public class CreateOrderEndpointDirectTests : IAsyncLifetime {
         var response = await _client!.PostAsJsonAsync("/v1/orders", command);
 
         response.EnsureSuccessStatusCode();
-    }
-
-    private sealed class NoOpOrderPlacedHandler : IBusinessEventHandler<OrderPlaced> {
-        public Task Handle(OrderPlaced businessEvent, CancellationToken token = default) => Task.CompletedTask;
     }
 }
