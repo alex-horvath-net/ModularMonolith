@@ -1,6 +1,6 @@
 ﻿using BusinessExperts.Billing;
 
-namespace ApplicationUsers {
+namespace ApplicationApi.Users {
     public class Member {
        public BillingExpert BillingExpert = new();
     }

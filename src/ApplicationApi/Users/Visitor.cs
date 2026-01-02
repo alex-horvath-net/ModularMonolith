@@ -1,5 +1,5 @@
 ﻿using BusinessExperts.Identity;
 
-namespace ApplicationUsers; 
+namespace ApplicationApi.Users; 
 public record Visitor(
     IdentityExpert IdentityExpert);

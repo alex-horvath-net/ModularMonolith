@@ -1,20 +1,16 @@
 using System.Net.Http.Json;
-using Asp.Versioning;
-using BusinessExperts.Contracts.Events;
 using BusinessExperts.Orders;
+using BusinessExperts.Orders.Contracts.Events;
 using BusinessExperts.Orders.Featrures.Create;
 using BusinessExperts.Orders.Featrures.Create.Infrastructure.Data;
 using Common.Events;
-using FluentValidation;
 using FluentAssertions;
-using Microsoft.AspNetCore.Authorization;
+using FluentValidation;
 using Microsoft.AspNetCore.Builder;
-using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.TestHost;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Testcontainers.MsSql;
-using Xunit;
 
 namespace DevTests.IntegrationTests;
 

@@ -1,25 +1,19 @@
 using System.Net.Http.Json;
-using Asp.Versioning;
-using BusinessExperts.Contracts.Events;
 using BusinessExperts.Orders;
+using BusinessExperts.Orders.Contracts.Events;
 using BusinessExperts.Orders.Featrures.Create;
 using BusinessExperts.Orders.Featrures.Create.Infrastructure.Data;
 using Common.Events;
 using FluentValidation;
-using FluentAssertions;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Builder;
-using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.TestHost;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Testcontainers.MsSql;
-using Xunit;
 
 namespace DevTests.IntegrationTests;
 
-public class CreateOrderEndpointDirectTests : IAsyncLifetime
-{
+public class CreateOrderEndpointDirectTests : IAsyncLifetime {
     private readonly MsSqlContainer _dbContainer = new MsSqlBuilder()
         .WithImage("mcr.microsoft.com/mssql/server:2022-latest")
         .WithPassword("Strong_password_123!")
@@ -27,12 +21,10 @@ public class CreateOrderEndpointDirectTests : IAsyncLifetime
 
     private HttpClient? _client;
 
-    public async Task InitializeAsync()
-    {
+    public async Task InitializeAsync() {
         await _dbContainer.StartAsync();
 
-        var builder = WebApplication.CreateBuilder(new WebApplicationOptions
-        {
+        var builder = WebApplication.CreateBuilder(new WebApplicationOptions {
             EnvironmentName = "IntegrationTest"
         });
 
@@ -44,11 +36,9 @@ public class CreateOrderEndpointDirectTests : IAsyncLifetime
         builder.Services.AddScoped<IValidator<CreateOrderCommand>, CreateOrderCommandValidator>();
         builder.Services.AddScoped<IBusinessEventPublisher, InProcessBusinessEventPublisher>();
         builder.Services.AddScoped<IBusinessEventHandler<OrderPlaced>, NoOpOrderPlacedHandler>();
-        builder.Services.AddApiVersioning(options => options.ReportApiVersions = true)
-            .AddApiExplorer();
+        builder.Services.AddApiVersioning(options => options.ReportApiVersions = true).AddApiExplorer();
         builder.Services.AddEndpointsApiExplorer();
-        builder.Services.AddAuthorization(options =>
-        {
+        builder.Services.AddAuthorization(options => {
             options.AddPolicy(OrdersConstants.Write, policy => policy.RequireAssertion(_ => true));
             options.DefaultPolicy = options.GetPolicy(OrdersConstants.Write)!;
             options.FallbackPolicy = options.DefaultPolicy;
@@ -56,8 +46,7 @@ public class CreateOrderEndpointDirectTests : IAsyncLifetime
 
         var app = builder.Build();
 
-        using (var scope = app.Services.CreateScope())
-        {
+        using (var scope = app.Services.CreateScope()) {
             var db = scope.ServiceProvider.GetRequiredService<OrdersDbContext>();
             await db.Database.EnsureCreatedAsync();
         }
@@ -70,10 +59,8 @@ public class CreateOrderEndpointDirectTests : IAsyncLifetime
         _client = app.GetTestClient();
     }
 
-    public async Task DisposeAsync()
-    {
-        if (_client is IAsyncDisposable asyncDisposable)
-        {
+    public async Task DisposeAsync() {
+        if (_client is IAsyncDisposable asyncDisposable) {
             await asyncDisposable.DisposeAsync();
         }
 
@@ -81,19 +68,17 @@ public class CreateOrderEndpointDirectTests : IAsyncLifetime
     }
 
     [Fact]
-    public async Task PostOrders_ShouldCreateOrder()
-    {
+    public async Task PostOrders_ShouldCreateOrder() {
         var command = new CreateOrderCommand(
             CustomerId: Guid.NewGuid(),
-            Lines: [ new OrderLineRequest(Guid.NewGuid(), 1, 10.0m) ]);
+            Lines: [new OrderLineRequest(Guid.NewGuid(), 1, 10.0m)]);
 
         var response = await _client!.PostAsJsonAsync("/v1/orders", command);
 
         response.EnsureSuccessStatusCode();
     }
 
-    private sealed class NoOpOrderPlacedHandler : IBusinessEventHandler<OrderPlaced>
-    {
+    private sealed class NoOpOrderPlacedHandler : IBusinessEventHandler<OrderPlaced> {
         public Task Handle(OrderPlaced businessEvent, CancellationToken token = default) => Task.CompletedTask;
     }
 }
