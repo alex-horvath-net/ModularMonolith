@@ -1,6 +1,6 @@
 using System.Net.Http.Json;
+using BusinessExperts.Contracts.Events;
 using BusinessExperts.Orders;
-using BusinessExperts.Orders.Contracts.Events;
 using BusinessExperts.Orders.Featrures.Create;
 using BusinessExperts.Orders.Featrures.Create.Infrastructure.Data;
 using Common.Events;

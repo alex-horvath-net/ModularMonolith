@@ -1,4 +1,4 @@
-﻿using BusinessExperts.Orders.Contracts.Events;
+﻿using BusinessExperts.Contracts.Events;
 using Common.Events;
 
 namespace DevTests.IntegrationTests;
