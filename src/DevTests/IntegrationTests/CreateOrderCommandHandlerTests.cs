@@ -12,7 +12,7 @@ public class CreateOrderCommandHandlerTests(IntegrationTestWebAppFactory factory
         var command = new CreateOrderCommand(
             CustomerId: Guid.NewGuid(),
             Lines: [
-                new OrderLineRequest( ProductId: Guid.NewGuid(), Quantity: 1, UnitPrice: 10.0m                )
+                new OrderLineRequest( ProductId: Guid.NewGuid(), Quantity: 1, UnitPrice: 10.0m )
             ]
         );
         var handler = Get<CreateOrderCommandHandler>();
