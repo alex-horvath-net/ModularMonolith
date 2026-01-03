@@ -13,10 +13,10 @@ public class CreateOrderEndpoint_Tests(WebAppFactory factory) : IClassFixture<We
     public async Task PostOrders_ShouldCreateOrder() {
 
         // Arrange
-        var client = factory.CreateClient();
-        var tokenHandler = factory.GetRequiredService<CreateTokenCommandHandler>();
-        var token = await tokenHandler.Handle(new CreateTokenCommand());
-        client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
+        var client = factory.CreateClient(); 
+        var createTokenHttpRespons = await client.PostAsJsonAsync("/v1/devtokens", new CreateTokenCommand());
+        var createTokenResponse = await createTokenHttpRespons.Content.ReadFromJsonAsync<CreateTokenResponse>();
+        client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", createTokenResponse?.access_token);
 
         var command = new CreateOrderCommand(
             CustomerId: Guid.NewGuid(),
@@ -26,7 +26,7 @@ public class CreateOrderEndpoint_Tests(WebAppFactory factory) : IClassFixture<We
         var response = await client.PostAsJsonAsync("/v1/orders", command);
 
         // Assert
-        response.EnsureSuccessStatusCode();
-        response.StatusCode.Should().Be(HttpStatusCode.Created);
+        createTokenHttpRespons.EnsureSuccessStatusCode();
+        createTokenHttpRespons.StatusCode.Should().Be(HttpStatusCode.Created);
     }
 }
