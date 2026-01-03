@@ -4,24 +4,25 @@ using FluentAssertions;
 
 namespace DevTests.IntegrationTests;
 
-public class CreateOrderCommandHandlerTests(IntegrationTestWebAppFactory factory) : BaseIntegrationTest(factory) {
+public class CreateOrderCommandHandlerTests(WebAppFactory factory) : IClassFixture<WebAppFactory> {
 
     [Fact]
     public async Task CreateOrderCommandHandler_ShouldCreateOrder() {
         // Arrange
+        var commandHandler = factory.GetRequiredService<CreateOrderCommandHandler>();
         var command = new CreateOrderCommand(
             CustomerId: Guid.NewGuid(),
             Lines: [
                 new OrderLineRequest( ProductId: Guid.NewGuid(), Quantity: 1, UnitPrice: 10.0m )
             ]
         );
-        var handler = Get<CreateOrderCommandHandler>();
+
         // Act
-        var id = await handler.Handle(command, default);
+        var id = await commandHandler.Handle(command, CancellationToken.None);
 
         // Assert 
-        var db = Get<OrdersDbContext>();
+        var db = factory.GetRequiredService<OrdersDbContext>();
         var order = db.Orders.FirstOrDefault(p => p.Id == id);
-        order.Should().NotBeNull(); 
+        order.Should().NotBeNull();
     }
 }

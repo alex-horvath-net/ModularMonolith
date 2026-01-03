@@ -1,8 +1,6 @@
-﻿using System.Net.Http.Headers;
-using BusinessExperts.Billing.Infrastructure.Data;
+﻿using BusinessExperts.Billing.Infrastructure.Data;
 using BusinessExperts.Identity.CreateToken;
 using BusinessExperts.Orders.Featrures.Create.Infrastructure.Data;
-using Common.Authentication;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc.Testing;
 using Microsoft.AspNetCore.TestHost;
@@ -10,23 +8,26 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Diagnostics;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Options;
 using Testcontainers.MsSql;
 
 namespace DevTests.IntegrationTests;
 
-public class IntegrationTestWebAppFactory : WebApplicationFactory<Program>, IAsyncLifetime {
+public class WebAppFactory : WebApplicationFactory<Program>, IAsyncLifetime {
 
     private readonly MsSqlContainer _dbContainer = new MsSqlBuilder("mcr.microsoft.com/mssql/server:2022-latest")
         .WithPassword("Strong_password_123!")
         .Build();
-    private string token = default!;
+
+    private IServiceScope _scope = default!;
+
+    public T GetRequiredService<T>() where T : notnull => _scope.ServiceProvider.GetRequiredService<T>();
+
 
     protected override void ConfigureWebHost(IWebHostBuilder builder) {
         builder.UseSetting(WebHostDefaults.EnvironmentKey, "IntegrationTest");
         builder.UseTestServer();
-        builder.ConfigureAppConfiguration((_, config) => {
-            config.AddInMemoryCollection(new Dictionary<string, string?> {
+        builder.ConfigureAppConfiguration((_, configBuilder) => {
+            configBuilder.AddInMemoryCollection(new Dictionary<string, string?> {
                 ["ConnectionStrings:AppDB"] = _dbContainer.GetConnectionString(),
                 ["Authentication:Issuer"] = "integration-tests",
                 ["Authentication:Audience"] = "integration-tests",
@@ -42,27 +43,21 @@ public class IntegrationTestWebAppFactory : WebApplicationFactory<Program>, IAsy
             UseTestContainerDB<BillingDbContext>(services);
         });
     }
-
-    protected override void ConfigureClient(HttpClient client) {
-        client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
-    }
-
+    
     public async Task InitializeAsync() {
         await _dbContainer.StartAsync();
 
-        using var scope = Services.CreateScope();
-        var ordersDb = scope.ServiceProvider.GetRequiredService<OrdersDbContext>();
+        _scope = base.Services.CreateScope();
+        var ordersDb = GetRequiredService<OrdersDbContext>();
         await ordersDb.Database.MigrateAsync();
-        var billingDb = scope.ServiceProvider.GetRequiredService<BillingDbContext>();
-        await billingDb.Database.MigrateAsync();
 
-        var jwtOptions = scope.ServiceProvider.GetRequiredService<IOptions<JwtOptions>>();
-        var tokenHandler = new CreateTokenCommandHandler(jwtOptions);
-        token = await tokenHandler.Handle(new CreateTokenCommand());
+        var billingDb = GetRequiredService<BillingDbContext>();
+        await billingDb.Database.MigrateAsync();
     }
 
-    public new Task DisposeAsync() {
-        return _dbContainer.StopAsync();
+    public new async Task DisposeAsync() {
+        _scope?.Dispose();
+        await _dbContainer.StopAsync();
     }
 
     private void UseTestContainerDB<T>(IServiceCollection services) where T : DbContext {

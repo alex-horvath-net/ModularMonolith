@@ -1,5 +1,4 @@
 namespace BusinessExperts.Identity.CreateToken;
 
-public sealed record CreateTokenCommand(
-    );
+public sealed record CreateTokenCommand();
 
