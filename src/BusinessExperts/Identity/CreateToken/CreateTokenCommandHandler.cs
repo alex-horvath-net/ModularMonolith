@@ -10,9 +10,9 @@ namespace BusinessExperts.Identity.CreateToken;
 public sealed class CreateTokenCommandHandler(IOptions<JwtOptions> options) {
     public async Task<string> Handle(CreateTokenCommand command) {
         var claims = new List<Claim> {
-            new(JwtRegisteredClaimNames.Sub, "dev-user"),
-            new(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString("N")),
-            new(JwtRegisteredClaimNames.Iat, EpochTime.GetIntDate(DateTime.UtcNow).ToString(), ClaimValueTypes.Integer64)
+            new(JwtRegisteredClaimNames.Sub, command.Subject),
+            new(JwtRegisteredClaimNames.Jti, command.JwtId.ToString("N")),
+            new(JwtRegisteredClaimNames.Iat, EpochTime.GetIntDate(command.IssuedAt).ToString(), ClaimValueTypes.Integer64)
         };
 
         foreach (var scope in options.Value.DevScopes) {

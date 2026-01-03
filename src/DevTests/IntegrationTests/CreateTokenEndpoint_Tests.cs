@@ -1,5 +1,4 @@
 using System.Net.Http.Json;
-using Azure;
 using BusinessExperts.Identity.CreateToken;
 using FluentAssertions;
 
@@ -14,7 +13,10 @@ public class CreateTokenEndpoint_Tests(WebAppFactory factory) : IClassFixture<We
         var request = new HttpRequestMessage();
         request.Method = HttpMethod.Post;
         request.RequestUri = new Uri("/v1/devtokens", UriKind.Relative);
-        request.Content = JsonContent.Create(new CreateTokenCommand());
+        request.Content = JsonContent.Create(new CreateTokenCommand(
+            JwtId: Guid.NewGuid(),
+            Subject: "dev-user",
+            IssuedAt: DateTime.UtcNow)); 
 
         // act
         var respons = await client.SendAsync(request);
