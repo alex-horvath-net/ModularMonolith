@@ -14,6 +14,7 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddCommon(builder.Configuration, builder.Environment);
 builder.Services.AddOrders(builder.Configuration);
 builder.Services.AddBilling(builder.Configuration);
+builder.Services.AddScoped<CreateTokenCommandHandler>();
 
 var app = builder.Build();
 
