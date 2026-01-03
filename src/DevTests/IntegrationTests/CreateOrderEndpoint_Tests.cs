@@ -13,20 +13,39 @@ public class CreateOrderEndpoint_Tests(WebAppFactory factory) : IClassFixture<We
     public async Task PostOrders_ShouldCreateOrder() {
 
         // Arrange
-        var client = factory.CreateClient(); 
-        var createTokenHttpRespons = await client.PostAsJsonAsync("/v1/devtokens", new CreateTokenCommand());
-        var createTokenResponse = await createTokenHttpRespons.Content.ReadFromJsonAsync<CreateTokenResponse>();
-        client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", createTokenResponse?.access_token);
+        var client = factory.CreateClient();
+
+        var accessToken = await GetAccessToken(client);
 
         var command = new CreateOrderCommand(
             CustomerId: Guid.NewGuid(),
             Lines: [new OrderLineRequest(Guid.NewGuid(), 1, 10.0m)]);
 
-        // Act
-        var response = await client.PostAsJsonAsync("/v1/orders", command);
+        var request = new HttpRequestMessage {
+            Method = HttpMethod.Post,
+            RequestUri = new Uri("/v1/orders", UriKind.Relative),
+            Content = JsonContent.Create(command)
+        };
+        request.Headers.Authorization = new AuthenticationHeaderValue("Bearer", accessToken);
+       
+        var response = await client.SendAsync(request);
 
         // Assert
-        createTokenHttpRespons.EnsureSuccessStatusCode();
-        createTokenHttpRespons.StatusCode.Should().Be(HttpStatusCode.Created);
+        response.EnsureSuccessStatusCode();
+        response.StatusCode.Should().Be(HttpStatusCode.Created);
+    }
+
+    private static async Task<string> GetAccessToken(HttpClient client) {
+        var request = new HttpRequestMessage {
+            Method = HttpMethod.Post,
+            RequestUri = new Uri("/v1/devtokens", UriKind.Relative),
+            Content = JsonContent.Create(new CreateTokenCommand())
+        };
+        
+        var response = await client.SendAsync(request);
+        response.EnsureSuccessStatusCode();
+        var token = await response.Content.ReadFromJsonAsync<string>();
+        token.Should().NotBeNullOrWhiteSpace();
+        return token!;
     }
 }

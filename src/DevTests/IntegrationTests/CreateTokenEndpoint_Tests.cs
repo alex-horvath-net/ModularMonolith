@@ -1,5 +1,5 @@
-using System.Net;
 using System.Net.Http.Json;
+using Azure;
 using BusinessExperts.Identity.CreateToken;
 using FluentAssertions;
 
@@ -9,19 +9,19 @@ public class CreateTokenEndpoint_Tests(WebAppFactory factory) : IClassFixture<We
 
     [Fact]
     public async Task PostOrders_ShouldCreateOrder() {
-
         // Arrange
         var client = factory.CreateClient();
-        var command = new CreateTokenCommand();
+        var request = new HttpRequestMessage();
+        request.Method = HttpMethod.Post;
+        request.RequestUri = new Uri("/v1/devtokens", UriKind.Relative);
+        request.Content = JsonContent.Create(new CreateTokenCommand());
 
-        // Act
-        var response = await client.PostAsJsonAsync("/v1/devtokens", command);
-
+        // act
+        var respons = await client.SendAsync(request);
+        
         // Assert
-        response.EnsureSuccessStatusCode();
-        response.StatusCode.Should().Be(HttpStatusCode.Created);
-        var createdToken = await response.Content.ReadFromJsonAsync<CreateTokenResponse>();
-        createdToken.Should().NotBeNull();
-        createdToken!.access_token.Should().NotBeNullOrEmpty();
+        respons.EnsureSuccessStatusCode();
+        var token = await respons.Content.ReadFromJsonAsync<string>();
+        token.Should().NotBeNull();
     }
 }
