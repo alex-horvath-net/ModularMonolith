@@ -5,8 +5,8 @@ using FluentAssertions;
 
 namespace DevTests.IntegrationTests;
 
-public class CreateOrderEndpointTests : BaseIntegrationTest {
-  
+public class CreateOrderEndpointTests(IntegrationTestWebAppFactory factory) : BaseIntegrationTest(factory) {
+
     [Fact]
     public async Task PostOrders_ShouldCreateOrder() {
 

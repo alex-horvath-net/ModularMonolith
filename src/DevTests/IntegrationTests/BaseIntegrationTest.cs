@@ -1,96 +1,86 @@
-﻿using BusinessExperts.Billing;
-using BusinessExperts.Contracts.Events;
+﻿using System.Net.Http.Headers;
+using BusinessExperts.Billing;
 using BusinessExperts.Identity.CreateToken;
 using BusinessExperts.Orders;
 using BusinessExperts.Orders.Featrures.Create.Infrastructure.Data;
 using Common;
+using Common.Authentication;
+using Docker.DotNet.Models;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Builder;
+using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Mvc.Testing;
 using Microsoft.AspNetCore.TestHost;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Diagnostics;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Options;
+using Org.BouncyCastle.Tls;
 using Testcontainers.MsSql;
-using Asp.Versioning;
 
 namespace DevTests.IntegrationTests;
 
-public abstract class BaseIntegrationTest : IAsyncLifetime {
-    private readonly MsSqlContainer _dbContainer = new MsSqlBuilder()
-        .WithImage("mcr.microsoft.com/mssql/server:2022-latest")
+public class IntegrationTestWebAppFactory : WebApplicationFactory<Program>, IAsyncLifetime {
+
+    private readonly MsSqlContainer _dbContainer = new MsSqlBuilder("mcr.microsoft.com/mssql/server:2022-latest")
         .WithPassword("Strong_password_123!")
         .Build();
+    private string token = default!;
 
-    private IServiceScope? _scope;
-    protected HttpClient TestClient = default!;
+     override protected void ConfigureWebHost(IWebHostBuilder builder) {
+        builder.ConfigureTestServices(services => {
+            UseTestContainerDB<OrdersDbContext>(services);
+        });
+    }
+
+
+    override protected void ConfigureClient(HttpClient client) {
+        client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
+    }
+
+  
 
     public async Task InitializeAsync() {
+        var scope = Services.CreateScope();
+
         await _dbContainer.StartAsync();
 
-        var builder = WebApplication.CreateBuilder(new WebApplicationOptions {
-            EnvironmentName = "IntegrationTest"
-        });
 
-        builder.WebHost.UseTestServer();
+        using var ordersDb = scope.ServiceProvider.GetRequiredService<OrdersDbContext>();
+        ordersDb.Database.Migrate();
 
-        builder.Configuration.AddInMemoryCollection(new Dictionary<string, string?> {
-            ["ConnectionStrings:AppDB"] = _dbContainer.GetConnectionString(),
-            ["Authentication:Issuer"] = "integration-tests",
-            ["Authentication:Audience"] = "integration-tests",
-            ["Authentication:SecurityKey"] = "integration-test-key-012345678901234567890123456789",
-            ["Authentication:AllowDevSymmetricKey"] = "true",
-            ["Authentication:DevScopes:0"] = "orders.read",
-            ["Authentication:DevScopes:1"] = "orders.write",
-            ["Authentication:DevScopes:2"] = "billing.read"
-        });
 
-        builder.Services.AddCommon(builder.Configuration, builder.Environment);
-        builder.Services.AddOrders(builder.Configuration);
-        builder.Services.AddBilling(builder.Configuration);
 
-        builder.Services.AddDbContext<OrdersDbContext>((sp, options) => {
-            options.UseSqlServer(_dbContainer.GetConnectionString());
-            options.ConfigureWarnings(w => w.Ignore(RelationalEventId.PendingModelChangesWarning));
-        });
-        builder.Services.AddDbContext<BusinessExperts.Billing.Infrastructure.Data.BillingDbContext>((sp, options) => {
-            options.UseSqlServer(_dbContainer.GetConnectionString());
-            options.ConfigureWarnings(w => w.Ignore(RelationalEventId.PendingModelChangesWarning));
-        });
-
-        builder.Services.AddAuthorization();
-        builder.Services.AddApiVersioning(options => options.ReportApiVersions = true)
-            .AddApiExplorer();
-
-        var app = builder.Build();
-
-        _scope = app.Services.CreateScope();
-        _scope.ServiceProvider.GetRequiredService<IAuthorizationPolicyProvider>();
-
-        app.MapCommon();
-        app.MapDevToken();
-        app.MapOrders();
-        app.MapBilling();
-
-        try {
-            await app.StartAsync();
-        }
-        catch (Exception ex) {
-            Console.WriteLine(ex);
-            throw;
-        }
-
-        TestClient = app.GetTestClient();
+        var tokenHandler = scope.ServiceProvider.GetRequiredService<CreateTokenCommandHandler>();
+        token = await tokenHandler.Handle(new CreateTokenCommand());
     }
 
-    public T Get<T>() where T : notnull => _scope!.ServiceProvider.GetRequiredService<T>();
+    public new Task DisposeAsync() {
+        return _dbContainer.StopAsync();
+    }
 
-    public async Task DisposeAsync() {
-        if (TestClient is IAsyncDisposable asyncDisposable) {
-            await asyncDisposable.DisposeAsync();
+    private void UseTestContainerDB<T>(IServiceCollection services) where T : DbContext {
+        var descriptorType = typeof(DbContextOptions<T>);
+        var descriptor = services.SingleOrDefault(s => s.ServiceType == descriptorType);
+        if (descriptor is not null) {
+            services.Remove(descriptor);
         }
 
-        _scope?.Dispose();
-        await _dbContainer.StopAsync();
+        services.AddDbContext<T>(options => options.UseSqlServer(_dbContainer.GetConnectionString()));
     }
 }
+
+public abstract class BaseIntegrationTest : IClassFixture<IntegrationTestWebAppFactory>, IDisposable {
+    private readonly IServiceScope _scope = default!;
+    protected readonly HttpClient TestClient = default!;
+    protected BaseIntegrationTest(IntegrationTestWebAppFactory factory) {
+        _scope = factory.Services.CreateScope();
+
+        TestClient = factory.CreateClient();
+    }
+    public T Get<T>() where T : notnull => _scope.ServiceProvider.GetRequiredService<T>();
+    public void Dispose() {
+        _scope?.Dispose();
+       
+    }
+}
+

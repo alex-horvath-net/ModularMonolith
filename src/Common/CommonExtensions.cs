@@ -24,7 +24,7 @@ public static class CommonExtensions {
         //services.AddRateLimiting();             // Apply rate limiting 
         //services.AddApiDocumentation();         // Apply OpenApi 
         //services.AddApiAdmin();                 // Apply Swagger Admin
-        //services.AddApiVersion();               // API Versioning
+        services.AddApiVersion();               // API Versioning
         //services.AddErrorHandling();            // Apply global error handling with RFC7807 ProblemDetails
         //services.AddBrowserRequestRestrictions(config);    // restrict incoming HttpRequests from browser
         //services.AddJson();           // Harden JSON input to mitigate resource exhaustion & ambiguity

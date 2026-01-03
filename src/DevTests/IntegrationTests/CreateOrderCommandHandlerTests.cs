@@ -4,7 +4,7 @@ using FluentAssertions;
 
 namespace DevTests.IntegrationTests;
 
-public class CreateOrderCommandHandlerTests : BaseIntegrationTest {
+public class CreateOrderCommandHandlerTests(IntegrationTestWebAppFactory factory) : BaseIntegrationTest(factory) {
 
     [Fact]
     public async Task CreateOrderCommandHandler_ShouldCreateOrder() {
@@ -16,11 +16,11 @@ public class CreateOrderCommandHandlerTests : BaseIntegrationTest {
             ]
         );
         var handler = Get<CreateOrderCommandHandler>();
-        var db = Get<OrdersDbContext>();
         // Act
         var id = await handler.Handle(command, default);
 
         // Assert 
+        var db = Get<OrdersDbContext>();
         var order = db.Orders.FirstOrDefault(p => p.Id == id);
         order.Should().NotBeNull(); 
     }
