@@ -44,7 +44,7 @@ public static class CreateOrderEndpoint
             });
         }
 
-        var id = await commandHandler.Handle(command, token);
-        return TypedResults.Created($"/v1/orders/{id}", new { id });
+        var order = await commandHandler.Handle(command, token);
+        return TypedResults.Created($"/v1/orders/{order.Id}", order.Id);
     }
 }

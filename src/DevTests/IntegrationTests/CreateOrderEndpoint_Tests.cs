@@ -31,8 +31,8 @@ public class CreateOrderEndpoint_Tests(WebAppFactory factory) : IClassFixture<We
         response.Headers.GetValues("api-supported-versions").First().Should().Be("1.0");
         response.Headers.Location?.OriginalString.Should().StartWith("/v1/orders/");
 
-        var content = await response.Content.ReadFromJsonAsync<JsonElement>();
-        content.GetProperty("id").GetGuid().Should().NotBe(Guid.Empty);
+        var content = await response.Content.ReadFromJsonAsync<Guid>();
+        content.Should().NotBe(Guid.Empty);
     }
 
     private static CreateOrderCommand GetCreateOrderCommand() {

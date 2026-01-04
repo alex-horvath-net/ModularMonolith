@@ -18,11 +18,11 @@ public class CreateOrderCommandHandlerTests(WebAppFactory factory) : IClassFixtu
         );
 
         // Act
-        var id = await commandHandler.Handle(command, CancellationToken.None);
+        var order = await commandHandler.Handle(command, CancellationToken.None);
 
         // Assert 
         var db = factory.GetRequiredService<OrdersDbContext>();
-        var order = db.Orders.FirstOrDefault(p => p.Id == id);
-        order.Should().NotBeNull();
+        var order_in_db = db.Orders.FirstOrDefault(p => p.Id ==  order.Id);
+        order_in_db.Should().NotBeNull();
     }
 }

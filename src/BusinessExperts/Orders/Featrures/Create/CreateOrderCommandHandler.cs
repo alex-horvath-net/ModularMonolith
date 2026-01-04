@@ -6,7 +6,7 @@ using Common.Events;
 namespace BusinessExperts.Orders.Featrures.Create;
 
 public sealed class CreateOrderCommandHandler(OrdersDbContext db, IBusinessEventPublisher bus) {
-    public async Task<Guid> Handle(CreateOrderCommand command, CancellationToken token) {
+    public async Task<Order> Handle(CreateOrderCommand command, CancellationToken token) {
         Order order = Order.Create(command.CustomerId, command.Lines.Select(l => (l.ProductId, l.Quantity, l.UnitPrice)));
         db.Add(order);
         await db.SaveChangesAsync(token);
@@ -16,7 +16,7 @@ public sealed class CreateOrderCommandHandler(OrdersDbContext db, IBusinessEvent
             new OrderPlaced(order.Id, order.CustomerId, total),
             token);
 
-        return order.Id;
+        return order;
     }
 }
 
