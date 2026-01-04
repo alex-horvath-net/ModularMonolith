@@ -1,11 +1,10 @@
+using Asp.Versioning;
+using BusinessExperts.Orders.Contracts.DTOs;
+using BusinessExperts.Orders.Featrures.GetById;
 using Microsoft.AspNetCore.Builder; // MapGroup extension
 using Microsoft.AspNetCore.Http; // IResult, TypedResults
 using Microsoft.AspNetCore.Http.HttpResults; // OK
 using Microsoft.AspNetCore.Routing; // IEndpointRouteBuilder
-using Asp.Versioning;
-using BusinessExperts.Orders.Contracts.DTOs;
-using BusinessExperts.Orders.Featrures.GetAll;
-using BusinessExperts.Orders.Featrures.GetById;
 
 namespace BusinessExperts.Orders.Featrures.GetAll;
 public static class GetAllOrderEndpoints {
