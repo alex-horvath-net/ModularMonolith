@@ -1,0 +1,7 @@
+﻿namespace Business.MemberApplicationUser.BillingBusinessExpert.GetInvoice.Contracts.DTOs;
+public sealed record InvoiceDto(
+    Guid Id ,
+    Guid OrderId ,
+    Guid CustomerId ,
+    decimal Total);
+

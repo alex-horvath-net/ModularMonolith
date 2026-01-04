@@ -7,13 +7,13 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Content Include="ApplicationUsers\Member\Orders\Featrures\GetAll\Blazor\Components\OrderDetails.razor">
+    <Content Include="MemberApplicationUser\OrderBusinessExpert\GetAllOrderWorkFlow\Blazor\Components\OrderDetails.razor">
       <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
     </Content>
-    <Content Include="ApplicationUsers\Member\Orders\Featrures\GetAll\Blazor\Components\OrdersList.razor">
+    <Content Include="MemberApplicationUser\OrderBusinessExpert\GetAllOrderWorkFlow\Blazor\Components\OrdersList.razor">
       <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
     </Content>
-    <Content Include="ApplicationUsers\Member\Orders\Featrures\GetAll\Blazor\_Imports.razor">
+    <Content Include="MemberApplicationUser\OrderBusinessExpert\GetAllOrderWorkFlow\Blazor\_Imports.razor">
       <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
     </Content>
   </ItemGroup>
@@ -30,7 +30,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="ApplicationUsers\Member\Orders\Contracts\Events\" />
+    <Folder Include="MemberApplicationUser\OrderBusinessExpert\Contracts\Events\" />
   </ItemGroup>
     
 
