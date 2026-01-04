@@ -19,8 +19,10 @@ public sealed class Order {
 
     public static Order Create(Guid customerId, IEnumerable<(Guid productId, int quantity, decimal unitPrice)> lines) {
         var order = new Order(Guid.NewGuid(), customerId);
+       
         foreach (var (productId, quantity, unitPrice) in lines)
             order.AddLine(productId, quantity, unitPrice);
+        
         return order;
     }
 

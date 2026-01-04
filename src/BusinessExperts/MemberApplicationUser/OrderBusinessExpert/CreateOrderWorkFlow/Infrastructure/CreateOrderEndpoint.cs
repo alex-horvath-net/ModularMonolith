@@ -1,12 +1,11 @@
 using Asp.Versioning;
-using Business.MemberApplicationUser.OrderBusinessExpert;
 using FluentValidation;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Routing;
 
-namespace Business.MemberApplicationUser.OrderBusinessExpert.CreateOrderWorkFlow;
+namespace Business.MemberApplicationUser.OrderBusinessExpert.CreateOrderWorkFlow.Infrastructure;
 
 public static class CreateOrderEndpoint
 {
@@ -31,12 +30,12 @@ public static class CreateOrderEndpoint
     }
 
     private static async Task<IResult> Handle(
-        CreateOrderCommandHandler commandHandler,
-        IValidator<CreateOrderCommand> validator,
-        CreateOrderCommand command,
+        CreateOrderWorkFlow workflow,
+        IValidator<CreateOrderRequest> validator,
+        CreateOrderRequest request,
         CancellationToken token)
     {
-        var validation = await validator.ValidateAsync(command, token);
+        var validation = await validator.ValidateAsync(request, token);
         if (!validation.IsValid)
         {
             return TypedResults.BadRequest(new
@@ -45,7 +44,8 @@ public static class CreateOrderEndpoint
             });
         }
 
-        var order = await commandHandler.Handle(command, token);
-        return TypedResults.Created($"/v1/orders/{order.Id}", order.Id);
+        var response = await workflow.Run(request, token);
+        return TypedResults.Created($"/v1/orders/{response.Order.Id}", response.Order.Id);
     }
 }
+ 

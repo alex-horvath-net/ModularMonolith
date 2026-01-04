@@ -7,7 +7,7 @@ using FluentAssertions;
 
 namespace DevTests.IntegrationTests;
 
-public class CreateOrderEndpoint_Tests(WebAppFactory factory) : IClassFixture<WebAppFactory> {
+public class CreateOrder_Endpoint_Tests(WebAppFactory factory) : IClassFixture<WebAppFactory> {
 
     [Fact]
     public async Task PostOrders_ShouldCreateOrder() {
@@ -18,7 +18,7 @@ public class CreateOrderEndpoint_Tests(WebAppFactory factory) : IClassFixture<We
         var request = new HttpRequestMessage();
         request.Method = HttpMethod.Post;
         request.RequestUri = new Uri("/v1/orders", UriKind.Relative);
-        request.Content = JsonContent.Create(GetCreateOrderCommand());
+        request.Content = JsonContent.Create(GetCreateOrderRequest());
         request.Headers.Authorization = new AuthenticationHeaderValue("Bearer", await GetAccessToken(client));
 
         // Act
@@ -34,10 +34,10 @@ public class CreateOrderEndpoint_Tests(WebAppFactory factory) : IClassFixture<We
         content.Should().NotBe(Guid.Empty);
     }
 
-    private static CreateOrderCommand GetCreateOrderCommand() {
-        return new CreateOrderCommand(
+    private static CreateOrderRequest GetCreateOrderRequest() {
+        return new CreateOrderRequest(
                     CustomerId: Guid.NewGuid(),
-                    Lines: [new OrderLineRequest(Guid.NewGuid(), 1, 10.0m)]);
+                    Lines: [new CreateOrderLineRequest(Guid.NewGuid(), 1, 10.0m)]);
     }
 
     private static async Task<string> GetAccessToken(HttpClient client) {

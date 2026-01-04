@@ -33,10 +33,10 @@ public class GetOrderByIdEndpoints_Tests(WebAppFactory factory) : IClassFixture<
         content?.Id.Should().Be(id);
     }
 
-    private static CreateOrderCommand GetCreateOrderCommand() {
-        return new CreateOrderCommand(
+    private static CreateOrderRequest GetCreateOrderRequest() {
+        return new CreateOrderRequest(
                     CustomerId: Guid.NewGuid(),
-                    Lines: [new OrderLineRequest(Guid.NewGuid(), 1, 10.0m)]);
+                    Lines: [new CreateOrderLineRequest(Guid.NewGuid(), 1, 10.0m)]);
     }
 
     private static async Task<string> GetAccessToken(HttpClient client) {

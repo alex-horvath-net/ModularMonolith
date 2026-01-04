@@ -1,5 +1,5 @@
-using Business.MemberApplicationUser.OrderBusinessExpert.Contracts.Abstraction;
 using Business.MemberApplicationUser.OrderBusinessExpert.CreateOrderWorkFlow;
+using Business.MemberApplicationUser.OrderBusinessExpert.CreateOrderWorkFlow.Infrastructure;
 using Business.MemberApplicationUser.OrderBusinessExpert.CreateOrderWorkFlow.Infrastructure.Data;
 using Business.MemberApplicationUser.OrderBusinessExpert.GetAllOrderWorkFlow;
 using Business.MemberApplicationUser.OrderBusinessExpert.GetByIdOrderWorkFlow;
@@ -7,7 +7,6 @@ using FluentValidation;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Routing;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Diagnostics;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
@@ -21,11 +20,14 @@ public static class OrdersExtensions {
         // Application
         services.AddScoped<GetAllOrderQueryHandler>();
         services.AddScoped<GetOrderQueryHandler>();
-        services.AddScoped<CreateOrderCommandHandler>();
-        services.AddScoped<IReadOrderService, GetAllOrderService>();
+        services.AddScoped<CreateOrderWorkFlow.CreateOrderWorkFlow>();
+        services.AddScoped<CreateOrderWorkFlow.ValidatorWorkStep>();
+        services.AddScoped<CreateOrderWorkFlow.CreateOrderWorkStep>();
+        services.AddScoped<CreateOrderWorkFlow.PersistWorkStep>();
+        services.AddScoped<CreateOrderWorkFlow.PublishWorkStep>();
 
         // Register validator so Minimal APIs resolve it from DI (not Body)
-        services.AddScoped<IValidator<CreateOrderCommand>, CreateOrderCommandValidator>();
+        services.AddScoped<IValidator<CreateOrderRequest>, CreateOrderRequestValidator>();
 
         // Infrastructure
         services.AddDbContext<OrdersDbContext>((sp, options) => {
