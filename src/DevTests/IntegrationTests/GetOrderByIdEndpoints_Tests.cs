@@ -1,9 +1,9 @@
 using System.Net;
 using System.Net.Http.Headers;
 using System.Net.Http.Json;
+using Business.ApplicationUsers.Member.Orders.Contracts.DTOs;
+using Business.ApplicationUsers.Member.Orders.Featrures.Create;
 using BusinessExperts.Identity.CreateToken;
-using BusinessExperts.Orders.Contracts.DTOs;
-using BusinessExperts.Orders.Featrures.Create;
 using FluentAssertions;
 
 namespace DevTests.IntegrationTests;

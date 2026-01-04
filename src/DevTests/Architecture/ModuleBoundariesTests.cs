@@ -1,3 +1,5 @@
+using Business.ApplicationUsers.Member.Billing;
+using Business.ApplicationUsers.Member.Orders;
 using FluentAssertions;
 using NetArchTest.Rules;
 
@@ -15,7 +17,7 @@ public class ModuleBoundariesTests {
 
     [Fact]
     public void Orders_Must_Not_Depend_On_Billing() {
-        var result = Types.InAssembly(typeof(BusinessExperts.Orders.OrdersExtensions).Assembly)
+        var result = Types.InAssembly(typeof(OrdersExtensions).Assembly)
             .That().ResideInNamespace("BusinessExperts.Orders")
             .Or().ResideInNamespaceMatching("BusinessExperts.Orders\\..*")
             .Should().NotHaveDependencyOnAny("BusinessExperts.Billing")
@@ -26,7 +28,7 @@ public class ModuleBoundariesTests {
 
     [Fact]
     public void Billing_Must_Not_Depend_On_Orders() {
-        var result = Types.InAssembly(typeof(BusinessExperts.Billing.BillingExtensions).Assembly)
+        var result = Types.InAssembly(typeof(BillingExtensions).Assembly)
             .That().ResideInNamespace("BusinessExperts.Billing")
             .Or().ResideInNamespaceMatching("BusinessExperts.Billing\\..*")
             .Should().NotHaveDependencyOnAny("BusinessExperts.Orders")
@@ -37,13 +39,13 @@ public class ModuleBoundariesTests {
 
     [Fact]
     public void Modules_Must_Not_Depend_On_Hosts() {
-        var orders = Types.InAssembly(typeof(BusinessExperts.Orders.OrdersExtensions).Assembly)
+        var orders = Types.InAssembly(typeof(OrdersExtensions).Assembly)
             .That().ResideInNamespace("BusinessExperts.Orders")
             .Or().ResideInNamespaceMatching("BusinessExperts.Orders\\..*")
             .Should().NotHaveDependencyOnAny("ApplicationPortal", "WebApi")
             .GetResult();
 
-        var billing = Types.InAssembly(typeof(BusinessExperts.Billing.BillingExtensions).Assembly)
+        var billing = Types.InAssembly(typeof(BillingExtensions).Assembly)
             .That().ResideInNamespace("BusinessExperts.Billing")
             .Or().ResideInNamespaceMatching("BusinessExperts.Billing\\..*")
             .Should().NotHaveDependencyOnAny("ApplicationPortal", "WebApi")
