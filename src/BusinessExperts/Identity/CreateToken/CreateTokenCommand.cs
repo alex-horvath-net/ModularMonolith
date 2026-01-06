@@ -1,4 +1,4 @@
-namespace BusinessExperts.Identity.CreateToken;
+namespace Business.Identity.CreateToken;
 
 public sealed record CreateTokenCommand(
     Guid JwtId,

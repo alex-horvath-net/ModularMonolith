@@ -1,5 +1,5 @@
-﻿using BusinessExperts.Order.CreateOrderWorkFlow;
-using BusinessExperts.Order.CreateOrderWorkFlow.Infrastructure.Data;
+﻿using BusinessExperts.OrderBusinessExpert.CreateOrder;
+using BusinessExperts.OrderBusinessExpert.CreateOrder.Infrastructure.Data;
 using FluentAssertions;
 
 namespace DevTests.IntegrationTests;
@@ -9,7 +9,7 @@ public class CreateOrder_WorkFlow_Tests(WebAppFactory factory) : IClassFixture<W
     [Fact]
     public async Task CreateOrderCommandHandler_ShouldCreateOrder() {
         // Arrange
-        var workflow = factory.GetRequiredService<CreateOrderWorkFlow>();
+        var workflow = factory.GetRequiredService<WorkFlow>();
         var request = new CreateOrderRequest(
             CustomerId: Guid.NewGuid(),
             Lines: [

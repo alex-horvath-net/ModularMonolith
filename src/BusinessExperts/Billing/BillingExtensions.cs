@@ -1,8 +1,8 @@
-using BusinessExperts.Billing.CreateInvoice;
-using BusinessExperts.Billing.GetInvoice.API;
-using BusinessExperts.Billing.GetInvoice.QueryHandlers;
-using BusinessExperts.Billing.Infrastructure.Data;
-using BusinessExperts.Contracts.Events;
+using Business.Billing.CreateInvoice;
+using Business.Billing.GetInvoice.API;
+using Business.Billing.GetInvoice.QueryHandlers;
+using Business.Billing.Infrastructure.Data;
+using Business.Domain.Events;
 using Common.Events;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Routing;
@@ -13,7 +13,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 
-namespace BusinessExperts.Billing;
+namespace Business.Billing;
 
 public static class BillingExtensions
 {

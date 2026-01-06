@@ -1,6 +1,6 @@
-using BusinessExperts.Billing;
-using BusinessExperts.Identity.CreateToken;
-using BusinessExperts.Order;
+using Business.Billing;
+using Business.Identity.CreateToken;
+using Business.OrderBusinessExpert;
 using Common;
 
 var builder = WebApplication.CreateBuilder(args);

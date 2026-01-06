@@ -1,4 +1,4 @@
-﻿using BusinessExperts.Identity;
+﻿using Business.Identity;
 
 namespace ApplicationApi.Users; 
 public record Visitor(

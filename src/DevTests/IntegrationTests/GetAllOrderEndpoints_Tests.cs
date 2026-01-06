@@ -2,7 +2,7 @@ using System.Net;
 using System.Net.Http.Headers;
 using System.Net.Http.Json;
 using Business.MemberApplicationUser.IdentityBusinessExpert.CreateToken;
-using BusinessExperts.Order.Contracts.DTOs;
+using BusinessScope.OrderBusinessExpert.Contracts.DTOs;
 using FluentAssertions;
 
 namespace DevTests.IntegrationTests;
