@@ -1,6 +1,6 @@
-﻿using Business.MemberApplicationUser.OrderBusinessExpert.CreateOrderWorkFlow.Infrastructure.Data.Models;
+﻿using ApplicationUsers.Member.BusinessExperts.OrderBusinessExpert.CreateOrderWorkFlow.Infrastructure.Data.Models;
 
-namespace Business.MemberApplicationUser.OrderBusinessExpert.CreateOrderWorkFlow;
+namespace BusinessExperts.Order.CreateOrderWorkFlow;
 
 public class CreateOrderWorkStep {
     public Order Create(CreateOrderRequest request) { 

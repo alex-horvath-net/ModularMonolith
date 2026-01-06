@@ -1,8 +1,8 @@
-using Business.MemberApplicationUser.OrderBusinessExpert.CreateOrderWorkFlow;
-using Business.MemberApplicationUser.OrderBusinessExpert.CreateOrderWorkFlow.Infrastructure;
-using Business.MemberApplicationUser.OrderBusinessExpert.CreateOrderWorkFlow.Infrastructure.Data;
-using Business.MemberApplicationUser.OrderBusinessExpert.GetAllOrderWorkFlow;
-using Business.MemberApplicationUser.OrderBusinessExpert.GetByIdOrderWorkFlow;
+using BusinessExperts.Order.CreateOrderWorkFlow;
+using BusinessExperts.Order.CreateOrderWorkFlow.Infrastructure;
+using BusinessExperts.Order.CreateOrderWorkFlow.Infrastructure.Data;
+using BusinessExperts.Order.GetAllOrderWorkFlow;
+using BusinessExperts.Order.GetByIdOrderWorkFlow;
 using FluentValidation;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Routing;
@@ -12,7 +12,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 
-namespace Business.MemberApplicationUser.OrderBusinessExpert;
+namespace BusinessExperts.Order;
 
 public static class OrdersExtensions {
     public static IServiceCollection AddOrders(this IServiceCollection services, IConfiguration configuration) {
@@ -21,10 +21,10 @@ public static class OrdersExtensions {
         services.AddScoped<GetAllOrderQueryHandler>();
         services.AddScoped<GetOrderQueryHandler>();
         services.AddScoped<CreateOrderWorkFlow.CreateOrderWorkFlow>();
-        services.AddScoped<CreateOrderWorkFlow.ValidatorWorkStep>();
-        services.AddScoped<CreateOrderWorkFlow.CreateOrderWorkStep>();
-        services.AddScoped<CreateOrderWorkFlow.PersistWorkStep>();
-        services.AddScoped<CreateOrderWorkFlow.PublishWorkStep>();
+        services.AddScoped<ValidatorWorkStep>();
+        services.AddScoped<CreateOrderWorkStep>();
+        services.AddScoped<PersistWorkStep>();
+        services.AddScoped<PublishWorkStep>();
 
         // Register validator so Minimal APIs resolve it from DI (not Body)
         services.AddScoped<IValidator<CreateOrderRequest>, CreateOrderRequestValidator>();

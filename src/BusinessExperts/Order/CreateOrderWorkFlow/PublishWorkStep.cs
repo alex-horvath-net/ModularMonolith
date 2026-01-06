@@ -1,8 +1,8 @@
-﻿using Business.MemberApplicationUser.Contracts.Events;
-using Business.MemberApplicationUser.OrderBusinessExpert.CreateOrderWorkFlow.Infrastructure.Data.Models;
+﻿using ApplicationUsers.Member.BusinessExperts.OrderBusinessExpert.CreateOrderWorkFlow.Infrastructure.Data.Models;
+using Business.MemberApplicationUser.Contracts.Events;
 using Common.Events;
 
-namespace Business.MemberApplicationUser.OrderBusinessExpert.CreateOrderWorkFlow;
+namespace BusinessExperts.Order.CreateOrderWorkFlow;
 
 public class PublishWorkStep(IBusinessEventPublisher bus) {
     public  Task<bool> Publish(Order order, CancellationToken token) {

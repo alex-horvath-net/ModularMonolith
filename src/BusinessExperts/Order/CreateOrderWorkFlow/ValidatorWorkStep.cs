@@ -1,6 +1,6 @@
 ﻿using FluentValidation;
 
-namespace Business.MemberApplicationUser.OrderBusinessExpert.CreateOrderWorkFlow;
+namespace BusinessExperts.Order.CreateOrderWorkFlow;
 
 public class ValidatorWorkStep(IValidator<CreateOrderRequest> validator) {
     public async Task<IEnumerable<Error>> Validate(CreateOrderRequest request, CancellationToken token) {

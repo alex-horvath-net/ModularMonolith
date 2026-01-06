@@ -1,4 +1,4 @@
-namespace Business.MemberApplicationUser.OrderBusinessExpert.CreateOrderWorkFlow.Infrastructure.Data.Models;
+namespace BusinessExperts.Order.CreateOrderWorkFlow.Infrastructure.Data.Models;
 
 public sealed class Order {
     public Guid Id { get; private set; }

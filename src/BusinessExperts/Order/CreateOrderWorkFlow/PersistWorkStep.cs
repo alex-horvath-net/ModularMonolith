@@ -1,7 +1,7 @@
-﻿using Business.MemberApplicationUser.OrderBusinessExpert.CreateOrderWorkFlow.Infrastructure.Data;
-using Business.MemberApplicationUser.OrderBusinessExpert.CreateOrderWorkFlow.Infrastructure.Data.Models;
+﻿using ApplicationUsers.Member.BusinessExperts.OrderBusinessExpert.CreateOrderWorkFlow.Infrastructure.Data.Models;
+using BusinessExperts.Order.CreateOrderWorkFlow.Infrastructure.Data;
 
-namespace Business.MemberApplicationUser.OrderBusinessExpert.CreateOrderWorkFlow;
+namespace BusinessExperts.Order.CreateOrderWorkFlow;
 
 public class PersistWorkStep(OrdersDbContext db) {
     public async Task Save(Order order, CancellationToken token) {
