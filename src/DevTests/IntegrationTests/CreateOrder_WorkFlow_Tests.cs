@@ -1,5 +1,5 @@
-﻿using Business.MemberApplicationUser.OrderBusinessExpert.CreateOrderWorkFlow;
-using Business.MemberApplicationUser.OrderBusinessExpert.CreateOrderWorkFlow.Infrastructure.Data;
+﻿using BusinessExperts.Order.CreateOrderWorkFlow;
+using BusinessExperts.Order.CreateOrderWorkFlow.Infrastructure.Data;
 using FluentAssertions;
 
 namespace DevTests.IntegrationTests;

@@ -1,5 +1,5 @@
-using Business.MemberApplicationUser.BillingBusinessExpert;
-using Business.MemberApplicationUser.OrderBusinessExpert;
+using BusinessExperts.Billing;
+using BusinessExperts.Order;
 using FluentAssertions;
 using NetArchTest.Rules;
 

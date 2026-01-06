@@ -1,5 +1,5 @@
-﻿using Business.MemberApplicationUser.BillingBusinessExpert.Infrastructure.Data;
-using Business.MemberApplicationUser.OrderBusinessExpert.CreateOrderWorkFlow.Infrastructure.Data;
+﻿using BusinessExperts.Billing.Infrastructure.Data;
+using BusinessExperts.Order.CreateOrderWorkFlow.Infrastructure.Data;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc.Testing;
 using Microsoft.AspNetCore.TestHost;
