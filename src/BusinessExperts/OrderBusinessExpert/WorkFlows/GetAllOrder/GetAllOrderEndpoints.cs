@@ -1,6 +1,6 @@
 using Asp.Versioning;
 using Experts.OrderBusinessExpert;
-using Experts.OrderBusinessExpert.Shared.Business.DTOs;
+using Experts.OrderBusinessExpert.Shared.Business.Domain;
 using Experts.OrderBusinessExpert.WorkFlows.GetOrderById;
 using Microsoft.AspNetCore.Builder; // MapGroup extension
 using Microsoft.AspNetCore.Http; // IResult, TypedResults
@@ -17,17 +17,17 @@ public static class GetAllOrderEndpoints {
 
         group.MapGet("", GetAllOrders)
             .RequireAuthorization(OrdersConstants.Read)
-            .Produces<List<OrderDto>>(StatusCodes.Status200OK);
+            .Produces<List<Order>>(StatusCodes.Status200OK);
 
         group.MapGet("/{id:guid}", GetOrderById)
             .RequireAuthorization(OrdersConstants.Read)
-            .Produces<OrderDto>(StatusCodes.Status200OK)
+            .Produces<Order>(StatusCodes.Status200OK)
             .Produces(StatusCodes.Status404NotFound);
 
         return app;
     }
 
-    private static async Task<Ok<List<OrderDto>>> GetAllOrders(
+    private static async Task<Ok<List<Order>>> GetAllOrders(
         GetAllOrderQueryHandler queryHandler, 
         CancellationToken token) {
         var orders = await queryHandler.Handle(token); 

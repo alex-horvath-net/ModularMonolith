@@ -1,6 +1,6 @@
-﻿using Business.Contracts.Events;
-using Common.Events;
-using Experts.OrderBusinessExpert.WorkFlows.PlaceOrderBusinessWorkFlow.Domain;
+﻿using Common.Events;
+using Experts.OrderBusinessExpert.Shared.Business.Domain;
+using Experts.Shared.Business.Events;
 
 namespace Experts.OrderBusinessExpert.WorkFlows.PlaceOrderBusinessWorkFlow.WorkSteps;
 

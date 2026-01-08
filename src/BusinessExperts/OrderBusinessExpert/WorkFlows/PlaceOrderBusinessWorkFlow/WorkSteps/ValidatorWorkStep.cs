@@ -1,4 +1,5 @@
 ﻿using Experts.OrderBusinessExpert.WorkFlows.PlaceOrderBusinessWorkFlow.Domain;
+using Experts.Shared.Business.Domain;
 using FluentValidation;
 
 namespace Experts.OrderBusinessExpert.WorkFlows.PlaceOrderBusinessWorkFlow.WorkSteps;

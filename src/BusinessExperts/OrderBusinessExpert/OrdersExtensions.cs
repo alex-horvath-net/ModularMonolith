@@ -1,8 +1,8 @@
+using Experts.OrderBusinessExpert.Shared.Infrastructure.Data;
 using Experts.OrderBusinessExpert.WorkFlows.GetAllOrder;
 using Experts.OrderBusinessExpert.WorkFlows.GetOrderById;
 using Experts.OrderBusinessExpert.WorkFlows.PlaceOrderBusinessWorkFlow.Domain;
 using Experts.OrderBusinessExpert.WorkFlows.PlaceOrderBusinessWorkFlow.Infrastructure;
-using Experts.OrderBusinessExpert.WorkFlows.PlaceOrderBusinessWorkFlow.Infrastructure.Data;
 using Experts.OrderBusinessExpert.WorkFlows.PlaceOrderBusinessWorkFlow.WorkSteps;
 using FluentValidation;
 using Microsoft.AspNetCore.Builder;
@@ -21,7 +21,7 @@ public static class OrdersExtensions {
         // Application
         services.AddScoped<GetAllOrderQueryHandler>();
         services.AddScoped<GetOrderQueryHandler>();
-        services.AddScoped<PlaceOrderBusinessWorkflow>();
+        services.AddScoped<WorkFlows.PlaceOrderBusinessWorkFlow.PlaceOrderWorkflow>();
         services.AddScoped<ValidatorWorkStep>();
         services.AddScoped<CreateOrderWorkStep>();
         services.AddScoped<PersistWorkStep>();

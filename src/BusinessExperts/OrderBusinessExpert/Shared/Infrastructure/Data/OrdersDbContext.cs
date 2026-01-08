@@ -1,8 +1,8 @@
 using System.Reflection;
-using Experts.OrderBusinessExpert.WorkFlows.PlaceOrderBusinessWorkFlow.Infrastructure.Data.Models;
+using Experts.OrderBusinessExpert.Shared.Infrastructure.Data.Models;
 using Microsoft.EntityFrameworkCore;
 
-namespace Experts.OrderBusinessExpert.WorkFlows.PlaceOrderBusinessWorkFlow.Infrastructure.Data;
+namespace Experts.OrderBusinessExpert.Shared.Infrastructure.Data;
 
 public sealed class OrdersDbContext(DbContextOptions<OrdersDbContext> options) : DbContext(options) {
     public DbSet<Order> Orders => Set<Order>();

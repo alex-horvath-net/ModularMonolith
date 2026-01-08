@@ -1,3 +1,5 @@
-﻿namespace Experts.OrderBusinessExpert.WorkFlows.PlaceOrderBusinessWorkFlow.Domain;
+﻿using Experts.OrderBusinessExpert.Shared.Business.Domain;
 
-public sealed record CreateOrderRequest(Guid CustomerId, IEnumerable<CreateOrderLineRequest> Lines);
+namespace Experts.OrderBusinessExpert.WorkFlows.PlaceOrderBusinessWorkFlow.Domain;
+
+public sealed record CreateOrderRequest(Guid CustomerId, IEnumerable<OrderLine> Lines);
