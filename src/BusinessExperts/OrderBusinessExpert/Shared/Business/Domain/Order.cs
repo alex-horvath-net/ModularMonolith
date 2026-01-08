@@ -17,7 +17,7 @@ public sealed class Order {
         CustomerId = customerId;
     }
 
-    public static Order Create(Guid customerId, IEnumerable<(Guid productId, int quantity, decimal unitPrice)> lines) {
+    public static Order Create(Guid customerId, IEnumerable<OrderLine> lines) {
         var order = new Order(Guid.NewGuid(), customerId);
        
         foreach (var (productId, quantity, unitPrice) in lines)

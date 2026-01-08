@@ -1,8 +1,8 @@
 using Experts.OrderBusinessExpert.Shared.Infrastructure.Data;
 using Experts.OrderBusinessExpert.WorkFlows.GetAllOrder;
 using Experts.OrderBusinessExpert.WorkFlows.GetOrderById;
-using Experts.OrderBusinessExpert.WorkFlows.PlaceOrderBusinessWorkFlow.Domain;
-using Experts.OrderBusinessExpert.WorkFlows.PlaceOrderBusinessWorkFlow.Infrastructure;
+using Experts.OrderBusinessExpert.WorkFlows.PlaceOrderBusinessWorkFlow.Shared.Business.Domain;
+using Experts.OrderBusinessExpert.WorkFlows.PlaceOrderBusinessWorkFlow.Shared.Infrastructure;
 using Experts.OrderBusinessExpert.WorkFlows.PlaceOrderBusinessWorkFlow.WorkSteps;
 using FluentValidation;
 using Microsoft.AspNetCore.Builder;

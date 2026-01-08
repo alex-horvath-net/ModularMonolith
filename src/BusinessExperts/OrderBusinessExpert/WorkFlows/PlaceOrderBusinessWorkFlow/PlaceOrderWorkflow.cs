@@ -1,4 +1,4 @@
-﻿using Experts.OrderBusinessExpert.WorkFlows.PlaceOrderBusinessWorkFlow.Domain;
+﻿using Experts.OrderBusinessExpert.WorkFlows.PlaceOrderBusinessWorkFlow.Shared.Business.Domain;
 using Experts.OrderBusinessExpert.WorkFlows.PlaceOrderBusinessWorkFlow.WorkSteps;
 
 namespace Experts.OrderBusinessExpert.WorkFlows.PlaceOrderBusinessWorkFlow;
