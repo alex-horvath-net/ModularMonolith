@@ -21,7 +21,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Common", "src\Common\Common
 EndProject
 Project("{E53339B2-1760-4266-BCC7-CA923CBCF16C}") = "Docker-compose", "src\Docker-compose\Docker-compose.dcproj", "{81DDED9D-158B-E303-5F62-77A2896D2A5A}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Business", "src\BusinessExperts\Business.csproj", "{8600C0DB-9F1C-4293-98C0-278D269BDF5F}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Experts", "src\BusinessExperts\Experts.csproj", "{8600C0DB-9F1C-4293-98C0-278D269BDF5F}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ApplicationApi", "src\ApplicationApi\ApplicationApi.csproj", "{D4CD9A8C-9E65-8CEB-3D40-EFE24BF1EC69}"
 EndProject

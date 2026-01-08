@@ -1,4 +1,4 @@
-﻿using Business.Billing;
+﻿using Experts.Experts.BillingBusinessExpert;
 
 namespace ApplicationApi.Users {
     public class Member {
