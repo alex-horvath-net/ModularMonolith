@@ -30,8 +30,8 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="OrderBusinessExpert\Contracts\Events\" />
-    <Folder Include="OrderBusinessExpert\Infrastructure\" />
+    <Folder Include="OrderBusinessExpert\Shared\Contracts\Events\" />
+    <Folder Include="OrderBusinessExpert\Shared\Infrastructure\" />
     <Folder Include="Shared\Infrastructure\" />
   </ItemGroup>
     

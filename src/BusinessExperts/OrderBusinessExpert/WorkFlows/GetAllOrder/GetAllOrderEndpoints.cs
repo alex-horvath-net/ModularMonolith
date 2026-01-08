@@ -1,6 +1,6 @@
 using Asp.Versioning;
 using Experts.OrderBusinessExpert;
-using Experts.OrderBusinessExpert.Business.DTOs;
+using Experts.OrderBusinessExpert.Shared.Business.DTOs;
 using Experts.OrderBusinessExpert.WorkFlows.GetOrderById;
 using Microsoft.AspNetCore.Builder; // MapGroup extension
 using Microsoft.AspNetCore.Http; // IResult, TypedResults

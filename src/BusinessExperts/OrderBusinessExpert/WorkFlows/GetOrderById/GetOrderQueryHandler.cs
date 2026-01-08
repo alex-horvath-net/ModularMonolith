@@ -1,4 +1,4 @@
-using Experts.OrderBusinessExpert.Business.DTOs;
+using Experts.OrderBusinessExpert.Shared.Business.DTOs;
 using Experts.OrderBusinessExpert.WorkFlows.PlaceOrderBusinessWorkFlow.Infrastructure.Data;
 
 namespace Experts.OrderBusinessExpert.WorkFlows.GetOrderById;

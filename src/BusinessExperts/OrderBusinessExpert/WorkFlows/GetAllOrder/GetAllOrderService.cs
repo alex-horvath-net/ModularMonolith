@@ -1,5 +1,5 @@
-using Experts.OrderBusinessExpert.Business.DTOs;
-using Experts.OrderBusinessExpert.Contracts.Abstraction;
+using Experts.OrderBusinessExpert.Shared.Business.DTOs;
+using Experts.OrderBusinessExpert.Shared.Contracts.Abstraction;
 using Experts.OrderBusinessExpert.WorkFlows.PlaceOrderBusinessWorkFlow.Infrastructure.Data;
 
 namespace Experts.OrderBusinessExpert.WorkFlows.GetAllOrder;
