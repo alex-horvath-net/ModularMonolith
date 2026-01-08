@@ -1,4 +1,4 @@
-﻿using Experts.Experts.IdentityBusinessExpert;
+﻿using Experts.IdentityBusinessExpert;
 
 namespace ApplicationApi.Users; 
 public record Visitor(
