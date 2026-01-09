@@ -7,32 +7,35 @@ public sealed class Order {
     private readonly List<OrderLine> _lines = new();
     public IReadOnlyCollection<OrderLine> Lines => _lines;
 
+
+    public decimal Total => _lines.Sum(l => l.Quantity * l.UnitPrice);
+
     // Shadow auditing & concurrency handled via configuration.
     private Order() { }
 
-    private Order(Guid id, Guid customerId) {
+    public Order(Guid customerId) {
         if (customerId == Guid.Empty)
             throw new ArgumentException("CustomerId empty.", nameof(customerId));
-        Id = id;
+
+        Id = Guid.NewGuid();
         CustomerId = customerId;
     }
 
-    public static Order Create(Guid customerId, IEnumerable<OrderLine> lines) {
-        var order = new Order(Guid.NewGuid(), customerId);
-       
-        foreach (var (productId, quantity, unitPrice) in lines)
-            order.AddLine(productId, quantity, unitPrice);
-        
-        return order;
-    }
-
     public void AddLine(Guid productId, int quantity, decimal unitPrice) {
-        if (productId == Guid.Empty)
-            throw new ArgumentException("ProductId empty.", nameof(productId));
-        if (quantity <= 0)
-            throw new ArgumentOutOfRangeException(nameof(quantity));
-        if (unitPrice < 0)
-            throw new ArgumentOutOfRangeException(nameof(unitPrice));
+       
         _lines.Add(new OrderLine(productId, quantity, unitPrice));
     }
+
+    public Infrastructure.Data.Models.Order ToInfra() => new() {
+        Id = Id,
+        CustomerId = CustomerId,
+        Lines = Lines.Select(ToInfraOrderLine).ToList()
+    };
+
+
+    private Infrastructure.Data.Models.OrderLine ToInfraOrderLine(Domain.OrderLine domainOrderLine) => new() {
+        ProductId = domainOrderLine.ProductId,
+        UnitPrice = domainOrderLine.UnitPrice,
+        Quantity = domainOrderLine.Quantity
+    };
 }

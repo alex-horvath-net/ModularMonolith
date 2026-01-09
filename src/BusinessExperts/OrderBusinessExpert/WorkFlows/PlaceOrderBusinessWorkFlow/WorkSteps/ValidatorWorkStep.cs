@@ -1,15 +1,20 @@
 ﻿using Experts.OrderBusinessExpert.WorkFlows.PlaceOrderBusinessWorkFlow.Shared.Business.Domain;
 using Experts.Shared.Business.Domain;
 using FluentValidation;
+using FluentValidation.Results;
 
 namespace Experts.OrderBusinessExpert.WorkFlows.PlaceOrderBusinessWorkFlow.WorkSteps;
 
 public class ValidatorWorkStep(IValidator<CreateOrderRequest> validator) {
     public async Task<IEnumerable<Error>> Validate(CreateOrderRequest request, CancellationToken token) {
-        var result = await validator.ValidateAsync(request, token);
-        return result.Errors.Select(e => new Error(e.PropertyName, e.ErrorMessage));
+        var infraResult = await validator.ValidateAsync(request, token);
+        var domainErrors = infraResult.Errors.Select(MapInfraToDomain);
+        return domainErrors;
     }
 
+    private Error MapInfraToDomain(ValidationFailure infra) => new(
+        infra.PropertyName,
+        infra.ErrorMessage);
 }
 
 public sealed class CreateOrderRequestValidator : AbstractValidator<CreateOrderRequest> {

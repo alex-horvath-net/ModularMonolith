@@ -4,7 +4,13 @@ using Experts.OrderBusinessExpert.WorkFlows.PlaceOrderBusinessWorkFlow.Shared.Bu
 namespace Experts.OrderBusinessExpert.WorkFlows.PlaceOrderBusinessWorkFlow.WorkSteps;
 
 public class CreateOrderWorkStep {
-    public Order Create(CreateOrderRequest request) => Order.Create(
-        request.CustomerId, 
-        request.Lines);
+    public Order Create(CreateOrderRequest request) {
+        var order = new Order(
+        request.CustomerId);
+
+        foreach (var line in request.Lines) {
+            order.AddLine(line.ProductId, line.Quantity, line.UnitPrice);
+        }
+        return order;
+    }
 }

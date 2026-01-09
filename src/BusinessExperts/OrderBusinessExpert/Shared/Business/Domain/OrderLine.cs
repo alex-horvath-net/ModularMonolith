@@ -5,6 +5,7 @@ public sealed class OrderLine {
     public int Quantity { get; private set; }
     public decimal UnitPrice { get; private set; }
 
+    private OrderLine() { }
     public OrderLine(Guid productId, int quantity, decimal unitPrice) {
         if (productId == Guid.Empty)
             throw new ArgumentException("ProductId empty.", nameof(productId));
@@ -12,6 +13,7 @@ public sealed class OrderLine {
             throw new ArgumentOutOfRangeException(nameof(quantity));
         if (unitPrice < 0)
             throw new ArgumentOutOfRangeException(nameof(unitPrice));
+
         ProductId = productId;
         Quantity = quantity;
         UnitPrice = unitPrice;

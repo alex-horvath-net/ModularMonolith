@@ -1,4 +1,7 @@
-﻿using FluentAssertions;
+﻿using Experts.OrderBusinessExpert.Shared.Infrastructure.Data;
+using Experts.OrderBusinessExpert.WorkFlows.PlaceOrderBusinessWorkFlow;
+using Experts.OrderBusinessExpert.WorkFlows.PlaceOrderBusinessWorkFlow.Shared.Business.Domain;
+using FluentAssertions;
 
 namespace DevTests.IntegrationTests;
 
@@ -7,7 +10,7 @@ public class CreateOrder_WorkFlow_Tests(WebAppFactory factory) : IClassFixture<W
     [Fact]
     public async Task CreateOrderCommandHandler_ShouldCreateOrder() {
         // Arrange
-        var workflow = factory.GetRequiredService<WorkFlow>();
+        var workflow = factory.GetRequiredService<PlaceOrderWorkflow>();
         var request = new CreateOrderRequest(
             CustomerId: Guid.NewGuid(),
             Lines: [

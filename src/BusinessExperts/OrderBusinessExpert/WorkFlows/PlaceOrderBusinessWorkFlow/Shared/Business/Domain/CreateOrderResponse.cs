@@ -6,5 +6,5 @@ namespace Experts.OrderBusinessExpert.WorkFlows.PlaceOrderBusinessWorkFlow.Share
 public sealed class CreateOrderResponse {
     public Order Order { get; set; }
     public IEnumerable<Error> Errors { get; set; }
-    public bool IsOrderPlaced { get; internal set; }
+    public bool IsOrderPlaced { get; set; }
 }

@@ -1,5 +1,5 @@
-﻿using BusinessExperts.OrderBusinessExpert.CreateOrder.Infrastructure.Data;
-using BusinessScope.Billing.Infrastructure.Data;
+﻿using Experts.BillingBusinessExpert.Infrastructure.Data;
+using Experts.OrderBusinessExpert.Shared.Infrastructure.Data;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc.Testing;
 using Microsoft.AspNetCore.TestHost;

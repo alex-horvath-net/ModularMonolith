@@ -3,6 +3,20 @@ namespace Experts.OrderBusinessExpert.Shared.Infrastructure.Data.Models;
 public sealed class Order {
     public Guid Id { get; set; }
     public Guid CustomerId { get; set; }
+    public IEnumerable<OrderLine> Lines { get; set; } = [];
 
-    public IReadOnlyCollection<OrderLine> Lines { get; set; } = [];
+    public Business.Domain.Order ToDomain() { 
+        var orderDomain= new Business.Domain.Order(CustomerId);
+     
+        foreach (var line in Lines)
+            orderDomain.AddLine(line.ProductId, line.Quantity, line.UnitPrice);
+        return orderDomain;
+    }
+
+
+    private Business.Domain.OrderLine ToInfraOrderLine(OrderLine domainOrderLine) => new(
+        productId: domainOrderLine.ProductId,
+        unitPrice: domainOrderLine.UnitPrice,
+        quantity: domainOrderLine.Quantity
+    );
 }

@@ -1,8 +1,8 @@
 using System.Net;
 using System.Net.Http.Headers;
 using System.Net.Http.Json;
-using Business.MemberApplicationUser.IdentityBusinessExpert.CreateToken;
-using BusinessScope.OrderBusinessExpert.Contracts.DTOs;
+using Experts.IdentityBusinessExpert.CreateToken;
+using Experts.OrderBusinessExpert.Shared.Business.Domain;
 using FluentAssertions;
 
 namespace DevTests.IntegrationTests;
@@ -28,7 +28,7 @@ public class GetAllOrderEndpoints_Tests(WebAppFactory factory) : IClassFixture<W
         response.Version.ToString().Should().Be("1.1");
         response.Headers.GetValues("api-supported-versions").First().Should().Be("1.0");
 
-        var content = await response.Content.ReadFromJsonAsync<List<OrderDto>>();
+        var content = await response.Content.ReadFromJsonAsync<List<Order>>();
         content.Should().NotBeEmpty();
     }
 
