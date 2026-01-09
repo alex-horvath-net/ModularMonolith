@@ -15,29 +15,24 @@ using Microsoft.Extensions.Logging;
 
 namespace Experts.BillingBusinessExpert;
 
-public static class BillingExtensions
-{
-    public static IServiceCollection AddBilling(this IServiceCollection services, IConfiguration configuration)
-    {
+public static class BillingExtensions {
+    public static IServiceCollection AddBilling(this IServiceCollection services, IConfiguration configuration) {
         // Application
         services.AddScoped<GetInvoiceQueryHandler>();
         services.AddScoped<IBusinessEventHandler<OrderPlaced>, OrderPlacedEventHandler>();
 
         //Infrastructure
-        services.AddDbContext<BillingDbContext>((sp, options) =>
-        {
+        services.AddDbContext<BillingDbContext>((sp, options) => {
             var env = sp.GetRequiredService<IHostEnvironment>();
             var loggerFactory = sp.GetRequiredService<ILoggerFactory>();
             options.UseLoggerFactory(loggerFactory);
 
-            if (env.IsDevelopment())
-            {
+            if (env.IsDevelopment()) {
                 options.EnableDetailedErrors();
                 options.EnableSensitiveDataLogging();
             }
 
-            options.UseSqlServer(configuration.GetConnectionString("AppDB"), sql =>
-            {
+            options.UseSqlServer(configuration.GetConnectionString("AppDB"), sql => {
                 sql.EnableRetryOnFailure(5, TimeSpan.FromSeconds(2), null);
                 sql.MigrationsHistoryTable("__EFMigrationsHistory", "billing");
                 sql.CommandTimeout(30);
@@ -52,10 +47,10 @@ public static class BillingExtensions
         return services;
     }
 
-    public static IEndpointRouteBuilder MapBilling(this WebApplication app)
-    {
+    public static IEndpointRouteBuilder MapBilling(this WebApplication app) {
         using var scope = app.Services.CreateScope();
         var db = scope.ServiceProvider.GetRequiredService<BillingDbContext>();
+        db.Database.EnsureCreated();
         db.Database.Migrate();
 
         return BillingEndpoints.MapBilling(app);

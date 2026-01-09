@@ -1,4 +1,5 @@
-﻿using Experts.BillingBusinessExpert.Infrastructure.Data;
+﻿using System.Linq;
+using Experts.BillingBusinessExpert.Infrastructure.Data;
 using Experts.OrderBusinessExpert.Shared.Infrastructure.Data;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc.Testing;
@@ -7,15 +8,13 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Diagnostics;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using Testcontainers.MsSql;
+using Microsoft.Extensions.DependencyInjection.Extensions;
+using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Options;
 
 namespace DevTests.IntegrationTests;
 
 public class WebAppFactory : WebApplicationFactory<Program>, IAsyncLifetime {
-
-    private readonly MsSqlContainer _dbContainer = new MsSqlBuilder("mcr.microsoft.com/mssql/server:2022-latest")
-        .WithPassword("Strong_password_123!")
-        .Build();
 
     private IServiceScope _scope = default!;
 
@@ -27,7 +26,7 @@ public class WebAppFactory : WebApplicationFactory<Program>, IAsyncLifetime {
         builder.UseTestServer();
         builder.ConfigureAppConfiguration((_, configBuilder) => {
             configBuilder.AddInMemoryCollection(new Dictionary<string, string?> {
-                ["ConnectionStrings:AppDB"] = _dbContainer.GetConnectionString(),
+                ["ConnectionStrings:AppDB"] = "InMemory-DevTests",
                 ["Authentication:Issuer"] = "integration-tests",
                 ["Authentication:Audience"] = "integration-tests",
                 ["Authentication:SecurityKey"] = "integration-test-key-012345678901234567890123456789",
@@ -38,38 +37,51 @@ public class WebAppFactory : WebApplicationFactory<Program>, IAsyncLifetime {
             });
         });
         builder.ConfigureTestServices(services => {
-            UseTestContainerDB<OrdersDbContext>(services);
-            UseTestContainerDB<BillingDbContext>(services);
+            RemoveSqlServerProvider(services);
+            UseTestDatabase<OrdersDbContext>(services, "orders-test-db");
+            UseTestDatabase<BillingDbContext>(services, "billing-test-db");
         });
     }
     
-    public async Task InitializeAsync() {
-        await _dbContainer.StartAsync();
-
-        _scope = base.Services.CreateScope();
-        var ordersDb = GetRequiredService<OrdersDbContext>();
-        await ordersDb.Database.MigrateAsync();
-
-        var billingDb = GetRequiredService<BillingDbContext>();
-        await billingDb.Database.MigrateAsync();
+    public Task InitializeAsync() {
+        _scope = Services.CreateScope();
+        return Task.CompletedTask;
     }
 
-    public new async Task DisposeAsync() {
+    public new Task DisposeAsync() {
         _scope?.Dispose();
-        await _dbContainer.StopAsync();
+        return Task.CompletedTask;
     }
 
-    private void UseTestContainerDB<T>(IServiceCollection services) where T : DbContext {
-        var descriptorType = typeof(DbContextOptions<T>);
-        var descriptor = services.SingleOrDefault(s => s.ServiceType == descriptorType);
-        if (descriptor is not null) {
+    private void UseTestDatabase<T>(IServiceCollection services, string dbName) where T : DbContext {
+        services.RemoveAll(typeof(DbContextOptions<T>));
+        services.RemoveAll(typeof(IConfigureOptions<DbContextOptions<T>>));
+        services.RemoveAll(typeof(IOptions<DbContextOptions<T>>));
+        services.RemoveAll(typeof(T));
+
+        var optionsBuilder = new DbContextOptionsBuilder<T>();
+        optionsBuilder.UseInMemoryDatabase(dbName);
+        optionsBuilder.ConfigureWarnings(w => w.Ignore(InMemoryEventId.TransactionIgnoredWarning));
+
+        services.AddSingleton(optionsBuilder.Options);
+        services.AddScoped(sp => {
+            var loggerFactory = sp.GetRequiredService<ILoggerFactory>();
+            optionsBuilder.UseLoggerFactory(loggerFactory);
+            return (T)ActivatorUtilities.CreateInstance(sp, typeof(T), optionsBuilder.Options);
+        });
+    }
+
+    private static void RemoveSqlServerProvider(IServiceCollection services) {
+        var providerDescriptors = services
+            .Where(d =>
+                d.ServiceType?.Namespace?.Contains("Microsoft.EntityFrameworkCore.SqlServer", StringComparison.Ordinal) == true ||
+                d.ImplementationType?.Namespace?.Contains("Microsoft.EntityFrameworkCore.SqlServer", StringComparison.Ordinal) == true ||
+                d.ImplementationInstance?.GetType().Namespace?.Contains("Microsoft.EntityFrameworkCore.SqlServer", StringComparison.Ordinal) == true)
+            .ToList();
+
+        foreach (var descriptor in providerDescriptors) {
             services.Remove(descriptor);
         }
-
-        services.AddDbContext<T>(options => {
-            options.UseSqlServer(_dbContainer.GetConnectionString());
-            options.ConfigureWarnings(w => w.Ignore(RelationalEventId.PendingModelChangesWarning));
-        });
     }
 }
 

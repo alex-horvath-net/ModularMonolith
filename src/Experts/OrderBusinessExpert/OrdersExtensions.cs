@@ -58,7 +58,9 @@ public static class OrdersExtensions {
 
     public static IEndpointRouteBuilder MapOrders(this WebApplication app) {
         using var scope = app.Services.CreateScope();
+        
         var db = scope.ServiceProvider.GetRequiredService<OrdersDbContext>();
+        db.Database.EnsureCreated();
         db.Database.Migrate();
 
         app.MapOrdersEndpoints();
