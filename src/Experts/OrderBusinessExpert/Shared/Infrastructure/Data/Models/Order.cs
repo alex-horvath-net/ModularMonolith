@@ -3,10 +3,10 @@ namespace Experts.OrderBusinessExpert.Shared.Infrastructure.Data.Models;
 public sealed class Order {
     public Guid Id { get; set; }
     public Guid CustomerId { get; set; }
-    public IEnumerable<OrderLine> Lines { get; set; } = [];
+    public List<OrderLine> Lines { get; set; } = new();
 
     public Business.Domain.Order ToDomain() { 
-        var orderDomain= new Business.Domain.Order(CustomerId);
+        var orderDomain= new Business.Domain.Order(Id, CustomerId);
      
         foreach (var line in Lines)
             orderDomain.AddLine(line.ProductId, line.Quantity, line.UnitPrice);

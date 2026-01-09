@@ -11,14 +11,25 @@ public sealed class Order {
     public decimal Total => _lines.Sum(l => l.Quantity * l.UnitPrice);
 
     // Shadow auditing & concurrency handled via configuration.
-    private Order() { }
+    public Order() { }
 
-    public Order(Guid customerId) {
+    public Order(Guid customerId) : this(Guid.NewGuid(), customerId) { }
+
+    public Order(Guid id, Guid customerId) {
+        if (id == Guid.Empty)
+            throw new ArgumentException("Id empty.", nameof(id));
         if (customerId == Guid.Empty)
             throw new ArgumentException("CustomerId empty.", nameof(customerId));
 
-        Id = Guid.NewGuid();
+        Id = id;
         CustomerId = customerId;
+    }
+
+    public Order(Guid id, Guid customerId, IEnumerable<OrderLine> lines) : this(id, customerId) {
+        ArgumentNullException.ThrowIfNull(lines);
+        foreach (var line in lines) {
+            _lines.Add(line);
+        }
     }
 
     public void AddLine(Guid productId, int quantity, decimal unitPrice) {

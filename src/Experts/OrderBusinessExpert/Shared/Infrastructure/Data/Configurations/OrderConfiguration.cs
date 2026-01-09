@@ -33,6 +33,6 @@ public sealed class OrderConfiguration : IEntityTypeConfiguration<Order> {
             owned.HasIndex("OrderId").HasDatabaseName("IX_OrderLines_OrderId");
         });
 
-        builder.Navigation(o => o.Lines).HasField("_lines").UsePropertyAccessMode(PropertyAccessMode.Field);
+        builder.Navigation(o => o.Lines).UsePropertyAccessMode(PropertyAccessMode.Property);
     }
 }

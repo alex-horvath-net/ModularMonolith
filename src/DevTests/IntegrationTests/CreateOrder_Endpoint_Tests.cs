@@ -1,6 +1,7 @@
 using System.Net;
 using System.Net.Http.Headers;
 using System.Net.Http.Json;
+using System.Linq;
 using Experts.IdentityBusinessExpert.CreateToken;
 using Experts.OrderBusinessExpert.WorkFlows.PlaceOrderBusinessWorkFlow.Shared.Business.Domain;
 using FluentAssertions;
@@ -25,6 +26,7 @@ public class CreateOrder_Endpoint_Tests(WebAppFactory factory) : IClassFixture<W
         var response = await client.SendAsync(request);
 
         // Assert
+        response.EnsureSuccessStatusCode();
         response.StatusCode.Should().Be(HttpStatusCode.Created);
         response.Version.ToString().Should().Be("1.1");
         response.Headers.GetValues("api-supported-versions").First().Should().Be("1.0");
