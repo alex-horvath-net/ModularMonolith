@@ -1,4 +1,4 @@
-﻿namespace Experts.Order.PlaceOrderBusinessWorkFlow.StoreBusinessWorkSteps;
+﻿namespace Experts.Order.PlaceOrder.StoreBusinessWorkSteps;
 
 public class Business(Business.IInfrastructure infrastructure) {
     public async Task Save( Order.Shared.Business.Domain.Order domainOrder, CancellationToken token) {

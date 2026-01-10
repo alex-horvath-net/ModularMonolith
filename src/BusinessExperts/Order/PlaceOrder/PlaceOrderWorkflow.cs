@@ -1,6 +1,6 @@
-﻿using Experts.Order.PlaceOrderBusinessWorkFlow.Shared.Business.Domain;
+﻿using Experts.Order.PlaceOrder.Shared.Business.Domain;
 
-namespace Experts.Order.PlaceOrderBusinessWorkFlow;
+namespace Experts.Order.PlaceOrder;
 
 public class PlaceOrderWorkflow(
    ValidatorBusinessWorkSteps.Business validator,

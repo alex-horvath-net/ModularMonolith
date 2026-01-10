@@ -1,7 +1,7 @@
-﻿using Experts.Order.PlaceOrderBusinessWorkFlow.Shared.Business.Domain;
+﻿using Experts.Order.PlaceOrder.Shared.Business.Domain;
 using FluentValidation;
 
-namespace Experts.Order.PlaceOrderBusinessWorkFlow.ValidatorBusinessWorkSteps;
+namespace Experts.Order.PlaceOrder.ValidatorBusinessWorkSteps;
 
 public sealed class Infrastructure : AbstractValidator<CreateOrderRequest> {
     public Infrastructure() {

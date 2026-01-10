@@ -2,7 +2,7 @@ using System.Net;
 using System.Net.Http.Headers;
 using System.Net.Http.Json;
 using Experts.Identity.CreateToken;
-using Experts.Order.PlaceOrderBusinessWorkFlow.Shared.Business.Domain;
+using Experts.Order.PlaceOrder.Shared.Business.Domain;
 using FluentAssertions;
 
 namespace DevTests.IntegrationTests;

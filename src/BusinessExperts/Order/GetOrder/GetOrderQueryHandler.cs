@@ -1,6 +1,6 @@
 using Experts.Order.Shared.Infrastructure.Data;
 
-namespace Experts.Order.GetOrderByIdBusinessWorkFlow;
+namespace Experts.Order.GetOrder;
 
 public sealed class GetOrderQueryHandler(OrdersDbContext db) {
     public async Task<Shared.Business.Domain.Order?> Handle(Guid id, CancellationToken token) {

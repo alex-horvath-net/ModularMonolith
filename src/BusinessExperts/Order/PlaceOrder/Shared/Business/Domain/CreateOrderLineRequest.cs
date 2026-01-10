@@ -1,4 +1,4 @@
-﻿namespace Experts.Order.PlaceOrderBusinessWorkFlow.Shared.Business.Domain;
+﻿namespace Experts.Order.PlaceOrder.Shared.Business.Domain;
 
 public record CreateOrderLineRequest(
     Guid ProductId, 

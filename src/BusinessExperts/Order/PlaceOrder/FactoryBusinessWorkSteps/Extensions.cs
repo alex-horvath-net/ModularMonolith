@@ -1,7 +1,7 @@
 ﻿using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 
-namespace Experts.Order.PlaceOrderBusinessWorkFlow.FactoryBusinessWorkSteps;
+namespace Experts.Order.PlaceOrder.FactoryBusinessWorkSteps;
 
 public static class Extensions {
     public static IServiceCollection AddFactoryBusinessWorkSteps(this IServiceCollection services, IConfiguration configuration) {

@@ -1,12 +1,12 @@
 using Asp.Versioning;
-using Experts.Order.GetOrderByIdBusinessWorkFlow;
+using Experts.Order.GetOrder;
 using Experts.Order.Shared.Business;
 using Microsoft.AspNetCore.Builder; // MapGroup extension
 using Microsoft.AspNetCore.Http; // IResult, TypedResults
 using Microsoft.AspNetCore.Http.HttpResults; // OK
 using Microsoft.AspNetCore.Routing;
 
-namespace Experts.Order.GetAllOrderBusinessWorkFlow;
+namespace Experts.Order.GetAll;
 
 public static class GetAllOrderEndpoints {
     public static IEndpointRouteBuilder MapOrdersEndpoints(this IEndpointRouteBuilder app) {
