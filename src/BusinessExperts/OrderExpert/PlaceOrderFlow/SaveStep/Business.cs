@@ -1,6 +1,6 @@
 ﻿using Experts.OrderExpert.Shared.Business.Domain;
 
-namespace Experts.OrderExpert.PlaceOrder.Save;
+namespace Experts.OrderExpert.PlaceOrderFlow.SaveStep;
 
 public class Business(Business.IInfrastructure infrastructure) {
     public async Task Run(Order domainOrder, CancellationToken token) {

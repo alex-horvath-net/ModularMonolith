@@ -1,5 +1,5 @@
-﻿using Experts.OrderExpert.PlaceOrder;
-using Experts.OrderExpert.PlaceOrder.Shared.Business.Domain;
+﻿using Experts.OrderExpert.PlaceOrderFlow.Shared.Business.Domain;
+using Experts.OrderExpert.PlaceOrderFlow;
 using Experts.OrderExpert.Shared.Infrastructure.Data;
 using FluentAssertions;
 

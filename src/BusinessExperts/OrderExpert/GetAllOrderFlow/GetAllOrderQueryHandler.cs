@@ -1,7 +1,7 @@
 using Experts.OrderExpert.Shared.Infrastructure.Data;
 using Microsoft.EntityFrameworkCore;
 
-namespace Experts.OrderExpert.GetAll;
+namespace Experts.OrderExpert.GetAllOrderFlow;
 
 public sealed class GetAllOrderQueryHandler(OrdersDbContext db) {
     public async Task<List<Shared.Business.Domain.Order>> Handle(CancellationToken token = default) {

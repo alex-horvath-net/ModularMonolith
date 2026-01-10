@@ -1,7 +1,7 @@
-﻿using Experts.OrderExpert.PlaceOrder.Shared.Business.Domain;
+﻿using Experts.OrderExpert.PlaceOrderFlow.Shared.Business.Domain;
 using Experts.OrderExpert.Shared.Business.Domain;
 
-namespace Experts.OrderExpert.PlaceOrder.Create;
+namespace Experts.OrderExpert.PlaceOrderFlow.CreateStep;
 
 public class Business() {
     public Order Run(CreateOrderRequest request) {

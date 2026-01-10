@@ -1,7 +1,7 @@
-using Experts.OrderExpert.GetAll;
-using Experts.OrderExpert.GetOrder;
-using Experts.OrderExpert.PlaceOrder;
-using Experts.OrderExpert.PlaceOrder.Shared.Infrastructure;
+using Experts.OrderExpert.GetAllOrderFlow;
+using Experts.OrderExpert.GetOrderFlow;
+using Experts.OrderExpert.PlaceOrderFlow;
+using Experts.OrderExpert.PlaceOrderFlow.Shared.Infrastructure;
 using Experts.OrderExpert.Shared.Business;
 using Experts.OrderExpert.Shared.Infrastructure.Data;
 using Microsoft.AspNetCore.Builder;

@@ -3,7 +3,7 @@ using System.Net.Http.Headers;
 using System.Net.Http.Json;
 using System.Text.Json;
 using Experts.Identity.CreateToken;
-using Experts.OrderExpert.PlaceOrder.Shared.Business.Domain;
+using Experts.OrderExpert.PlaceOrderFlow.Shared.Business.Domain;
 using FluentAssertions;
 
 namespace DevTests.IntegrationTests;

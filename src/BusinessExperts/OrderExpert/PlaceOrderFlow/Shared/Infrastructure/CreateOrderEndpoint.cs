@@ -1,13 +1,12 @@
 using Asp.Versioning;
-using Experts.OrderExpert.PlaceOrder;
-using Experts.OrderExpert.PlaceOrder.Shared.Business.Domain;
+using Experts.OrderExpert.PlaceOrderFlow.Shared.Business.Domain;
 using Experts.OrderExpert.Shared.Business;
 using FluentValidation;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Routing;
 
-namespace Experts.OrderExpert.PlaceOrder.Shared.Infrastructure;
+namespace Experts.OrderExpert.PlaceOrderFlow.Shared.Infrastructure;
 
 public static class CreateOrderEndpoint
 {

@@ -1,12 +1,12 @@
-﻿using Experts.OrderExpert.PlaceOrder.Shared.Business.Domain;
+﻿using Experts.OrderExpert.PlaceOrderFlow.Shared.Business.Domain;
 
-namespace Experts.OrderExpert.PlaceOrder;
+namespace Experts.OrderExpert.PlaceOrderFlow;
 
 public class PlaceOrderWorkflow(
-   Validate.Business validate,
-   Create.Business create,
-   Save.Business save,
-   Publish.Business publish) {
+   ValideStep.Business validate,
+   CreateStep.Business create,
+   SaveStep.Business save,
+   PublishStep.Business publish) {
 
     public async Task<CreateOrderResponse> Run(CreateOrderRequest request, CancellationToken token) {
 

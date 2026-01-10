@@ -2,7 +2,7 @@ using Experts.OrderExpert.Shared.Business.Domain;
 using Experts.OrderExpert.Shared.Business.Services;
 using Experts.OrderExpert.Shared.Infrastructure.Data;
 
-namespace Experts.OrderExpert.GetAll;
+namespace Experts.OrderExpert.GetAllOrderFlow;
 
 internal sealed class GetAllOrderService(OrdersDbContext db) : IReadOrderService {
     public async Task<Order?> GetById(Guid id) {

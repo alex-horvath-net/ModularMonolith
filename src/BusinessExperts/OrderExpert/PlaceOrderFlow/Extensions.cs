@@ -1,11 +1,11 @@
-﻿using Experts.OrderExpert.PlaceOrder.Create;
-using Experts.OrderExpert.PlaceOrder.Publish;
-using Experts.OrderExpert.PlaceOrder.Save;
-using Experts.OrderExpert.PlaceOrder.Validate;
+﻿using Experts.OrderExpert.PlaceOrderFlow.CreateStep;
+using Experts.OrderExpert.PlaceOrderFlow.PublishStep;
+using Experts.OrderExpert.PlaceOrderFlow.SaveStep;
+using Experts.OrderExpert.PlaceOrderFlow.ValideStep;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 
-namespace Experts.OrderExpert.PlaceOrder;
+namespace Experts.OrderExpert.PlaceOrderFlow;
 
 public static class Extensions {
     public static IServiceCollection AddPlaceOrderBusinessWorkFlow(this IServiceCollection services, IConfiguration configuration) {

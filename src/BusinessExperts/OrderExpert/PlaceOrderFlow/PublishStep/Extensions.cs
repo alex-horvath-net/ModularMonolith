@@ -1,14 +1,15 @@
 ﻿using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 
-namespace Experts.OrderExpert.PlaceOrder.Create;
+namespace Experts.OrderExpert.PlaceOrderFlow.PublishStep;
 
 public static class Extensions {
-    public static IServiceCollection AddFactoryBusinessWorkSteps(this IServiceCollection services, IConfiguration configuration) {
+    public static IServiceCollection AddPublisherBusinessWorkStep(this IServiceCollection services, IConfiguration configuration) {
 
         services.AddScoped<Business>();
 
         return services;
-         
+
     }
+
 }

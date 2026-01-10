@@ -1,9 +1,9 @@
-﻿using Experts.OrderExpert.PlaceOrder.Shared.Business.Domain;
+﻿using Experts.OrderExpert.PlaceOrderFlow.Shared.Business.Domain;
 using Experts.Shared.Business.Domain;
 using Experts.Shared.Infrastructure;
 using FluentValidation;
 
-namespace Experts.OrderExpert.PlaceOrder.Validate;
+namespace Experts.OrderExpert.PlaceOrderFlow.ValideStep;
 
 public class Business(IValidator<CreateOrderRequest> validator) {
     public async Task<IEnumerable<Error>> Run(CreateOrderRequest request, CancellationToken token) {
