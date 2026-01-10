@@ -1,5 +1,5 @@
-using Experts.BillingBusinessExpert;
-using Experts.OrderBusinessExpert.Shared.Infrastructure;
+using Experts.Billing;
+using Experts.Order.Shared.Infrastructure;
 using FluentAssertions;
 using NetArchTest.Rules;
 

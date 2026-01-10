@@ -1,5 +1,5 @@
 using System.Net.Http.Json;
-using Experts.IdentityBusinessExpert.CreateToken;
+using Experts.Identity.CreateToken;
 using FluentAssertions;
 
 namespace DevTests.IntegrationTests;

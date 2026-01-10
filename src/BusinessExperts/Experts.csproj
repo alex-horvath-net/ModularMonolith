@@ -7,13 +7,13 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Content Include="OrderBusinessExpert\GetAllOrderBusinessWorkFlow\Blazor\Components\OrderDetails.razor">
+    <Content Include="Order\GetAllOrderBusinessWorkFlow\Blazor\Components\OrderDetails.razor">
       <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
     </Content>
-    <Content Include="OrderBusinessExpert\GetAllOrderBusinessWorkFlow\Blazor\Components\OrdersList.razor">
+    <Content Include="Order\GetAllOrderBusinessWorkFlow\Blazor\Components\OrdersList.razor">
       <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
     </Content>
-    <Content Include="OrderBusinessExpert\GetAllOrderBusinessWorkFlow\Blazor\_Imports.razor">
+    <Content Include="Order\GetAllOrderBusinessWorkFlow\Blazor\_Imports.razor">
       <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
     </Content>
   </ItemGroup>
