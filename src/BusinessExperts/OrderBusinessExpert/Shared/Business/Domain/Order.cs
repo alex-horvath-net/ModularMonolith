@@ -37,14 +37,14 @@ public sealed class Order {
         _lines.Add(new OrderLine(productId, quantity, unitPrice));
     }
 
-    public Business.Experts.OrderBusinessExpert.Shared.Infrastructure.Data.Models.Order ToInfra() => new() {
+    public Infrastructure.Data.Models.Order ToInfra() => new() {
         Id = Id,
         CustomerId = CustomerId,
         Lines = Lines.Select(ToInfraOrderLine).ToList()
     };
 
 
-    private Business.Experts.OrderBusinessExpert.Shared.Infrastructure.Data.Models.OrderLine ToInfraOrderLine(OrderLine domainOrderLine) => new() {
+    private BusinessExperts.OrderBusinessExpert.Shared.Infrastructure.Data.Models.OrderLine ToInfraOrderLine(OrderLine domainOrderLine) => new() {
         ProductId = domainOrderLine.ProductId,
         UnitPrice = domainOrderLine.UnitPrice,
         Quantity = domainOrderLine.Quantity

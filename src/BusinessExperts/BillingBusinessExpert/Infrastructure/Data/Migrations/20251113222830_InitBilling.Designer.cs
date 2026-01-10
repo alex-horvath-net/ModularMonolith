@@ -9,7 +9,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
 
-namespace Billing.Infrastructure.Data.Migrations
+namespace BusinessExperts.BillingBusinessExpert.Infrastructure.Data.Migrations
 {
     [DbContext(typeof(BillingDbContext))]
     [Migration("20251113222830_InitBilling")]

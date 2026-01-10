@@ -1,4 +1,3 @@
-using Domain = Business.Experts.OrderBusinessExpert.Shared.Business.Domain;
 using BusinessExperts.OrderBusinessExpert.Shared.Infrastructure.Data;
 using BusinessExperts.OrderBusinessExpert.Shared.Business.Domain;
 

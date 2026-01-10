@@ -1,11 +1,9 @@
 using System.Net;
 using System.Net.Http.Headers;
 using System.Net.Http.Json;
-using System.Linq;
-using Business.Experts.IdentityBusinessExpert.CreateToken;
-using Business.Experts.OrderBusinessExpert.WorkFlows.PlaceOrderBusinessWorkFlow.Shared.Business.Domain;
-using FluentAssertions;
+using BusinessExperts.IdentityBusinessExpert.CreateToken;
 using BusinessExperts.OrderBusinessExpert.WorkFlows.PlaceOrderBusinessWorkFlow.Shared.Business.Domain;
+using FluentAssertions;
 
 namespace DevTests.IntegrationTests;
 

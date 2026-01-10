@@ -1,5 +1,5 @@
-﻿using Business.Experts.Shared.Business.Events;
-using BusinessExperts.OrderBusinessExpert.Shared.Business.Domain;
+﻿using BusinessExperts.OrderBusinessExpert.Shared.Business.Domain;
+using BusinessExperts.Shared.Business.Events;
 using Common.Events;
 
 namespace BusinessExperts.OrderBusinessExpert.WorkFlows.PlaceOrderBusinessWorkFlow.WorkSteps;
