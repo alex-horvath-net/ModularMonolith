@@ -1,7 +1,7 @@
 using Common;
 using Experts.Billing;
 using Experts.Identity.CreateToken;
-using Experts.Order.Shared.Infrastructure;
+using Experts.OrderExpert.Shared.Infrastructure;
 
 var builder = WebApplication.CreateBuilder(args);
 

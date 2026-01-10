@@ -1,7 +1,7 @@
-﻿using Experts.Order.Shared.Infrastructure.Data;
-using Experts.Order.PlaceOrder.Shared.Business.Domain;
+﻿using Experts.OrderExpert.PlaceOrder;
+using Experts.OrderExpert.PlaceOrder.Shared.Business.Domain;
+using Experts.OrderExpert.Shared.Infrastructure.Data;
 using FluentAssertions;
-using Experts.Order.PlaceOrder;
 
 namespace DevTests.IntegrationTests;
 
