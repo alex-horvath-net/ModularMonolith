@@ -14,7 +14,7 @@ public class CreateOrder_WorkFlow_Tests(WebAppFactory factory) : IClassFixture<W
         var request = new CreateOrderRequest(
             CustomerId: Guid.NewGuid(),
             Lines: [
-                new CreateOrderLineRequest( ProductId: Guid.NewGuid(), Quantity: 1, UnitPrice: 10.0m )
+                new CreateOrderLineRequest( ProductId: Guid.NewGuid(), Quantity: 1, UnitPrice: 100.0m )
             ]
         );
 

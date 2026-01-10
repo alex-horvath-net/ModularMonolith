@@ -13,6 +13,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
+using Microsoft.EntityFrameworkCore.Metadata;
 
 namespace Experts.OrderBusinessExpert;
 
@@ -63,7 +64,9 @@ public static class OrdersExtensions {
         
         var db = scope.ServiceProvider.GetRequiredService<OrdersDbContext>();
         if (app.Environment.IsEnvironment("IntegrationTest")) {
+            //db.Database.EnsureDeleted();
             db.Database.EnsureCreated();
+            CleanDatabase(db);
         } else {
             db.Database.Migrate();
         }
@@ -72,5 +75,21 @@ public static class OrdersExtensions {
         app.MapCreateOrderEndpoint();
 
         return app;
+    }
+
+    private static void CleanDatabase(DbContext db) {
+        foreach (var entityType in db.Model.GetEntityTypes()) {
+            var tableName = entityType.GetTableName();
+            var schema = entityType.GetSchema();
+            if (tableName is null) {
+                continue;
+            }
+
+            var fullName = string.IsNullOrWhiteSpace(schema)
+                ? $"[{tableName}]"
+                : $"[{schema}].[{tableName}]";
+
+            db.Database.ExecuteSqlRaw($"DELETE FROM {fullName}");
+        }
     }
 }

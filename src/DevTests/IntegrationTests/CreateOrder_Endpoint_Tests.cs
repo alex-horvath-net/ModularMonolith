@@ -39,7 +39,7 @@ public class CreateOrder_Endpoint_Tests(WebAppFactory factory) : IClassFixture<W
     private static CreateOrderRequest GetCreateOrderRequest() {
         return new CreateOrderRequest(
                     CustomerId: Guid.NewGuid(),
-                    Lines: [new CreateOrderLineRequest(Guid.NewGuid(), 1, 10.0m)]);
+                    Lines: [new CreateOrderLineRequest(Guid.NewGuid(), 1, 100.0m)]);
     }
 
     private static async Task<string> GetAccessToken(HttpClient client) {

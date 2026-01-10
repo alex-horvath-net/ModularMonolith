@@ -12,6 +12,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
+using Microsoft.EntityFrameworkCore.Metadata;
 
 namespace Experts.BillingBusinessExpert;
 
@@ -53,10 +54,27 @@ public static class BillingExtensions {
         var db = scope.ServiceProvider.GetRequiredService<BillingDbContext>();
         if (app.Environment.IsEnvironment("IntegrationTest")) {
             db.Database.EnsureCreated();
+            CleanDatabase(db);
         } else {
             db.Database.Migrate();
         }
 
         return BillingEndpoints.MapBilling(app);
+    }
+
+    private static void CleanDatabase(DbContext db) {
+        foreach (var entityType in db.Model.GetEntityTypes()) {
+            var tableName = entityType.GetTableName();
+            var schema = entityType.GetSchema();
+            if (tableName is null) {
+                continue;
+            }
+
+            var fullName = string.IsNullOrWhiteSpace(schema)
+                ? $"[{tableName}]"
+                : $"[{schema}].[{tableName}]";
+
+            db.Database.ExecuteSqlRaw($"DELETE FROM {fullName}");
+        }
     }
 }
