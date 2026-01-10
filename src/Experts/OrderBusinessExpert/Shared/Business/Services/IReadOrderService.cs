@@ -1,6 +1,6 @@
-using Business.Experts.OrderBusinessExpert.Shared.Business.Domain;
+using BusinessExperts.OrderBusinessExpert.Shared.Business.Domain;
 
-namespace Business.Experts.OrderBusinessExpert.Shared.Business.Services;
+namespace BusinessExperts.OrderBusinessExpert.Shared.Business.Services;
 
 public interface IReadOrderService {
     Task<Order?> GetById(Guid id);

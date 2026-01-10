@@ -5,7 +5,7 @@ using System.Linq;
 using Business.Experts.IdentityBusinessExpert.CreateToken;
 using Business.Experts.OrderBusinessExpert.WorkFlows.PlaceOrderBusinessWorkFlow.Shared.Business.Domain;
 using FluentAssertions;
-using Business.Experts.OrderBusinessExpert.WorkFlows.PlaceOrderBusinessWorkFlow.Shared.Business.Domain;
+using BusinessExperts.OrderBusinessExpert.WorkFlows.PlaceOrderBusinessWorkFlow.Shared.Business.Domain;
 
 namespace DevTests.IntegrationTests;
 

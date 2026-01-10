@@ -8,15 +8,15 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Microsoft.EntityFrameworkCore.Metadata;
-using Business.Experts.OrderBusinessExpert.Shared.Infrastructure.Data;
-using Business.Experts.OrderBusinessExpert.WorkFlows.GetAllOrder;
-using Business.Experts.OrderBusinessExpert.WorkFlows.PlaceOrderBusinessWorkFlow.Shared.Infrastructure;
-using Business.Experts.OrderBusinessExpert.WorkFlows.GetOrderById;
-using Business.Experts.OrderBusinessExpert.WorkFlows.PlaceOrderBusinessWorkFlow.WorkSteps;
-using Business.Experts.OrderBusinessExpert.WorkFlows.PlaceOrderBusinessWorkFlow;
-using Business.Experts.OrderBusinessExpert.WorkFlows.PlaceOrderBusinessWorkFlow.Shared.Business.Domain;
+using BusinessExperts.OrderBusinessExpert.WorkFlows.GetAllOrder;
+using BusinessExperts.OrderBusinessExpert.Shared.Infrastructure.Data;
+using BusinessExperts.OrderBusinessExpert.WorkFlows.PlaceOrderBusinessWorkFlow;
+using BusinessExperts.OrderBusinessExpert.WorkFlows.PlaceOrderBusinessWorkFlow.WorkSteps;
+using BusinessExperts.OrderBusinessExpert.WorkFlows.GetOrderById;
+using BusinessExperts.OrderBusinessExpert.WorkFlows.PlaceOrderBusinessWorkFlow.Shared.Business.Domain;
+using BusinessExperts.OrderBusinessExpert.WorkFlows.PlaceOrderBusinessWorkFlow.Shared.Infrastructure;
 
-namespace Business.Experts.OrderBusinessExpert;
+namespace BusinessExperts.OrderBusinessExpert;
 
 public static class OrdersExtensions {
     public static IServiceCollection AddOrders(this IServiceCollection services, IConfiguration configuration) {

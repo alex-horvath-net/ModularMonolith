@@ -1,8 +1,8 @@
 using Domain = Business.Experts.OrderBusinessExpert.Shared.Business.Domain;
-using Business.Experts.OrderBusinessExpert.Shared.Infrastructure.Data;
-using Business.Experts.OrderBusinessExpert.Shared.Business.Domain;
+using BusinessExperts.OrderBusinessExpert.Shared.Infrastructure.Data;
+using BusinessExperts.OrderBusinessExpert.Shared.Business.Domain;
 
-namespace Business.Experts.OrderBusinessExpert.WorkFlows.GetOrderById;
+namespace BusinessExperts.OrderBusinessExpert.WorkFlows.GetOrderById;
 
 public sealed class GetOrderQueryHandler(OrdersDbContext db) {
     public async Task<Order?> Handle(Guid id, CancellationToken token) {

@@ -1,7 +1,7 @@
-﻿using Business.Experts.OrderBusinessExpert.Shared.Business.Domain;
-using Business.Experts.Shared.Business.Domain;
+﻿using BusinessExperts.OrderBusinessExpert.Shared.Business.Domain;
+using BusinessExperts.Shared.Business.Domain;
 
-namespace Business.Experts.OrderBusinessExpert.WorkFlows.PlaceOrderBusinessWorkFlow.Shared.Business.Domain;
+namespace BusinessExperts.OrderBusinessExpert.WorkFlows.PlaceOrderBusinessWorkFlow.Shared.Business.Domain;
 
 public sealed class CreateOrderResponse {
     public Order Order { get; set; }

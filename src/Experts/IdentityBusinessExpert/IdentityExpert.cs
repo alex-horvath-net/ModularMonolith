@@ -1,6 +1,6 @@
-﻿using Business.Experts.IdentityBusinessExpert.CreateToken;
+﻿using BusinessExperts.IdentityBusinessExpert.CreateToken;
 
-namespace Business.Experts.IdentityBusinessExpert {
+namespace BusinessExperts.IdentityBusinessExpert {
     public record IdentityExpert(
         CreateTokenCommandHandler CreateToken) {
     }

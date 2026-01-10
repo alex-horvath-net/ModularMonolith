@@ -1,6 +1,6 @@
 using Common.Events;
 
-namespace Business.Experts.Shared.Business.Events;
+namespace BusinessExperts.Shared.Business.Events;
 
 public sealed record OrderPlaced(
     Guid OrderId, 

@@ -1,8 +1,8 @@
-﻿using Business.Experts.OrderBusinessExpert.Shared.Infrastructure.Data.Models;
+﻿using BusinessExperts.OrderBusinessExpert.Shared.Infrastructure.Data.Models;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
-namespace Business.Experts.OrderBusinessExpert.Shared.Infrastructure.Data.Configurations;
+namespace BusinessExperts.OrderBusinessExpert.Shared.Infrastructure.Data.Configurations;
 
 
 public sealed class OrderConfiguration : IEntityTypeConfiguration<Order> {

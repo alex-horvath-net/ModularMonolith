@@ -1,6 +1,6 @@
-﻿using Business.Experts.OrderBusinessExpert.Shared.Infrastructure.Data;
-using Business.Experts.OrderBusinessExpert.WorkFlows.PlaceOrderBusinessWorkFlow;
-using Business.Experts.OrderBusinessExpert.WorkFlows.PlaceOrderBusinessWorkFlow.Shared.Business.Domain;
+﻿using Business.Experts.OrderBusinessExpert.WorkFlows.PlaceOrderBusinessWorkFlow.Shared.Business.Domain;
+using BusinessExperts.OrderBusinessExpert.Shared.Infrastructure.Data;
+using BusinessExperts.OrderBusinessExpert.WorkFlows.PlaceOrderBusinessWorkFlow;
 using FluentAssertions;
 
 namespace DevTests.IntegrationTests;
