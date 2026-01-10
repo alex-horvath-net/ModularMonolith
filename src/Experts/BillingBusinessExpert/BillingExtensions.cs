@@ -26,6 +26,7 @@ public static class BillingExtensions {
             var env = sp.GetRequiredService<IHostEnvironment>();
             var loggerFactory = sp.GetRequiredService<ILoggerFactory>();
             options.UseLoggerFactory(loggerFactory);
+            options.ConfigureWarnings(w => w.Ignore(RelationalEventId.PendingModelChangesWarning));
 
             if (env.IsDevelopment()) {
                 options.EnableDetailedErrors();
@@ -50,8 +51,11 @@ public static class BillingExtensions {
     public static IEndpointRouteBuilder MapBilling(this WebApplication app) {
         using var scope = app.Services.CreateScope();
         var db = scope.ServiceProvider.GetRequiredService<BillingDbContext>();
-        db.Database.EnsureCreated();
-        db.Database.Migrate();
+        if (app.Environment.IsEnvironment("IntegrationTest")) {
+            db.Database.EnsureCreated();
+        } else {
+            db.Database.Migrate();
+        }
 
         return BillingEndpoints.MapBilling(app);
     }

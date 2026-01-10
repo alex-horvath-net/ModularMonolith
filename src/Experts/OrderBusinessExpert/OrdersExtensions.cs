@@ -8,6 +8,7 @@ using FluentValidation;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Routing;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Diagnostics;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
@@ -35,6 +36,7 @@ public static class OrdersExtensions {
             var env = sp.GetRequiredService<IHostEnvironment>();
             var loggerFactory = sp.GetRequiredService<ILoggerFactory>();
             options.UseLoggerFactory(loggerFactory);
+            options.ConfigureWarnings(w => w.Ignore(RelationalEventId.PendingModelChangesWarning));
 
             if (env.IsDevelopment()) {
                 options.EnableSensitiveDataLogging();
@@ -60,8 +62,11 @@ public static class OrdersExtensions {
         using var scope = app.Services.CreateScope();
         
         var db = scope.ServiceProvider.GetRequiredService<OrdersDbContext>();
-        db.Database.EnsureCreated();
-        db.Database.Migrate();
+        if (app.Environment.IsEnvironment("IntegrationTest")) {
+            db.Database.EnsureCreated();
+        } else {
+            db.Database.Migrate();
+        }
 
         app.MapOrdersEndpoints();
         app.MapCreateOrderEndpoint();
