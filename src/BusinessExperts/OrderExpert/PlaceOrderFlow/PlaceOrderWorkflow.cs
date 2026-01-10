@@ -26,3 +26,18 @@ public class PlaceOrderWorkflow(
         return response;
     }
 }
+
+public class  Business(Business.IAdapter adapter) {
+    public async Task<CreateOrderResponse> Run(CreateOrderRequest request, CancellationToken token) {
+
+        var response = new CreateOrderResponse();
+
+        
+        return response;
+    }
+
+    public interface IAdapter {
+
+    }
+
+}

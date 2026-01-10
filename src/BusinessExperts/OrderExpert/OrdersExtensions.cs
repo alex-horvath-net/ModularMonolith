@@ -14,10 +14,12 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 
-namespace Experts.OrderExpert.Shared.Infrastructure;
+namespace Experts.OrderExpert;
 
 public static class OrdersExtensions {
     public static IServiceCollection AddOrders(this IServiceCollection services, IConfiguration configuration) {
+
+        services.AddScoped<OrderBusinessExpert>();
 
         // Application
         services.AddScoped<GetAllOrderQueryHandler>();
