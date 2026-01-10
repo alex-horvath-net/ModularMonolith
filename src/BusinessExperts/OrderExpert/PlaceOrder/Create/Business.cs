@@ -4,7 +4,7 @@ using Experts.OrderExpert.Shared.Business.Domain;
 namespace Experts.OrderExpert.PlaceOrder.Create;
 
 public class Business() {
-    public Order Create(CreateOrderRequest request) {
+    public Order Run(CreateOrderRequest request) {
         var order = new Order(request.CustomerId);
 
         foreach (var line in request.Lines) {

@@ -1,9 +1,9 @@
 ﻿using Experts.OrderExpert.Shared.Business.Domain;
 
-namespace Experts.OrderExpert.PlaceOrder.Store;
+namespace Experts.OrderExpert.PlaceOrder.Save;
 
 public class Business(Business.IInfrastructure infrastructure) {
-    public async Task Save(Order domainOrder, CancellationToken token) {
+    public async Task Run(Order domainOrder, CancellationToken token) {
         var infraOrder = domainOrder.ToInfra();
         await infrastructure.Save(infraOrder, token);
     }

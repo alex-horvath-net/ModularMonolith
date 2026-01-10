@@ -3,25 +3,25 @@
 namespace Experts.OrderExpert.PlaceOrder;
 
 public class PlaceOrderWorkflow(
-   Valide.Business validator,
-   Create.Business factory,
-   Store.Business store,
-   Publish.Business publisher) {
+   Validate.Business validate,
+   Create.Business create,
+   Save.Business save,
+   Publish.Business publish) {
 
-    public async Task<CreateOrderResponse> Run(CreateOrderRequest request, CancellationToken token) {        
+    public async Task<CreateOrderResponse> Run(CreateOrderRequest request, CancellationToken token) {
 
         var response = new CreateOrderResponse();
 
-        response.Errors = await validator.Validate(request, token);
+        response.Errors = await validate.Run(request, token);
         if (response.Errors.Any()) {
             return response;
         }
 
-        response.Order = factory.Create(request);
+        response.Order = create.Run(request);
 
-        await store.Save(response.Order, token);
+        await save.Run(response.Order, token);
 
-        response.IsOrderPlaced = await publisher.Publish(response.Order, token);
+        await publish.Run(response.Order, token);
 
         return response;
     }

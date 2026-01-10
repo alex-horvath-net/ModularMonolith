@@ -1,7 +1,7 @@
 ﻿using Experts.OrderExpert.Shared.Infrastructure.Data;
 using Experts.OrderExpert.Shared.Infrastructure.Data.Models;
 
-namespace Experts.OrderExpert.PlaceOrder.Store;
+namespace Experts.OrderExpert.PlaceOrder.Save;
 
 public class Infrastructure(OrdersDbContext db) : Business.IInfrastructure {
     public async Task Save(Order order, CancellationToken token) {

@@ -1,7 +1,7 @@
 ﻿using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 
-namespace Experts.OrderExpert.PlaceOrder.Store;
+namespace Experts.OrderExpert.PlaceOrder.Save;
 
 public static class Extensions {
     public static IServiceCollection AddStoreBusinessWorkSteps(this IServiceCollection services, IConfiguration configuration) {

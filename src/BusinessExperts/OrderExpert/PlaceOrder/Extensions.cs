@@ -1,7 +1,7 @@
 ﻿using Experts.OrderExpert.PlaceOrder.Create;
 using Experts.OrderExpert.PlaceOrder.Publish;
-using Experts.OrderExpert.PlaceOrder.Store;
-using Experts.OrderExpert.PlaceOrder.Valide;
+using Experts.OrderExpert.PlaceOrder.Save;
+using Experts.OrderExpert.PlaceOrder.Validate;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 

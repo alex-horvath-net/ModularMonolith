@@ -3,7 +3,7 @@ using FluentValidation;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 
-namespace Experts.OrderExpert.PlaceOrder.Valide;
+namespace Experts.OrderExpert.PlaceOrder.Validate;
 
 public static class Extensions {
     public static IServiceCollection AddValidatorBusinessWorkSteps(this IServiceCollection services, IConfiguration configuration) {

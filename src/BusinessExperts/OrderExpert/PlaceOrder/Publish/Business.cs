@@ -4,7 +4,7 @@ using Experts.Shared.Business.Events;
 namespace Experts.OrderExpert.PlaceOrder.Publish;
 
 public class Business(IBusinessEventPublisher bus) {
-    public Task<bool> Publish(Experts.OrderExpert.Shared.Business.Domain.Order order, CancellationToken token) {
+    public Task<bool> Run(Experts.OrderExpert.Shared.Business.Domain.Order order, CancellationToken token) {
 
         var businessEvent = new OrderPlaced(
             order.Id,
