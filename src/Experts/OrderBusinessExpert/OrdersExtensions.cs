@@ -1,9 +1,3 @@
-using Experts.OrderBusinessExpert.Shared.Infrastructure.Data;
-using Experts.OrderBusinessExpert.WorkFlows.GetAllOrder;
-using Experts.OrderBusinessExpert.WorkFlows.GetOrderById;
-using Experts.OrderBusinessExpert.WorkFlows.PlaceOrderBusinessWorkFlow.Shared.Business.Domain;
-using Experts.OrderBusinessExpert.WorkFlows.PlaceOrderBusinessWorkFlow.Shared.Infrastructure;
-using Experts.OrderBusinessExpert.WorkFlows.PlaceOrderBusinessWorkFlow.WorkSteps;
 using FluentValidation;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Routing;
@@ -14,8 +8,15 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Business.Experts.OrderBusinessExpert.Shared.Infrastructure.Data;
+using Business.Experts.OrderBusinessExpert.WorkFlows.GetAllOrder;
+using Business.Experts.OrderBusinessExpert.WorkFlows.PlaceOrderBusinessWorkFlow.Shared.Infrastructure;
+using Business.Experts.OrderBusinessExpert.WorkFlows.GetOrderById;
+using Business.Experts.OrderBusinessExpert.WorkFlows.PlaceOrderBusinessWorkFlow.WorkSteps;
+using Business.Experts.OrderBusinessExpert.WorkFlows.PlaceOrderBusinessWorkFlow;
+using Business.Experts.OrderBusinessExpert.WorkFlows.PlaceOrderBusinessWorkFlow.Shared.Business.Domain;
 
-namespace Experts.OrderBusinessExpert;
+namespace Business.Experts.OrderBusinessExpert;
 
 public static class OrdersExtensions {
     public static IServiceCollection AddOrders(this IServiceCollection services, IConfiguration configuration) {
@@ -23,7 +24,7 @@ public static class OrdersExtensions {
         // Application
         services.AddScoped<GetAllOrderQueryHandler>();
         services.AddScoped<GetOrderQueryHandler>();
-        services.AddScoped<WorkFlows.PlaceOrderBusinessWorkFlow.PlaceOrderWorkflow>();
+        services.AddScoped<PlaceOrderWorkflow>();
         services.AddScoped<ValidatorWorkStep>();
         services.AddScoped<CreateOrderWorkStep>();
         services.AddScoped<PersistWorkStep>();

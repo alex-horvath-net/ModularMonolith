@@ -1,11 +1,11 @@
-using Domain = Experts.OrderBusinessExpert.Shared.Business.Domain;
-using Data = Experts.OrderBusinessExpert.Shared.Infrastructure.Data;
+using Business.Experts.OrderBusinessExpert.Shared.Business.Domain;
+using Business.Experts.OrderBusinessExpert.Shared.Infrastructure.Data;
 using Microsoft.EntityFrameworkCore;
 
-namespace Experts.OrderBusinessExpert.WorkFlows.GetAllOrder;
+namespace Business.Experts.OrderBusinessExpert.WorkFlows.GetAllOrder;
 
-public sealed class GetAllOrderQueryHandler(Data.OrdersDbContext db) {
-    public async Task<List<Domain.Order>> Handle(CancellationToken token = default) {
+public sealed class GetAllOrderQueryHandler(OrdersDbContext db) {
+    public async Task<List<Order>> Handle(CancellationToken token = default) {
         var infraOrders = await db.Orders.AsNoTracking().ToListAsync(token);
         var ordersDomain = infraOrders.Select(order => order.ToDomain()).ToList();
 

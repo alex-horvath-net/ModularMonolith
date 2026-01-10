@@ -1,8 +1,8 @@
-using Experts.BillingBusinessExpert.GetInvoice.Contracts.DTOs;
-using Experts.BillingBusinessExpert.Infrastructure.Data;
+using Business.Experts.BillingBusinessExpert.GetInvoice.Contracts.DTOs;
+using Business.Experts.BillingBusinessExpert.Infrastructure.Data;
 using Microsoft.EntityFrameworkCore;
 
-namespace Experts.BillingBusinessExpert.GetInvoice.QueryHandlers;
+namespace Business.Experts.BillingBusinessExpert.GetInvoice.QueryHandlers;
 
 public sealed class GetInvoiceQueryHandler(BillingDbContext db) {
     public async Task<InvoiceDto?> Handle(Guid id, CancellationToken token) {

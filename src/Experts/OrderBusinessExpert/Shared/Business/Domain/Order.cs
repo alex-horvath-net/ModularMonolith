@@ -1,4 +1,4 @@
-namespace Experts.OrderBusinessExpert.Shared.Business.Domain;
+namespace Business.Experts.OrderBusinessExpert.Shared.Business.Domain;
 
 public sealed class Order {
     public Guid Id { get; private set; }
@@ -37,14 +37,14 @@ public sealed class Order {
         _lines.Add(new OrderLine(productId, quantity, unitPrice));
     }
 
-    public Infrastructure.Data.Models.Order ToInfra() => new() {
+    public Business.Experts.OrderBusinessExpert.Shared.Infrastructure.Data.Models.Order ToInfra() => new() {
         Id = Id,
         CustomerId = CustomerId,
         Lines = Lines.Select(ToInfraOrderLine).ToList()
     };
 
 
-    private Infrastructure.Data.Models.OrderLine ToInfraOrderLine(Domain.OrderLine domainOrderLine) => new() {
+    private Business.Experts.OrderBusinessExpert.Shared.Infrastructure.Data.Models.OrderLine ToInfraOrderLine(OrderLine domainOrderLine) => new() {
         ProductId = domainOrderLine.ProductId,
         UnitPrice = domainOrderLine.UnitPrice,
         Quantity = domainOrderLine.Quantity

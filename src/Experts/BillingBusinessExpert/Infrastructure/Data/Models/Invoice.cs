@@ -1,4 +1,4 @@
-namespace Experts.BillingBusinessExpert.Infrastructure.Data.Models;
+namespace Business.Experts.BillingBusinessExpert.Infrastructure.Data.Models;
 
 public sealed class Invoice {
     public Guid Id { get; private set; } = Guid.NewGuid();

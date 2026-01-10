@@ -1,4 +1,4 @@
-namespace Experts.OrderBusinessExpert.Shared.Business.Domain;
+namespace Business.Experts.OrderBusinessExpert.Shared.Business.Domain;
 
 public sealed class OrderLine {
     public Guid ProductId { get; private set; }

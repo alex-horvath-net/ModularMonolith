@@ -1,9 +1,9 @@
+using Business.Experts.BillingBusinessExpert.Infrastructure.Data;
+using Business.Experts.BillingBusinessExpert.Infrastructure.Data.Models;
+using Business.Experts.Shared.Business.Events;
 using Common.Events;
-using Experts.BillingBusinessExpert.Infrastructure.Data;
-using Experts.BillingBusinessExpert.Infrastructure.Data.Models;
-using Experts.Shared.Business.Events;
 
-namespace Experts.BillingBusinessExpert.CreateInvoice;
+namespace Business.Experts.BillingBusinessExpert.CreateInvoice;
 
 public sealed class OrderPlacedEventHandler(BillingDbContext db) : IBusinessEventHandler<OrderPlaced> {
     public async Task Handle(OrderPlaced orderPlaced, CancellationToken token = default) {

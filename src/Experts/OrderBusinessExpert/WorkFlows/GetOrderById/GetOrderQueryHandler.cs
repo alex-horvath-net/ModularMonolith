@@ -1,10 +1,11 @@
-using Domain= Experts.OrderBusinessExpert.Shared.Business.Domain;
-using Experts.OrderBusinessExpert.Shared.Infrastructure.Data;
+using Domain = Business.Experts.OrderBusinessExpert.Shared.Business.Domain;
+using Business.Experts.OrderBusinessExpert.Shared.Infrastructure.Data;
+using Business.Experts.OrderBusinessExpert.Shared.Business.Domain;
 
-namespace Experts.OrderBusinessExpert.WorkFlows.GetOrderById;
+namespace Business.Experts.OrderBusinessExpert.WorkFlows.GetOrderById;
 
 public sealed class GetOrderQueryHandler(OrdersDbContext db) {
-    public async Task<Domain. Order?> Handle(Guid id, CancellationToken token) {
+    public async Task<Order?> Handle(Guid id, CancellationToken token) {
         var infraOrder = await db.Orders.FindAsync([id], token);
         if (infraOrder is null)
             return null;

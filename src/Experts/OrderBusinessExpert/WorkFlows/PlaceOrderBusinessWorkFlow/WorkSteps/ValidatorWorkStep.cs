@@ -1,9 +1,9 @@
-﻿using Experts.OrderBusinessExpert.WorkFlows.PlaceOrderBusinessWorkFlow.Shared.Business.Domain;
-using Experts.Shared.Business.Domain;
+﻿using Business.Experts.OrderBusinessExpert.WorkFlows.PlaceOrderBusinessWorkFlow.Shared.Business.Domain;
+using Business.Experts.Shared.Business.Domain;
 using FluentValidation;
 using FluentValidation.Results;
 
-namespace Experts.OrderBusinessExpert.WorkFlows.PlaceOrderBusinessWorkFlow.WorkSteps;
+namespace Business.Experts.OrderBusinessExpert.WorkFlows.PlaceOrderBusinessWorkFlow.WorkSteps;
 
 public class ValidatorWorkStep(IValidator<CreateOrderRequest> validator) {
     public async Task<IEnumerable<Error>> Validate(CreateOrderRequest request, CancellationToken token) {

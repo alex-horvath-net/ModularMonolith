@@ -1,11 +1,11 @@
 using Asp.Versioning;
-using Experts.BillingBusinessExpert.GetInvoice.Contracts.DTOs;
-using Experts.BillingBusinessExpert.GetInvoice.QueryHandlers;
+using Business.Experts.BillingBusinessExpert.GetInvoice.Contracts.DTOs;
+using Business.Experts.BillingBusinessExpert.GetInvoice.QueryHandlers;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Routing;
 
-namespace Experts.BillingBusinessExpert.GetInvoice.API;
+namespace Business.Experts.BillingBusinessExpert.GetInvoice.API;
 
 public static class BillingEndpoints {
     public static IEndpointRouteBuilder MapBilling(this IEndpointRouteBuilder app) {

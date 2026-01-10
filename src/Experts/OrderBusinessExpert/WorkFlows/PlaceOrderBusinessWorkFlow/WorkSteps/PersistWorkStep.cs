@@ -1,10 +1,12 @@
-﻿using Domain = Experts.OrderBusinessExpert.Shared.Business.Domain;
-using Infra = Experts.OrderBusinessExpert.Shared.Infrastructure.Data;
+﻿using Business.Experts.OrderBusinessExpert.Shared.Business.Domain;
+using Business.Experts.OrderBusinessExpert.Shared.Infrastructure.Data;
+using Domain = Business.Experts.OrderBusinessExpert.Shared.Business.Domain;
+using Infra = Business.Experts.OrderBusinessExpert.Shared.Infrastructure.Data;
 
-namespace Experts.OrderBusinessExpert.WorkFlows.PlaceOrderBusinessWorkFlow.WorkSteps;
+namespace Business.Experts.OrderBusinessExpert.WorkFlows.PlaceOrderBusinessWorkFlow.WorkSteps;
 
-public class PersistWorkStep(Infra.OrdersDbContext db) {
-    public async Task Save(Domain.Order domainOrder, CancellationToken token) {
+public class PersistWorkStep(OrdersDbContext db) {
+    public async Task Save(Order domainOrder, CancellationToken token) {
         var infraOrder = domainOrder.ToInfra();
         db.Add(infraOrder);
         await db.SaveChangesAsync(token);

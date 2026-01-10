@@ -1,13 +1,12 @@
 using Asp.Versioning;
-using Experts.OrderBusinessExpert;
-using Experts.OrderBusinessExpert.Shared.Business.Domain;
-using Experts.OrderBusinessExpert.WorkFlows.GetOrderById;
+using Business.Experts.OrderBusinessExpert.Shared.Business.Domain;
+using Business.Experts.OrderBusinessExpert.WorkFlows.GetOrderById;
 using Microsoft.AspNetCore.Builder; // MapGroup extension
 using Microsoft.AspNetCore.Http; // IResult, TypedResults
 using Microsoft.AspNetCore.Http.HttpResults; // OK
 using Microsoft.AspNetCore.Routing;
 
-namespace Experts.OrderBusinessExpert.WorkFlows.GetAllOrder;
+namespace Business.Experts.OrderBusinessExpert.WorkFlows.GetAllOrder;
 public static class GetAllOrderEndpoints {
     public static IEndpointRouteBuilder MapOrdersEndpoints(this IEndpointRouteBuilder app) {
         var versionSet = app.NewApiVersionSet().HasApiVersion(new ApiVersion(1,0)).ReportApiVersions().Build();
