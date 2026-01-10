@@ -1,5 +1,3 @@
-using Common.Events;
-
 namespace Experts.Shared.Business.Events;
 
 public sealed record OrderPlaced(

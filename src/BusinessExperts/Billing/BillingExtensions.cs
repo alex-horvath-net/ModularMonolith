@@ -1,4 +1,3 @@
-using Common.Events;
 using Experts.Billing.CreateInvoice;
 using Experts.Billing.GetInvoice.API;
 using Experts.Billing.GetInvoice.QueryHandlers;

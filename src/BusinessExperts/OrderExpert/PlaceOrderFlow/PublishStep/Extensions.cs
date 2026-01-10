@@ -7,6 +7,7 @@ public static class Extensions {
     public static IServiceCollection AddPublisherBusinessWorkStep(this IServiceCollection services, IConfiguration configuration) {
 
         services.AddScoped<Business>();
+        services.AddScoped<Business.IAdapter, Adapter>();
 
         return services;
 

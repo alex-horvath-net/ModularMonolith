@@ -1,12 +1,4 @@
 ﻿using Common.Authentication;
-using Common.Configuration;
-using Common.Error;
-using Common.Events;
-using Common.HealhCheck;
-using Common.Observability;
-using Common.Publish;
-using Common.RateLimiting;
-using Common.Security;
 using Common.Version;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Routing;
@@ -34,8 +26,7 @@ public static class CommonExtensions {
         //services.AddFullHealthCheck();          // Health checks: basic self check; dependency checks can be added externally for DB/cache etc.
         //services.AddAllowedIPsForHealthProbes(config); // IP allowlist filter for health probes
 
-        // Business event publisher (in-process) enables decoupled module interaction without direct references
-        services.AddScoped<IBusinessEventPublisher, InProcessBusinessEventPublisher>();
+       
 
         // Validate critical secrets/config and fail fast in non-development
        // services.ValidateSecretsOnStart(config, env);

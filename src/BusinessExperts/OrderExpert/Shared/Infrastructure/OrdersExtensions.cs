@@ -4,6 +4,7 @@ using Experts.OrderExpert.PlaceOrderFlow;
 using Experts.OrderExpert.PlaceOrderFlow.Shared.Infrastructure;
 using Experts.OrderExpert.Shared.Business;
 using Experts.OrderExpert.Shared.Infrastructure.Data;
+using Experts.Shared;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Routing;
 using Microsoft.EntityFrameworkCore;
@@ -21,8 +22,9 @@ public static class OrdersExtensions {
         // Application
         services.AddScoped<GetAllOrderQueryHandler>();
         services.AddScoped<GetOrderQueryHandler>();
-        services.AddPlaceOrderBusinessWorkFlow(configuration);
 
+        services.AddPlaceOrderBusinessWorkFlow(configuration);
+        services.AddShared();
         // Infrastructure
         services.AddDbContext<OrdersDbContext>((sp, options) => {
             var env = sp.GetRequiredService<IHostEnvironment>();

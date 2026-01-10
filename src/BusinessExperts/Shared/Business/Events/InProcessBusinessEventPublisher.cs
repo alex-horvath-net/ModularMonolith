@@ -1,6 +1,6 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 
-namespace Common.Events;
+namespace Experts.Shared.Business.Events;
 
 public sealed class InProcessBusinessEventPublisher(IServiceProvider services) : IBusinessEventPublisher {
     public async Task<bool> Publish<T>(T businessEvent, CancellationToken token = default) where T : IBusinessEvent {

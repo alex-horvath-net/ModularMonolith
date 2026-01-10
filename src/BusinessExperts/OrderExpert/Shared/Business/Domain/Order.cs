@@ -1,4 +1,4 @@
-using Data= Experts.OrderExpert.Shared.Infrastructure.Data.Models;
+using Data= Experts.OrderExpert.Shared.Infrastructure.Data;
 
 namespace Experts.OrderExpert.Shared.Business.Domain;
 
@@ -39,14 +39,14 @@ public sealed class Order {
         _lines.Add(new OrderLine(productId, quantity, unitPrice));
     }
 
-    public Data.Order ToInfra() => new() {
+    public Data.Models.Order ToDataModel() => new() {
         Id = Id,
         CustomerId = CustomerId,
         Lines = Lines.Select(ToInfraOrderLine).ToList()
     };
 
 
-    private Data.OrderLine ToInfraOrderLine(OrderLine domainOrderLine) => new() {
+    private Data.Models.OrderLine ToInfraOrderLine(OrderLine domainOrderLine) => new() {
         ProductId = domainOrderLine.ProductId,
         UnitPrice = domainOrderLine.UnitPrice,
         Quantity = domainOrderLine.Quantity

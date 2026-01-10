@@ -1,4 +1,3 @@
-using Common.Events;
 using Experts.Billing.Infrastructure.Data;
 using Experts.Billing.Infrastructure.Data.Models;
 using Experts.Shared.Business.Events;
