@@ -1,7 +1,7 @@
-﻿using BusinessExperts.OrderBusinessExpert.BusinessWorkFlows.PlaceOrderBusinessWorkFlow.BusinessWorkSteps.Shared.Business.Domain;
-using BusinessExperts.OrderBusinessExpert.BusinessWorkFlows.Shared.Business.Domain;
+﻿using Experts.OrderBusinessExpert.BusinessWorkFlows.PlaceOrderBusinessWorkFlow.BusinessWorkSteps.Shared.Business.Domain;
+using Experts.OrderBusinessExpert.BusinessWorkFlows.Shared.Business.Domain;
 
-namespace BusinessExperts.OrderBusinessExpert.BusinessWorkFlows.PlaceOrderBusinessWorkFlow.BusinessWorkSteps.FactoryBusinessWorkSteps;
+namespace Experts.OrderBusinessExpert.BusinessWorkFlows.PlaceOrderBusinessWorkFlow.BusinessWorkSteps.FactoryBusinessWorkSteps;
 
 public class Business() {
     public Order Create(CreateOrderRequest request) {

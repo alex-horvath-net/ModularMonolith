@@ -1,8 +1,8 @@
-using BusinessExperts.OrderBusinessExpert.BusinessWorkFlows.Shared.Business.Domain;
-using BusinessExperts.OrderBusinessExpert.BusinessWorkFlows.Shared.Infrastructure.Data;
+using Experts.OrderBusinessExpert.BusinessWorkFlows.Shared.Business.Domain;
+using Experts.OrderBusinessExpert.BusinessWorkFlows.Shared.Infrastructure.Data;
 using Microsoft.EntityFrameworkCore;
 
-namespace BusinessExperts.OrderBusinessExpert.BusinessWorkFlows.GetAllOrder;
+namespace Experts.OrderBusinessExpert.BusinessWorkFlows.GetAllOrder;
 
 public sealed class GetAllOrderQueryHandler(OrdersDbContext db) {
     public async Task<List<Order>> Handle(CancellationToken token = default) {

@@ -1,6 +1,6 @@
-﻿using BusinessExperts.OrderBusinessExpert.BusinessWorkFlows.PlaceOrderBusinessWorkFlow;
+﻿using Experts.OrderBusinessExpert.BusinessWorkFlows.PlaceOrderBusinessWorkFlow;
 
-namespace BusinessExperts.OrderBusinessExpert;
+namespace Experts.OrderBusinessExpert;
 
 public record OrderExpert(
     PlaceOrderWorkflow PlaceOrder);

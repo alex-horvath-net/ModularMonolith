@@ -27,7 +27,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ApplicationPortal", "src\Ap
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Applications", "Applications", "{D7ED42E8-B232-4723-A883-3F29CB651B27}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BusinessExperts", "src\BusinessExperts\BusinessExperts.csproj", "{1E45F82B-4470-3660-DBA9-7419D90E2DED}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Experts", "src\BusinessExperts\Experts.csproj", "{1E45F82B-4470-3660-DBA9-7419D90E2DED}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

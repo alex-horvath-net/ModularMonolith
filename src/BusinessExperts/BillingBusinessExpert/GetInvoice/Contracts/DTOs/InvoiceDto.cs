@@ -1,4 +1,4 @@
-﻿namespace BusinessExperts.BillingBusinessExpert.GetInvoice.Contracts.DTOs;
+﻿namespace Experts.BillingBusinessExpert.GetInvoice.Contracts.DTOs;
 public sealed record InvoiceDto(
     Guid Id ,
     Guid OrderId ,

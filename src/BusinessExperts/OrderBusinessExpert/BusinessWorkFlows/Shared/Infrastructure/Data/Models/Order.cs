@@ -1,4 +1,6 @@
-namespace BusinessExperts.OrderBusinessExpert.BusinessWorkFlows.Shared.Infrastructure.Data.Models;
+using Experts.OrderBusinessExpert.BusinessWorkFlows.Shared.Business.Domain;
+
+namespace Experts.OrderBusinessExpert.BusinessWorkFlows.Shared.Infrastructure.Data.Models;
 
 public sealed class Order {
     public Guid Id { get; set; }

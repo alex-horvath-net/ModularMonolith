@@ -3,6 +3,6 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace BusinessExperts.BillingBusinessExpert; 
+namespace Experts.BillingBusinessExpert; 
 public class BillingExpert {
 }

@@ -1,8 +1,8 @@
-﻿using BusinessExperts.OrderBusinessExpert.BusinessWorkFlows.Shared.Business.Domain;
-using BusinessExperts.Shared.Business.Events;
+﻿using Experts.Shared.Business.Events;
 using Common.Events;
+using Experts.OrderBusinessExpert.BusinessWorkFlows.Shared.Business.Domain;
 
-namespace BusinessExperts.OrderBusinessExpert.BusinessWorkFlows.PlaceOrderBusinessWorkFlow.BusinessWorkSteps.PublisherBusinessWorkStep;
+namespace Experts.OrderBusinessExpert.BusinessWorkFlows.PlaceOrderBusinessWorkFlow.BusinessWorkSteps.PublisherBusinessWorkStep;
 
 public class Business(IBusinessEventPublisher bus) {
     public Task<bool> Publish(Order order, CancellationToken token) {

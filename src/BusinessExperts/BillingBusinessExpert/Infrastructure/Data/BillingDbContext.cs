@@ -1,8 +1,8 @@
 using System.Reflection;
-using BusinessExperts.BillingBusinessExpert.Infrastructure.Data.Models;
+using Experts.BillingBusinessExpert.Infrastructure.Data.Models;
 using Microsoft.EntityFrameworkCore;
 
-namespace BusinessExperts.BillingBusinessExpert.Infrastructure.Data;
+namespace Experts.BillingBusinessExpert.Infrastructure.Data;
 
 public sealed class BillingDbContext(DbContextOptions<BillingDbContext> options) : DbContext(options) {
     public DbSet<Invoice> Invoices => Set<Invoice>();

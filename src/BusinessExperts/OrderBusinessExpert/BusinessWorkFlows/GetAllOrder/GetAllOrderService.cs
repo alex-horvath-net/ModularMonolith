@@ -1,8 +1,8 @@
-using BusinessExperts.OrderBusinessExpert.BusinessWorkFlows.Shared.Business.Domain;
-using BusinessExperts.OrderBusinessExpert.BusinessWorkFlows.Shared.Business.Services;
-using BusinessExperts.OrderBusinessExpert.BusinessWorkFlows.Shared.Infrastructure.Data;
+using Experts.OrderBusinessExpert.BusinessWorkFlows.Shared.Business.Domain;
+using Experts.OrderBusinessExpert.BusinessWorkFlows.Shared.Business.Services;
+using Experts.OrderBusinessExpert.BusinessWorkFlows.Shared.Infrastructure.Data;
 
-namespace BusinessExperts.OrderBusinessExpert.BusinessWorkFlows.GetAllOrder;
+namespace Experts.OrderBusinessExpert.BusinessWorkFlows.GetAllOrder;
 
 internal sealed class GetAllOrderService(OrdersDbContext db) : IReadOrderService {
     public async Task<Order?> GetById(Guid id) {

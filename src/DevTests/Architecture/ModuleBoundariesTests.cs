@@ -1,5 +1,5 @@
-using BusinessExperts.BillingBusinessExpert;
-using BusinessExperts.OrderBusinessExpert.BusinessWorkFlows.Shared.Infrastructure;
+using Experts.BillingBusinessExpert;
+using Experts.OrderBusinessExpert.BusinessWorkFlows.Shared.Infrastructure;
 using FluentAssertions;
 using NetArchTest.Rules;
 
@@ -9,7 +9,7 @@ public class ModuleBoundariesTests {
     [Fact]
     public void Common_Must_Not_Depend_On_Modules() {
         var result = Types.InAssembly(typeof(Common.CommonExtensions).Assembly)
-            .Should().NotHaveDependencyOnAny("BusinessExperts.Orders", "BusinessExperts.Billing")
+            .Should().NotHaveDependencyOnAny("Experts.Orders", "Experts.Billing")
             .GetResult();
 
         result.IsSuccessful.Should().BeTrue(string.Join(Environment.NewLine, result.FailingTypeNames ?? []));
@@ -18,9 +18,9 @@ public class ModuleBoundariesTests {
     [Fact]
     public void Orders_Must_Not_Depend_On_Billing() {
         var result = Types.InAssembly(typeof(OrdersExtensions).Assembly)
-            .That().ResideInNamespace("BusinessExperts.Orders")
-            .Or().ResideInNamespaceMatching("BusinessExperts.Orders\\..*")
-            .Should().NotHaveDependencyOnAny("BusinessExperts.Billing")
+            .That().ResideInNamespace("Experts.Orders")
+            .Or().ResideInNamespaceMatching("Experts.Orders\\..*")
+            .Should().NotHaveDependencyOnAny("Experts.Billing")
             .GetResult();
 
         result.IsSuccessful.Should().BeTrue(string.Join(Environment.NewLine, result.FailingTypeNames ?? []));
@@ -29,9 +29,9 @@ public class ModuleBoundariesTests {
     [Fact]
     public void Billing_Must_Not_Depend_On_Orders() {
         var result = Types.InAssembly(typeof(BillingExtensions).Assembly)
-            .That().ResideInNamespace("BusinessExperts.Billing")
-            .Or().ResideInNamespaceMatching("BusinessExperts.Billing\\..*")
-            .Should().NotHaveDependencyOnAny("BusinessExperts.Orders")
+            .That().ResideInNamespace("Experts.Billing")
+            .Or().ResideInNamespaceMatching("Experts.Billing\\..*")
+            .Should().NotHaveDependencyOnAny("Experts.Orders")
             .GetResult();
 
         result.IsSuccessful.Should().BeTrue(string.Join(Environment.NewLine, result.FailingTypeNames ?? []));
@@ -40,14 +40,14 @@ public class ModuleBoundariesTests {
     [Fact]
     public void Modules_Must_Not_Depend_On_Hosts() {
         var orders = Types.InAssembly(typeof(OrdersExtensions).Assembly)
-            .That().ResideInNamespace("BusinessExperts.Orders")
-            .Or().ResideInNamespaceMatching("BusinessExperts.Orders\\..*")
+            .That().ResideInNamespace("Experts.Orders")
+            .Or().ResideInNamespaceMatching("Experts.Orders\\..*")
             .Should().NotHaveDependencyOnAny("ApplicationPortal", "WebApi")
             .GetResult();
 
         var billing = Types.InAssembly(typeof(BillingExtensions).Assembly)
-            .That().ResideInNamespace("BusinessExperts.Billing")
-            .Or().ResideInNamespaceMatching("BusinessExperts.Billing\\..*")
+            .That().ResideInNamespace("Experts.Billing")
+            .Or().ResideInNamespaceMatching("Experts.Billing\\..*")
             .Should().NotHaveDependencyOnAny("ApplicationPortal", "WebApi")
             .GetResult();
 

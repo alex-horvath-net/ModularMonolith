@@ -1,7 +1,7 @@
-using BusinessExperts.BillingBusinessExpert;
-using BusinessExperts.IdentityBusinessExpert.CreateToken;
-using BusinessExperts.OrderBusinessExpert.BusinessWorkFlows.Shared.Infrastructure;
 using Common;
+using Experts.BillingBusinessExpert;
+using Experts.IdentityBusinessExpert.CreateToken;
+using Experts.OrderBusinessExpert.BusinessWorkFlows.Shared.Infrastructure;
 
 var builder = WebApplication.CreateBuilder(args);
 

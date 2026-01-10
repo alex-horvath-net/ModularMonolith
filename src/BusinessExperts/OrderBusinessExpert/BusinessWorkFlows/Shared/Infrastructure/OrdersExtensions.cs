@@ -1,9 +1,9 @@
-using BusinessExperts.OrderBusinessExpert.BusinessWorkFlows.GetAllOrder;
-using BusinessExperts.OrderBusinessExpert.BusinessWorkFlows.GetOrderById;
-using BusinessExperts.OrderBusinessExpert.BusinessWorkFlows.PlaceOrderBusinessWorkFlow;
-using BusinessExperts.OrderBusinessExpert.BusinessWorkFlows.PlaceOrderBusinessWorkFlow.BusinessWorkSteps.Shared.Infrastructure;
-using BusinessExperts.OrderBusinessExpert.BusinessWorkFlows.Shared.Business;
-using BusinessExperts.OrderBusinessExpert.BusinessWorkFlows.Shared.Infrastructure.Data;
+using Experts.OrderBusinessExpert.BusinessWorkFlows.GetAllOrder;
+using Experts.OrderBusinessExpert.BusinessWorkFlows.GetOrderById;
+using Experts.OrderBusinessExpert.BusinessWorkFlows.PlaceOrderBusinessWorkFlow;
+using Experts.OrderBusinessExpert.BusinessWorkFlows.PlaceOrderBusinessWorkFlow.BusinessWorkSteps.Shared.Infrastructure;
+using Experts.OrderBusinessExpert.BusinessWorkFlows.Shared.Business;
+using Experts.OrderBusinessExpert.BusinessWorkFlows.Shared.Infrastructure.Data;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Routing;
 using Microsoft.EntityFrameworkCore;
@@ -13,7 +13,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 
-namespace BusinessExperts.OrderBusinessExpert.BusinessWorkFlows.Shared.Infrastructure;
+namespace Experts.OrderBusinessExpert.BusinessWorkFlows.Shared.Infrastructure;
 
 public static class OrdersExtensions {
     public static IServiceCollection AddOrders(this IServiceCollection services, IConfiguration configuration) {
