@@ -1,6 +1,4 @@
-﻿using Experts.OrderBusinessExpert.PlaceOrderBusinessWorkFlow.StoreBusinessWorkSteps;
-
-0using Experts.Business.OrderBusinessExpert.BusinessWorkFlows.Shared.Business.Domain;
+﻿using Experts.OrderBusinessExpert.Shared.Business.Domain;
 
 namespace Experts.OrderBusinessExpert.PlaceOrderBusinessWorkFlow.StoreBusinessWorkSteps;
 
@@ -11,7 +9,7 @@ public class Business(Business.IInfrastructure infrastructure) {
     }
 
     public interface IInfrastructure {
-        Task Save(Shared.Infrastructure.Data.Models.Order order, CancellationToken token);
+        Task Save(OrderBusinessExpert.Shared.Infrastructure.Data.Models.Order order, CancellationToken token);
     }
 }
 

@@ -1,6 +1,6 @@
 ﻿using Common.Events;
-using Experts.Business.Shared.Events;
 using Experts.OrderBusinessExpert.Shared.Business.Domain;
+using Experts.Shared.Business.Events;
 
 namespace Experts.OrderBusinessExpert.PlaceOrderBusinessWorkFlow.PublisherBusinessWorkStep;
 

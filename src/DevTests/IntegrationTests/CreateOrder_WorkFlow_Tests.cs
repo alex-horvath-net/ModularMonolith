@@ -1,5 +1,5 @@
-﻿using Experts.OrderBusinessExpert.BusinessWorkFlows.PlaceOrderBusinessWorkFlow.BusinessWorkSteps.Shared.Business.Domain;
-using Experts.OrderBusinessExpert.PlaceOrderBusinessWorkFlow;
+﻿using Experts.OrderBusinessExpert.PlaceOrderBusinessWorkFlow;
+using Experts.OrderBusinessExpert.PlaceOrderBusinessWorkFlow.Shared.Business.Domain;
 using Experts.OrderBusinessExpert.Shared.Infrastructure.Data;
 using FluentAssertions;
 
