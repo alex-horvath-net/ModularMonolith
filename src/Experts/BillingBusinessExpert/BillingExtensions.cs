@@ -1,3 +1,8 @@
+using Business.Experts.BillingBusinessExpert.CreateInvoice;
+using Business.Experts.BillingBusinessExpert.GetInvoice.API;
+using Business.Experts.BillingBusinessExpert.GetInvoice.QueryHandlers;
+using Business.Experts.BillingBusinessExpert.Infrastructure.Data;
+using Business.Experts.Shared.Business.Events;
 using Common.Events;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Routing;
@@ -7,12 +12,6 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
-using Microsoft.EntityFrameworkCore.Metadata;
-using Business.Experts.BillingBusinessExpert.Infrastructure.Data;
-using Business.Experts.BillingBusinessExpert.GetInvoice.API;
-using Business.Experts.BillingBusinessExpert.GetInvoice.QueryHandlers;
-using Business.Experts.BillingBusinessExpert.CreateInvoice;
-using Business.Experts.Shared.Business.Events;
 
 namespace Business.Experts.BillingBusinessExpert;
 

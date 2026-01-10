@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 #nullable disable
 
-namespace Billing.Infrastructure.Data.Migrations
+namespace Business.Experts.BillingBusinessExpert.Infrastructure.Data.Migrations
 {
     /// <inheritdoc />
     public partial class InitBilling : Migration

@@ -8,7 +8,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
 
-namespace Billing.Infrastructure.Data.Migrations
+namespace Business.Experts.BillingBusinessExpert.Infrastructure.Data.Migrations
 {
     [DbContext(typeof(BillingDbContext))]
     partial class BillingDbContextModelSnapshot : ModelSnapshot
