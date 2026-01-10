@@ -4,8 +4,7 @@ using System.Net.Http.Json;
 using System.Text.Json;
 using Experts.IdentityBusinessExpert.CreateToken;
 using FluentAssertions;
-using Experts.OrderBusinessExpert.BusinessWorkFlows.PlaceOrderBusinessWorkFlow.BusinessWorkSteps.Shared.Business.Domain;
-using Experts.OrderBusinessExpert.BusinessWorkFlows.PlaceOrderBusinessWorkFlow.BusinessWorkSteps.Shared.Business.Domain;
+using Experts.OrderBusinessExpert.PlaceOrderBusinessWorkFlow.Shared.Business.Domain;
 
 namespace DevTests.IntegrationTests;
 

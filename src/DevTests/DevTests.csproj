@@ -38,7 +38,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\ApplicationApi\ApplicationApi.csproj" />
-    <ProjectReference Include="..\Experts\Experts.csproj" />
+    <ProjectReference Include="..\BusinessExperts\Experts.csproj" />
     <ProjectReference Include="..\Common\Common.csproj" />
   </ItemGroup>
 
