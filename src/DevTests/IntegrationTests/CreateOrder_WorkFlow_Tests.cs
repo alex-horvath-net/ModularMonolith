@@ -1,4 +1,4 @@
-﻿using Experts.OrderExpert.PlaceOrderFlow;
+﻿using Experts.OrderExpert.PlaceOrder;
 using Experts.OrderExpert.Shared.Infrastructure.Data;
 using FluentAssertions;
 
@@ -10,10 +10,10 @@ public class CreateOrder_WorkFlow_Tests(WebAppFactory factory) : IClassFixture<W
     public async Task CreateOrderCommandHandler_ShouldCreateOrder() {
         // Arrange
         var workflow = factory.GetRequiredService<BusinessWorkFlow>();
-        var request = new CreateOrderRequest(
+        var request = new PlaceOrderRequest(
             CustomerId: Guid.NewGuid(),
             Lines: [
-                new CreateOrderLineRequest( ProductId: Guid.NewGuid(), Quantity: 1, UnitPrice: 100.0m )
+                new PlaceOrderLineRequest( ProductId: Guid.NewGuid(), Quantity: 1, UnitPrice: 100.0m )
             ]
         );
 

@@ -4,7 +4,7 @@ using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Routing;
 
-namespace Experts.OrderExpert.PlaceOrderFlow;
+namespace Experts.OrderExpert.PlaceOrder;
 
 public static class ApiEndpoint {
     public static IEndpointRouteBuilder MapCreateOrderEndpoint(this IEndpointRouteBuilder app) {
@@ -27,7 +27,7 @@ public static class ApiEndpoint {
 
     private static async Task<IResult> Handler(
         BusinessWorkFlow placeOrder,
-        CreateOrderRequest request,
+        PlaceOrderRequest request,
         CancellationToken token) {
 
         var response = await placeOrder.Run(request, token);

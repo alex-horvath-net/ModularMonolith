@@ -2,14 +2,14 @@
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 
-namespace Experts.OrderExpert.PlaceOrderFlow;
+namespace Experts.OrderExpert.PlaceOrder;
 
 public static class Extensions {
     public static IServiceCollection AddPlaceOrderBusinessWorkFlow(this IServiceCollection services, IConfiguration configuration) {
 
         services.AddScoped<BusinessWorkFlow>();
         services.AddScoped<BusinessWorkFlow.IBusinessWorkSteps, BusinessWorkSteps>();
-        services.AddScoped<IValidator<CreateOrderRequest>, ValidatorInfrastructure>();
+        services.AddScoped<IValidator<PlaceOrderRequest>, ValidatorInfrastructure>();
         services.AddScoped<BusinessWorkSteps.IStoreInfrastructure, StoreInfrastructure>();
 
         return services;

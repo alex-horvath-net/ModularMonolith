@@ -3,7 +3,7 @@ using System.Net.Http.Headers;
 using System.Net.Http.Json;
 using System.Text.Json;
 using Experts.Identity.CreateToken;
-using Experts.OrderExpert.PlaceOrderFlow;
+using Experts.OrderExpert.PlaceOrder;
 using FluentAssertions;
 
 namespace DevTests.IntegrationTests;
@@ -41,9 +41,9 @@ public class GetAllOrderEndpoints_Tests(WebAppFactory factory) : IClassFixture<W
         var request = new HttpRequestMessage();
         request.Method = HttpMethod.Post;
         request.RequestUri = new Uri("/v1/orders", UriKind.Relative);
-        request.Content = JsonContent.Create(new CreateOrderRequest(
+        request.Content = JsonContent.Create(new PlaceOrderRequest(
             CustomerId: Guid.NewGuid(),
-            Lines: [new CreateOrderLineRequest(Guid.NewGuid(), 1, 10.0m)]));
+            Lines: [new PlaceOrderLineRequest(Guid.NewGuid(), 1, 10.0m)]));
         request.Headers.Authorization = new AuthenticationHeaderValue("Bearer", token);
 
         var response = await client.SendAsync(request);

@@ -2,7 +2,7 @@ using System.Net;
 using System.Net.Http.Headers;
 using System.Net.Http.Json;
 using Experts.Identity.CreateToken;
-using Experts.OrderExpert.PlaceOrderFlow;
+using Experts.OrderExpert.PlaceOrder;
 using FluentAssertions;
 
 namespace DevTests.IntegrationTests;
@@ -35,10 +35,10 @@ public class CreateOrder_Endpoint_Tests(WebAppFactory factory) : IClassFixture<W
         content.Should().NotBe(Guid.Empty);
     }
 
-    private static CreateOrderRequest GetCreateOrderRequest() {
-        return new CreateOrderRequest(
+    private static PlaceOrderRequest GetCreateOrderRequest() {
+        return new PlaceOrderRequest(
                     CustomerId: Guid.NewGuid(),
-                    Lines: [new CreateOrderLineRequest(Guid.NewGuid(), 1, 100.0m)]);
+                    Lines: [new PlaceOrderLineRequest(Guid.NewGuid(), 1, 100.0m)]);
     }
 
     private static async Task<string> GetAccessToken(HttpClient client) {

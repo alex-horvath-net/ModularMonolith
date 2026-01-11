@@ -5,20 +5,20 @@ using Experts.Shared.Infrastructure;
 using FluentValidation;
 using Data = Experts.OrderExpert.Shared.Infrastructure.Data;
 
-namespace Experts.OrderExpert.PlaceOrderFlow;
+namespace Experts.OrderExpert.PlaceOrder;
 
 public class BusinessWorkSteps(
-    IValidator<CreateOrderRequest> validator,
+    IValidator<PlaceOrderRequest> validator,
     BusinessWorkSteps.IStoreInfrastructure store,
     IBusinessEventPublisher publisher) : BusinessWorkFlow.IBusinessWorkSteps {
 
-    public async Task<IEnumerable<Error>> Validate(CreateOrderRequest request, CancellationToken token) {
+    public async Task<IEnumerable<Error>> Validate(PlaceOrderRequest request, CancellationToken token) {
         var infraModel = await validator.ValidateAsync(request, token);
         var domainModel = infraModel.Errors.Select(error => error.ToDomain());
         return domainModel;
     }
 
-    public Order Create(CreateOrderRequest request) {
+    public Order Create(PlaceOrderRequest request) {
         var order = new Order(request.CustomerId);
 
         foreach (var line in request.Lines) {

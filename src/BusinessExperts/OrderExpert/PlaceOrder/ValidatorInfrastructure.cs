@@ -1,8 +1,8 @@
 ﻿using FluentValidation;
 
-namespace Experts.OrderExpert.PlaceOrderFlow;
+namespace Experts.OrderExpert.PlaceOrder;
 
-public sealed class ValidatorInfrastructure : AbstractValidator<CreateOrderRequest> {
+public sealed class ValidatorInfrastructure : AbstractValidator<PlaceOrderRequest> {
     public ValidatorInfrastructure() {
         RuleFor(x => x.CustomerId).NotEmpty();
         RuleFor(x => x.Lines).NotEmpty().WithMessage("Must provide at least one order line");

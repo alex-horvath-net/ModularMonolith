@@ -1,12 +1,12 @@
 ﻿using Experts.OrderExpert.Shared.Business.Domain;
 using Experts.Shared.Business.Domain;
 
-namespace Experts.OrderExpert.PlaceOrderFlow;
+namespace Experts.OrderExpert.PlaceOrder;
 
 public class BusinessWorkFlow(BusinessWorkFlow.IBusinessWorkSteps workSteps) {
-    public async Task<CreateOrderResponse> Run(CreateOrderRequest request, CancellationToken token) {
+    public async Task<PlaceOrderResponse> Run(PlaceOrderRequest request, CancellationToken token) {
 
-        var response = new CreateOrderResponse();
+        var response = new PlaceOrderResponse();
 
         response.Errors = await workSteps.Validate(request, token);
         if (response.Errors.Any())
@@ -22,25 +22,25 @@ public class BusinessWorkFlow(BusinessWorkFlow.IBusinessWorkSteps workSteps) {
     }
 
     public interface IBusinessWorkSteps {
-        Task<IEnumerable<Error>> Validate(CreateOrderRequest request, CancellationToken token);
-        Order Create(CreateOrderRequest request);
+        Task<IEnumerable<Error>> Validate(PlaceOrderRequest request, CancellationToken token);
+        Order Create(PlaceOrderRequest request);
         Task Save(Order order, CancellationToken token);
         Task Publish(Order order, CancellationToken token);
     }
 }
 
 
-public sealed record CreateOrderRequest(
+public sealed record PlaceOrderRequest(
     Guid CustomerId,
-    IEnumerable<CreateOrderLineRequest> Lines);
+    IEnumerable<PlaceOrderLineRequest> Lines);
+ 
 
-
-public record CreateOrderLineRequest(
+public record PlaceOrderLineRequest(
     Guid ProductId,
     int Quantity,
     decimal UnitPrice);
 
-public sealed class CreateOrderResponse {
+public sealed class PlaceOrderResponse {
     public Order? Order { get; set; }
     public IEnumerable<Error> Errors { get; set; } = [];
 }
