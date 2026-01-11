@@ -3,7 +3,7 @@ using Experts.Shared.Business.Domain;
 
 namespace Experts.OrderExpert.PlaceOrder;
 
-internal class BusinessWorkFlow(BusinessWorkFlow.IBusinessWorkSteps workSteps) {
+public class BusinessWorkFlow(BusinessWorkFlow.IBusinessWorkSteps workSteps) {
     public async Task<PlaceOrderResponse> Run(PlaceOrderRequest request, CancellationToken token) {
 
         var response = new PlaceOrderResponse();
