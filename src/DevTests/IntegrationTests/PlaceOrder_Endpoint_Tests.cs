@@ -1,28 +1,22 @@
 using System.Net;
-using System.Net.Http.Headers;
 using System.Net.Http.Json;
-using Experts.Identity.CreateToken;
 using Experts.OrderExpert.PlaceOrder;
 using FluentAssertions;
 
 namespace DevTests.IntegrationTests;
 
-public class PlaceOrder_Endpoint_Tests(WebAppFactory factory) : IClassFixture<WebAppFactory> {
+public class PlaceOrder_Endpoint_Tests(WebAppFactory applicationApi) : IClassFixture<WebAppFactory> {
 
     [Fact]
     public async Task PostOrders_ShouldCreateOrder() {
 
         // Arrange
-        var client = factory.CreateClient();
-
-        var request = new HttpRequestMessage();
-        request.Method = HttpMethod.Post;
-        request.RequestUri = new Uri("/v1/orders", UriKind.Relative);
-        request.Content = JsonContent.Create(GetCreateOrderRequest());
-        request.Headers.Authorization = new AuthenticationHeaderValue("Bearer", await GetAccessToken(client));
+        var placeOrderRequest = new PlaceOrderRequest(
+                    CustomerId: Guid.NewGuid(),
+                    Lines: [new PlaceOrderLineRequest(Guid.NewGuid(), 1, 100.0m)]);
 
         // Act
-        var response = await client.SendAsync(request);
+        var response = await applicationApi.Post("/v1/orders", placeOrderRequest);
 
         // Assert
         response.EnsureSuccessStatusCode();
@@ -33,27 +27,5 @@ public class PlaceOrder_Endpoint_Tests(WebAppFactory factory) : IClassFixture<We
 
         var content = await response.Content.ReadFromJsonAsync<Guid>();
         content.Should().NotBe(Guid.Empty);
-    }
-
-    private static PlaceOrderRequest GetCreateOrderRequest() {
-        return new PlaceOrderRequest(
-                    CustomerId: Guid.NewGuid(),
-                    Lines: [new PlaceOrderLineRequest(Guid.NewGuid(), 1, 100.0m)]);
-    }
-
-    private static async Task<string> GetAccessToken(HttpClient client) {
-        var request = new HttpRequestMessage();
-        request.Method = HttpMethod.Post;
-        request.RequestUri = new Uri("/v1/devtokens", UriKind.Relative);
-        request.Content = JsonContent.Create(new CreateTokenCommand(
-            JwtId: Guid.NewGuid(),
-            Subject: "dev-user",
-            IssuedAt: DateTime.UtcNow));
-
-        var response = await client.SendAsync(request);
-        response.EnsureSuccessStatusCode();
-        var token = await response.Content.ReadFromJsonAsync<string>();
-        token.Should().NotBeNullOrWhiteSpace();
-        return token!;
     }
 }

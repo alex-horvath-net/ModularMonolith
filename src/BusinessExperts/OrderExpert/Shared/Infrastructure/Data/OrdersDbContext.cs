@@ -1,10 +1,12 @@
 using System.Reflection;
+using Experts.OrderExpert.Shared.Infrastructure.Data.Models;
 using Microsoft.EntityFrameworkCore;
 
 namespace Experts.OrderExpert.Shared.Infrastructure.Data;
 
 public sealed class OrdersDbContext(DbContextOptions<OrdersDbContext> options) : DbContext(options) {
-    public DbSet<Models.Order> Orders => Set<Models.Order>();
+    public DbSet<Order> Orders => Set<Order>();
+    public DbSet<OrderLine> OrderLines => Set<OrderLine>();
 
     protected override void OnModelCreating(ModelBuilder modelBuilder) {
         modelBuilder.HasDefaultSchema("orders");

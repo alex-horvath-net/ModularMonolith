@@ -5,10 +5,8 @@ using Microsoft.EntityFrameworkCore.Metadata.Builders;
 namespace Experts.OrderExpert.Shared.Infrastructure.Data.Configurations;
 public sealed class OrderConfiguration : IEntityTypeConfiguration<Order> {
     public void Configure(EntityTypeBuilder<Order> builder) {
-        builder.ToTable("Orders", "orders", tb => {
-            tb.HasCheckConstraint("CK_Orders_CustomerId_NotEmpty", "[CustomerId] <> '00000000-0000-0000-0000-000000000000'");
-            tb.HasCheckConstraint("CK_Orders_UpdatedUtc_NotBeforeCreatedUtc", "[UpdatedUtc] >= [CreatedUtc]");
-        });
+
+        builder.ToTable("Orders", "orders");
 
         builder.HasKey(o => o.Id);
         builder.HasIndex(o => o.CustomerId).HasDatabaseName("IX_Orders_CustomerId");
@@ -18,10 +16,7 @@ public sealed class OrderConfiguration : IEntityTypeConfiguration<Order> {
         builder.Property<DateTime>("UpdatedUtc").HasColumnType("datetime2(3)").HasDefaultValueSql("SYSUTCDATETIME()").ValueGeneratedOnAddOrUpdate();
 
         builder.OwnsMany(o => o.Lines, owned => {
-            owned.ToTable("OrderLines", "orders", tb => {
-                tb.HasCheckConstraint("CK_OrderLines_Quantity_Positive", "[Quantity] > 0");
-                tb.HasCheckConstraint("CK_OrderLines_UnitPrice_NonNegative", "[UnitPrice] >= 0");
-            });
+            owned.ToTable("OrderLines", "orders");
 
             owned.WithOwner().HasForeignKey("OrderId");
             owned.Property<Guid>("Id");

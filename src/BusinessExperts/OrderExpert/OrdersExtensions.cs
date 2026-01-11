@@ -57,13 +57,15 @@ public static class OrdersExtensions {
         using var scope = app.Services.CreateScope();
         
         var db = scope.ServiceProvider.GetRequiredService<OrdersDbContext>();
-        if (app.Environment.IsEnvironment("IntegrationTest")) {
-            //db.Database.EnsureDeleted();
-            db.Database.EnsureCreated();
-            CleanDatabase(db);
-        } else {
-            db.Database.Migrate();
-        }
+        db.Database.EnsureCreated();
+        db.Database.Migrate();
+        //if (app.Environment.IsEnvironment("IntegrationTest")) {
+        //    //db.Database.EnsureDeleted();
+        //    db.Database.EnsureCreated();
+        //    CleanDatabase(db);
+        //} else {
+        //    db.Database.Migrate();
+        //}
 
         app.MapOrdersEndpoints();
         app.MapCreateOrderEndpoint();
