@@ -3,19 +3,16 @@ using Experts.OrderExpert.Shared.Infrastructure.Data;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc.Testing;
 using Microsoft.AspNetCore.TestHost;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Diagnostics;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Logging;
 
 namespace DevTests.IntegrationTests;
 
 public class WebAppFactory : WebApplicationFactory<Program>, IAsyncLifetime {
 
-    private IServiceScope _scope = default!;
+    private IServiceScope scope = default!;
 
-    public T GetRequiredService<T>() where T : notnull => _scope.ServiceProvider.GetRequiredService<T>();
+    public T GetRequiredService<T>() where T : notnull => scope.ServiceProvider.GetRequiredService<T>();
 
 
     protected override void ConfigureWebHost(IWebHostBuilder builder) {
@@ -36,7 +33,7 @@ public class WebAppFactory : WebApplicationFactory<Program>, IAsyncLifetime {
     }
     
     public async Task InitializeAsync() {
-        _scope = Services.CreateScope();
+        scope = Services.CreateScope();
 
         var ordersDb = GetRequiredService<OrdersDbContext>();
         await ordersDb.Database.EnsureCreatedAsync();
@@ -46,7 +43,7 @@ public class WebAppFactory : WebApplicationFactory<Program>, IAsyncLifetime {
     }
 
     public new Task DisposeAsync() {
-        _scope?.Dispose();
+        scope?.Dispose();
         return Task.CompletedTask;
     }
 }

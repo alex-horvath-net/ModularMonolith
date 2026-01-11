@@ -7,7 +7,7 @@ using Data = Experts.OrderExpert.Shared.Infrastructure.Data;
 
 namespace Experts.OrderExpert.PlaceOrder;
 
-public class BusinessWorkSteps(
+internal class BusinessWorkSteps(
     IValidator<PlaceOrderRequest> validator,
     BusinessWorkSteps.IStoreInfrastructure store,
     IBusinessEventPublisher publisher) : BusinessWorkFlow.IBusinessWorkSteps {

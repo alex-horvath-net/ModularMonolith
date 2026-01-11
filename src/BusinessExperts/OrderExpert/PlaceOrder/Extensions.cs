@@ -9,8 +9,8 @@ public static class Extensions {
 
         services.AddScoped<BusinessWorkFlow>();
         services.AddScoped<BusinessWorkFlow.IBusinessWorkSteps, BusinessWorkSteps>();
-        services.AddScoped<IValidator<PlaceOrderRequest>, ValidatorInfrastructure>();
-        services.AddScoped<BusinessWorkSteps.IStoreInfrastructure, StoreInfrastructure>();
+        services.AddScoped<IValidator<PlaceOrderRequest>, Infrastructure.Validator>();
+        services.AddScoped<BusinessWorkSteps.IStoreInfrastructure, Infrastructure.Store>();
 
         return services;
 

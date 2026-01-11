@@ -7,7 +7,7 @@ using FluentAssertions;
 
 namespace DevTests.IntegrationTests;
 
-public class CreateOrder_Endpoint_Tests(WebAppFactory factory) : IClassFixture<WebAppFactory> {
+public class PlaceOrder_Endpoint_Tests(WebAppFactory factory) : IClassFixture<WebAppFactory> {
 
     [Fact]
     public async Task PostOrders_ShouldCreateOrder() {

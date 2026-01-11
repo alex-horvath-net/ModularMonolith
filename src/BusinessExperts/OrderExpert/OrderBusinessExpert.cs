@@ -2,6 +2,6 @@
 
 namespace Experts.OrderExpert;
 
-public record OrderBusinessExpert(
+internal record OrderBusinessExpert(
     BusinessWorkFlow PlaceOrder);
  

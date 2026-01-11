@@ -4,7 +4,7 @@ using FluentAssertions;
 
 namespace DevTests.IntegrationTests;
 
-public class CreateOrder_WorkFlow_Tests(WebAppFactory factory) : IClassFixture<WebAppFactory> {
+public class PlaceOrder_WorkFlow_Tests(WebAppFactory factory) : IClassFixture<WebAppFactory> {
 
     [Fact]
     public async Task CreateOrderCommandHandler_ShouldCreateOrder() {
