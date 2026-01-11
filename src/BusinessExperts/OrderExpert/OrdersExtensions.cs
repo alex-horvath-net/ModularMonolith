@@ -1,7 +1,6 @@
 using Experts.OrderExpert.GetAllOrderFlow;
 using Experts.OrderExpert.GetOrderFlow;
 using Experts.OrderExpert.PlaceOrderFlow;
-using Experts.OrderExpert.PlaceOrderFlow.Shared.Infrastructure;
 using Experts.OrderExpert.Shared.Business;
 using Experts.OrderExpert.Shared.Infrastructure.Data;
 using Experts.Shared;
@@ -17,7 +16,7 @@ using Microsoft.Extensions.Logging;
 namespace Experts.OrderExpert;
 
 public static class OrdersExtensions {
-    public static IServiceCollection AddOrders(this IServiceCollection services, IConfiguration configuration) {
+    public static IServiceCollection AddOrderBusinessExpert(this IServiceCollection services, IConfiguration configuration) {
 
         services.AddScoped<OrderBusinessExpert>();
 

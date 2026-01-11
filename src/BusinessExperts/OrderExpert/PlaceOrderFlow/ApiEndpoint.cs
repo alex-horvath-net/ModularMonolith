@@ -5,34 +5,33 @@ using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Routing;
 
-namespace Experts.OrderExpert.PlaceOrderFlow.Shared.Infrastructure;
+namespace Experts.OrderExpert.PlaceOrderFlow;
 
-public static class Endpoint {
+public static class ApiEndpoint {
     public static IEndpointRouteBuilder MapCreateOrderEndpoint(this IEndpointRouteBuilder app) {
-        var versionSet = app.NewApiVersionSet()
-            .HasApiVersion(new ApiVersion(1, 0))
-            .ReportApiVersions()
-            .Build();
 
-        var group = app.MapGroup("/v{version:apiVersion}/orders")
+        var versionSet = app.NewApiVersionSet().HasApiVersion(new ApiVersion(1, 0)).ReportApiVersions().Build();
+
+        var routeGroup = app.MapGroup("/v{version:apiVersion}/orders")
             .WithApiVersionSet(versionSet)
-            .WithTags("Orders");
+            .WithTags("OrderExpert");
 
-        group.MapPost("/", Handle)
+        routeGroup.MapPost("/", Handler)
             .RequireRateLimiting("writes")
             .RequireAuthorization(OrdersConstants.Write)
             .Produces(StatusCodes.Status201Created)
-            .ProducesValidationProblem();
+            .ProducesValidationProblem()
+            .WithTags("PlaceOrderFlow");
 
         return app;
     }
 
-    private static async Task<IResult> Handle(
-        OrderBusinessExpert order,
+    private static async Task<IResult> Handler(
+        BusinessWorkFlow placeOrder,
         CreateOrderRequest request,
         CancellationToken token) {
 
-        var response = await order.PlaceOrder.Run(request, token);
+        var response = await placeOrder.Run(request, token);
         return
             response.Errors.Any() ?
             TypedResults.BadRequest(response.Errors) :

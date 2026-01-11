@@ -10,7 +10,7 @@ public class CreateOrder_WorkFlow_Tests(WebAppFactory factory) : IClassFixture<W
     [Fact]
     public async Task CreateOrderCommandHandler_ShouldCreateOrder() {
         // Arrange
-        var workflow = factory.GetRequiredService<PlaceOrderWorkflow>();
+        var workflow = factory.GetRequiredService<BusinessWorkFlow>();
         var request = new CreateOrderRequest(
             CustomerId: Guid.NewGuid(),
             Lines: [
