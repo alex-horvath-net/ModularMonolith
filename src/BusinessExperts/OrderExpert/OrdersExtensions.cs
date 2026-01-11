@@ -1,5 +1,5 @@
-using Experts.OrderExpert.GetAllOrderFlow;
-using Experts.OrderExpert.GetOrderFlow;
+using Experts.OrderExpert.GetAllOrder;
+using Experts.OrderExpert.GetOrder;
 using Experts.OrderExpert.PlaceOrder;
 using Experts.OrderExpert.Shared.Business;
 using Experts.OrderExpert.Shared.Infrastructure.Data;
