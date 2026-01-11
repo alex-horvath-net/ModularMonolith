@@ -28,10 +28,6 @@
   <ItemGroup>
     <ProjectReference Include="..\Common\Common.csproj" />
   </ItemGroup>
-
-  <ItemGroup>
-    <Folder Include="OrderExpert\Shared\Infrastructure\Data\Migrations\" />
-  </ItemGroup>
     
 
 </Project>
