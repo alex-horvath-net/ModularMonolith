@@ -26,6 +26,8 @@ public static class OrdersExtensions {
 
         services.AddPlaceOrderBusinessWorkFlow(configuration);
         services.AddShared();
+
+
         // Infrastructure
         services.AddDbContext<OrdersDbContext>((sp, options) => {
             var env = sp.GetRequiredService<IHostEnvironment>();
@@ -43,6 +45,7 @@ public static class OrdersExtensions {
                 sql.CommandTimeout(30);
             });
         });
+        services.AddScoped<DataSeeder>();
 
         // Authorization policies local to Orders module
         services
@@ -55,10 +58,13 @@ public static class OrdersExtensions {
 
     public static IEndpointRouteBuilder MapOrders(this WebApplication app) {
         using var scope = app.Services.CreateScope();
-        
+
         var db = scope.ServiceProvider.GetRequiredService<OrdersDbContext>();
         db.Database.EnsureCreated();
         db.Database.Migrate();
+
+        var dataSeeder = scope.ServiceProvider.GetRequiredService<DataSeeder>();
+        dataSeeder.Seed();
         //if (app.Environment.IsEnvironment("IntegrationTest")) {
         //    //db.Database.EnsureDeleted();
         //    db.Database.EnsureCreated();
