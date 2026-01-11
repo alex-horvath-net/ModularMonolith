@@ -1,5 +1,4 @@
-﻿using Experts.OrderExpert.PlaceOrderFlow.Shared.Business.Domain;
-using Experts.OrderExpert.Shared.Business.Domain;
+﻿using Experts.OrderExpert.Shared.Business.Domain;
 using Experts.Shared.Business.Domain;
 
 namespace Experts.OrderExpert.PlaceOrderFlow;
@@ -28,4 +27,20 @@ public class BusinessWorkFlow(BusinessWorkFlow.IBusinessWorkSteps workSteps) {
         Task Save(Order order, CancellationToken token);
         Task Publish(Order order, CancellationToken token);
     }
+}
+
+
+public sealed record CreateOrderRequest(
+    Guid CustomerId,
+    IEnumerable<CreateOrderLineRequest> Lines);
+
+
+public record CreateOrderLineRequest(
+    Guid ProductId,
+    int Quantity,
+    decimal UnitPrice);
+
+public sealed class CreateOrderResponse {
+    public Order? Order { get; set; }
+    public IEnumerable<Error> Errors { get; set; } = [];
 }

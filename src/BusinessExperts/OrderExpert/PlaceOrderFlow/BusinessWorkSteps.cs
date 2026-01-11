@@ -1,5 +1,4 @@
-﻿using Experts.OrderExpert.PlaceOrderFlow.Shared.Business.Domain;
-using Experts.OrderExpert.Shared.Business.Domain;
+﻿using Experts.OrderExpert.Shared.Business.Domain;
 using Experts.Shared.Business.Domain;
 using Experts.Shared.Business.Events;
 using Experts.Shared.Infrastructure;

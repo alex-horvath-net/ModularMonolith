@@ -1,5 +1,4 @@
-﻿using Experts.OrderExpert.PlaceOrderFlow.Shared.Business.Domain;
-using FluentValidation;
+﻿using FluentValidation;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 
