@@ -1,4 +1,3 @@
-using System.Reflection;
 using Experts.OrderExpert.Shared.Infrastructure.Data.Models;
 using Microsoft.EntityFrameworkCore;
 
@@ -9,6 +8,7 @@ public sealed class OrdersDbContext(DbContextOptions<OrdersDbContext> options) :
     public DbSet<OrderLine> OrderLines => Set<OrderLine>();
 
     protected override void OnModelCreating(ModelBuilder modelBuilder) {
-        modelBuilder.ApplyConfigurationsFromAssembly(Assembly.GetExecutingAssembly());
+        var type = typeof(OrdersDbContext);
+        modelBuilder.ApplyConfigurationsFromAssembly(type.Assembly, x => x.Namespace!.StartsWith(type.Namespace!) );
     }
 }

@@ -3,6 +3,7 @@ using Experts.OrderExpert.GetOrder;
 using Experts.OrderExpert.PlaceOrder;
 using Experts.OrderExpert.Shared.Business;
 using Experts.OrderExpert.Shared.Infrastructure.Data;
+using Experts.OrderExpert.Shared.Infrastructure.Data.Seed;
 using Experts.Shared;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Routing;
@@ -60,18 +61,10 @@ public static class OrdersExtensions {
         using var scope = app.Services.CreateScope();
 
         var db = scope.ServiceProvider.GetRequiredService<OrdersDbContext>();
-        db.Database.EnsureCreated();
         db.Database.Migrate();
 
         var dataSeeder = scope.ServiceProvider.GetRequiredService<DataSeeder>();
         dataSeeder.Seed();
-        //if (app.Environment.IsEnvironment("IntegrationTest")) {
-        //    //db.Database.EnsureDeleted();
-        //    db.Database.EnsureCreated();
-        //    CleanDatabase(db);
-        //} else {
-        //    db.Database.Migrate();
-        //}
 
         app.MapOrdersEndpoints();
         app.MapCreateOrderEndpoint();
