@@ -1,18 +1,13 @@
 ﻿using Experts.OrderExpert.Shared.Infrastructure.Data.Models;
-using Microsoft.Extensions.Logging;
 
 namespace Experts.OrderExpert.Shared.Infrastructure.Data.Seed;
 
 public sealed class DataSeeder(OrdersDbContext db) {
     public void Seed() {
-
-        // remove all orders
         var existingOrders = db.Orders.ToList();
-        if (existingOrders.Any()) {
-            db.Orders.RemoveRange(existingOrders);
-        }
+        db.Orders.RemoveRange(existingOrders);
+        db.SaveChanges(); 
 
-        // add seed orders
         var seedOrders = GetSeedOrders();
         db.Orders.AddRange(seedOrders);
         db.SaveChanges();
@@ -40,10 +35,10 @@ public sealed class DataSeeder(OrdersDbContext db) {
             new() {
                 Id = Id(3),
                 CustomerId = Id(2),
-                Lines = new List<Models.OrderLine> {
+                Lines = [
                     new() { Id = Id(5), ProductId = Id(1), Quantity = 2, UnitPrice = 12.99m },
                     new() { Id = Id(6), ProductId = Id(2), Quantity = 4, UnitPrice = 3.50m }
-                }
+                ]
             }
         ];
     }
