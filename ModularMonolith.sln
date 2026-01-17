@@ -10,6 +10,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 		.editorconfig = .editorconfig
 		.gitattributes = .gitattributes
 		.gitignore = .gitignore
+		.github\copilot-instructions.md = .github\copilot-instructions.md
 		README.md = README.md
 	EndProjectSection
 EndProject
@@ -28,6 +29,13 @@ EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Applications", "Applications", "{D7ED42E8-B232-4723-A883-3F29CB651B27}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Experts", "src\BusinessExperts\Experts.csproj", "{1E45F82B-4470-3660-DBA9-7419D90E2DED}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "docs", "docs", "{48962B6F-1A91-4947-A0BD-BB3479087D35}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "development", "development", "{BE97A076-2C86-46BE-AC1E-D675F05606C5}"
+	ProjectSection(SolutionItems) = preProject
+		INCREMENTAL-DEVELOPMENT.md = INCREMENTAL-DEVELOPMENT.md
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -120,6 +128,7 @@ Global
 		{3F3044DC-A9F8-DE16-79DD-4A0C1649CD06} = {D0EE306E-957C-4EF5-9A85-36B63A6C663E}
 		{D4CD9A8C-9E65-8CEB-3D40-EFE24BF1EC69} = {D7ED42E8-B232-4723-A883-3F29CB651B27}
 		{3F896F3E-4C3C-A480-5DDF-CBEE21E19867} = {D7ED42E8-B232-4723-A883-3F29CB651B27}
+		{BE97A076-2C86-46BE-AC1E-D675F05606C5} = {48962B6F-1A91-4947-A0BD-BB3479087D35}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {9F153098-1BFD-4764-842C-EF44352D968A}
