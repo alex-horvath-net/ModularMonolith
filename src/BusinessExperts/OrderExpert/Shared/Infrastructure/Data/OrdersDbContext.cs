@@ -15,7 +15,7 @@ public sealed class OrdersDbContext(DbContextOptions<OrdersDbContext> options) :
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder) {
         base.OnConfiguring(optionsBuilder);
         if (optionsBuilder.IsConfigured) {
-            var seeder = new DataSeeder(this);
+            var seeder = new DataSeeder(this, new DataProvider());
             seeder.Seed();
         }
     }

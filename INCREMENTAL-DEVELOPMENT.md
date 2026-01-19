@@ -1,8 +1,8 @@
-﻿# Incremental Development Model 
+﻿# Incremental Development 
 
-This is the primary development workflow, <br>
-for building well architected solution for business need <br>
-in form of small, iterative, verified increments.
+This is the primary development instruction, <br>
+for building well architected solution for real business need <br>
+in form of small, iterative, incremental and verified work steps.
 
 ---
 
@@ -10,43 +10,161 @@ in form of small, iterative, verified increments.
 
 Development proceeds in three strictly ordered, nested loops:
 
-- Business need loops explore the user manual of the application.
-- Business scope loops explore business workflow behind the business need.
-- Solution scope loops explore the solution behind the busness scope.
+- User action loop
+- Business scope loop 
+- Solution scope loop
 
 ---
 
-## 2. Business need loop
+## 2. Init User Action (IUA)
 
-Artifact:
- - User Manual
- - User Story
- - Demo
+This step need only in case of business need a new user action <br>
+Based on user story suggest the
+- Name of Application
+- Name of Application User
+- Name of Business Expert
+- Name of Business Workflow
 
-Purpose of each loop:
-- Add a tiny verified increment to the previous busness need,
-  .
-Final loop:
-- Complites the altimate vision which satisfies the User Story.
+RED: 
+- Create an UserAction PlayWright UI test which 
+  - placed at `Tets\{BusinessExpertName}\{WorkflowName}\UserAction.Tests.cs Do_Nothing`
+  - verifies nothing, but the user action triggers an empty workflow.
+  - It needs no visible input fields nor output fields yet
+- Verify if test really fails: `dotnet test Tests.csproj --filter "FullyQualifiedName=Tests.Trader.PlaceTrade.PlaceTrade_UserAction"`
+- Close the pahase: `git commit -am "user action red: init"` 
 
-Focus:
-- UI behaviour
-- User journeys
-- Error messages
-- Accessibility
-- Permissions as experienced by the user
+GREEN
+- Create a Blazor UI, which makes init UI test passed
+  - place at `Expert\{BusinessExpertName}\{WorkflowName}\UserAction.\{ApplicationName}.cs`  
+- Announce: `git commit -m "Iuser action green" - a`
 
-Verification:
-- UI / E2E tests (e.g. Playwright)
+REFACTOR
+- inmprove name if needed
+- once the test is green again: `git commit -m "user action blue: init" - a`
 
-Rules:
-- UDD never defines business truth
-- UDD may not bypass BDD
-- UI tests are never authoritative for business rules
+## 3. Init Business Workflow (IBW)
+
+This step need only in case of a new Business Action is introduced 
+
+RED
+- Create an init Business Workflow test which
+    - has an input request without fields
+    - has an output response without fields
+	- has no business work steps
+	
+GREEN
+- Create the workk flow which makes the workflow test pass 
+
+REFACTOR
+- inmprove name if needed
+
+## 2. User Action Loop
+
+User Action Loop Artifact:
+ - Production ready Application
+ - Executable Application User Manual in form of UI tests or Integration tests.
+
+Open the User Action loops when:
+- Business need to create, update or delete a user action and
+- Solution scope loop is closed
+- Business scope loop is closed and
+
+Close the loops when:
+- No more business need for the user action is identified.
+
+Identify the current state of the User Action:
+- at the very first loop, we can know only what the user story implicates
+    - what is the application
+    - where is the application segment to use(page, screen ...)
+    - who is the application user
+	- what is the user activity (visit a page, submit ...)
+	- which business workflow is triggered by the user action
+
+- - what visible user inputs are required (fields)
+- what visible action outputs are expected (fields, messages, navigation ...)
+
+Shrink the user action
+- Shrink original user action that still delivers value to the user.
+- It should be small enough to be implemented, tested and delivered in max 3 hours.
+
+Start the loop with the shrinked user action.
+
+RED phase:
+- Define the shrinked User Action with a UI test that fails, becuse of the missing implementation.
+- This UI test must verify the visible behaviour of the user action.
+- This UI test must verify if the business workflow is triggered.
+- This UI test must not verify business workflow behavior.
+- This UI test must not verify Solution behavior.
+- This UI test will be the Executable Application User Manual
+- Prefer to use Playwright.
+- Also acceptable: Cypress, Selenium, ...
+- So this UI test addss a verified increment to the previous delivered user action.
+- Close the phase with: git commit -m "R-UA-001: <short description>" -a
+
+GREEN phase:
+- Once the Business Scope loops
+- This loop has no own GREEN phase, instead of the inner Business scope loop and Solution scope loop
+  provide the needed implementation to make the UI test pass.
+
+REFACTOR phase:
+- Improve the UI without changing the behaviour.
+- Improve the visual appearance.
+- Improve the user experience.
+- Close the phase with: git commit -m "B-UA-001: <short description>" -a
 
 ---
 
-## 3. BDD — Business Driven Development
+## 3. Business Scope Loop
+
+Business Scope Loop Artifact:
+ - Executable Business Workflow Specification in form of BDD tests.
+
+Open the Business Scope loops when:
+- User Action need to create, update or delete a Business Workflow and
+- Solution scope loop is closed
+
+Close the loops when:
+- No more business work step for the business workflow is identified.
+
+Recap knowlage about the Workflow:
+- at the very first loop, we can only
+	- Identify which application user needs the business workflow
+	- Identify which business expert holds the business workflow
+	- Identify what request needs to trigger the business workflow (it comes from the user action input)
+	- Identify what is the name of the business workflow (it should reflect the user action intent)
+	- Identify what response will the business workflow provide (it feeds the user action output)
+    
+- Identify business work steps of the business workflow
+- Identify the orchestration of business work steps
+
+Shrink the Business Scope
+- Shrink original Business Scope that still delivers value to the user.
+- It should be small enough to be implemented, tested and delivered in max 3 hours.
+
+Start the loop with the shrinked Business Scope.
+
+RED phase:
+- Define the shrinked Business Scope with a UI test that fails, becuse of the missing implementation.
+- This UI test must verify only the visible behaviour of the Business Scope.
+- This UI test must not verify business workflow or solution details.
+- This UI test will be the Executable Application User Manual
+- Prefer to use Playwright.
+- Also acceptable: Cypress, Selenium, ...
+- So this UI test addss a verified increment to the previous delivered user action.
+- Close the phase with: git commit -m "R-UA-001: <short description>" -a
+
+GREEN phase:
+- Once the Business Scope loops
+- This loop has no own GREEN phase, instead of the inner Business scope loop and Solution scope loop
+  provide the needed implementation to make the UI test pass.
+
+REFACTOR phase:
+- Improve the UI without changing the behaviour.
+- Improve the visual appearance.
+- Improve the user experience.
+- Close the phase with: git commit -m "B-UA-001: <short description>" -a
+
+
 
 Purpose:
 - Define and verify business truth
