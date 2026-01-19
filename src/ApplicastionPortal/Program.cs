@@ -6,7 +6,7 @@ using Experts.OrderExpert;
 
 var builder = WebApplication.CreateBuilder(args);
 
-%//builder.Services.AddCommon(builder.Configuration, builder.Environment);
+//builder.Services.AddCommon(builder.Configuration, builder.Environment);
 builder.Services.AddOrderBusinessExpert(builder.Configuration);
 builder.Services.AddBilling(builder.Configuration);
 builder.Services.AddScoped<CreateTokenCommandHandler>();

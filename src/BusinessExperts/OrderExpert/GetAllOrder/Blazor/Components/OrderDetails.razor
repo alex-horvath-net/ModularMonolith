@@ -1,5 +1,5 @@
 @page "/orders/{Id:guid}"
-@using BusinessExperts.Orders.Contracts.DTOs
+@using Experts.OrderExpert.Shared.Business.Domain
 @inject HttpClient Http
 
 <h3>Order Details</h3>
@@ -18,11 +18,11 @@
 
 @code {
     [Parameter] public Guid Id { get; set; }
-    private OrderDto? order;
+    private Order? order;
 
     protected override async Task OnParametersSetAsync() {
         try {
-            order = await Http.GetFromJsonAsync<OrderDto>($"/orders/{Id}");
+            order = await Http.GetFromJsonAsync<Order>($"/orders/{Id}");
         } catch {
             order = null;
         }

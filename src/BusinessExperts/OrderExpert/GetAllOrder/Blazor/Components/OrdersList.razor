@@ -1,5 +1,5 @@
 @page "/orders"
-@using BusinessExperts.Orders.Contracts.DTOs
+@using Experts.OrderExpert.Shared.Business.Domain
 @inject NavigationManager Nav
 @inject HttpClient Http
 
@@ -20,11 +20,10 @@
 }
 
 @code {
-    private List<OrderDto>? orders;
+    private List<Order>? orders;
 
     protected override async Task OnInitializedAsync() {
-        // Demo: fetch a small list by calling /orders individually or provide a dedicated list endpoint later
-        // For now, leave placeholder empty list so page renders
+        // Demo placeholder; replace with real API call when available
         orders = new();
     }
 }

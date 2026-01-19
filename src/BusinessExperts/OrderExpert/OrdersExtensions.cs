@@ -46,6 +46,7 @@ public static class OrdersExtensions {
                 sql.CommandTimeout(30);
             });
         });
+        services.AddScoped<DataProvider>();
         services.AddScoped<DataSeeder>();
 
         // Authorization policies local to Orders module
