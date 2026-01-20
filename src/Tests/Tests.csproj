@@ -34,7 +34,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Common/" />
     <Folder Include="Trader\BookTrade\" />
   </ItemGroup>
 
@@ -42,6 +41,7 @@
     <ProjectReference Include="..\Common\Common.csproj" />
     <ProjectReference Include="..\Experts\Experts.csproj" />
     <ProjectReference Include="..\TradingApi\TradingApi.csproj" />
+    <ProjectReference Include="..\TradingPortal\TradingPortal.csproj" />
   </ItemGroup>
 
 </Project>
