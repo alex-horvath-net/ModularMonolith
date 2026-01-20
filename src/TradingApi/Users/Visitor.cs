@@ -1,5 +1,5 @@
 ﻿using Experts.Identity;
 
-namespace ApplicationApi.Users; 
+namespace TradingApi.Users; 
 public record Visitor(
     IdentityExpert IdentityExpert);

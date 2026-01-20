@@ -1,6 +1,6 @@
 ﻿using Experts.Billing;
 
-namespace ApplicationApi.Users {
+namespace TradingApi.Users {
     public class Member {
        public BillingExpert BillingExpert = new();
     }
