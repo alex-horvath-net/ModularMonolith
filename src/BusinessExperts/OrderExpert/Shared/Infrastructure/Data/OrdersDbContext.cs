@@ -12,11 +12,4 @@ public sealed class OrdersDbContext(DbContextOptions<OrdersDbContext> options) :
         var type = typeof(OrdersDbContext);
         modelBuilder.ApplyConfigurationsFromAssembly(type.Assembly, x => x.Namespace!.StartsWith(type.Namespace!) );
     }
-    protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder) {
-        base.OnConfiguring(optionsBuilder);
-        if (optionsBuilder.IsConfigured) {
-            var seeder = new DataSeeder(this, new DataProvider());
-            seeder.Seed();
-        }
-    }
 }

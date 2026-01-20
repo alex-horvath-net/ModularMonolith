@@ -27,6 +27,12 @@ builder.Services.AddAuthentication(options => {
 });
 
 builder.Services.AddAuthorization();
+builder.Services.AddApiVersioning(o => o.ReportApiVersions = true)
+                .AddApiExplorer(o =>
+                {
+                    o.GroupNameFormat = "'v'VVV";
+                    o.SubstituteApiVersionInUrl = true;
+                });
 
 
 var app = builder.Build();
