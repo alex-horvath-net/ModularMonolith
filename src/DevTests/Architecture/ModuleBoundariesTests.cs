@@ -3,7 +3,7 @@ using Experts.OrderExpert;
 using FluentAssertions;
 using NetArchTest.Rules;
 
-namespace DevTests.Architecture;
+namespace Tests.Architecture;
 
 public class ModuleBoundariesTests {
     [Fact]
@@ -42,13 +42,13 @@ public class ModuleBoundariesTests {
         var orders = Types.InAssembly(typeof(OrdersExtensions).Assembly)
             .That().ResideInNamespace("Experts.Orders")
             .Or().ResideInNamespaceMatching("Experts.Orders\\..*")
-            .Should().NotHaveDependencyOnAny("ApplicationPortal", "WebApi")
+            .Should().NotHaveDependencyOnAny("TradingPortal", "WebApi")
             .GetResult();
 
         var billing = Types.InAssembly(typeof(BillingExtensions).Assembly)
             .That().ResideInNamespace("Experts.Billing")
             .Or().ResideInNamespaceMatching("Experts.Billing\\..*")
-            .Should().NotHaveDependencyOnAny("ApplicationPortal", "WebApi")
+            .Should().NotHaveDependencyOnAny("TradingPortal", "WebApi")
             .GetResult();
 
         var failures = new List<string>();

@@ -2,7 +2,7 @@ using System.Net.Http.Json;
 using Experts.Identity.CreateToken;
 using FluentAssertions;
 
-namespace DevTests.IntegrationTests;
+namespace Tests.IntegrationTests;
 
 public class CreateTokenEndpoint_Tests(WebAppFactory factory) : IClassFixture<WebAppFactory> {
 

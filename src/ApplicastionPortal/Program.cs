@@ -1,4 +1,4 @@
-using ApplicationPortal.Components;
+using TradingPortal.Components;
 using Common;
 using Experts.Billing;
 using Experts.Identity.CreateToken;

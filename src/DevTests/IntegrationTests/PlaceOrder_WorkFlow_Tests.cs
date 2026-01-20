@@ -2,7 +2,7 @@
 using Experts.OrderExpert.Shared.Infrastructure.Data;
 using FluentAssertions;
 
-namespace DevTests.IntegrationTests;
+namespace Tests.IntegrationTests;
 
 public class PlaceOrder_WorkFlow_Tests(WebAppFactory factory) : IClassFixture<WebAppFactory> {
 

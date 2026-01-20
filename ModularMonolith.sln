@@ -14,9 +14,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 		README.md = README.md
 	EndProjectSection
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tests", "Tests", "{CD9DBFAD-C4AC-42D9-9C7B-3A4775BA86A7}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DevTests", "src\DevTests\DevTests.csproj", "{78FE86C1-9403-0104-7207-73DFB801BEA9}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Tests", "src\DevTests\Tests.csproj", "{78FE86C1-9403-0104-7207-73DFB801BEA9}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Common", "src\Common\Common.csproj", "{3F3044DC-A9F8-DE16-79DD-4A0C1649CD06}"
 EndProject
@@ -24,7 +22,7 @@ Project("{E53339B2-1760-4266-BCC7-CA923CBCF16C}") = "Docker-compose", "src\Docke
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ApplicationApi", "src\ApplicationApi\ApplicationApi.csproj", "{D4CD9A8C-9E65-8CEB-3D40-EFE24BF1EC69}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ApplicationPortal", "src\ApplicastionPortal\ApplicationPortal.csproj", "{3F896F3E-4C3C-A480-5DDF-CBEE21E19867}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TradingPortal", "src\ApplicastionPortal\TradingPortal.csproj", "{3F896F3E-4C3C-A480-5DDF-CBEE21E19867}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Applications", "Applications", "{D7ED42E8-B232-4723-A883-3F29CB651B27}"
 EndProject
@@ -124,10 +122,8 @@ Global
 		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
-		{78FE86C1-9403-0104-7207-73DFB801BEA9} = {CD9DBFAD-C4AC-42D9-9C7B-3A4775BA86A7}
 		{3F3044DC-A9F8-DE16-79DD-4A0C1649CD06} = {D0EE306E-957C-4EF5-9A85-36B63A6C663E}
 		{D4CD9A8C-9E65-8CEB-3D40-EFE24BF1EC69} = {D7ED42E8-B232-4723-A883-3F29CB651B27}
-		{3F896F3E-4C3C-A480-5DDF-CBEE21E19867} = {D7ED42E8-B232-4723-A883-3F29CB651B27}
 		{BE97A076-2C86-46BE-AC1E-D675F05606C5} = {48962B6F-1A91-4947-A0BD-BB3479087D35}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution

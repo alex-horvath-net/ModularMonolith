@@ -9,7 +9,7 @@ using Microsoft.AspNetCore.TestHost;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 
-namespace DevTests.IntegrationTests;
+namespace Tests.IntegrationTests;
 
 public class WebAppFactory : WebApplicationFactory<Program>, IAsyncLifetime {
 

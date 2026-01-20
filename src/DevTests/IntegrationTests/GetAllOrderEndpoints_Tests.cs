@@ -6,7 +6,7 @@ using Experts.Identity.CreateToken;
 using Experts.OrderExpert.PlaceOrder;
 using FluentAssertions;
 
-namespace DevTests.IntegrationTests;
+namespace Tests.IntegrationTests;
 
 public class GetAllOrderEndpoints_Tests(WebAppFactory factory) : IClassFixture<WebAppFactory> {
 

@@ -3,7 +3,7 @@ using System.Net.Http.Json;
 using Experts.OrderExpert.PlaceOrder;
 using FluentAssertions;
 
-namespace DevTests.IntegrationTests;
+namespace Tests.IntegrationTests;
 
 public class PlaceOrder_Endpoint_Tests(WebAppFactory applicationApi) : IClassFixture<WebAppFactory> {
 

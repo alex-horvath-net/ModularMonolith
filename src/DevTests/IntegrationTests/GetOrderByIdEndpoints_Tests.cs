@@ -3,7 +3,7 @@ using System.Net.Http.Json;
 using System.Text.Json;
 using FluentAssertions;
 
-namespace DevTests.IntegrationTests;
+namespace Tests.IntegrationTests;
 
 public class GetOrderByIdEndpoints_Tests(WebAppFactory factory) : IClassFixture<WebAppFactory> {
 
