@@ -33,7 +33,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\BusinessExperts\Experts.csproj" />
     <ProjectReference Include="..\Common\Common.csproj" />
   </ItemGroup>
 
