@@ -1,10 +1,27 @@
 @page "/access/login"
 @rendermode InteractiveServer
+@using TradingPortal.Components.Pages.Access
 
 <PageTitle>Login</PageTitle>
 
 <h1>Login</h1>
 
-<button type="button" class="btn btn-primary" onclick="document.querySelector('[data-testid=trader-login-workflow-started]').hidden=false;">Login</button>
+<button type="button" class="btn btn-primary" @onclick="ShowUnderConstruction">Login</button>
 
-<div class="alert alert-info mt-3" data-testid="trader-login-workflow-started" hidden>Under-construction</div>
+<div class="alert alert-info mt-3" data-testid="trader-login-workflow-started" hidden="@(!_showMessage)">@_response.Message</div>
+
+@code {
+    private LogInResponse _response = new(null);
+    private bool _showMessage;
+
+    protected override void OnInitialized()
+    {
+        _showMessage = false;
+    }
+
+    private void ShowUnderConstruction()
+    {
+        _response = new LogInResponse("Under-construction");
+        _showMessage = true;
+    }
+}
