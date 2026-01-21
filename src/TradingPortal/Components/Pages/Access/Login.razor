@@ -6,22 +6,20 @@
 
 <h1>Login</h1>
 
-<button type="button" class="btn btn-primary" @onclick="ShowUnderConstruction">Login</button>
+<button type="button" class="btn btn-primary" @onclick="OnLoginClicked">Login</button>
 
-<div class="alert alert-info mt-3" data-testid="trader-login-workflow-started" hidden="@(!_showMessage)">@_response.Message</div>
+@if (now is not null)
+{
+    <div class="alert alert-info mt-3" data-testid="Trader-Login-UserAction">
+        @now
+    </div>
+}
 
 @code {
-    private LogInResponse _response = new(null);
-    private bool _showMessage;
+    private DateTime? now;
 
-    protected override void OnInitialized()
+    private void OnLoginClicked()
     {
-        _showMessage = false;
-    }
-
-    private void ShowUnderConstruction()
-    {
-        _response = new LogInResponse("Under-construction");
-        _showMessage = true;
+        now = DateTime.UtcNow;
     }
 }

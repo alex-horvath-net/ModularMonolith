@@ -15,6 +15,6 @@ public class UserManual(TradingPortalPlaywrigh visitor) {
     public async Task TraderSeesUnderConstructionPopupOnLoginClick() {
         await visitor.GoToPage("access/login");
         await visitor.ClickOnButton("Login");
-        await visitor.WaitForTextAsync("Under-construction", timeoutMs: 2000);
+        await visitor.WaitForTextAsync("Trader-Login-UserAction", timeoutMs: 2000);
     }
 }
