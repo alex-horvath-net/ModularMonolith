@@ -1,7 +1,10 @@
 @page "/access/login"
+@rendermode InteractiveServer
 
 <PageTitle>Login</PageTitle>
 
 <h1>Login</h1>
 
-<button type="button" class="btn btn-primary">Login</button>
+<button type="button" class="btn btn-primary" onclick="document.querySelector('[data-testid=trader-login-workflow-started]').hidden=false;">Login</button>
+
+<div class="alert alert-info mt-3" data-testid="trader-login-workflow-started" hidden>Under-construction</div>
