@@ -28,7 +28,14 @@ public class TradingPortalPlaywrigh : IAsyncLifetime {
             .Build();
 
 
-        _baseUrl = configuration["Playwright:BaseUrl"];
+        var envBaseUrl = Environment.GetEnvironmentVariable("TRADINGPORTAL_BASE_URL");
+        var configBaseUrl = configuration["Playwright:BaseUrl"];
+
+        _baseUrl = !string.IsNullOrWhiteSpace(envBaseUrl)
+            ? envBaseUrl
+            : !string.IsNullOrWhiteSpace(configBaseUrl)
+                ? configBaseUrl
+                : "http://127.0.0.1:5055";
 
         StartTradingPortal();
         await WaitForPortalAsync();
@@ -46,7 +53,33 @@ public class TradingPortalPlaywrigh : IAsyncLifetime {
     }
 
     public Task ClickOnButton(string name) {
-        return _page!.GetByRole(AriaRole.Button, new() { Name = name }).ClickAsync();
+        if (_page is null) {
+            throw new InvalidOperationException("No active page. Call GoToPage first.");
+        }
+
+        return _page.GetByRole(AriaRole.Button, new() { Name = name }).ClickAsync();
+    }
+
+    public async Task WaitForWorkflowStartedAsync(string testId, int timeoutMs = 2000) {
+        if (_page is null) {
+            throw new InvalidOperationException("No active page. Call GoToPage first.");
+        }
+
+        await _page.GetByTestId(testId).WaitForAsync(new LocatorWaitForOptions {
+            Timeout = timeoutMs,
+            State = WaitForSelectorState.Visible
+        });
+    }
+
+    public async Task WaitForTextAsync(string text, int timeoutMs = 2000) {
+        if (_page is null) {
+            throw new InvalidOperationException("No active page. Call GoToPage first.");
+        }
+
+        await _page.GetByText(text, new() { Exact = true }).WaitForAsync(new LocatorWaitForOptions {
+            Timeout = timeoutMs,
+            State = WaitForSelectorState.Visible
+        });
     }
 
     public async Task DisposeAsync() {

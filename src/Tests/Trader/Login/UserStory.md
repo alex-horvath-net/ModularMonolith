@@ -1,13 +1,11 @@
 # Trader Can Verify System Is Live and Ready for Trading
 
-## As a
-Trader
-
-## I want
-to log in and immediately see whether the system is live and I am permitted to trade
-
-## So that
-I can safely decide whether to start trading or stop
+## Description
+As a Trader <br>
+I want to log in <br>
+and immediately see whether the system is live and <br>
+I am permitted to trade. <br>
+So that I can safely decide whether to start trading or stop.
 
 ---
 

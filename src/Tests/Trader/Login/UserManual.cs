@@ -9,4 +9,12 @@ public class UserManual(TradingPortalPlaywrigh visitor) {
         await visitor.GoToPage("access/login");
         await visitor.ClickOnButton("Login");
     }
+
+
+    [Fact]
+    public async Task TraderSeesUnderConstructionPopupOnLoginClick() {
+        await visitor.GoToPage("access/login");
+        await visitor.ClickOnButton("Login");
+        await visitor.WaitForTextAsync("Under-construction", timeoutMs: 2000);
+    }
 }
