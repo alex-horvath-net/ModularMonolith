@@ -1,17 +1,12 @@
-﻿using Microsoft.Playwright;
-using Tests.Shared;
+﻿using Tests.Shared;
 
 namespace Tests.Trader.Login;
 
-public class UserManual(TradingPortalPlaywrigh fixture) : IClassFixture<TradingPortalPlaywrigh>
-{
+[Collection(UserManualCollection.Name)]
+public class UserManual(TradingPortalPlaywrigh visitor) {
     [Fact]
-    public async Task TraderCanClickLoginButton()
-    {
-        var (page, baseUrl) = await fixture.GetPage();
-
-        await page.GotoAsync($"{baseUrl}/access/login");
-
-        await page.GetByRole(AriaRole.Button, new() { Name = "Login" }).ClickAsync();
+    public async Task TraderCanClickLoginButton() {
+        await visitor.GoToPage("access/login");
+        await visitor.ClickOnButton("Login");
     }
 }

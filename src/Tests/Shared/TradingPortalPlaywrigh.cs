@@ -10,6 +10,7 @@ public class TradingPortalPlaywrigh : IAsyncLifetime {
     private readonly List<IBrowserContext> _contexts = new();
     private string _baseUrl = default!;
     private Process? _portalProcess;
+    private IPage? _page;
 
     public async Task InitializeAsync() {
         Microsoft.Playwright.Program.Main(new[] { "install" });
@@ -45,6 +46,18 @@ public class TradingPortalPlaywrigh : IAsyncLifetime {
         _contexts.Add(context);
         var page = await context.NewPageAsync();
         return (page, _baseUrl);
+    }
+
+
+    public async Task GoToPage(string page) {
+        var context = await Browser.NewContextAsync();
+        _contexts.Add(context);
+        _page = await context.NewPageAsync();
+        await _page.GotoAsync($"{_baseUrl}/{page}");
+    }
+
+    public Task ClickOnButton(string name ){
+        return _page!.GetByRole(AriaRole.Button, new() { Name = name }).ClickAsync();
     }
 
     public async Task DisposeAsync() {
