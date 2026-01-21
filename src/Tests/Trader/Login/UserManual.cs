@@ -3,7 +3,7 @@ using Tests.Shared;
 
 namespace Tests.Trader.Login;
 
-public class UserManual(PlaywrightFixture fixture) : IClassFixture<PlaywrightFixture>
+public class UserManual(TradingPortalPlaywrigh fixture) : IClassFixture<TradingPortalPlaywrigh>
 {
     [Fact]
     public async Task TraderCanClickLoginButton()
