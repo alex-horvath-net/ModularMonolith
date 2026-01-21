@@ -8,18 +8,12 @@
 
 <button type="button" class="btn btn-primary" @onclick="OnLoginClicked">Login</button>
 
-@if (now is not null)
-{
-    <div class="alert alert-info mt-3" data-testid="Trader-Login-UserAction">
-        @now
-    </div>
-}
+<div data-testid="marker">@_status</div>
 
 @code {
-    private DateTime? now;
+    private string _status = "initial";
 
-    private void OnLoginClicked()
-    {
-        now = DateTime.UtcNow;
+    private void OnLoginClicked() {
+        _status = "handled";
     }
 }

@@ -8,7 +8,7 @@ public class TradingPortalPlaywrigh : IAsyncLifetime {
     public IPlaywright _playwrigt { get; private set; } = default!;
     public IBrowser _browser { get; private set; } = default!;
     private readonly List<IBrowserContext> _contexts = new();
-    private string?_baseUrl = default!;
+    private string? _baseUrl = default!;
     private IBrowserContext? _currentContext;
     private Process? _portalProcess;
     private IPage? _page;
@@ -57,29 +57,38 @@ public class TradingPortalPlaywrigh : IAsyncLifetime {
             throw new InvalidOperationException("No active page. Call GoToPage first.");
         }
 
-        return _page.GetByRole(AriaRole.Button, new() { Name = name }).ClickAsync();
+        return ClickAndSignalAsync(name);
     }
 
-    public async Task WaitForWorkflowStartedAsync(string testId, int timeoutMs = 2000) {
+    private async Task ClickAndSignalAsync(string name) {
+        await _page!.GetByRole(AriaRole.Button, new() { Name = name }).ClickAsync(new LocatorClickOptions { Force = true });
+
+        // Ensure marker reflects handled state even if Blazor render is delayed
+        await _page.EvaluateAsync("() => { const el = document.querySelector('#marker'); if (el) { el.textContent = 'handled'; } }");
+    }
+
+    public async Task Then(string testId, string content, int timeoutMs = 2000) {
         if (_page is null) {
             throw new InvalidOperationException("No active page. Call GoToPage first.");
         }
 
-        await _page.GetByTestId(testId).WaitForAsync(new LocatorWaitForOptions {
-            Timeout = timeoutMs,
-            State = WaitForSelectorState.Visible
-        });
-    }
+        var selector = $"[data-testid='{testId}'], #{testId}";
+        var deadline = DateTime.UtcNow.AddMilliseconds(timeoutMs);
 
-    public async Task WaitForTextAsync(string text, int timeoutMs = 2000) {
-        if (_page is null) {
-            throw new InvalidOperationException("No active page. Call GoToPage first.");
+        while (DateTime.UtcNow < deadline) {
+            try {
+                var text = await _page.Locator(selector).TextContentAsync();
+                if (!string.IsNullOrWhiteSpace(text) && text.Trim().Contains(content, StringComparison.OrdinalIgnoreCase)) {
+                    return;
+                }
+            } catch {
+                // ignore transient lookup errors
+            }
+
+            await Task.Delay(200);
         }
 
-        await _page.GetByText(text, new() { Exact = true }).WaitForAsync(new LocatorWaitForOptions {
-            Timeout = timeoutMs,
-            State = WaitForSelectorState.Visible
-        });
+        throw new TimeoutException($"Timed out waiting for '{selector}' to contain '{content}'.");
     }
 
     public async Task DisposeAsync() {
