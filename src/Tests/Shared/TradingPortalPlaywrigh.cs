@@ -5,18 +5,19 @@ using Microsoft.Playwright;
 namespace Tests.Shared;
 
 public class TradingPortalPlaywrigh : IAsyncLifetime {
-    public IPlaywright PlaywrightInstance { get; private set; } = default!;
-    public IBrowser Browser { get; private set; } = default!;
+    public IPlaywright _playwrigt { get; private set; } = default!;
+    public IBrowser _browser { get; private set; } = default!;
     private readonly List<IBrowserContext> _contexts = new();
-    private string _baseUrl = default!;
+    private string?_baseUrl = default!;
+    private IBrowserContext? _currentContext;
     private Process? _portalProcess;
     private IPage? _page;
 
     public async Task InitializeAsync() {
         Microsoft.Playwright.Program.Main(new[] { "install" });
 
-        PlaywrightInstance = await Playwright.CreateAsync();
-        Browser = await PlaywrightInstance.Chromium.LaunchAsync(new BrowserTypeLaunchOptions {
+        _playwrigt = await Playwright.CreateAsync();
+        _browser = await _playwrigt.Chromium.LaunchAsync(new BrowserTypeLaunchOptions {
             Headless = true
         });
 
@@ -26,37 +27,25 @@ public class TradingPortalPlaywrigh : IAsyncLifetime {
             .AddEnvironmentVariables()
             .Build();
 
-        var envBaseUrl = Environment.GetEnvironmentVariable("TRADINGPORTAL_BASE_URL");
-        var configBaseUrl = configuration["Playwright:BaseUrl"];
 
-        _baseUrl = !string.IsNullOrWhiteSpace(envBaseUrl)
-            ? envBaseUrl!
-            : !string.IsNullOrWhiteSpace(configBaseUrl)
-                ? configBaseUrl!
-                : "http://127.0.0.1:5055";
+        _baseUrl = configuration["Playwright:BaseUrl"];
 
-        if (string.IsNullOrWhiteSpace(envBaseUrl) && !await IsPortalReachableAsync(_baseUrl)) {
-            StartTradingPortal();
-            await WaitForPortalAsync();
-        }
+        StartTradingPortal();
+        await WaitForPortalAsync();
     }
-
-    public async Task<(IPage, string)> GetPage() {
-        var context = await Browser.NewContextAsync();
-        _contexts.Add(context);
-        var page = await context.NewPageAsync();
-        return (page, _baseUrl);
-    }
-
 
     public async Task GoToPage(string page) {
-        var context = await Browser.NewContextAsync();
-        _contexts.Add(context);
-        _page = await context.NewPageAsync();
-        await _page.GotoAsync($"{_baseUrl}/{page}");
+        if (_currentContext is not null) {
+            await _currentContext.CloseAsync();
+        }
+
+        _currentContext = await _browser.NewContextAsync();
+        _contexts.Add(_currentContext);
+        _page = await _currentContext.NewPageAsync();
+        await _page.GotoAsync($"{_baseUrl!.TrimEnd('/')}/{page}");
     }
 
-    public Task ClickOnButton(string name ){
+    public Task ClickOnButton(string name) {
         return _page!.GetByRole(AriaRole.Button, new() { Name = name }).ClickAsync();
     }
 
@@ -72,11 +61,11 @@ public class TradingPortalPlaywrigh : IAsyncLifetime {
                 // ignore best-effort shutdown
             }
         }
-        if (Browser is not null) {
-            await Browser.CloseAsync();
+        if (_browser is not null) {
+            await _browser.CloseAsync();
         }
 
-        PlaywrightInstance?.Dispose();
+        _playwrigt?.Dispose();
     }
 
     private void StartTradingPortal() {
@@ -95,15 +84,6 @@ public class TradingPortalPlaywrigh : IAsyncLifetime {
         _portalProcess = Process.Start(startInfo);
     }
 
-    private async Task<bool> IsPortalReachableAsync(string baseUrl) {
-        using var client = new HttpClient();
-        try {
-            using var response = await client.GetAsync(baseUrl);
-            return response.IsSuccessStatusCode;
-        } catch {
-            return false;
-        }
-    }
 
     private async Task WaitForPortalAsync() {
         using var client = new HttpClient();
