@@ -49,9 +49,11 @@ public class TradingPortalPlaywrigh : IAsyncLifetime {
         return button.ClickAsync(new LocatorClickOptions { Force = true });
     }
 
-    public  Task ShouldBe(string id, string expectedContent, int timeoutMs = 2000) {
+    public Task ShouldBe(string id, string expectedContent, int timeoutMs = 2000) {
 
-         Expect(page.Locator($"#{id}")).ToHaveTextAsync(expectedContent);
+        return Assertions
+            .Expect( page.Locator($"#{id}"))
+            .ToHaveTextAsync(expectedContent, new LocatorAssertionsToHaveTextOptions { Timeout = timeoutMs });
 
     }
 
