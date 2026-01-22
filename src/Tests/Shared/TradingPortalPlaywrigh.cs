@@ -5,21 +5,21 @@ using Microsoft.Playwright;
 namespace Tests.Shared;
 
 public class TradingPortalPlaywrigh : IAsyncLifetime {
-    public IPlaywright _playwrigt { get; private set; } = default!;
-    public IBrowser _browser { get; private set; } = default!;
-    private readonly List<IBrowserContext> _contexts = new();
-    private string? _baseUrl = default!;
-    private IBrowserContext? _currentContext;
-    private Process? _portalProcess;
-    private IPage? _page;
+    private Process? portalProcess;
+    private IPlaywright playwright = null!;
+    private IBrowser browser = null!;
+    private IBrowserContext? browserContext;
+    private IPage page = null!;
+    private readonly List<IBrowserContext> browserContexts = new();
+    private string baseUrl = null!;
 
     public async Task InitializeAsync() {
-        Microsoft.Playwright.Program.Main(new[] { "install" });
+        Microsoft.Playwright.Program.Main(["install"]);
 
-        _playwrigt = await Playwright.CreateAsync();
-        _browser = await _playwrigt.Chromium.LaunchAsync(new BrowserTypeLaunchOptions {
-            Headless = true
-        });
+        playwright = await Playwright.CreateAsync();
+        var options = new BrowserTypeLaunchOptions();
+        options.Headless = true;
+        browser = await playwright.Chromium.LaunchAsync(options);
 
         var configuration = new ConfigurationBuilder()
             .SetBasePath(AppContext.BaseDirectory)
@@ -27,87 +27,62 @@ public class TradingPortalPlaywrigh : IAsyncLifetime {
             .AddEnvironmentVariables()
             .Build();
 
-
-        var envBaseUrl = Environment.GetEnvironmentVariable("TRADINGPORTAL_BASE_URL");
-        var configBaseUrl = configuration["Playwright:BaseUrl"];
-
-        _baseUrl = !string.IsNullOrWhiteSpace(envBaseUrl)
-            ? envBaseUrl
-            : !string.IsNullOrWhiteSpace(configBaseUrl)
-                ? configBaseUrl
-                : "http://127.0.0.1:5055";
-
+        baseUrl = configuration["Playwright:BaseUrl"];
         StartTradingPortal();
         await WaitForPortalAsync();
     }
 
-    public async Task GoToPage(string page) {
-        if (_currentContext is not null) {
-            await _currentContext.CloseAsync();
+    public async Task GoToPage(string relativeUrl) {
+        if (browserContext is not null) {
+            await browserContext.CloseAsync();
         }
 
-        _currentContext = await _browser.NewContextAsync();
-        _contexts.Add(_currentContext);
-        _page = await _currentContext.NewPageAsync();
-        await _page.GotoAsync($"{_baseUrl!.TrimEnd('/')}/{page}");
+        browserContext = await browser.NewContextAsync();
+        browserContexts.Add(browserContext);
+        this.page = await browserContext.NewPageAsync();
+        var absoluteUrl = $"{baseUrl!.TrimEnd('/')}/{relativeUrl}";
+        await this.page.GotoAsync(absoluteUrl);
     }
 
     public Task ClickOnButton(string name) {
-        if (_page is null) {
-            throw new InvalidOperationException("No active page. Call GoToPage first.");
-        }
-
-        return ClickAndSignalAsync(name);
+        var button = page.GetByRole(AriaRole.Button, new() { Name = name });
+        return button.ClickAsync(new LocatorClickOptions { Force = true });
     }
 
-    private async Task ClickAndSignalAsync(string name) {
-        await _page!.GetByRole(AriaRole.Button, new() { Name = name }).ClickAsync(new LocatorClickOptions { Force = true });
+    public async Task ShouldBe(string id, string expectedContent, int timeoutMs = 2000) {
 
-        // Ensure marker reflects handled state even if Blazor render is delayed
-        await _page.EvaluateAsync("() => { const el = document.querySelector('#marker'); if (el) { el.textContent = 'handled'; } }");
-    }
-
-    public async Task Then(string testId, string content, int timeoutMs = 2000) {
-        if (_page is null) {
-            throw new InvalidOperationException("No active page. Call GoToPage first.");
-        }
-
-        var selector = $"[data-testid='{testId}'], #{testId}";
         var deadline = DateTime.UtcNow.AddMilliseconds(timeoutMs);
 
         while (DateTime.UtcNow < deadline) {
-            try {
-                var text = await _page.Locator(selector).TextContentAsync();
-                if (!string.IsNullOrWhiteSpace(text) && text.Trim().Contains(content, StringComparison.OrdinalIgnoreCase)) {
-                    return;
-                }
-            } catch {
-                // ignore transient lookup errors
+            var element = page.Locator($"#{id}");
+            var actualContent = await element.TextContentAsync();
+            if (actualContent == expectedContent) {
+                return;
             }
 
             await Task.Delay(200);
         }
 
-        throw new TimeoutException($"Timed out waiting for '{selector}' to contain '{content}'.");
+        throw new TimeoutException($"Timed out waiting for '#{id}' to contain '{expectedContent}'.");
     }
 
     public async Task DisposeAsync() {
-        foreach (var context in _contexts) {
+        foreach (var context in browserContexts) {
             await context.CloseAsync();
         }
 
-        if (_portalProcess is not null && !_portalProcess.HasExited) {
+        if (portalProcess is not null && !portalProcess.HasExited) {
             try {
-                _portalProcess.Kill(entireProcessTree: true);
+                portalProcess.Kill(entireProcessTree: true);
             } catch {
                 // ignore best-effort shutdown
             }
         }
-        if (_browser is not null) {
-            await _browser.CloseAsync();
+        if (browser is not null) {
+            await browser.CloseAsync();
         }
 
-        _playwrigt?.Dispose();
+        playwright?.Dispose();
     }
 
     private void StartTradingPortal() {
@@ -116,25 +91,23 @@ public class TradingPortalPlaywrigh : IAsyncLifetime {
 
         var startInfo = new ProcessStartInfo {
             FileName = "dotnet",
-            Arguments = $"run --project \"{projectPath}\" --urls {_baseUrl}",
+            Arguments = $"run --project \"{projectPath}\" --urls {baseUrl}",
             UseShellExecute = false,
             RedirectStandardOutput = true,
             RedirectStandardError = true,
             WorkingDirectory = solutionRoot
         };
 
-        _portalProcess = Process.Start(startInfo);
+        portalProcess = Process.Start(startInfo);
     }
-
 
     private async Task WaitForPortalAsync() {
         using var client = new HttpClient();
         var timeout = TimeSpan.FromSeconds(20);
         var start = DateTime.UtcNow;
-
         while (DateTime.UtcNow - start < timeout) {
             try {
-                using var response = await client.GetAsync(_baseUrl);
+                using var response = await client.GetAsync(baseUrl);
                 if (response.IsSuccessStatusCode) {
                     return;
                 }
@@ -145,6 +118,6 @@ public class TradingPortalPlaywrigh : IAsyncLifetime {
             await Task.Delay(500);
         }
 
-        throw new InvalidOperationException($"TradingPortal did not start at {_baseUrl} within {timeout.TotalSeconds} seconds.");
+        throw new InvalidOperationException($"TradingPortal did not start at {baseUrl} within {timeout.TotalSeconds} seconds.");
     }
 }

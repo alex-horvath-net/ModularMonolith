@@ -3,12 +3,12 @@
 namespace Tests.Trader.Login;
 
 [Collection(UserManualCollection.Name)]
-public class UserManual(TradingPortalPlaywrigh visitor) {
+public class UserManual(TradingPortalPlaywrigh trader) {
 
     [Fact]
     public async Task TraderSeesUnderConstructionPopupOnLoginClick() {
-        await visitor.GoToPage("access/login");
-        await visitor.ClickOnButton("Login");
-        await visitor.Then("marker", "handled", timeoutMs: 10000);
+        await trader.GoToPage("access/login");
+        await trader.ClickOnButton("Login");
+        await trader.ShouldBe("marker", "handled");
     }
 }

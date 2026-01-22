@@ -8,12 +8,12 @@
 
 <button type="button" class="btn btn-primary" @onclick="OnLoginClicked">Login</button>
 
-<div data-testid="marker">@_status</div>
+<div id="marker">@status</div>
 
 @code {
-    private string _status = "initial";
+    private string? status;
 
     private void OnLoginClicked() {
-        _status = "handled";
+        status = "handled";
     }
 }
