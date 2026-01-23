@@ -52,9 +52,8 @@ public class TradingPortalPlaywrigh : IAsyncLifetime {
     public Task ShouldBe(string id, string expectedContent, int timeoutMs = 2000) {
 
         return Assertions
-            .Expect( page.Locator($"#{id}"))
+            .Expect(page.Locator($"#{id}"))
             .ToHaveTextAsync(expectedContent, new LocatorAssertionsToHaveTextOptions { Timeout = timeoutMs });
-
     }
 
     public async Task DisposeAsync() {
