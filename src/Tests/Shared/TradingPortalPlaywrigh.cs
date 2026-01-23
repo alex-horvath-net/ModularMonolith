@@ -10,7 +10,7 @@ public class TradingPortalPlaywrigh : IAsyncLifetime {
     private IBrowser browser = null!;
     private IBrowserContext? browserContext;
     private IPage page = null!;
-    private readonly List<IBrowserContext> browserContexts = new();
+    private readonly List<IBrowserContext> browserContexts = [];
     private string baseUrl = null!;
 
     public async Task InitializeAsync() {
@@ -40,13 +40,15 @@ public class TradingPortalPlaywrigh : IAsyncLifetime {
         browserContext = await browser.NewContextAsync();
         browserContexts.Add(browserContext);
         this.page = await browserContext.NewPageAsync();
-        var absoluteUrl = $"{baseUrl!.TrimEnd('/')}/{relativeUrl}";
+        var absoluteUrl = new Uri(new Uri(baseUrl), relativeUrl).ToString();
         await this.page.GotoAsync(absoluteUrl);
+        await page.WaitForLoadStateAsync(LoadState.NetworkIdle);
     }
 
-    public Task ClickOnButton(string name) {
+    public async Task ClickOnButton(string name) {
         var button = page.GetByRole(AriaRole.Button, new() { Name = name });
-        return button.ClickAsync(new LocatorClickOptions { Force = true });
+        await button.WaitForAsync(new LocatorWaitForOptions { State = WaitForSelectorState.Visible, Timeout = 5000 });
+        await button.ClickAsync(new LocatorClickOptions { Timeout = 5000 });
     }
 
     public Task ShouldBe(string id, string expectedContent, int timeoutMs = 2000) {
@@ -110,4 +112,5 @@ public class TradingPortalPlaywrigh : IAsyncLifetime {
 
         throw new InvalidOperationException($"TradingPortal did not start at {baseUrl} within {timeout.TotalSeconds} seconds.");
     }
+
 }
