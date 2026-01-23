@@ -4,7 +4,7 @@ using Microsoft.Playwright;
 
 namespace Tests.Shared;
 
-public class TradingPortalPlaywrigh : IAsyncLifetime {
+public class PlaywrightFixture : IAsyncLifetime {
     private Process? portalProcess;
     private IPlaywright playwright = null!;
     private IBrowser browser = null!;
@@ -32,7 +32,7 @@ public class TradingPortalPlaywrigh : IAsyncLifetime {
         await WaitForPortalAsync();
     }
 
-    public async Task GoToPage(string relativeUrl) {
+    public async Task GoToPage(string relativeUrl, int timeoutMs = 5000) {
         if (browserContext is not null) {
             await browserContext.CloseAsync();
         }
@@ -42,20 +42,20 @@ public class TradingPortalPlaywrigh : IAsyncLifetime {
         this.page = await browserContext.NewPageAsync();
         var absoluteUrl = new Uri(new Uri(baseUrl), relativeUrl).ToString();
         await this.page.GotoAsync(absoluteUrl);
-        await page.WaitForLoadStateAsync(LoadState.NetworkIdle);
+        await page.WaitForLoadStateAsync(LoadState.NetworkIdle, new PageWaitForLoadStateOptions { Timeout = timeoutMs });
     }
 
-    public async Task ClickOnButton(string name) {
+    public async Task ClickOnButton(string name, int timeoutMs = 5000) {
         var button = page.GetByRole(AriaRole.Button, new() { Name = name });
-        await button.WaitForAsync(new LocatorWaitForOptions { State = WaitForSelectorState.Visible, Timeout = 5000 });
-        await button.ClickAsync(new LocatorClickOptions { Timeout = 5000 });
+        await button.WaitForAsync(new LocatorWaitForOptions { State = WaitForSelectorState.Visible, Timeout = timeoutMs });
+        await button.ClickAsync(new LocatorClickOptions { Timeout = timeoutMs });
     }
 
-    public Task ShouldBe(string id, string expectedContent, int timeoutMs = 2000) {
+    public Task ExpectTextInElement(string text, string id, int timeoutMs = 5000) {
 
         return Assertions
             .Expect(page.Locator($"#{id}"))
-            .ToHaveTextAsync(expectedContent, new LocatorAssertionsToHaveTextOptions { Timeout = timeoutMs });
+            .ToHaveTextAsync(text, new LocatorAssertionsToHaveTextOptions { Timeout = timeoutMs });
     }
 
     public async Task DisposeAsync() {
