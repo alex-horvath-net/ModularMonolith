@@ -5,7 +5,7 @@ namespace Tests.Trader.Login;
 [Collection(UserManualCollection.Name)]
 public class UserManual(PlaywrightFixture trader) {
 
-    [Fact]
+    [FactPlaywright]
     public async Task How_to_login() {
         await trader.GoToPage("access/login");
         await trader.ClickOnButton("Login");

@@ -5,6 +5,16 @@ using Microsoft.Playwright;
 namespace Tests.Shared;
 
 public class PlaywrightFixture : IAsyncLifetime {
+    public static readonly Lazy<bool> Skip = new(() => {
+        var configuration = new ConfigurationBuilder()
+            .SetBasePath(AppContext.BaseDirectory)
+            .AddJsonFile("appsettings.json", optional: true)
+            .AddEnvironmentVariables()
+            .Build();
+
+        return configuration.GetValue<bool>("Playwright:Skip");
+    });
+
     private Process? portalProcess;
     private IPlaywright playwright = null!;
     private IBrowser browser = null!;
@@ -14,6 +24,10 @@ public class PlaywrightFixture : IAsyncLifetime {
     private string baseUrl = null!;
 
     public async Task InitializeAsync() {
+        if (Skip.Value) {
+            return;
+        }
+
         //Microsoft.Playwright.Program.Main(["install"]);
 
         playwright = await Playwright.CreateAsync();
@@ -59,6 +73,10 @@ public class PlaywrightFixture : IAsyncLifetime {
     }
 
     public async Task DisposeAsync() {
+        if (Skip.Value) {
+            return;
+        }
+
         foreach (var context in browserContexts) {
             await context.CloseAsync();
         }
