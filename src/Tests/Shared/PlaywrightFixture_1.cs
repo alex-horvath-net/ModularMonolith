@@ -14,7 +14,7 @@ public class PlaywrightFixture : IAsyncLifetime {
     private string baseUrl = null!;
 
     public async Task InitializeAsync() {
-        Microsoft.Playwright.Program.Main(["install"]);
+        //Microsoft.Playwright.Program.Main(["install"]);
 
         playwright = await Playwright.CreateAsync();
         var options = new BrowserTypeLaunchOptions();
@@ -29,7 +29,7 @@ public class PlaywrightFixture : IAsyncLifetime {
 
         baseUrl = configuration["Playwright:BaseUrl"];
         StartTradingPortal();
-        await WaitForPortalAsync();
+        await WaitForPortal(20_000);
     }
 
     public async Task GoToPage(string relativeUrl, int timeoutMs = 5000) {
@@ -83,7 +83,7 @@ public class PlaywrightFixture : IAsyncLifetime {
 
         var startInfo = new ProcessStartInfo {
             FileName = "dotnet",
-            Arguments = $"run --project \"{projectPath}\" --urls {baseUrl}",
+            Arguments = $"run --project \"{projectPath}\" --urls {baseUrl} --no-sandbox, --disable-dev-shm-usage",
             UseShellExecute = false,
             RedirectStandardOutput = true,
             RedirectStandardError = true,
@@ -93,9 +93,9 @@ public class PlaywrightFixture : IAsyncLifetime {
         portalProcess = Process.Start(startInfo);
     }
 
-    private async Task WaitForPortalAsync() {
+    private async Task WaitForPortal(int timeoutMs = 20_000) {
         using var client = new HttpClient();
-        var timeout = TimeSpan.FromSeconds(20);
+        var timeout = TimeSpan.FromMilliseconds(timeoutMs);
         var start = DateTime.UtcNow;
         while (DateTime.UtcNow - start < timeout) {
             try {
