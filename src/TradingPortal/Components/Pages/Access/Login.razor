@@ -1,6 +1,7 @@
 @page "/access/login"
 @rendermode InteractiveServer
 @using TradingPortal.Components.Pages.Access
+@using Client = Experts.Trader.Login.UserStory.BlazorClient;
 
 <PageTitle>Login</PageTitle>
 
@@ -8,12 +9,14 @@
 
 <button type="button" class="btn btn-primary" @onclick="OnLoginClicked">Login</button>
 
-<div id="marker">@status</div>
+<div id="marker">@response.IsUserStoryEnabled</div>
 
 @code {
-    private string? status;
+    private Client client = new();
+    private Client.Response response = null!;
 
     private void OnLoginClicked() {
-        status = "handled";
+        var request = new Client.Request();
+        response = client.Run(request);
     }
 }

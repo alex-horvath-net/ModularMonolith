@@ -6,7 +6,8 @@ public class UserStory {
     public void Login() {
         var userStory = new Experts.Trader.Login.UserStory();
         var request = new Experts.Trader.Login.UserStory.Request();
-        var resposnse = userStory.Run(request);
-        resposnse.Should().NotBeNull();
+        var response = userStory.Run(request);
+        response.Should().NotBeNull();
     }
 }
+  
