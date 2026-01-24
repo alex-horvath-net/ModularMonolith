@@ -5,7 +5,7 @@ using Common.Authentication;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 
-namespace Experts.Identity.CreateToken;
+namespace Experts.SecurityOfficer.CreateToken;
 
 public sealed class CreateTokenCommandHandler(IOptions<JwtOptions> options) {
     public async Task<string> Handle(CreateTokenCommand command) {

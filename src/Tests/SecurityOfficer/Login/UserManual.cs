@@ -1,10 +1,10 @@
 ﻿using Tests.Shared;
 
-namespace Tests.Trader.Login;
+namespace Tests.SecurityOfficer.Login;
 
 [Collection(UserManualCollection.Name)]
 public class UserManual(PlaywrightFixture trader) {
-
+     
     [FactPlaywright]
     public async Task How_to_login() {
         await trader.GoToPage("access/login");

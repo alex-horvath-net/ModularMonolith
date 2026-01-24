@@ -1,7 +1,7 @@
 @page "/access/login"
 @rendermode InteractiveServer
+@using Experts.SecurityOfficer.Login
 @using TradingPortal.Components.Pages.Access
-@using Client = Experts.Trader.Login.UserStory.BlazorClient;
 
 <PageTitle>Login</PageTitle>
 
@@ -12,11 +12,11 @@
 <div id="marker">@response.IsUserStoryEnabled</div>
 
 @code {
-    private Client client = new();
-    private Client.Response response = null!;
+    private BlazorClient client = new();
+    private BlazorClient.Response response = null!;
 
     private void OnLoginClicked() {
-        var request = new Client.Request();
+        var request = new BlazorClient.Request();
         response = client.Run(request);
     }
 }

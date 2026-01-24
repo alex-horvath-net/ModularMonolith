@@ -5,7 +5,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Routing;
 using Microsoft.Extensions.Hosting;
 
-namespace Experts.Identity.CreateToken;
+namespace Experts.SecurityOfficer.CreateToken;
 
 public static class CreateTokenEndPoint {
 
