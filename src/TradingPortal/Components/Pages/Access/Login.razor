@@ -2,31 +2,36 @@
 @rendermode InteractiveServer
 
 @using TradingPortal.Components.Pages.Access
-@using LoginClient= Experts.SecurityOfficer.Login.BlazorClient
+@using LoginClient = Experts.SecurityOfficer.Login.BlazorClient
 
 @inject UserContext UserContext
 @inject LoginClient login
 
 <PageTitle>Login</PageTitle>
 
-<h1>Login</h1> 
+<h1>Login</h1>
 
 <button type="button" class="btn btn-primary" @onclick="OnLoginClicked">Login</button>
 
-<div id="marker1">@UserContext.User.Identity.VisitorId</div>
-<div id="marker2">@UserContext.User.Identity.VisitStartedAt</div>
-<div id="marker3">@UserContext.User.Identity.AuthenticationId</div>
-<div id="marker4">@UserContext.User.Identity.UserName</div>
-<div id="marker5">@UserContext.User.Application.Name</div>
-<div id="marker6">@UserContext.User.Application.Version</div>
-<div id="marker7">@UserContext.User.Roles[0]</div>
+<div id="marker1">@UserContext.User?.Identity.VisitorId</div>
+<div id="marker2">@UserContext.User?.Identity.VisitStartedAt</div>
+<div id="marker3">@UserContext.User?.Identity.AuthenticationId</div>
+<div id="marker4">@UserContext.User?.Identity.UserName</div>
+<div id="marker5">@UserContext.User?.Application.Name</div>
+<div id="marker6">@UserContext.User?.Application.Version</div>
+<div id="marker7">@UserContext.User?.Roles.FirstOrDefault()</div>
 <div id="marker">@response?.IsUserStoryEnabled</div>
 
 @code {
-    private LoginClient.Response response = null!;
+    private LoginClient.Response? response;
 
-    private void OnLoginClicked() {
+    private async Task OnLoginClicked() {
+        if (UserContext.User is null) {
+            // User context not initialized yet
+            return;
+        }
+
         var request = new LoginClient.Request(UserContext.User);
-        response = login.Run(request);
+        response = await Task.Run(() => login.Run(request));
     }
 }
