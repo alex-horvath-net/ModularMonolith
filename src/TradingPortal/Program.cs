@@ -6,7 +6,11 @@ using TradingPortal.Components;
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddScoped<Experts.SecurityOfficer.CreateVisitor.UserStory>();
-builder.Services.AddScoped<TradingPortal.UserContext>();
+builder.Services.AddScoped(sp => {
+    return new TradingPortal.UserContext {
+        UserContextId = 123
+    };
+});
 
 builder.Services.AddScoped<Experts.SecurityOfficer.Login.UserStory>();
 builder.Services.AddScoped<Experts.SecurityOfficer.Login.BlazorClient>();

@@ -1,6 +1,4 @@
-﻿@inject UserContext UserContext
-
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="en">
 
 <head>
@@ -20,11 +18,6 @@
     @code {
         [CascadingParameter] private HttpContext? HttpContext { get; set; }
         private string? Nonce => HttpContext?.Items.ContainsKey("csp-nonce") == true ? HttpContext.Items["csp-nonce"]?.ToString() : null;
-
-        protected override async Task OnInitializedAsync() {
-
-            UserContext.UserContextId = 123;
-        }
     }
     <script src="_framework/blazor.web.js" nonce="@Nonce"></script>
 </body>
