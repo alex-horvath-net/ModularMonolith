@@ -38,6 +38,6 @@ public class UserManual(PlaywrightFixture trader) {
 
         await trader.ExpectElementNotEmpty("Role1");
 
-        await trader.ExpectTextInElement("true", "IsUserStoryEnabled");
+        await trader.ExpectTextInElement("True", "IsUserStoryEnabled");
     }
 } 
