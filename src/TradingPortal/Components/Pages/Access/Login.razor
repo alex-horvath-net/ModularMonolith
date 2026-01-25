@@ -1,44 +1,11 @@
 @page "/access/login"
 @rendermode InteractiveServer
 
-@using TradingPortal.Components.Pages.Access
-@using LoginClient = Experts.SecurityOfficer.Login.BlazorClient
-@using Experts.SecurityOfficer.Shared.Domain
-
 @inject UserContext UserContext
-@inject LoginClient login
 
 <PageTitle>Login</PageTitle>
 
 <h1>Login</h1>
 
-<button type="button" class="btn btn-primary" @onclick="OnLoginClicked" >Login</button>
+<div id="UserContextId">@UserContext.UserContextId</div>
 
-<div id="VisitorId">@user?.Identity?.VisitorId</div>
-<div id="VisitStartedAt">@UserContext?.User?.Identity?.VisitStartedAt</div>
-<div id="AuthenticationId">@UserContext?.User?.Identity?.AuthenticationId</div>
-<div id="UserName">@UserContext?.User?.Identity?.UserName</div>
-
-<div id="ApplicationName">@UserContext?.User?.Application?.Name</div>
-<div id="ApplicationVersion">@UserContext?.User?.Application?.Version</div>
-
-<div id="Role1">@UserContext?.User?.Roles?.FirstOrDefault()</div>
-
-<div id="IsUserStoryEnabled">@response?.IsUserStoryEnabled.ToString()</div>
-
-@code {
-    private LoginClient.Response? response;
-    private Experts.SecurityOfficer.Shared.Domain.ApplicationUser user;
-    protected override void OnInitialized()
-    {
-        if (UserContext.User == null)
-            return;
-
-        user = UserContext.User;
-    }
-    private async Task OnLoginClicked() {
-        var request = new LoginClient.Request(UserContext.User);
-        response = await login.Run(request);
-        //StateHasChanged();
-    }   
-}
