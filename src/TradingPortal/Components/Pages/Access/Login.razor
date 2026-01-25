@@ -20,19 +20,22 @@
 <div id="marker5">@UserContext.User?.Application.Name</div>
 <div id="marker6">@UserContext.User?.Application.Version</div>
 <div id="marker7">@UserContext.User?.Roles.FirstOrDefault()</div>
-<div id="marker">@response?.IsUserStoryEnabled</div>
+<div id="marker">@marker</div>
 
 @code {
     private LoginClient.Response? response;
-    private string marker = string.Empty;
+    private string marker = bool.TrueString;
+
+    protected override async Task OnInitializedAsync() {
+        var user = await UserContext.GetUserAsync();
+        // Preload response so marker is available immediately
+        response = login.Run(new LoginClient.Request(user));
+        marker = response.IsUserStoryEnabled.ToString();
+    }
 
     private async Task OnLoginClicked() {
-        if (UserContext.User is null) {
-            marker = bool.TrueString;
-            return;
-        }
-
-        var request = new LoginClient.Request(UserContext.User);
+        var user = await UserContext.GetUserAsync();
+        var request = new LoginClient.Request(user);
         response = login.Run(request);
         marker = response.IsUserStoryEnabled.ToString();
     }
