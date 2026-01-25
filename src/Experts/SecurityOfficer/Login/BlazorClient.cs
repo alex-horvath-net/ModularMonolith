@@ -8,6 +8,6 @@ public class BlazorClient {
         return new Response(userStoryResponse.IsUserStoryEnabled);
     }
 
-    public record Request();
+    public record Request(Shared.Domain.ApplicationUser User);
     public record Response(bool IsUserStoryEnabled);
 }

@@ -1,7 +1,7 @@
-﻿@using Experts.SecurityOfficer.CreateVisitor
+﻿@using CreateVisitor = Experts.SecurityOfficer.CreateVisitor.UserStory
 
-@inject UserStory UserStory
-@inject User User
+@inject CreateVisitor createVisitor
+@inject UserContext UserContext
 
 <!DOCTYPE html>
 <html lang="en">
@@ -26,11 +26,9 @@
 
         protected override async Task OnInitializedAsync() {
 
-            var request = new UserStory.Request("TradingPortal", "1.0", Guid.NewGuid());
-
-            var response = await UserStory.Run(request);
-
-            User.Set(response.User);
+            var request = new CreateVisitor.Request("TradingPortal", "1.0", Guid.NewGuid());
+            var response = await createVisitor.Run(request);
+            UserContext.Set(response.ApplicationUser);
         }
     }
     <script src="_framework/blazor.web.js" nonce="@Nonce"></script>

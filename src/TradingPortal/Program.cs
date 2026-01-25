@@ -1,14 +1,15 @@
 using Experts.Billing;
 using Experts.OrderExpert;
 using Experts.SecurityOfficer.CreateToken;
-using TradingPortal;
 using TradingPortal.Components;
 
 var builder = WebApplication.CreateBuilder(args);
 
-builder.Services.AddScoped<Experts.SecurityOfficer.CreateVisitor.BlazorClient>();
 builder.Services.AddScoped<Experts.SecurityOfficer.CreateVisitor.UserStory>();
-builder.Services.AddScoped<User>();
+builder.Services.AddScoped<TradingPortal.UserContext>();
+
+builder.Services.AddScoped<Experts.SecurityOfficer.Login.UserStory>();
+builder.Services.AddScoped<Experts.SecurityOfficer.Login.BlazorClient>();
 
 
 //builder.Services.AddCommon(builder.Configuration, builder.Environment);

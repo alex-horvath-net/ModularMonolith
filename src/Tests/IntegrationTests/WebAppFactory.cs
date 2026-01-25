@@ -11,7 +11,7 @@ using Microsoft.Extensions.DependencyInjection;
 
 namespace Tests.IntegrationTests;
 
-public class WebAppFactory : WebApplicationFactory<Program>, IAsyncLifetime {
+public class WebAppFactory : WebApplicationFactory<TradingApi.User>, IAsyncLifetime {
 
 
     private async Task<string?> GetAccessToken(HttpClient client) {

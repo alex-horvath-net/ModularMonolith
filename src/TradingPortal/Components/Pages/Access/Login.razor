@@ -1,27 +1,32 @@
 @page "/access/login"
 @rendermode InteractiveServer
 
-@using Experts.SecurityOfficer.Login
 @using TradingPortal.Components.Pages.Access
+@using LoginClient= Experts.SecurityOfficer.Login.BlazorClient
 
-@inject User User
-
+@inject UserContext UserContext
+@inject LoginClient login
 
 <PageTitle>Login</PageTitle>
 
-<h1>Login</h1>
+<h1>Login</h1> 
 
 <button type="button" class="btn btn-primary" @onclick="OnLoginClicked">Login</button>
 
-<div id="marker2">@User.Application.Name</div>
+<div id="marker1">@UserContext.User.Identity.VisitorId</div>
+<div id="marker2">@UserContext.User.Identity.VisitStartedAt</div>
+<div id="marker3">@UserContext.User.Identity.AuthenticationId</div>
+<div id="marker4">@UserContext.User.Identity.UserName</div>
+<div id="marker5">@UserContext.User.Application.Name</div>
+<div id="marker6">@UserContext.User.Application.Version</div>
+<div id="marker7">@UserContext.User.Roles[0]</div>
 <div id="marker">@response?.IsUserStoryEnabled</div>
 
 @code {
-    private BlazorClient client = new();
-    private BlazorClient.Response response = null!;
+    private LoginClient.Response response = null!;
 
     private void OnLoginClicked() {
-        var request = new BlazorClient.Request();
-        response = client.Run(request);
+        var request = new LoginClient.Request(UserContext.User);
+        response = login.Run(request);
     }
 }

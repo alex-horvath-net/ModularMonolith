@@ -5,17 +5,31 @@ namespace Experts.SecurityOfficer.CreateVisitor;
 public class UserStory {
     public async Task<Response> Run(Request request) {
 
-        var user = new ApplicationUser(
-            new Application(request.Name, request.Version),
-            new Identity(request.VisitorId, DateTime.UtcNow, null, null),
-            ["Visitor"]);
-
         await Task.CompletedTask;
-        return new Response(true, user);
+        var response = new Response();
+        response = response with { IsUserStoryEnabled = true };
+        response = response with { ApplicationUser = CreateApplicationUserUser(request) };
+        return response;
     }
 
-    public record Request(string Name, string Version, Guid VisitorId);
+    private static ApplicationUser CreateApplicationUserUser(Request request) {
+        var application = new Application(request.ApplicationName, request.ApplicationVersion);
+        var identity = new Identity(request.VisitorId, DateTime.UtcNow, null, null);
+        var roles = new List<string>() { "Visitor" };
+
+        var user = new ApplicationUser(application, identity, roles);
+
+        return user;
+    }
+
+    public record Request(
+        string ApplicationName, 
+        string ApplicationVersion, 
+        Guid VisitorId);
+    
     public record Response(
-        bool IsUserStoryEnabled,
-        ApplicationUser User);
+        bool IsUserStoryEnabled, 
+        ApplicationUser ApplicationUser) {
+        public Response() : this(false, null) { }
+    }
 }

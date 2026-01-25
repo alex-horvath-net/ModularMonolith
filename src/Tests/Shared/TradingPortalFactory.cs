@@ -7,7 +7,7 @@ using Microsoft.Extensions.Hosting;
 
 namespace Tests.Shared;
 
-public sealed class TradingPortalFactory : WebApplicationFactory<Program>
+public sealed class TradingPortalFactory : WebApplicationFactory<TradingPortal.UserContext>
 {
     public string BaseAddress { get; private set; } = string.Empty;
 
