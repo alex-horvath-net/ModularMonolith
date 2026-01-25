@@ -1,5 +1,7 @@
-﻿namespace TradingPortal;
+﻿using Experts.SecurityOfficer.Shared.Domain;
+
+namespace TradingPortal;
 
 public class UserContext {
-    public int? UserContextId { get; set; } 
-} 
+    public ApplicationUser User { get; set; }
+}

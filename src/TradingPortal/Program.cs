@@ -1,15 +1,23 @@
 using Experts.Billing;
 using Experts.OrderExpert;
 using Experts.SecurityOfficer.CreateToken;
+using TradingPortal;
 using TradingPortal.Components;
 
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddScoped<Experts.SecurityOfficer.CreateVisitor.UserStory>();
-builder.Services.AddScoped(_ => {
-    return new TradingPortal.UserContext {
-        UserContextId = 123
+builder.Services.AddScoped<UserContext>(sp => {
+    var request = new Experts.SecurityOfficer.CreateVisitor.UserStory.Request("TradingPortal", "1.0", Guid.Parse("10000000-0000-0000-0000-000000000001"));
+    var userStory = sp.GetRequiredService<Experts.SecurityOfficer.CreateVisitor.UserStory>();
+    // Blocking call to async method for scoped registration
+    var response = userStory.Run(request).GetAwaiter().GetResult();
+
+    var userContext = new TradingPortal.UserContext() { 
+        User = response.ApplicationUser
     };
+
+    return userContext;
 });
 
 builder.Services.AddScoped<Experts.SecurityOfficer.Login.UserStory>();
