@@ -3,12 +3,10 @@
 
 @using TradingPortal.Components.Pages.Access
 @using LoginClient = Experts.SecurityOfficer.Login.BlazorClient
-@using CreateVisitor = Experts.SecurityOfficer.CreateVisitor.UserStory
 @using Experts.SecurityOfficer.Shared.Domain
 
 @inject UserContext UserContext
 @inject LoginClient login
-@inject CreateVisitor createVisitor
 
 <PageTitle>Login</PageTitle>
 
@@ -28,28 +26,17 @@
 @code {
     private LoginClient.Response? response;
     private ApplicationUser? user;
-    private string marker = bool.TrueString;
-    private string visitorIdText = string.Empty;
-    private string visitStartedAtText = string.Empty;
-    private string authenticationIdText = string.Empty;
-    private string userNameText = string.Empty;
-    private string applicationNameText = string.Empty;
-    private string applicationVersionText = string.Empty;
-    private string role1Text = string.Empty;
+    private string marker = "true";
+    private string visitorIdText = "loading";
+    private string visitStartedAtText = "loading";
+    private string authenticationIdText = "loading";
+    private string userNameText = "loading";
+    private string applicationNameText = "loading";
+    private string applicationVersionText = "loading";
+    private string role1Text = "loading";
 
     protected override async Task OnInitializedAsync() {
-        user = UserContext.User;
-        if (user is null)
-        {
-            var visitorRequest = new CreateVisitor.Request("TradingPortal", "1.0", Guid.NewGuid());
-            var visitorResponse = await createVisitor.Run(visitorRequest);
-            user = visitorResponse.ApplicationUser;
-            UserContext.Set(user);
-        }
-        else
-        {
-            user = await UserContext.GetUserAsync();
-        }
+        user = await UserContext.GetUserAsync();
         // Preload response so marker is available immediately
         response = login.Run(new LoginClient.Request(user));
         marker = response.IsUserStoryEnabled.ToString().ToLowerInvariant();
@@ -58,11 +45,11 @@
     }
 
     private async Task OnLoginClicked() {
-        user ??= await UserContext.GetUserAsync();
-        var request = new LoginClient.Request(user);
+        var currentUser = user ?? throw new InvalidOperationException("User context not initialized.");
+        var request = new LoginClient.Request(currentUser);
         response = login.Run(request);
         marker = response.IsUserStoryEnabled.ToString().ToLowerInvariant();
-        PopulateDisplay(user);
+        PopulateDisplay(currentUser);
     }
 
     private void PopulateDisplay(ApplicationUser currentUser)
