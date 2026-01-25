@@ -14,5 +14,5 @@ public class UserContext {
 
     public Task<ApplicationUser> GetUserAsync() => userReady.Task;
 
-    public ApplicationUser? User { get; private set; }
+    public ApplicationUser User { get; private set; }
 }

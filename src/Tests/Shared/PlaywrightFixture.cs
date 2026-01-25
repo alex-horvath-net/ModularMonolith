@@ -73,6 +73,12 @@ public class PlaywrightFixture : IAsyncLifetime {
             new Regex(@".+"),
             new LocatorAssertionsToHaveTextOptions { Timeout = timeoutMs }
         );
+    public Task ExpectElementEmpty(string id, int timeoutMs = 5000) =>    Assertions
+        .Expect(page.Locator($"#{id}"))
+        .ToHaveTextAsync(
+            new Regex(@"^\s*$"),
+            new LocatorAssertionsToHaveTextOptions { Timeout = timeoutMs }
+        );
 
     public Task ExpectTextInElement(string text, string id, int timeoutMs = 5000) => Assertions
         .Expect(page.Locator($"#{id}"))

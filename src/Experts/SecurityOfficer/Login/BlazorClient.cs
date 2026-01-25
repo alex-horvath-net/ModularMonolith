@@ -1,10 +1,10 @@
 ﻿namespace Experts.SecurityOfficer.Login;
 
 public class BlazorClient {
-    public Response Run(Request loginRequest) {
+    public async Task<Response> Run(Request loginRequest) {
         var userStory = new UserStory();
         var userStoryRequest = new UserStory.Request();
-        var userStoryResponse = userStory.Run(userStoryRequest);
+        var userStoryResponse = await userStory.Run(userStoryRequest);
         return new Response(userStoryResponse.IsUserStoryEnabled);
     }
 

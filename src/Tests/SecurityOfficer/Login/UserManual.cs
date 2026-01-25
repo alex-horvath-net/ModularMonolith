@@ -11,11 +11,15 @@ public class UserManual(PlaywrightFixture trader) {
 
         await trader.ExpectElementNotEmpty("VisitorId");
         await trader.ExpectElementNotEmpty("VisitStartedAt");
-        await trader.ExpectElementNotEmpty("AuthenticationId");
-        await trader.ExpectElementNotEmpty("UserName");
+        await trader.ExpectElementEmpty("AuthenticationId");
+        await trader.ExpectElementEmpty("UserName");
+
         await trader.ExpectElementNotEmpty("ApplicationName");
         await trader.ExpectElementNotEmpty("ApplicationVersion");
+
         await trader.ExpectElementNotEmpty("Role1");
+
+        await trader.ExpectElementEmpty("IsUserStoryEnabled");
     }
 
     [FactPlaywright]
@@ -26,11 +30,14 @@ public class UserManual(PlaywrightFixture trader) {
         
         await trader.ExpectElementNotEmpty("VisitorId");
         await trader.ExpectElementNotEmpty("VisitStartedAt");
-        await trader.ExpectElementNotEmpty("AuthenticationId");
-        await trader.ExpectElementNotEmpty("UserName");
+        await trader.ExpectElementEmpty("AuthenticationId");
+        await trader.ExpectElementEmpty("UserName");
+
         await trader.ExpectElementNotEmpty("ApplicationName");
         await trader.ExpectElementNotEmpty("ApplicationVersion");
+
         await trader.ExpectElementNotEmpty("Role1");
+
         await trader.ExpectTextInElement("true", "IsUserStoryEnabled");
     }
 } 

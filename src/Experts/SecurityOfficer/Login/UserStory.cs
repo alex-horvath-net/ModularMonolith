@@ -1,12 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿namespace Experts.SecurityOfficer.Login;
 
-namespace Experts.SecurityOfficer.Login; 
 public class UserStory {
-    public Response Run(Request request) {
+    public async Task<Response> Run(Request request) {
+        await Task.CompletedTask;
         return new Response(true);
     }
 
