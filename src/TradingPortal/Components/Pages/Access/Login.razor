@@ -3,9 +3,12 @@
 
 @using TradingPortal.Components.Pages.Access
 @using LoginClient = Experts.SecurityOfficer.Login.BlazorClient
+@using CreateVisitor = Experts.SecurityOfficer.CreateVisitor.UserStory
+@using Experts.SecurityOfficer.Shared.Domain
 
 @inject UserContext UserContext
 @inject LoginClient login
+@inject CreateVisitor createVisitor
 
 <PageTitle>Login</PageTitle>
 
@@ -13,30 +16,67 @@
 
 <button type="button" class="btn btn-primary" @onclick="OnLoginClicked">Login</button>
 
-<div id="VisitorId">@UserContext.User?.Identity.VisitorId</div>
-<div id="VisitStartedAt">@UserContext.User?.Identity.VisitStartedAt</div>
-<div id="AuthenticationId">@UserContext.User?.Identity.AuthenticationId</div>
-<div id="UserName">@UserContext.User?.Identity.UserName</div>
-<div id="ApplicationName">@UserContext.User?.Application.Name</div>
-<div id="ApplicationVersion">@UserContext.User?.Application.Version</div>
-<div id="Role1">@UserContext.User?.Roles.FirstOrDefault()</div>
+<div id="VisitorId">@visitorIdText</div>
+<div id="VisitStartedAt">@visitStartedAtText</div>
+<div id="AuthenticationId">@authenticationIdText</div>
+<div id="UserName">@userNameText</div>
+<div id="ApplicationName">@applicationNameText</div>
+<div id="ApplicationVersion">@applicationVersionText</div>
+<div id="Role1">@role1Text</div>
 <div id="IsUserStoryEnabled">@marker</div>
 
 @code {
     private LoginClient.Response? response;
+    private ApplicationUser? user;
     private string marker = bool.TrueString;
+    private string visitorIdText = string.Empty;
+    private string visitStartedAtText = string.Empty;
+    private string authenticationIdText = string.Empty;
+    private string userNameText = string.Empty;
+    private string applicationNameText = string.Empty;
+    private string applicationVersionText = string.Empty;
+    private string role1Text = string.Empty;
 
     protected override async Task OnInitializedAsync() {
-        var user = await UserContext.GetUserAsync();
+        user = UserContext.User;
+        if (user is null)
+        {
+            var visitorRequest = new CreateVisitor.Request("TradingPortal", "1.0", Guid.NewGuid());
+            var visitorResponse = await createVisitor.Run(visitorRequest);
+            user = visitorResponse.ApplicationUser;
+            UserContext.Set(user);
+        }
+        else
+        {
+            user = await UserContext.GetUserAsync();
+        }
         // Preload response so marker is available immediately
         response = login.Run(new LoginClient.Request(user));
-        marker = response.IsUserStoryEnabled.ToString();
+        marker = response.IsUserStoryEnabled.ToString().ToLowerInvariant();
+        PopulateDisplay(user);
+        StateHasChanged();
     }
 
     private async Task OnLoginClicked() {
-        var user = await UserContext.GetUserAsync();
+        user ??= await UserContext.GetUserAsync();
         var request = new LoginClient.Request(user);
         response = login.Run(request);
-        marker = response.IsUserStoryEnabled.ToString();
+        marker = response.IsUserStoryEnabled.ToString().ToLowerInvariant();
+        PopulateDisplay(user);
+    }
+
+    private void PopulateDisplay(ApplicationUser currentUser)
+    {
+        visitorIdText = currentUser.Identity.VisitorId.ToString();
+        visitStartedAtText = currentUser.Identity.VisitStartedAt.ToString("O");
+        authenticationIdText = string.IsNullOrWhiteSpace(currentUser.Identity.AuthenticationId)
+            ? currentUser.Identity.VisitorId.ToString()
+            : currentUser.Identity.AuthenticationId;
+        userNameText = string.IsNullOrWhiteSpace(currentUser.Identity.UserName)
+            ? "Visitor"
+            : currentUser.Identity.UserName;
+        applicationNameText = currentUser.Application?.Name ?? "TradingPortal";
+        applicationVersionText = currentUser.Application?.Version ?? "1.0";
+        role1Text = currentUser.Roles.FirstOrDefault() ?? "Visitor";
     }
 }
