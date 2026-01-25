@@ -1,6 +1,8 @@
 ﻿using System.Diagnostics;
+using System.Text.RegularExpressions;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Playwright;
+using static System.Net.Mime.MediaTypeNames;
 
 namespace Tests.Shared;
 
@@ -65,12 +67,16 @@ public class PlaywrightFixture : IAsyncLifetime {
         await button.ClickAsync(new LocatorClickOptions { Timeout = timeoutMs });
     }
 
-    public Task ExpectTextInElement(string text, string id, int timeoutMs = 5000) {
+    public Task ExpectElementNotEmpty(string id, int timeoutMs = 5000) => Assertions
+        .Expect(page.Locator($"#{id}"))
+        .ToHaveTextAsync( 
+            new Regex(@".+"),
+            new LocatorAssertionsToHaveTextOptions { Timeout = timeoutMs }
+        );
 
-        return Assertions
-            .Expect(page.Locator($"#{id}"))
-            .ToHaveTextAsync(text, new LocatorAssertionsToHaveTextOptions { Timeout = timeoutMs });
-    }
+    public Task ExpectTextInElement(string text, string id, int timeoutMs = 5000) => Assertions
+        .Expect(page.Locator($"#{id}"))
+        .ToHaveTextAsync(text, new LocatorAssertionsToHaveTextOptions { Timeout = timeoutMs });
 
     public async Task DisposeAsync() {
         if (Skip.Value) {
