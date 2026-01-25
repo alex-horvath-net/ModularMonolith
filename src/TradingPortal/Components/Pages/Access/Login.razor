@@ -24,14 +24,16 @@
 
 @code {
     private LoginClient.Response? response;
+    private string marker = string.Empty;
 
     private async Task OnLoginClicked() {
         if (UserContext.User is null) {
-            // User context not initialized yet
+            marker = bool.TrueString;
             return;
         }
 
         var request = new LoginClient.Request(UserContext.User);
-        response = await Task.Run(() => login.Run(request));
+        response = login.Run(request);
+        marker = response.IsUserStoryEnabled.ToString();
     }
 }
