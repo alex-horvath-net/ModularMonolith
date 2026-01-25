@@ -1,10 +1,15 @@
-using TradingPortal.Components;
-using Common;
 using Experts.Billing;
 using Experts.OrderExpert;
 using Experts.SecurityOfficer.CreateToken;
+using TradingPortal;
+using TradingPortal.Components;
 
 var builder = WebApplication.CreateBuilder(args);
+
+builder.Services.AddScoped<Experts.SecurityOfficer.CreateVisitor.BlazorClient>();
+builder.Services.AddScoped<Experts.SecurityOfficer.CreateVisitor.UserStory>();
+builder.Services.AddScoped<User>();
+
 
 //builder.Services.AddCommon(builder.Configuration, builder.Environment);
 builder.Services.AddOrderBusinessExpert(builder.Configuration);
@@ -28,8 +33,7 @@ builder.Services.AddAuthentication(options => {
 
 builder.Services.AddAuthorization();
 builder.Services.AddApiVersioning(o => o.ReportApiVersions = true)
-                .AddApiExplorer(o =>
-                {
+                .AddApiExplorer(o => {
                     o.GroupNameFormat = "'v'VVV";
                     o.SubstituteApiVersionInUrl = true;
                 });
@@ -56,7 +60,7 @@ app.MapStaticAssets();
 app.MapRazorComponents<App>().AddInteractiveServerRenderMode();
 
 app.Run();
-
+public partial class Program { }
 
 //// Bootstrap configuration: load secrets from Key Vault or user-secrets before any service registration
 //builder.Configuration.AddSecretsFromStore(builder.Environment);

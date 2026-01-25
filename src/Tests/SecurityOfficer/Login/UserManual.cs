@@ -9,6 +9,6 @@ public class UserManual(PlaywrightFixture trader) {
     public async Task How_to_login() {
         await trader.GoToPage("access/login");
         await trader.ClickOnButton("Login");
-        await trader.ExpectTextInElement("handled", "marker");
+        await trader.ExpectTextInElement("True", "marker");
     }
 } 

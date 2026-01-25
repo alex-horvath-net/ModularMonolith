@@ -1,4 +1,9 @@
-﻿<!DOCTYPE html>
+﻿@using Experts.SecurityOfficer.CreateVisitor
+
+@inject UserStory UserStory
+@inject User User
+
+<!DOCTYPE html>
 <html lang="en">
 
 <head>
@@ -18,6 +23,15 @@
     @code {
         [CascadingParameter] private HttpContext? HttpContext { get; set; }
         private string? Nonce => HttpContext?.Items.ContainsKey("csp-nonce") == true ? HttpContext.Items["csp-nonce"]?.ToString() : null;
+
+        protected override async Task OnInitializedAsync() {
+
+            var request = new UserStory.Request("TradingPortal", "1.0", Guid.NewGuid());
+
+            var response = await UserStory.Run(request);
+
+            User.Set(response.User);
+        }
     }
     <script src="_framework/blazor.web.js" nonce="@Nonce"></script>
 </body>

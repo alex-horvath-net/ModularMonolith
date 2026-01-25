@@ -1,7 +1,11 @@
 @page "/access/login"
 @rendermode InteractiveServer
+
 @using Experts.SecurityOfficer.Login
 @using TradingPortal.Components.Pages.Access
+
+@inject User User
+
 
 <PageTitle>Login</PageTitle>
 
@@ -9,7 +13,8 @@
 
 <button type="button" class="btn btn-primary" @onclick="OnLoginClicked">Login</button>
 
-<div id="marker">@response.IsUserStoryEnabled</div>
+<div id="marker2">@User.Application.Name</div>
+<div id="marker">@response?.IsUserStoryEnabled</div>
 
 @code {
     private BlazorClient client = new();

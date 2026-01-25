@@ -1,15 +1,13 @@
-using System.Linq;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Hosting.Server;
 using Microsoft.AspNetCore.Hosting.Server.Features;
 using Microsoft.AspNetCore.Mvc.Testing;
-using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.DependencyInjection;
-using TradingPortal;
+using Microsoft.Extensions.Hosting;
 
 namespace Tests.Shared;
 
-public sealed class TradingPortalFactory : WebApplicationFactory<TradingPortalMarker>
+public sealed class TradingPortalFactory : WebApplicationFactory<Program>
 {
     public string BaseAddress { get; private set; } = string.Empty;
 
