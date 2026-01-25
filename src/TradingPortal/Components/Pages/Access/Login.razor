@@ -14,7 +14,7 @@
 
 <button type="button" class="btn btn-primary" @onclick="OnLoginClicked" >Login</button>
 
-<div id="VisitorId">@UserContext?.User?.Identity?.VisitorId</div>
+<div id="VisitorId">@user?.Identity?.VisitorId</div>
 <div id="VisitStartedAt">@UserContext?.User?.Identity?.VisitStartedAt</div>
 <div id="AuthenticationId">@UserContext?.User?.Identity?.AuthenticationId</div>
 <div id="UserName">@UserContext?.User?.Identity?.UserName</div>
@@ -28,7 +28,14 @@
 
 @code {
     private LoginClient.Response? response;
+    private Experts.SecurityOfficer.Shared.Domain.ApplicationUser user;
+    protected override void OnInitialized()
+    {
+        if (UserContext.User == null)
+            return;
 
+        user = UserContext.User;
+    }
     private async Task OnLoginClicked() {
         var request = new LoginClient.Request(UserContext.User);
         response = await login.Run(request);
