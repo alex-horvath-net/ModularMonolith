@@ -8,9 +8,8 @@ var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddScoped<Experts.SecurityOfficer.CreateVisitor.UserStory>();
 builder.Services.AddScoped<UserContext>(sp => {
-    var request = new Experts.SecurityOfficer.CreateVisitor.UserStory.Request("TradingPortal", "1.0", Guid.Parse("10000000-0000-0000-0000-000000000001"));
     var userStory = sp.GetRequiredService<Experts.SecurityOfficer.CreateVisitor.UserStory>();
-    // Blocking call to async method for scoped registration
+    var request = new Experts.SecurityOfficer.CreateVisitor.UserStory.Request("TradingPortal", "1.0", Guid.Parse("10000000-0000-0000-0000-000000000001"));
     var response = userStory.Run(request).GetAwaiter().GetResult();
 
     var userContext = new TradingPortal.UserContext() { 
@@ -21,7 +20,7 @@ builder.Services.AddScoped<UserContext>(sp => {
 });
 
 builder.Services.AddScoped<Experts.SecurityOfficer.Login.UserStory>();
-builder.Services.AddScoped<Experts.SecurityOfficer.Login.BlazorClient>();
+builder.Services.AddScoped<Experts.SecurityOfficer.Login.UserStoryBlazorClient>();
 
 
 //builder.Services.AddCommon(builder.Configuration, builder.Environment);

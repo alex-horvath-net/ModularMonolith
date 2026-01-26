@@ -6,7 +6,17 @@ public class UserStory {
         return new Response(true);
     }
 
-    public record Request();
+    public record Request(
+        Guid VisitorId,
+        AccountType AccountType,
+        IReadOnlyDictionary<string, string> Credentials);
+    
+    public enum AccountType {
+        LocalAccount,
+        AzureAccount,
+        FacebookAccount,
+        SSOAccount,
+    }
     public record Response(
         bool IsUserStoryEnabled);
 }
