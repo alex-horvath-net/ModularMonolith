@@ -27,6 +27,8 @@ public class UserManual(PlaywrightFixture trader) {
     [FactPlaywright]
     public async Task How_to_login() {
         await trader.GoToPage("access/login");
+        await trader.FillInput("Email", "aladar.horvath@outlook.com");
+        await trader.FillInput("Password", "P@ssw0rd!");
 
         await trader.ClickOnButton("Login");
 

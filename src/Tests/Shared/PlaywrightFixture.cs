@@ -69,11 +69,11 @@ public class PlaywrightFixture : IAsyncLifetime {
 
     public Task ExpectElementNotEmpty(string id, int timeoutMs = 5000) => Assertions
         .Expect(page.Locator($"#{id}"))
-        .ToHaveTextAsync( 
+        .ToHaveTextAsync(
             new Regex(@".+"),
             new LocatorAssertionsToHaveTextOptions { Timeout = timeoutMs }
         );
-    public Task ExpectElementEmpty(string id, int timeoutMs = 5000) =>    Assertions
+    public Task ExpectElementEmpty(string id, int timeoutMs = 5000) => Assertions
         .Expect(page.Locator($"#{id}"))
         .ToHaveTextAsync(
             new Regex(@"^\s*$"),
@@ -83,6 +83,13 @@ public class PlaywrightFixture : IAsyncLifetime {
     public Task ExpectTextInElement(string text, string id, int timeoutMs = 5000) => Assertions
         .Expect(page.Locator($"#{id}"))
         .ToHaveTextAsync(text, new LocatorAssertionsToHaveTextOptions { Timeout = timeoutMs });
+
+
+    internal async Task FillInput(string id, string text) {
+        var input = page.Locator($"#{id}");
+        await input.WaitForAsync(new LocatorWaitForOptions { State = WaitForSelectorState.Visible });
+        await input.FillAsync(text);
+    }
 
     public async Task DisposeAsync() {
         if (Skip.Value) {

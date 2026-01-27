@@ -5,6 +5,8 @@ namespace Experts.SecurityOfficer.Login;
 
 public class UserStoryBlazorClient(UserStory userStory) {
     public async Task<ClientResponse> Run(ClientRequest clientRequest) {
+        ArgumentNullException.ThrowIfNull(clientRequest);
+
         var userStoryRequest = GetUserStoryRequest(clientRequest);
         var userStoryResponse = await userStory.Run(userStoryRequest);
         return GetClientResponse(userStoryResponse);
@@ -22,10 +24,17 @@ public class UserStoryBlazorClient(UserStory userStory) {
     private ClientResponse GetClientResponse(UserStory.Response response) => new(
         response.IsUserStoryEnabled);
 
-    public record ClientRequest(
-        ApplicationUser ApplicationUser,
-        string Email,
-        string Password);
+    public class ClientRequest {
+        public ClientRequest(ApplicationUser applicationUser) {
+            ApplicationUser = applicationUser ?? throw new ArgumentNullException(nameof(applicationUser));
+        }
+
+        public ApplicationUser ApplicationUser { get; }
+
+        public string Email { get; set; } = string.Empty;
+
+        public string Password { get; set; } = string.Empty;
+    }
 
     public record ClientResponse(bool IsUserStoryEnabled);
 }

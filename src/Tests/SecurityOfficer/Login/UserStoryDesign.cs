@@ -11,7 +11,7 @@ public class UserStoryTests {
             UserStory.AccountType.LocalAccount,
             new Dictionary<string, string>
             {
-                ["Username"] = "TestUser",
+                ["Email"] = "aladar.horvath@outlook.com",
                 ["Password"] = "P@ssw0rd!"
             });
         var response = userStory.Run(request);

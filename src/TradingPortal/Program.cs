@@ -1,5 +1,6 @@
 using Experts.Billing;
 using Experts.OrderExpert;
+using Experts.SecurityOfficer;
 using Experts.SecurityOfficer.CreateToken;
 using TradingPortal;
 using TradingPortal.Components;
@@ -19,8 +20,7 @@ builder.Services.AddScoped<UserContext>(sp => {
     return userContext;
 });
 
-builder.Services.AddScoped<Experts.SecurityOfficer.Login.UserStory>();
-builder.Services.AddScoped<Experts.SecurityOfficer.Login.UserStoryBlazorClient>();
+builder.Services.AddSecurityOfficer();
 
 
 //builder.Services.AddCommon(builder.Configuration, builder.Environment);
