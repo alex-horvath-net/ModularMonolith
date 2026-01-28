@@ -1,37 +1,62 @@
-﻿using Microsoft.EntityFrameworkCore;
-using Domain = Experts.SecurityOfficer.Shared.Domain;
-using Data = Experts.SecurityOfficer.Shared.Infrastructure.Data;
-using System.Security.Cryptography;
+﻿using System.Security.Cryptography;
 using System.Text;
+using Experts.SecurityOfficer.Shared.Domain;
+using Microsoft.EntityFrameworkCore;
+using Data = Experts.SecurityOfficer.Shared.Infrastructure.Data;
+using Domain = Experts.SecurityOfficer.Shared.Domain;
 
 namespace Experts.SecurityOfficer.Login;
 
 public class Authenticate(
     Authenticate.IStore store,
     Authenticate.IHasher hasher) {
-    public async Task<Domain.Account?> Run(UserStory.AccountType accountType, IReadOnlyDictionary<string, string> credentials, CancellationToken token) {
-        if (accountType != UserStory.AccountType.LocalAccount)
-            return null;
+    public async Task Run(
+        UserStory.Request request,
+        UserStory.Response response,
+        CancellationToken token) {
 
-        if (!credentials.TryGetValue("Email", out var email))
-            return null;
+        if (request.AccountType != UserStory.AccountType.LocalAccount) {
+            response.ErrorMessage = "Account type not found";
+            return;
+        }
 
-        if (!credentials.TryGetValue("Password", out var password)) {
-            return null;
+        await LocalAccountAuthentication(request, response, token);
+        if (response.ErrorMessage!=null) {
+            return;
+        }
+
+        return;
+    }
+
+    private async Task LocalAccountAuthentication(UserStory.Request request, UserStory.Response response, CancellationToken token) {
+        if (!request.Credentials.TryGetValue("Email", out var email)) {
+            response.ErrorMessage = "Credential not found. Missing Email";
+            return;
+        }
+
+        if (!request.Credentials.TryGetValue("Password", out var password)) {
+            response.ErrorMessage = "Credential not found. Missing Password";
+            return;
         }
 
         var account = await store.FindByEmail(email, token);
 
-        if (account is null)
-            return null;
+        if (account is null) {
+            response.ErrorMessage = "Account not found";
+            return ;
+        }
 
-        if (account.IsLocked)
-            return null;
+        if (account.IsLocked) {
+            response.ErrorMessage = "Account locked";
+            return ;
+        }
 
-        if (!hasher.Verify(password, account.PasswordHash))
-            return null;
+        if (!hasher.Verify(password, account.PasswordHash)) {
+            response.ErrorMessage = "Invalid password";
+            return ;
+        }
 
-        return account;
+        response.AuthenticationId = account.Id;
     }
 
     public interface IStore {
@@ -40,18 +65,24 @@ public class Authenticate(
 
     public class Store(Data.SecurityOfficerDbContext db) : IStore {
         public async Task<Domain.Account> FindByEmail(string email, CancellationToken token) {
-            Data.Models.Account accountData = await db.Accounts.Where(account => account.Email == email).SingleAsync(token);
-            Domain.Account accountDomain = MapToDomain(accountData);
+            Data.Models.Account? accountInfra =
+                await db
+                    .Accounts
+                    .Where(account => account.Email == email)
+                    .FirstOrDefaultAsync(token);
+
+            Domain.Account accountDomain = MapToDomain(accountInfra);
             return accountDomain;
         }
 
         public Domain.Account MapToDomain(Data.Models.Account accountData) => new() {
-            IsLocked = accountData.IsLocked,
+            Id = accountData.Id,
+            UserName = accountData.UserName,
             Email = accountData.Email,
-            PasswordHash = accountData.PasswordHash
+            PasswordHash = accountData.PasswordHash,
+            IsLocked = accountData.IsLocked,
         };
     }
-
 
     public interface IHasher {
         string Hash(string input);
@@ -90,16 +121,28 @@ public class Authenticate(
 
             // Hash the input with the salt using PBKDF2
             byte[] hash = Rfc2898DeriveBytes.Pbkdf2(
-                Encoding.UTF8.GetBytes(input),
-                salt,
-                Iterations,
-                HashAlgorithmName.SHA256,
-                HashSize);
+                password: Encoding.UTF8.GetBytes(input),
+                salt: salt,
+                iterations: Iterations,
+                hashAlgorithm: HashAlgorithmName.SHA256,
+                outputLength: HashSize);
 
             // Combine salt and hash then encode to Base64 for storage
             byte[] hashBytes = new byte[SaltSize + HashSize];
-            Buffer.BlockCopy(salt, 0, hashBytes, 0, SaltSize);
-            Buffer.BlockCopy(hash, 0, hashBytes, SaltSize, HashSize);
+            Buffer.BlockCopy(
+                src: salt,
+                srcOffset: 0,
+                dst: hashBytes,
+                dstOffset: 0,
+                count: SaltSize);
+
+            Buffer.BlockCopy(
+                src: hash,
+                srcOffset: 0,
+                dst: hashBytes,
+                dstOffset: SaltSize,
+                count: HashSize);
+
             return Convert.ToBase64String(hashBytes);
         }
 
@@ -140,11 +183,11 @@ public class Authenticate(
 
                 // Hash the provided input with the extracted salt using PBKDF2
                 byte[] computedHashBytes = Rfc2898DeriveBytes.Pbkdf2(
-                    Encoding.UTF8.GetBytes(input),
-                    storedSaltBytes,
-                    Iterations,
-                    HashAlgorithmName.SHA256,
-                    HashSize);
+                    password: Encoding.UTF8.GetBytes(input),
+                    salt: storedSaltBytes,
+                    iterations: Iterations,
+                    hashAlgorithm: HashAlgorithmName.SHA256,
+                    outputLength: HashSize);
 
                 // Compare the hashes
                 return CryptographicOperations.FixedTimeEquals(computedHashBytes, storedHashBytes);

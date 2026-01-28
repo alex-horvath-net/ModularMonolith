@@ -1,4 +1,5 @@
 ﻿using Experts.SecurityOfficer.Shared.Domain;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Routing.Constraints;
 using Microsoft.IdentityModel.Tokens;
 using static Experts.SecurityOfficer.Login.UserStory;
@@ -6,23 +7,22 @@ using static Experts.SecurityOfficer.Login.UserStory;
 namespace Experts.SecurityOfficer.Login;
 
 public class UserStory(
-    Authenticate authenticate) {
+    Authenticate authenticate,
+    Authorize authorize) {
     public async Task<Response> Run(Request request, CancellationToken token) {
+        var response = new Response();
 
-        // Load existing visitor
-        // Authenticate visitor based on AccountType and Credentials
-        var account = 
-            await authenticate.Run(
-                request.AccountType,
-                request.Credentials,
-                token);
+        // Authenticate
+        await authenticate.Run(request, response, token);
+        if (response.ErrorMessage != null)
+            return response;
 
-        return new Response(
-            true,
-            LoginOutcome.Failed,
-            LoginFailureReason.InvalidCredentials);
+        await authorize.Run(response, token);
+        if (response.ErrorMessage != null)
+            return response;
+
+        return response;
     }
-
 
 
     public record Request(
@@ -35,10 +35,13 @@ public class UserStory(
         AzureAccount,
         SSOAccount,
     }
-    public record Response(
-        bool IsUserStoryEnabled,
-        LoginOutcome Outcome,
-        LoginFailureReason? Failure);
+    public record Response() {
+        public Account? Account { get; internal set; }
+        public string? ErrorMessage { get; internal set; }
+        public Guid? AuthenticationId { get; internal set; }
+        public string? UserName { get; internal set; }
+        public List<string> Roles { get; internal set; }
+    }
 
     public enum LoginOutcome {
         Succeeded,
