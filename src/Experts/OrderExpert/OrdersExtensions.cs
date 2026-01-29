@@ -85,6 +85,7 @@ public static class OrdersExtensions {
                 ? $"[{tableName}]"
                 : $"[{schema}].[{tableName}]";
 
+            // Table metadata originates from EF model; interpolation is safe here.
             db.Database.ExecuteSqlRaw($"DELETE FROM {fullName}");
         }
     }

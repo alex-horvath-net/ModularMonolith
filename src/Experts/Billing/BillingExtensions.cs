@@ -72,6 +72,7 @@ public static class BillingExtensions {
                 ? $"[{tableName}]"
                 : $"[{schema}].[{tableName}]";
 
+            // Table metadata is controlled internally, so interpolation is safe here.
             db.Database.ExecuteSqlRaw($"DELETE FROM {fullName}");
         }
     }

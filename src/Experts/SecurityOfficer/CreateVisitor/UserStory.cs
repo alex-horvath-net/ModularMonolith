@@ -1,4 +1,5 @@
-﻿using Experts.SecurityOfficer.Shared.Domain;
+﻿using System.Collections.Generic;
+using Experts.SecurityOfficer.Shared.Domain;
 
 namespace Experts.SecurityOfficer.CreateVisitor;
 
@@ -14,7 +15,7 @@ public class UserStory {
 
     private static ApplicationUser CreateApplicationUserUser(Request request) {
         var application = new Application(request.ApplicationName, request.ApplicationVersion);
-        var identity = new Identity(request.VisitorId, DateTime.UtcNow, null, null);
+        var identity = new Identity(request.VisitorId, DateTime.UtcNow, string.Empty, string.Empty);
         var roles = new List<string>() { "Visitor" };
 
         var user = new ApplicationUser(application, identity, roles);
@@ -30,6 +31,11 @@ public class UserStory {
     public record Response(
         bool IsUserStoryEnabled, 
         ApplicationUser ApplicationUser) {
-        public Response() : this(false, null) { }
+        private static readonly ApplicationUser EmptyApplicationUser = new(
+            new Application(string.Empty, string.Empty),
+            new Identity(Guid.Empty, DateTime.MinValue, string.Empty, string.Empty),
+            Array.Empty<string>());
+
+        public Response() : this(false, EmptyApplicationUser) { }
     }
 }

@@ -31,9 +31,14 @@ public static class ApiEndpoint {
         CancellationToken token) {
 
         var response = await placeOrder.Run(request, token);
-        return
-            response.Errors.Any() ?
-            TypedResults.BadRequest(response.Errors) :
-            TypedResults.Created($"/v1/orders/{response.Order.Id}", response.Order.Id);
+        if (response.Errors.Any()) {
+            return TypedResults.BadRequest(response.Errors);
+        }
+
+        if (response.Order is null) {
+            return TypedResults.Problem("Order was not created.", statusCode: StatusCodes.Status500InternalServerError);
+        }
+
+        return TypedResults.Created($"/v1/orders/{response.Order.Id}", response.Order.Id);
     }
 }
