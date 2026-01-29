@@ -1,4 +1,5 @@
-﻿using Experts.SecurityOfficer.Shared.Domain;
+﻿using System.Threading;
+using Experts.SecurityOfficer.Shared.Domain;
 using static Experts.SecurityOfficer.Login.UserStory;
 
 namespace Experts.SecurityOfficer.Login;
@@ -8,7 +9,7 @@ public class UserStoryBlazorClient(UserStory userStory) {
         ArgumentNullException.ThrowIfNull(clientRequest);
 
         var userStoryRequest = GetUserStoryRequest(clientRequest);
-        var userStoryResponse = await userStory.Run(userStoryRequest);
+        var userStoryResponse = await userStory.Run(userStoryRequest, CancellationToken.None);
         return GetClientResponse(userStoryResponse);
     }
 

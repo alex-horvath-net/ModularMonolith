@@ -1,4 +1,6 @@
-﻿using Data = Experts.SecurityOfficer.Shared.Infrastructure.Data;
+﻿using System;
+using System.Linq;
+using Data = Experts.SecurityOfficer.Shared.Infrastructure.Data;
 using Domain = Experts.SecurityOfficer.Shared.Domain;
 
 namespace Experts.SecurityOfficer.Login {
@@ -17,13 +19,25 @@ namespace Experts.SecurityOfficer.Login {
                 if (dataAccount == null)
                     return null;
                 // Map Infrastructure.Data.Models.Account to Domain.Account
-                return new Domain.Account {
-                    Id = dataAccount.Id,
-                    UserName = dataAccount.UserName,
-                    Email = dataAccount.Email,
-                    PasswordHash = dataAccount.PasswordHash,
-                    IsLocked = dataAccount.IsLocked
-                };
+                return new Domain.Account(
+                    dataAccount.Id,
+                    dataAccount.Email,
+                    dataAccount.UserName,
+                    dataAccount.PasswordHash,
+                    ParseRoles(dataAccount.Roles),
+                    dataAccount.IsLocked,
+                    dataAccount.CreatedAtUtc);
+            }
+
+            private static IReadOnlyCollection<string> ParseRoles(string? rawRoles) {
+                if (string.IsNullOrWhiteSpace(rawRoles)) {
+                    return Array.Empty<string>();
+                }
+
+                return rawRoles
+                    .Split(',', StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries)
+                    .Distinct(StringComparer.OrdinalIgnoreCase)
+                    .ToArray();
             }
         }
     }

@@ -1,9 +1,13 @@
 ﻿namespace Experts.SecurityOfficer.Shared.Domain;
 
-public class Account {
-    public Guid Id { get; set; }
-    public string UserName { get; set; }
-    public string Email { get; set; }
-    public string PasswordHash { get; set; }
-    public bool IsLocked { get; set; }
-}
+/// <summary>
+/// Immutable representation of an authenticated identity that can own roles inside the trading portal.
+/// </summary>
+public sealed record Account(
+    Guid Id,
+    string Email,
+    string UserName,
+    string PasswordHash,
+    IReadOnlyCollection<string> Roles,
+    bool IsLocked,
+    DateTime CreatedAtUtc);

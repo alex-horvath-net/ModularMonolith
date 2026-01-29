@@ -1,20 +1,57 @@
-﻿using Experts.SecurityOfficer.Login;
-using FluentAssertions;
+﻿using System;
+using System.Collections.Generic;
+using System.Threading;
+using System.Threading.Tasks;
+using Experts.SecurityOfficer.Login;
+using Experts.SecurityOfficer.Shared.Domain;
+using Experts.SecurityOfficer.Shared.Security;
+using Xunit;
 
-namespace Tests.SecurityOfficer.Login;  
+namespace Tests.SecurityOfficer.Login;
+
 public class UserStoryTests {
     [Fact]
-    public void Login() {
-        var userStory = new UserStory();
+    public async Task Login_Succeeds_ForRegisteredAccount() {
+        var hasher = new Pbkdf2PasswordHasher();
+        var account = new Account(
+            Guid.Parse("20000000-0000-0000-0000-000000000001"),
+            "aladar.horvath@outlook.com",
+            "Aladar",
+            hasher.Hash("P@ssw0rd!"),
+            new[] { "Trader" },
+            IsLocked: false,
+            CreatedAtUtc: DateTime.UtcNow);
+
+        var authenticate = new Authenticate(new FakeAuthenticateStore(account), hasher);
+        var authorize = new Authorize(new FakeAuthorizeStore(account));
+        var userStory = new UserStory(authenticate, authorize);
+
         var request = new UserStory.Request(
             Guid.Parse("10000000-0000-0000-0000-000000000001"),
             UserStory.AccountType.LocalAccount,
-            new Dictionary<string, string>
-            {
+            new Dictionary<string, string> {
                 ["Email"] = "aladar.horvath@outlook.com",
                 ["Password"] = "P@ssw0rd!"
             });
-        var response = userStory.Run(request);
-        response.Should().NotBeNull();
+
+        var response = await userStory.Run(request, CancellationToken.None);
+
+        Assert.True(response.IsUserStoryEnabled);
+        Assert.Null(response.ErrorMessage);
+        Assert.Equal(account.Id, response.AuthenticationId);
+    }
+
+    private sealed class FakeAuthenticateStore(Account account) : Authenticate.IStore {
+        public Task<Account?> FindByEmail(string email, CancellationToken token)
+        {
+            return Task.FromResult(string.Equals(email, account.Email, StringComparison.OrdinalIgnoreCase) ? account : null);
+        }
+    }
+
+    private sealed class FakeAuthorizeStore(Account account) : Authorize.IStore {
+        public Task<Account?> FindById(Guid id, CancellationToken token)
+        {
+            return Task.FromResult(account.Id == id ? account : null);
+        }
     }
 }

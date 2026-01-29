@@ -1,7 +1,10 @@
+using System;
+using System.Linq;
 using Experts.Billing;
 using Experts.OrderExpert;
 using Experts.SecurityOfficer;
 using Experts.SecurityOfficer.CreateToken;
+using Experts.SecurityOfficer.Shared.Infrastructure.Data;
 using TradingPortal;
 using TradingPortal.Components;
 
@@ -53,6 +56,8 @@ builder.Services.AddApiVersioning(o => o.ReportApiVersions = true)
 
 var app = builder.Build();
 
+SeedSecurityOfficerAccounts(app);
+
 //app.MapCommon();
 app.MapDevToken();
 app.MapOrders();
@@ -72,6 +77,29 @@ app.MapStaticAssets();
 app.MapRazorComponents<App>().AddInteractiveServerRenderMode();
 
 app.Run();
+
+static void SeedSecurityOfficerAccounts(WebApplication app) {
+    using var scope = app.Services.CreateScope();
+    var db = scope.ServiceProvider.GetRequiredService<SecurityOfficerDbContext>();
+    var registerUserStory = scope.ServiceProvider.GetRequiredService<Experts.SecurityOfficer.Register.UserStory>();
+
+    db.Database.EnsureCreated();
+
+    const string defaultEmail = "aladar.horvath@outlook.com";
+    const string defaultPassword = "Sup3r$ecretPwd!";
+    if (db.Accounts.Any(a => a.Email == defaultEmail)) {
+        return;
+    }
+
+    var request = new Experts.SecurityOfficer.Register.UserStory.Request(
+        defaultEmail,
+        "Aladar Horvath",
+        defaultPassword,
+        new[] { "Trader" });
+
+    registerUserStory.RegisterAsync(request).GetAwaiter().GetResult();
+}
+
 public partial class Program { }
 
 //// Bootstrap configuration: load secrets from Key Vault or user-secrets before any service registration

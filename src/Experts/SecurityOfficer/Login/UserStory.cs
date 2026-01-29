@@ -1,4 +1,5 @@
-﻿using Experts.SecurityOfficer.Shared.Domain;
+﻿using System.Collections.Generic;
+using Experts.SecurityOfficer.Shared.Domain;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Routing.Constraints;
 using Microsoft.IdentityModel.Tokens;
@@ -21,6 +22,7 @@ public class UserStory(
         if (response.ErrorMessage != null)
             return response;
 
+        response.IsUserStoryEnabled = true;
         return response;
     }
 
@@ -40,7 +42,8 @@ public class UserStory(
         public string? ErrorMessage { get; internal set; }
         public Guid? AuthenticationId { get; internal set; }
         public string? UserName { get; internal set; }
-        public List<string> Roles { get; internal set; }
+        public List<string> Roles { get; internal set; } = [];
+        public bool IsUserStoryEnabled { get; internal set; }
     }
 
     public enum LoginOutcome {

@@ -5,6 +5,9 @@ namespace Tests.SecurityOfficer.Login;
 [Collection(UserManualCollection.Name)]
 public class UserManual(PlaywrightFixture trader) {
 
+    private const string DefaultEmail = "aladar.horvath@outlook.com";
+    private const string DefaultPassword = "Sup3r$ecretPwd!";
+
  
 
     [FactPlaywright]
@@ -27,8 +30,8 @@ public class UserManual(PlaywrightFixture trader) {
     [FactPlaywright]
     public async Task How_to_login() {
         await trader.GoToPage("access/login");
-        await trader.FillInput("Email", "aladar.horvath@outlook.com");
-        await trader.FillInput("Password", "P@ssw0rd!");
+        await trader.FillInput("Email", DefaultEmail);
+        await trader.FillInput("Password", DefaultPassword);
 
         await trader.ClickOnButton("Login");
 

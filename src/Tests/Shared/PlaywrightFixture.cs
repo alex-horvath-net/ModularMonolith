@@ -45,7 +45,7 @@ public class PlaywrightFixture : IAsyncLifetime {
 
         baseUrl = configuration["Playwright:BaseUrl"];
         StartTradingPortal();
-        await WaitForPortal(20_000);
+        await WaitForPortal(60_000);
     }
 
     public async Task GoToPage(string relativeUrl, int timeoutMs = 5000) {
@@ -91,6 +91,21 @@ public class PlaywrightFixture : IAsyncLifetime {
         await input.FillAsync(text);
     }
 
+    internal async Task SetCheckbox(string id, bool value) {
+        var checkbox = page.Locator($"#{id}");
+        await checkbox.WaitForAsync(new LocatorWaitForOptions { State = WaitForSelectorState.Visible });
+        var isChecked = await checkbox.IsCheckedAsync();
+        if (isChecked == value) {
+            return;
+        }
+
+        if (value) {
+            await checkbox.CheckAsync();
+        } else {
+            await checkbox.UncheckAsync();
+        }
+    }
+
     public async Task DisposeAsync() {
         if (Skip.Value) {
             return;
@@ -120,7 +135,7 @@ public class PlaywrightFixture : IAsyncLifetime {
 
         var startInfo = new ProcessStartInfo {
             FileName = "dotnet",
-            Arguments = $"run --project \"{projectPath}\" --urls {baseUrl} --no-sandbox, --disable-dev-shm-usage",
+            Arguments = $"run --project \"{projectPath}\" --urls {baseUrl}",
             UseShellExecute = false,
             RedirectStandardOutput = true,
             RedirectStandardError = true,

@@ -1,6 +1,6 @@
-﻿using System.Security.Cryptography;
-using System.Text;
+﻿using System.Linq;
 using Experts.SecurityOfficer.Shared.Domain;
+using Experts.SecurityOfficer.Shared.Security;
 using Microsoft.EntityFrameworkCore;
 using Data = Experts.SecurityOfficer.Shared.Infrastructure.Data;
 using Domain = Experts.SecurityOfficer.Shared.Domain;
@@ -9,7 +9,7 @@ namespace Experts.SecurityOfficer.Login;
 
 public class Authenticate(
     Authenticate.IStore store,
-    Authenticate.IHasher hasher) {
+    IPasswordHasher hasher) {
     public async Task Run(
         UserStory.Request request,
         UserStory.Response response,
@@ -60,146 +60,43 @@ public class Authenticate(
     }
 
     public interface IStore {
-        Task<Domain.Account> FindByEmail(string email, CancellationToken token);
+        Task<Domain.Account?> FindByEmail(string email, CancellationToken token);
     }
 
     public class Store(Data.SecurityOfficerDbContext db) : IStore {
-        public async Task<Domain.Account> FindByEmail(string email, CancellationToken token) {
+        public async Task<Domain.Account?> FindByEmail(string email, CancellationToken token) {
             Data.Models.Account? accountInfra =
                 await db
                     .Accounts
                     .Where(account => account.Email == email)
                     .FirstOrDefaultAsync(token);
 
-            Domain.Account accountDomain = MapToDomain(accountInfra);
-            return accountDomain;
-        }
-
-        public Domain.Account MapToDomain(Data.Models.Account accountData) => new() {
-            Id = accountData.Id,
-            UserName = accountData.UserName,
-            Email = accountData.Email,
-            PasswordHash = accountData.PasswordHash,
-            IsLocked = accountData.IsLocked,
-        };
-    }
-
-    public interface IHasher {
-        string Hash(string input);
-        bool Verify(string input, string storedHashedInput);
-    }
-
-    public class BCryptHasher : IHasher {
-        public string Hash(string input) {
-            return BCrypt.Net.BCrypt.HashPassword(input);
-        }
-
-        public bool Verify(string input, string storedHashedInput) {
-            try {
-                return BCrypt.Net.BCrypt.Verify(input, storedHashedInput);
-            } catch {
-                return false;
+            if (accountInfra is null) {
+                return null;
             }
+
+            return MapToDomain(accountInfra);
+        }
+
+        private static Domain.Account MapToDomain(Data.Models.Account accountData) => new(
+            accountData.Id,
+            accountData.Email,
+            accountData.UserName,
+            accountData.PasswordHash,
+            ParseRoles(accountData.Roles),
+            accountData.IsLocked,
+            accountData.CreatedAtUtc);
+
+        private static IReadOnlyCollection<string> ParseRoles(string? rawRoles) {
+            if (string.IsNullOrWhiteSpace(rawRoles)) {
+                return Array.Empty<string>();
+            }
+
+            return rawRoles
+                .Split(',', StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries)
+                .Distinct(StringComparer.OrdinalIgnoreCase)
+                .ToArray();
         }
     }
 
-    public class Pbkdf2Hasher : IHasher {
-        private const int SaltSize = 16; // 128 bit
-        private const int HashSize = 32; // 256 bit
-        private const int Iterations = 10000; // PBKDF2 iterations count
-
-        public string Hash(string input) {
-            if (string.IsNullOrEmpty(input)) {
-                throw new ArgumentException("Input cannot be null or empty", nameof(input));
-            }
-
-            // Generate a random salt
-            byte[] salt = new byte[SaltSize];
-            using (var rng = RandomNumberGenerator.Create()) {
-                rng.GetBytes(salt);
-            }
-
-            // Hash the input with the salt using PBKDF2
-            byte[] hash = Rfc2898DeriveBytes.Pbkdf2(
-                password: Encoding.UTF8.GetBytes(input),
-                salt: salt,
-                iterations: Iterations,
-                hashAlgorithm: HashAlgorithmName.SHA256,
-                outputLength: HashSize);
-
-            // Combine salt and hash then encode to Base64 for storage
-            byte[] hashBytes = new byte[SaltSize + HashSize];
-            Buffer.BlockCopy(
-                src: salt,
-                srcOffset: 0,
-                dst: hashBytes,
-                dstOffset: 0,
-                count: SaltSize);
-
-            Buffer.BlockCopy(
-                src: hash,
-                srcOffset: 0,
-                dst: hashBytes,
-                dstOffset: SaltSize,
-                count: HashSize);
-
-            return Convert.ToBase64String(hashBytes);
-        }
-
-        public bool Verify(string input, string storedHashedInput) {
-            if (string.IsNullOrEmpty(input)) {
-                return false;
-            }
-
-            if (string.IsNullOrEmpty(storedHashedInput)) {
-                return false;
-            }
-
-
-            try {
-                // Decode the hashediInput
-                byte[] storedHashedInputBytes = Convert.FromBase64String(storedHashedInput);
-                if (storedHashedInputBytes.Length != SaltSize + HashSize) {
-                    return false;
-                }
-
-                // Extract the stored salt. 
-                byte[] storedSaltBytes = new byte[SaltSize];
-                Array.Copy(
-                    sourceArray: storedHashedInputBytes,
-                    sourceIndex: 0,
-                    destinationArray: storedSaltBytes,
-                    destinationIndex: 0,
-                    length: SaltSize);
-
-                // Extract the stored hash. 
-                byte[] storedHashBytes = new byte[HashSize];
-                Array.Copy(
-                    sourceArray: storedHashedInputBytes,
-                    sourceIndex: SaltSize,
-                    destinationArray: storedHashBytes,
-                    destinationIndex: 0,
-                    length: HashSize);
-
-                // Hash the provided input with the extracted salt using PBKDF2
-                byte[] computedHashBytes = Rfc2898DeriveBytes.Pbkdf2(
-                    password: Encoding.UTF8.GetBytes(input),
-                    salt: storedSaltBytes,
-                    iterations: Iterations,
-                    hashAlgorithm: HashAlgorithmName.SHA256,
-                    outputLength: HashSize);
-
-                // Compare the hashes
-                return CryptographicOperations.FixedTimeEquals(computedHashBytes, storedHashBytes);
-
-            } catch {
-                return false;
-            }
-
-
-
-
-
-        }
-    }
 }

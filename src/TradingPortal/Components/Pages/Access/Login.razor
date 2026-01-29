@@ -17,14 +17,19 @@
             <h1 class="fw-bold display-6 mb-3">Secure Access for Market Professionals</h1>
             <p class="text-secondary mb-0">Authenticate with your institutional credentials to review allocations, approvals, and risk analyses. Session telemetry updates in real time to keep compliance satisfied.</p>
         </div>
-        <div class="col-lg-4 text-lg-end">
-            <button type="button"
-                    class="btn btn-primary btn-lg px-5"
-                    @onclick="OnLoginClicked"
-                    disabled="@(!CanLogin)">
-                Initiate Login
-            </button>
-            <small class="text-muted d-block mt-2">Enter credentials to enable the control.</small>
+        <div class="col-lg-4">
+            <div class="d-flex flex-column align-items-lg-end gap-2">
+                <div class="d-flex gap-2">
+                    <a class="btn btn-outline-secondary btn-lg px-4" href="/access/register">Request Access</a>
+                    <button type="button"
+                            class="btn btn-primary btn-lg px-5"
+                            @onclick="OnLoginClicked"
+                            disabled="@(!CanLogin)">
+                        Initiate Login
+                    </button>
+                </div>
+                <small class="text-muted">Enter credentials to enable the control.</small>
+            </div>
         </div>
     </div>
 

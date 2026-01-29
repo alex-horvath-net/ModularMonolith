@@ -1,4 +1,6 @@
-﻿using Microsoft.Extensions.DependencyInjection;
+﻿using Experts.SecurityOfficer.Shared.Security;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.DependencyInjection.Extensions;
 
 namespace Experts.SecurityOfficer.Login; 
 public static class Extensions {
@@ -7,7 +9,9 @@ public static class Extensions {
         services.AddScoped<UserStory>();
         services.AddScoped<Authenticate>();
         services.AddScoped<Authenticate.IStore, Authenticate.Store>();
-        services.AddScoped<Authenticate.IHasher, Authenticate.BCryptHasher>();
+        services.AddScoped<Authorize>();
+        services.AddScoped<Authorize.IStore, Authorize.Store>();
+        services.TryAddSingleton<IPasswordHasher, Pbkdf2PasswordHasher>();
         return services;
     }
 }
