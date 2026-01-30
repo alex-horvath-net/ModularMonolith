@@ -21,15 +21,15 @@ public static class CommonExtensions {
         //services.AddBrowserRequestRestrictions(config);    // restrict incoming HttpRequests from browser
         //services.AddJson();           // Harden JSON input to mitigate resource exhaustion & ambiguity
         services.AddAuthentication(config, env);// JWT bearer authentication + strict validation
-        //services.AddRequestLogging();           // HTTP logging: structured request/response metadata for audit & traceability 
-        //services.AddObservability(config, env);
-        //services.AddFullHealthCheck();          // Health checks: basic self check; dependency checks can be added externally for DB/cache etc.
-        //services.AddAllowedIPsForHealthProbes(config); // IP allowlist filter for health probes
+                                                //services.AddRequestLogging();           // HTTP logging: structured request/response metadata for audit & traceability 
+                                                //services.AddObservability(config, env);
+                                                //services.AddFullHealthCheck();          // Health checks: basic self check; dependency checks can be added externally for DB/cache etc.
+                                                //services.AddAllowedIPsForHealthProbes(config); // IP allowlist filter for health probes
 
-       
+
 
         // Validate critical secrets/config and fail fast in non-development
-       // services.ValidateSecretsOnStart(config, env);
+        // services.ValidateSecretsOnStart(config, env);
 
         return services;
     }
@@ -53,7 +53,7 @@ public static class CommonExtensions {
         // Dev token mapping is provided in Experts.Identity; map it from the host when needed.
         //app.MapDevToken();
         //app.MapFullHealthCheck();
-        
+
         //app.MapApiDocumentation();      // Apply OpenApi 
         //app.MapApiAdmin();              // Apply Swagger Admin
 

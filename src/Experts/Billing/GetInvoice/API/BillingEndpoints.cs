@@ -9,7 +9,7 @@ namespace Experts.Billing.GetInvoice.API;
 
 public static class BillingEndpoints {
     public static IEndpointRouteBuilder MapBilling(this IEndpointRouteBuilder app) {
-        var versionSet = app.NewApiVersionSet().HasApiVersion(new ApiVersion(1,0)).ReportApiVersions().Build();
+        var versionSet = app.NewApiVersionSet().HasApiVersion(new ApiVersion(1, 0)).ReportApiVersions().Build();
         var group = app.MapGroup("/v{version:apiVersion}/billing")
             .WithApiVersionSet(versionSet)
             .WithTags("Billing")
@@ -25,7 +25,8 @@ public static class BillingEndpoints {
 
     private static async Task<IResult> GetInvoice(GetInvoiceQueryHandler handler, Guid id, CancellationToken token) {
         var invoice = await handler.Handle(id, token);
-        if (invoice is null) return TypedResults.NotFound();
+        if (invoice is null)
+            return TypedResults.NotFound();
         var dto = new InvoiceDto(invoice.Id, invoice.OrderId, invoice.CustomerId, invoice.Total);
         return TypedResults.Ok(dto);
     }

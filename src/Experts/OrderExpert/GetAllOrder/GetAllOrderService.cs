@@ -9,7 +9,7 @@ internal sealed class GetAllOrderService(OrdersDbContext db) : IReadOrderService
         var infraOrder = await db.Orders.FindAsync(id);
         if (infraOrder is null)
             return null;
-       var domainOrder = infraOrder.ToDomain();
+        var domainOrder = infraOrder.ToDomain();
         return domainOrder;
     }
 }

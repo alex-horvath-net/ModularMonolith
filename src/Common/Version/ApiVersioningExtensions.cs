@@ -2,6 +2,7 @@
 using Microsoft.Extensions.DependencyInjection;
 
 namespace Common.Version;
+
 public static class ApiVersioningExtensions {
 
     public static IServiceCollection AddApiVersion(this IServiceCollection services) {
@@ -21,9 +22,9 @@ public static class ApiVersioningExtensions {
                 options.GroupNameFormat = "'v'VVV";
                 options.SubstituteApiVersionInUrl = true;
             });
-        
+
         return services;
     }
 
-  
+
 }

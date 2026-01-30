@@ -6,8 +6,7 @@ namespace Experts.SecurityOfficer.Register;
 public sealed class UserStoryBlazorClient(UserStory userStory) {
     private readonly UserStory userStory = userStory ?? throw new ArgumentNullException(nameof(userStory));
 
-    public async Task<ClientResponse> Run(ClientRequest clientRequest, CancellationToken cancellationToken = default)
-    {
+    public async Task<ClientResponse> Run(ClientRequest clientRequest, CancellationToken cancellationToken = default) {
         ArgumentNullException.ThrowIfNull(clientRequest);
 
         var request = new UserStory.Request(
@@ -20,22 +19,18 @@ public sealed class UserStoryBlazorClient(UserStory userStory) {
         return new ClientResponse(response.AccountId, response.Email, response.Roles);
     }
 
-    public sealed class ClientRequest
-    {
+    public sealed class ClientRequest {
         public string Email { get; set; } = string.Empty;
         public string UserName { get; set; } = string.Empty;
         public string Password { get; set; } = string.Empty;
         public IList<string> Roles { get; } = new List<string>();
 
-        public void ReplaceRoles(IEnumerable<string> roles)
-        {
+        public void ReplaceRoles(IEnumerable<string> roles) {
             ArgumentNullException.ThrowIfNull(roles);
 
             Roles.Clear();
-            foreach (var role in roles)
-            {
-                if (!string.IsNullOrWhiteSpace(role))
-                {
+            foreach (var role in roles) {
+                if (!string.IsNullOrWhiteSpace(role)) {
                     Roles.Add(role);
                 }
             }

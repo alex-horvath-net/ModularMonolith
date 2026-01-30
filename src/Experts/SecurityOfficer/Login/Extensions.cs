@@ -2,7 +2,8 @@
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 
-namespace Experts.SecurityOfficer.Login; 
+namespace Experts.SecurityOfficer.Login;
+
 public static class Extensions {
     public static IServiceCollection AddLogion(this IServiceCollection services) {
         services.AddScoped<UserStoryBlazorClient>();

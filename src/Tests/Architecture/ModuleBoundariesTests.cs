@@ -52,8 +52,10 @@ public class ModuleBoundariesTests {
             .GetResult();
 
         var failures = new List<string>();
-        if (!orders.IsSuccessful) failures.AddRange(orders.FailingTypeNames ?? []);
-        if (!billing.IsSuccessful) failures.AddRange(billing.FailingTypeNames ?? []);
+        if (!orders.IsSuccessful)
+            failures.AddRange(orders.FailingTypeNames ?? []);
+        if (!billing.IsSuccessful)
+            failures.AddRange(billing.FailingTypeNames ?? []);
 
         (orders.IsSuccessful && billing.IsSuccessful)
             .Should().BeTrue(string.Join(Environment.NewLine, failures));

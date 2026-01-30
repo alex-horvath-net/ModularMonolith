@@ -9,6 +9,6 @@ public sealed class OrdersDbContext(DbContextOptions<OrdersDbContext> options) :
 
     protected override void OnModelCreating(ModelBuilder modelBuilder) {
         var type = typeof(OrdersDbContext);
-        modelBuilder.ApplyConfigurationsFromAssembly(type.Assembly, x => x.Namespace!.StartsWith(type.Namespace!) );
+        modelBuilder.ApplyConfigurationsFromAssembly(type.Assembly, x => x.Namespace!.StartsWith(type.Namespace!));
     }
 }

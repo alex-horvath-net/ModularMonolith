@@ -8,7 +8,8 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Microsoft.IdentityModel.Tokens;
 
-namespace Common.Error; 
+namespace Common.Error;
+
 public static class GlobalErrorHandlingExtensions { // changed to public for external usage
 
     internal static IServiceCollection AddErrorHandling(this IServiceCollection services) {

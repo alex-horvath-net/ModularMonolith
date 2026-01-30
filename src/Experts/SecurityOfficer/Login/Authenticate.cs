@@ -19,7 +19,7 @@ public class Authenticate(
         }
 
         await LocalAccountAuthentication(request, response, token);
-        if (response.ErrorMessage!=null) {
+        if (response.ErrorMessage != null) {
             return;
         }
 
@@ -41,17 +41,17 @@ public class Authenticate(
 
         if (account is null) {
             response.ErrorMessage = "Account not found";
-            return ;
+            return;
         }
 
         if (account.IsLocked) {
             response.ErrorMessage = "Account locked";
-            return ;
+            return;
         }
 
         if (!hasher.Verify(password, account.PasswordHash)) {
             response.ErrorMessage = "Invalid password";
-            return ;
+            return;
         }
 
         response.AuthenticationId = account.Id;
@@ -63,7 +63,7 @@ public class Authenticate(
 
     public class Store(Data.SecurityOfficerDbContext db) : IStore {
         public async Task<Domain.Account?> FindByEmail(string email, CancellationToken token) {
-            Data.Models.Account? accountInfra =
+            var accountInfra =
                 await db
                     .Accounts
                     .Where(account => account.Email == email)

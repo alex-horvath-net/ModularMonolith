@@ -11,11 +11,11 @@ public sealed class JwtOptions {
 
     // Development symmetric key (must only be used in non-production and when explicitly allowed)
     public string? SecurityKey { get; set; }
-    public bool AllowDevSymmetricKey { get; set; } = false;
+    public bool AllowDevSymmetricKey { get; set; }
 
-    public string[] DevScopes { get; set; } = Array.Empty<string>();
+    public string[] DevScopes { get; set; } = [];
     // Certificate-based signing options for production/HSM
-    public bool UseCertificateForJwtSigning { get; set; } = false;
+    public bool UseCertificateForJwtSigning { get; set; }
     public string? CertificateThumbprint { get; set; }
     public string? CertificateSubjectName { get; set; } // optional alternative to thumbprint
     public string? CertificatePath { get; set; } // optional PFX path

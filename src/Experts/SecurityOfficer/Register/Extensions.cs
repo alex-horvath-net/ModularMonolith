@@ -4,10 +4,8 @@ using Microsoft.Extensions.DependencyInjection.Extensions;
 
 namespace Experts.SecurityOfficer.Register;
 
-public static class Extensions
-{
-    public static IServiceCollection AddRegistration(this IServiceCollection services)
-    {
+public static class Extensions {
+    public static IServiceCollection AddRegistration(this IServiceCollection services) {
         services.AddScoped<UserStory>();
         services.AddScoped<UserStoryBlazorClient>();
         services.AddScoped<UserStory.IAccountStore, AccountStore>();

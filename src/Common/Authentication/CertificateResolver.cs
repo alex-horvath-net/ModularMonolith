@@ -158,7 +158,7 @@ internal sealed class CertificateResolver(ILogger<CertificateResolver> logger) :
 
                     // If build failed, inspect statuses and reject (conservative)
                     if (!buildOk) {
-                        var statuses = chain.ChainStatus ?? Array.Empty<X509ChainStatus>();
+                        var statuses = chain.ChainStatus ?? [];
                         var statusMessages = string.Join("; ", statuses.Select(s => s.Status.ToString() + ":" + (s.StatusInformation ?? string.Empty).Trim()));
                         // If any revoked flag present, treat as revoked
                         if (statuses.Any(s => (s.Status & X509ChainStatusFlags.Revoked) != 0)) {

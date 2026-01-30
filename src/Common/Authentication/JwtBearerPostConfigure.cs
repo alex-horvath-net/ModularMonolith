@@ -28,7 +28,7 @@ internal sealed class JwtBearerPostConfigure(IOptions<JwtOptions> jwtOptions, IJ
 
 
         // Resolve signing key via DI-backed provider (may throw on misconfiguration)
-        SecurityKey key = _provider.GetValidationKey();
+        var key = _provider.GetValidationKey();
 
         // Enforce production prohibition of symmetric keys
         if (_env.IsProduction() && key is SymmetricSecurityKey) {
@@ -59,7 +59,7 @@ internal sealed class JwtBearerPostConfigure(IOptions<JwtOptions> jwtOptions, IJ
         options.Events = new JwtBearerEvents {
             OnMessageReceived = context => {
                 var correlationId = GetCorrelationId(context.HttpContext);
-                var hasAuth = !string.IsNullOrEmpty(context.Request.Headers["Authorization"]);
+                var hasAuth = !string.IsNullOrEmpty(context.Request.Headers.Authorization);
                 _logger.LogDebug("JwtBearer.OnMessageReceived; authHeaderPresent={AuthPresent}, correlationId={CorrelationId}, activityId={ActivityId}",
                     hasAuth, correlationId, System.Diagnostics.Activity.Current?.Id);
                 return Task.CompletedTask;
@@ -114,8 +114,7 @@ internal sealed class JwtBearerPostConfigure(IOptions<JwtOptions> jwtOptions, IJ
 
     private static string HashIdentifier(string id) {
         // SHA256 and return short hex prefix to avoid PII
-        using var sha = SHA256.Create();
-        var hash = sha.ComputeHash(Encoding.UTF8.GetBytes(id));
-        return BitConverter.ToString(hash, 0, 4).Replace("-", "").ToLowerInvariant(); // first 8 hex chars
+        var hash = SHA256.HashData(Encoding.UTF8.GetBytes(id));
+        return Convert.ToHexStringLower(hash, 0, 4); // first 4 bytes (8 hex chars)
     }
 }

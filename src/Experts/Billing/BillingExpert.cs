@@ -1,3 +1,4 @@
-﻿namespace Experts.Billing; 
+﻿namespace Experts.Billing;
+
 public class BillingExpert {
 }

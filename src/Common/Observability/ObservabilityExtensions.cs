@@ -14,7 +14,7 @@ public static class ObservabilityExtensions {
         // OpenTelemetry
         var resourceBuilder = ResourceBuilder.CreateDefault()
             .AddService(
-                serviceName: "WebApi", 
+                serviceName: "WebApi",
                 serviceVersion: "1.0.0",
                 serviceInstanceId: Environment.MachineName)
             .AddAttributes(new[] { new KeyValuePair<string, object>("deployment.environment", env.EnvironmentName) });
@@ -45,4 +45,4 @@ public static class ObservabilityExtensions {
             });
         return services;
     }
-}   
+}

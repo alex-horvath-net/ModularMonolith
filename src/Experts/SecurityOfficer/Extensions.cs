@@ -6,7 +6,8 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 
-namespace Experts.SecurityOfficer; 
+namespace Experts.SecurityOfficer;
+
 public static class Extensions {
     public static IServiceCollection AddSecurityOfficer(this IServiceCollection services) {
         services.AddLogion();

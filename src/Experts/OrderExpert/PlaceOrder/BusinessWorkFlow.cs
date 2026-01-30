@@ -33,7 +33,7 @@ public class BusinessWorkFlow(BusinessWorkFlow.IBusinessWorkSteps workSteps) {
 public sealed record PlaceOrderRequest(
     Guid CustomerId,
     IEnumerable<PlaceOrderLineRequest> Lines);
- 
+
 
 public record PlaceOrderLineRequest(
     Guid ProductId,

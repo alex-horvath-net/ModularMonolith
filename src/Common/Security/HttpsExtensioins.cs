@@ -6,7 +6,7 @@ using Microsoft.Extensions.Hosting;
 
 namespace Common.Security;
 
-internal static class HttpsExtensioins{
+internal static class HttpsExtensioins {
 
     internal static IServiceCollection AddHttps(this IServiceCollection services) {
         services.AddHsts(options => {

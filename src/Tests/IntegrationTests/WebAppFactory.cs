@@ -79,7 +79,7 @@ public class WebAppFactory : WebApplicationFactory<TradingApi.User>, IAsyncLifet
             });
         });
     }
-    
+
     public async Task InitializeAsync() {
         scope = Services.CreateScope();
 

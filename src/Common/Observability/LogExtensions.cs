@@ -21,4 +21,4 @@ public static class LogExtensions {
 
         return host;
     }
-}     
+}

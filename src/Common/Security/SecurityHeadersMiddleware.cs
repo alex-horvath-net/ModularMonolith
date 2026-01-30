@@ -13,10 +13,10 @@ public static class SecurityHeadersMiddleware {
         headers["X-XSS-Protection"] = "0"; // modern browsers ignore, use CSP
         headers["Permissions-Policy"] = "geolocation=(), microphone=(), camera=()";
 
-/* Dev/Local: relax CSP for hot reload and tooling
-   Prod: enforce strict CSP by removing unsafe-inline, requiring nonce, and enabling HSTS */
+        /* Dev/Local: relax CSP for hot reload and tooling
+           Prod: enforce strict CSP by removing unsafe-inline, requiring nonce, and enabling HSTS */
         var isDev = app.Environment.IsDevelopment();
-        
+
         // Generate per-request nonce for CSP
         var nonceBytes = RandomNumberGenerator.GetBytes(16);
         var nonce = Convert.ToBase64String(nonceBytes);

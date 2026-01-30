@@ -4,10 +4,8 @@ using Data = Experts.SecurityOfficer.Shared.Infrastructure.Data;
 
 namespace Experts.SecurityOfficer.Register.Infrastructure;
 
-public sealed class AccountStore(Data.SecurityOfficerDbContext db) : UserStory.IAccountStore
-{
-    public async Task<Account?> FindByEmailAsync(string normalizedEmail, CancellationToken cancellationToken)
-    {
+public sealed class AccountStore(Data.SecurityOfficerDbContext db) : UserStory.IAccountStore {
+    public async Task<Account?> FindByEmailAsync(string normalizedEmail, CancellationToken cancellationToken) {
         ArgumentException.ThrowIfNullOrWhiteSpace(normalizedEmail);
 
         var entity = await db.Accounts
@@ -18,12 +16,10 @@ public sealed class AccountStore(Data.SecurityOfficerDbContext db) : UserStory.I
         return entity is null ? null : Map(entity);
     }
 
-    public async Task CreateAsync(Account account, CancellationToken cancellationToken)
-    {
+    public async Task CreateAsync(Account account, CancellationToken cancellationToken) {
         ArgumentNullException.ThrowIfNull(account);
 
-        var entity = new Data.Models.Account
-        {
+        var entity = new Data.Models.Account {
             Id = account.Id,
             Email = account.Email,
             UserName = account.UserName,
@@ -46,10 +42,8 @@ public sealed class AccountStore(Data.SecurityOfficerDbContext db) : UserStory.I
         entity.IsLocked,
         entity.CreatedAtUtc);
 
-    private static IReadOnlyCollection<string> ParseRoles(string? rawRoles)
-    {
-        if (string.IsNullOrWhiteSpace(rawRoles))
-        {
+    private static IReadOnlyCollection<string> ParseRoles(string? rawRoles) {
+        if (string.IsNullOrWhiteSpace(rawRoles)) {
             return Array.Empty<string>();
         }
 

@@ -3,7 +3,8 @@ using Experts.OrderExpert.Shared.Infrastructure.Data;
 using Experts.OrderExpert.Shared.Infrastructure.Data.Models;
 using FluentValidation;
 
-namespace Experts.OrderExpert.PlaceOrder; 
+namespace Experts.OrderExpert.PlaceOrder;
+
 internal class Infrastructure {
     internal class Store(OrdersDbContext db) : BusinessWorkSteps.IStoreInfrastructure {
         public async Task Save(Order order, CancellationToken token) {

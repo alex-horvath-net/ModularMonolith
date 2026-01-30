@@ -4,20 +4,14 @@ using Microsoft.Extensions.Hosting;
 
 namespace Common.Security;
 
-public static class SecretConfigurationExtensions
-{
-    public static IConfigurationBuilder AddSecretsFromStore(this IConfigurationBuilder builder, IHostEnvironment env)
-    {
+public static class SecretConfigurationExtensions {
+    public static IConfigurationBuilder AddSecretsFromStore(this IConfigurationBuilder builder, IHostEnvironment env) {
         // Preserves existing configuration then adds secrets depending on environment
-        if (env.IsDevelopment())
-        {
+        if (env.IsDevelopment()) {
             // Use user secrets when running locally (if available)
-            try
-            {
+            try {
                 builder.AddUserSecrets<object>(optional: true);
-            }
-            catch
-            {
+            } catch {
                 // ignore if user secrets not configured
             }
 
@@ -31,10 +25,8 @@ public static class SecretConfigurationExtensions
         var keyVaultUri = temp["Secrets:KeyVault:Uri"];
         var allowFallback = bool.TryParse(temp["Secrets:AllowLocalFallback"], out var b) && b;
 
-        if (string.IsNullOrWhiteSpace(keyVaultUri))
-        {
-            if (allowFallback)
-            {
+        if (string.IsNullOrWhiteSpace(keyVaultUri)) {
+            if (allowFallback) {
                 // Fallback to environment vars only (dangerous; gated by explicit flag)
                 builder.AddEnvironmentVariables();
                 return builder;

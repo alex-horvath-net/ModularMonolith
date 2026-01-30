@@ -7,15 +7,12 @@ using Microsoft.Extensions.Hosting;
 
 namespace Tests.Shared;
 
-public sealed class TradingPortalFactory : WebApplicationFactory<TradingPortal.UserContext>
-{
+public sealed class TradingPortalFactory : WebApplicationFactory<TradingPortal.UserContext> {
     public string BaseAddress { get; private set; } = string.Empty;
 
-    protected override IHost CreateHost(IHostBuilder builder)
-    {
+    protected override IHost CreateHost(IHostBuilder builder) {
         builder.UseEnvironment("Development");
-        builder.ConfigureWebHost(webHost =>
-        {
+        builder.ConfigureWebHost(webHost => {
             webHost.UseKestrel(options => options.ListenLocalhost(0));
         });
 

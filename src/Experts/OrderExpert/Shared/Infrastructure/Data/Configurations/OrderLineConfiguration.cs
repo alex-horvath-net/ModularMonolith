@@ -4,12 +4,9 @@ using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace Experts.OrderExpert.Shared.Infrastructure.Data.Configurations;
 
-public sealed class OrderLineConfiguration : IEntityTypeConfiguration<OrderLine>
-{
-    public void Configure(EntityTypeBuilder<OrderLine> builder)
-    {
-        builder.ToTable("OrderLines", "orders", tb =>
-        {
+public sealed class OrderLineConfiguration : IEntityTypeConfiguration<OrderLine> {
+    public void Configure(EntityTypeBuilder<OrderLine> builder) {
+        builder.ToTable("OrderLines", "orders", tb => {
             tb.HasCheckConstraint("CK_OrderLines_Quantity_Positive", "[Quantity] > 0");
             tb.HasCheckConstraint("CK_OrderLines_UnitPrice_NonNegative", "[UnitPrice] >= 0");
         });

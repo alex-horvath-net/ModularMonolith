@@ -23,12 +23,12 @@ public class UserStory {
     }
 
     public record Request(
-        string ApplicationName, 
-        string ApplicationVersion, 
+        string ApplicationName,
+        string ApplicationVersion,
         Guid VisitorId);
-    
+
     public record Response(
-        bool IsUserStoryEnabled, 
+        bool IsUserStoryEnabled,
         ApplicationUser ApplicationUser) {
         private static readonly ApplicationUser EmptyApplicationUser = new(
             new Application(string.Empty, string.Empty),

@@ -8,7 +8,7 @@ using Microsoft.IdentityModel.Tokens;
 namespace Common.Authentication;
 
 internal interface IJwtSigningCredentialProvider {
-    public SecurityKey GetValidationKey();
+    SecurityKey GetValidationKey();
 }
 
 
@@ -20,7 +20,7 @@ internal sealed class JwtSigningCredentialProvider : IJwtSigningCredentialProvid
 
     // Cached key and sync primitives for thread-safe lazy initialization
     private volatile SecurityKey? _cachedKey;
-    private readonly object _sync = new();
+    private readonly Lock _sync = new();
 
     public JwtSigningCredentialProvider(IOptionsMonitor<JwtOptions> optionsMonitor, IHostEnvironment env, ICertificateResolver certResolver, ILogger<JwtSigningCredentialProvider> logger) {
         _optionsMonitor = optionsMonitor ?? throw new ArgumentNullException(nameof(optionsMonitor));
@@ -91,8 +91,7 @@ internal sealed class JwtSigningCredentialProvider : IJwtSigningCredentialProvid
 
                 _logger.LogError("No valid JWT signing key configuration found.");
                 throw new InvalidOperationException("No valid JWT signing key configuration found. For non-production: set Authentication:AllowDevSymmetricKey=true with Authentication:SecurityKey (in user-secrets) or configure certificate-based signing.");
-            }
-            catch {
+            } catch {
                 // On failure ensure we don't leave a partially initialized cached key
                 _cachedKey = null;
                 throw;
@@ -114,7 +113,7 @@ internal sealed class JwtSigningCredentialProvider : IJwtSigningCredentialProvid
             throw new InvalidOperationException("Authentication:Audience is not configured.");
     }
 
-    private static SecurityKey CreateSymmetricKey(string? devKey) {
+    private static SymmetricSecurityKey CreateSymmetricKey(string? devKey) {
         if (string.IsNullOrWhiteSpace(devKey))
             throw new InvalidOperationException("Authentication:AllowDevSymmetricKey is true but Authentication:SecurityKey is empty.");
 

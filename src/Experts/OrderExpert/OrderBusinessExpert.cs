@@ -4,4 +4,3 @@ namespace Experts.OrderExpert;
 
 internal record OrderBusinessExpert(
     BusinessWorkFlow PlaceOrder);
- 

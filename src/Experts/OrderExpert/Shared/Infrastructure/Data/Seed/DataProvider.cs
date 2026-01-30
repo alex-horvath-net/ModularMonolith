@@ -30,5 +30,5 @@ public sealed class DataProvider() {
         }
     ];
 
-    private Guid Id(int id) => Guid.Parse($"10000000-0000-0000-0000-{id:D12}"); 
+    private Guid Id(int id) => Guid.Parse($"10000000-0000-0000-0000-{id:D12}");
 }

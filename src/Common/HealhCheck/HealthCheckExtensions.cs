@@ -40,14 +40,14 @@ internal static class HealthCheckExtensions {
         return app;
     }
 
-    private static async Task<IResult> GetLive(HealthCheckService health)  {
+    private static async Task<IResult> GetLive(HealthCheckService health) {
         var report = await health.CheckHealthAsync(resgistration => resgistration.Name == "self");
         var payload = new {
             status = report.Status.ToString(),
-            checks = report.Entries.Select(entry => new { 
-                name = entry.Key, 
-                status = entry.Value.Status.ToString(), 
-                duration = entry.Value.Duration 
+            checks = report.Entries.Select(entry => new {
+                name = entry.Key,
+                status = entry.Value.Status.ToString(),
+                duration = entry.Value.Duration
             })
         };
         return report.Status == HealthStatus.Healthy
@@ -59,14 +59,15 @@ internal static class HealthCheckExtensions {
         var report = await health.CheckHealthAsync(resgistration => true);
         var payload = new {
             status = report.Status.ToString(),
-            checks = report.Entries.Select(entry => new { 
-                name = entry.Key, 
-                status = entry.Value.Status.ToString(), 
-                duration = entry.Value.Duration })
+            checks = report.Entries.Select(entry => new {
+                name = entry.Key,
+                status = entry.Value.Status.ToString(),
+                duration = entry.Value.Duration
+            })
         };
         return report.Status == HealthStatus.Healthy
             ? Results.Json(payload)
             : Results.StatusCode(StatusCodes.Status503ServiceUnavailable);
     }
 
-} 
+}

@@ -3,11 +3,9 @@ using Tests.Shared;
 namespace Tests.SecurityOfficer.Register;
 
 [Collection(UserManualCollection.Name)]
-public class UserManual(PlaywrightFixture trader)
-{
+public class UserManual(PlaywrightFixture trader) {
     [FactPlaywright]
-    public async Task How_to_visit_register_page()
-    {
+    public async Task How_to_visit_register_page() {
         await trader.GoToPage("access/register");
 
         await trader.ExpectElementEmpty("RegistrationSuccess");
@@ -15,8 +13,7 @@ public class UserManual(PlaywrightFixture trader)
     }
 
     [FactPlaywright]
-    public async Task How_to_register()
-    {
+    public async Task How_to_register() {
         await trader.GoToPage("access/register");
 
         var email = $"trader+{Guid.NewGuid():N}@bank.com";

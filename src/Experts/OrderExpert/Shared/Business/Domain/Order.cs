@@ -1,4 +1,4 @@
-using Data= Experts.OrderExpert.Shared.Infrastructure.Data;
+using Data = Experts.OrderExpert.Shared.Infrastructure.Data;
 
 namespace Experts.OrderExpert.Shared.Business.Domain;
 

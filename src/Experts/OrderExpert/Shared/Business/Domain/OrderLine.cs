@@ -9,10 +9,8 @@ public sealed class OrderLine {
     public OrderLine(Guid productId, int quantity, decimal unitPrice) {
         if (productId == Guid.Empty)
             throw new ArgumentException("ProductId empty.", nameof(productId));
-        if (quantity <= 0)
-            throw new ArgumentOutOfRangeException(nameof(quantity));
-        if (unitPrice < 0)
-            throw new ArgumentOutOfRangeException(nameof(unitPrice));
+        ArgumentOutOfRangeException.ThrowIfNegativeOrZero(quantity);
+        ArgumentOutOfRangeException.ThrowIfNegative(unitPrice);
 
         ProductId = productId;
         Quantity = quantity;

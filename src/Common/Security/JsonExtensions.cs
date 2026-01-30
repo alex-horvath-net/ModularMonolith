@@ -1,7 +1,8 @@
 ﻿using System.Text.Json;
 using Microsoft.Extensions.DependencyInjection;
 
-namespace Common.Security; 
+namespace Common.Security;
+
 internal static class JsonExtensions {
 
     public static IServiceCollection AddJson(this IServiceCollection services) {

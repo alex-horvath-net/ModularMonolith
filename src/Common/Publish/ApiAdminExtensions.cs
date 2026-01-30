@@ -5,6 +5,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 
 namespace Common.Publish;
+
 internal static class ApiAdminExtensions {
 
     internal static IServiceCollection AddApiAdmin(this IServiceCollection services) {
@@ -37,6 +38,6 @@ internal static class ApiAdminExtensions {
 
         }
 
-        return app; 
+        return app;
     }
 }

@@ -8,7 +8,7 @@ public class UserManual(PlaywrightFixture trader) {
     private const string DefaultEmail = "aladar.horvath@outlook.com";
     private const string DefaultPassword = "Sup3r$ecretPwd!";
 
- 
+
 
     [FactPlaywright]
     public async Task How_to_visit_login_page() {

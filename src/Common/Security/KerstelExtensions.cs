@@ -1,14 +1,15 @@
 ﻿using System.Security.Authentication;
+using System.Security.Cryptography.X509Certificates;
+using Common.Security;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Server.Kestrel.Core;
 using Microsoft.AspNetCore.Server.Kestrel.Https;
-using System.Security.Cryptography.X509Certificates;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Hosting;
-using Common.Security;
 
-namespace Common.Security; 
+namespace Common.Security;
+
 public static class KerstelExtensions {
 
 
@@ -16,17 +17,17 @@ public static class KerstelExtensions {
     public static ConfigureWebHostBuilder UseKestrel(this ConfigureWebHostBuilder webHost, IConfiguration config, IHostEnvironment env) {
         webHost.ConfigureKestrel(options => {
             options.AddServerHeader = false;
-           
+
             options.Limits.MaxRequestBodySize = 10_000_000; // 10MB cap
             options.Limits.MinRequestBodyDataRate = new MinDataRate(240, TimeSpan.FromSeconds(5));
             options.Limits.MinResponseDataRate = new MinDataRate(240, TimeSpan.FromSeconds(5));
-            
+
             options.ConfigureHttpsDefaults(https => {
                 https.SslProtocols = SslProtocols.Tls13 | SslProtocols.Tls12;
                 https.CheckCertificateRevocation = true;
                 https.ClientCertificateMode = ClientCertificateMode.NoCertificate;
             });
-            
+
             if (env.IsDevelopment()) {
                 // Dev HTTPS listener (self-signed dev cert handled automatically by ASP.NET)
                 options.ListenAnyIP(5001, lo => lo.UseHttps(https => {
@@ -64,7 +65,8 @@ public static class KerstelExtensions {
             var cert = store.Certificates.Find(X509FindType.FindByThumbprint, thumbprint, validOnly: true)
                 .OfType<X509Certificate2>()
                 .FirstOrDefault();
-            if (cert != null) return cert;
+            if (cert != null)
+                return cert;
         }
         throw new InvalidOperationException("Server certificate not found. Configure Certificates:Service:(Path|Thumbprint) or Certificates:WebApi:(Path|Thumbprint).");
     }
