@@ -73,20 +73,20 @@ public static class OrdersExtensions {
         return app;
     }
 
-    private static void CleanDatabase(DbContext db) {
-        foreach (var entityType in db.Model.GetEntityTypes()) {
-            var tableName = entityType.GetTableName();
-            var schema = entityType.GetSchema();
-            if (tableName is null) {
-                continue;
-            }
+    //private static void CleanDatabase(DbContext db) {
+    //    foreach (var entityType in db.Model.GetEntityTypes()) {
+    //        var tableName = entityType.GetTableName();
+    //        var schema = entityType.GetSchema();
+    //        if (tableName is null) {
+    //            continue;
+    //        }
 
-            var fullName = string.IsNullOrWhiteSpace(schema)
-                ? $"[{tableName}]"
-                : $"[{schema}].[{tableName}]";
+    //        var fullName = string.IsNullOrWhiteSpace(schema)
+    //            ? $"[{tableName}]"
+    //            : $"[{schema}].[{tableName}]";
 
-            // Table metadata originates from EF model; interpolation is safe here.
-            db.Database.ExecuteSqlRaw($"DELETE FROM {fullName}");
-        }
-    }
+    //        // Table metadata originates from EF model; interpolation is safe here.
+    //        db.Database.ExecuteSqlRaw($"DELETE FROM {fullName}");
+    //    }
+    //}
 }

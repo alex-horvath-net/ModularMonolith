@@ -12,16 +12,12 @@ internal interface ICertificateResolver {
     X509Certificate2? ResolveCertificate(JwtOptions options);
 }
 
-internal sealed class CertificateResolver : ICertificateResolver {
-    private readonly ILogger<CertificateResolver> _logger;
-
-    public CertificateResolver(ILogger<CertificateResolver> logger) {
-        _logger = logger ?? throw new ArgumentNullException(nameof(logger));
-    }
+internal sealed class CertificateResolver(ILogger<CertificateResolver> logger) : ICertificateResolver {
+    private readonly ILogger<CertificateResolver> _logger = logger ?? throw new ArgumentNullException(nameof(logger));
 
     public X509Certificate2? ResolveCertificate(JwtOptions options) {
         _logger.LogDebug($"{nameof(ResolveCertificate)} is called.");
-        
+
         if (options == null) {
             _logger.LogDebug("ResolveCertificate called with null options.");
             return null;
