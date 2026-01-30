@@ -1,4 +1,3 @@
-using System.Linq;
 using Experts.SecurityOfficer.Shared.Domain;
 using Experts.SecurityOfficer.Shared.Security;
 

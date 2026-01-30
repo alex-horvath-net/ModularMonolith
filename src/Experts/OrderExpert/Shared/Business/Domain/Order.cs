@@ -34,10 +34,8 @@ public sealed class Order {
         }
     }
 
-    public void AddLine(Guid productId, int quantity, decimal unitPrice) {
-       
-        _lines.Add(new OrderLine(productId, quantity, unitPrice));
-    }
+    public void AddLine(Guid productId, int quantity, decimal unitPrice) => _lines.Add(
+        new OrderLine(productId, quantity, unitPrice));
 
     public Data.Models.Order ToDataModel() => new() {
         Id = Id,

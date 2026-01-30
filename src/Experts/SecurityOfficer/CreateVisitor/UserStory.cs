@@ -1,5 +1,4 @@
-﻿using System.Collections.Generic;
-using Experts.SecurityOfficer.Shared.Domain;
+﻿using Experts.SecurityOfficer.Shared.Domain;
 
 namespace Experts.SecurityOfficer.CreateVisitor;
 

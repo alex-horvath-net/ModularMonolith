@@ -1,9 +1,4 @@
-﻿using System.Collections.Generic;
-using Experts.SecurityOfficer.Shared.Domain;
-using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Routing.Constraints;
-using Microsoft.IdentityModel.Tokens;
-using static Experts.SecurityOfficer.Login.UserStory;
+﻿using Experts.SecurityOfficer.Shared.Domain;
 
 namespace Experts.SecurityOfficer.Login;
 

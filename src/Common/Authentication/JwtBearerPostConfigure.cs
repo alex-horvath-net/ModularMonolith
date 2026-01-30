@@ -1,5 +1,4 @@
-﻿using System;
-using System.Security.Cryptography;
+﻿using System.Security.Cryptography;
 using System.Text;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Hosting;
@@ -10,18 +9,11 @@ using Microsoft.IdentityModel.Tokens;
 
 namespace Common.Authentication;
 
-internal sealed class JwtBearerPostConfigure : IPostConfigureOptions<JwtBearerOptions> {
-    private readonly JwtOptions _jwtOptions;
-    private readonly IJwtSigningCredentialProvider _provider;
-    private readonly IHostEnvironment _env;
-    private readonly ILogger<JwtBearerPostConfigure> _logger;
-
-    public JwtBearerPostConfigure(IOptions<JwtOptions> jwtOptions, IJwtSigningCredentialProvider provider, IHostEnvironment env, ILogger<JwtBearerPostConfigure> logger) {
-        _jwtOptions = jwtOptions?.Value ?? throw new ArgumentNullException(nameof(jwtOptions));
-        _provider = provider ?? throw new ArgumentNullException(nameof(provider));
-        _env = env ?? throw new ArgumentNullException(nameof(env));
-        _logger = logger ?? throw new ArgumentNullException(nameof(logger));
-    }
+internal sealed class JwtBearerPostConfigure(IOptions<JwtOptions> jwtOptions, IJwtSigningCredentialProvider provider, IHostEnvironment env, ILogger<JwtBearerPostConfigure> logger) : IPostConfigureOptions<JwtBearerOptions> {
+    private readonly JwtOptions _jwtOptions = jwtOptions?.Value ?? throw new ArgumentNullException(nameof(jwtOptions));
+    private readonly IJwtSigningCredentialProvider _provider = provider ?? throw new ArgumentNullException(nameof(provider));
+    private readonly IHostEnvironment _env = env ?? throw new ArgumentNullException(nameof(env));
+    private readonly ILogger<JwtBearerPostConfigure> _logger = logger ?? throw new ArgumentNullException(nameof(logger));
 
     public void PostConfigure(string name, JwtBearerOptions options) {
 
@@ -110,10 +102,13 @@ internal sealed class JwtBearerPostConfigure : IPostConfigureOptions<JwtBearerOp
     private static string? GetCorrelationId(Microsoft.AspNetCore.Http.HttpContext? ctx) {
         if (ctx == null)
             return null;
+
         if (ctx.Request.Headers.TryGetValue("X-Correlation-ID", out var v) && !string.IsNullOrWhiteSpace(v))
             return v.ToString();
+
         if (ctx.Request.Headers.TryGetValue("Correlation-Id", out v) && !string.IsNullOrWhiteSpace(v))
             return v.ToString();
+
         return System.Diagnostics.Activity.Current?.Id;
     }
 

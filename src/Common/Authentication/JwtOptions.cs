@@ -25,14 +25,9 @@ public sealed class JwtOptions {
     public bool EnforceCertificateRevocation { get; set; } = true;
 }
 
-internal sealed class JwtOptionsValidator : IValidateOptions<JwtOptions> {
-    private readonly IHostEnvironment env;
-    private readonly ILogger<JwtOptionsValidator> logger;
-
-    public JwtOptionsValidator(IHostEnvironment env, ILogger<JwtOptionsValidator> logger) {
-        this.env = env ?? throw new ArgumentNullException(nameof(env));
-        this.logger = logger ?? throw new ArgumentNullException(nameof(logger));
-    }
+internal sealed class JwtOptionsValidator(IHostEnvironment env, ILogger<JwtOptionsValidator> logger) : IValidateOptions<JwtOptions> {
+    private readonly IHostEnvironment env = env ?? throw new ArgumentNullException(nameof(env));
+    private readonly ILogger<JwtOptionsValidator> logger = logger ?? throw new ArgumentNullException(nameof(logger));
 
     public ValidateOptionsResult Validate(string name, JwtOptions options) {
         logger.LogInformation($"{nameof(Validate)} is called");

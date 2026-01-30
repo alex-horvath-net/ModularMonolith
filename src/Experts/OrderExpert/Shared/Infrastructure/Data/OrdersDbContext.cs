@@ -1,5 +1,4 @@
 using Experts.OrderExpert.Shared.Infrastructure.Data.Models;
-using Experts.OrderExpert.Shared.Infrastructure.Data.Seed;
 using Microsoft.EntityFrameworkCore;
 
 namespace Experts.OrderExpert.Shared.Infrastructure.Data;

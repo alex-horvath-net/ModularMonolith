@@ -1,5 +1,4 @@
-﻿using System.Threading;
-using Experts.SecurityOfficer.Shared.Domain;
+﻿using Experts.SecurityOfficer.Shared.Domain;
 using static Experts.SecurityOfficer.Login.UserStory;
 
 namespace Experts.SecurityOfficer.Login;
@@ -13,7 +12,7 @@ public class UserStoryBlazorClient(UserStory userStory) {
         return GetClientResponse(userStoryResponse);
     }
 
-    private UserStory.Request GetUserStoryRequest(ClientRequest clientRequest) => new(
+    private Request GetUserStoryRequest(ClientRequest clientRequest) => new(
         clientRequest.ApplicationUser.Identity.VisitorId,
         AccountType.LocalAccount,
         new Dictionary<string, string>() {
@@ -22,15 +21,11 @@ public class UserStoryBlazorClient(UserStory userStory) {
         });
 
 
-    private ClientResponse GetClientResponse(UserStory.Response response) => new(
+    private ClientResponse GetClientResponse(Response response) => new(
         response.IsUserStoryEnabled);
 
-    public class ClientRequest {
-        public ClientRequest(ApplicationUser applicationUser) {
-            ApplicationUser = applicationUser ?? throw new ArgumentNullException(nameof(applicationUser));
-        }
-
-        public ApplicationUser ApplicationUser { get; }
+    public class ClientRequest(ApplicationUser applicationUser) {
+        public ApplicationUser ApplicationUser { get; } = applicationUser ?? throw new ArgumentNullException(nameof(applicationUser));
 
         public string Email { get; set; } = string.Empty;
 

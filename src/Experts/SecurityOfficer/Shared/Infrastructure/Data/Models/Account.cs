@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace Experts.SecurityOfficer.Shared.Infrastructure.Data.Models;
+﻿namespace Experts.SecurityOfficer.Shared.Infrastructure.Data.Models;
 
 public class Account {
     public Guid Id { get; internal set; }

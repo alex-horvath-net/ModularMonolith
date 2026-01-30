@@ -1,4 +1,3 @@
-using System;
 using Tests.Shared;
 
 namespace Tests.SecurityOfficer.Register;

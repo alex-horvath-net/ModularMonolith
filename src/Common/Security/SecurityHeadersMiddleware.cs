@@ -1,7 +1,6 @@
+using System.Security.Cryptography;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.Hosting;
-using System.Security.Cryptography;
-using System.Text;
 
 namespace Common.Security;
 

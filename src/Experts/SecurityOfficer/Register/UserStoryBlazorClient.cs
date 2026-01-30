@@ -1,22 +1,10 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading;
-using System.Threading.Tasks;
-
 namespace Experts.SecurityOfficer.Register;
 
 /// <summary>
 /// Thin client adapter so UI layers can trigger the register business command without duplicating mapping logic.
 /// </summary>
-public sealed class UserStoryBlazorClient
-{
-    private readonly UserStory userStory;
-
-    public UserStoryBlazorClient(UserStory userStory)
-    {
-        this.userStory = userStory ?? throw new ArgumentNullException(nameof(userStory));
-    }
+public sealed class UserStoryBlazorClient(UserStory userStory) {
+    private readonly UserStory userStory = userStory ?? throw new ArgumentNullException(nameof(userStory));
 
     public async Task<ClientResponse> Run(ClientRequest clientRequest, CancellationToken cancellationToken = default)
     {

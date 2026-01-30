@@ -1,10 +1,6 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using Experts.SecurityOfficer.Register;
 using Experts.SecurityOfficer.Shared.Domain;
 using Experts.SecurityOfficer.Shared.Security;
-using Xunit;
 
 namespace Tests.SecurityOfficer.Register;
 
@@ -99,10 +95,7 @@ public class RegisterUserStoryTests
         public DateTime UtcNow => now;
     }
 
-    private static void AssertEquivalent(IEnumerable<string> expected, IEnumerable<string> actual)
-    {
-        Assert.Equal(
+    private static void AssertEquivalent(IEnumerable<string> expected, IEnumerable<string> actual) => Assert.Equal(
             expected.OrderBy(x => x, StringComparer.OrdinalIgnoreCase),
             actual.OrderBy(x => x, StringComparer.OrdinalIgnoreCase));
-    }
 }

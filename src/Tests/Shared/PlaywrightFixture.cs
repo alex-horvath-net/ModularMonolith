@@ -2,7 +2,6 @@
 using System.Text.RegularExpressions;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Playwright;
-using static System.Net.Mime.MediaTypeNames;
 
 namespace Tests.Shared;
 
@@ -55,9 +54,9 @@ public class PlaywrightFixture : IAsyncLifetime {
 
         browserContext = await browser.NewContextAsync();
         browserContexts.Add(browserContext);
-        this.page = await browserContext.NewPageAsync();
+        page = await browserContext.NewPageAsync();
         var absoluteUrl = new Uri(new Uri(baseUrl), relativeUrl).ToString();
-        await this.page.GotoAsync(absoluteUrl);
+        await page.GotoAsync(absoluteUrl);
         await page.WaitForLoadStateAsync(LoadState.NetworkIdle, new PageWaitForLoadStateOptions { Timeout = timeoutMs });
     }
 

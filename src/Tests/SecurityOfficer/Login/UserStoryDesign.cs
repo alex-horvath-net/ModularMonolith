@@ -1,11 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Threading;
-using System.Threading.Tasks;
-using Experts.SecurityOfficer.Login;
+﻿using Experts.SecurityOfficer.Login;
 using Experts.SecurityOfficer.Shared.Domain;
 using Experts.SecurityOfficer.Shared.Security;
-using Xunit;
 
 namespace Tests.SecurityOfficer.Login;
 
@@ -42,16 +37,10 @@ public class UserStoryTests {
     }
 
     private sealed class FakeAuthenticateStore(Account account) : Authenticate.IStore {
-        public Task<Account?> FindByEmail(string email, CancellationToken token)
-        {
-            return Task.FromResult(string.Equals(email, account.Email, StringComparison.OrdinalIgnoreCase) ? account : null);
-        }
+        public Task<Account?> FindByEmail(string email, CancellationToken token) => Task.FromResult(string.Equals(email, account.Email, StringComparison.OrdinalIgnoreCase) ? account : null);
     }
 
     private sealed class FakeAuthorizeStore(Account account) : Authorize.IStore {
-        public Task<Account?> FindById(Guid id, CancellationToken token)
-        {
-            return Task.FromResult(account.Id == id ? account : null);
-        }
+        public Task<Account?> FindById(Guid id, CancellationToken token) => Task.FromResult(account.Id == id ? account : null);
     }
 }

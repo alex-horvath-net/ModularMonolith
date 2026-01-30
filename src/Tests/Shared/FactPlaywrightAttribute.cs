@@ -1,6 +1,3 @@
-using Microsoft.Extensions.Configuration;
-using Xunit;
-
 namespace Tests.Shared;
 
 [AttributeUsage(AttributeTargets.Method, AllowMultiple = false)]

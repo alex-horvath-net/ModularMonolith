@@ -1,9 +1,7 @@
 ﻿namespace Experts.OrderExpert.Shared.Infrastructure.Data.Seed;
 
 public sealed class DataSeeder(OrdersDbContext db, DataProvider data) {
-    public void Seed() {
-        SeedOrders();
-    }
+    public void Seed() => SeedOrders();
 
     private void SeedOrders() {
         db.Orders.RemoveRange(db.Orders.ToList());

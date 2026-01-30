@@ -1,5 +1,3 @@
-using System;
-using System.Linq;
 using Experts.SecurityOfficer.Shared.Domain;
 using Microsoft.EntityFrameworkCore;
 using Data = Experts.SecurityOfficer.Shared.Infrastructure.Data;

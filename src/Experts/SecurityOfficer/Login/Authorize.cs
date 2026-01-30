@@ -1,6 +1,4 @@
-﻿using System;
-using System.Linq;
-using Data = Experts.SecurityOfficer.Shared.Infrastructure.Data;
+﻿using Data = Experts.SecurityOfficer.Shared.Infrastructure.Data;
 using Domain = Experts.SecurityOfficer.Shared.Domain;
 
 namespace Experts.SecurityOfficer.Login {
@@ -13,7 +11,7 @@ namespace Experts.SecurityOfficer.Login {
             Task<Domain.Account?> FindById(Guid id, CancellationToken token);
         }
 
-        public class Store(Data.SecurityOfficerDbContext db) : Authorize.IStore {
+        public class Store(Data.SecurityOfficerDbContext db) : IStore {
             public async Task<Domain.Account?> FindById(Guid id, CancellationToken token) {
                 var dataAccount = await db.Accounts.FindAsync([id], token);
                 if (dataAccount == null)
@@ -31,7 +29,7 @@ namespace Experts.SecurityOfficer.Login {
 
             private static IReadOnlyCollection<string> ParseRoles(string? rawRoles) {
                 if (string.IsNullOrWhiteSpace(rawRoles)) {
-                    return Array.Empty<string>();
+                    return [];
                 }
 
                 return rawRoles

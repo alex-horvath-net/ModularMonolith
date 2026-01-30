@@ -1,5 +1,3 @@
-using Xunit;
-
 namespace Tests.Shared;
 
 [CollectionDefinition(Name)]

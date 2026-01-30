@@ -111,7 +111,9 @@ internal sealed class CertificateResolver(ILogger<CertificateResolver> logger) :
 
             // Public key algorithm check (accept RSA and ECDSA)
             var pkOid = cert.PublicKey.Oid?.Value ?? string.Empty;
-            var acceptPk = pkOid == "1.2.840.113549.1.1.1" /* RSA */ || pkOid == "1.2.840.10045.2.1" /* ECC */;
+            // /RSA or ECC
+            var acceptPk = pkOid is "1.2.840.113549.1.1.1" or "1.2.840.10045.2.1";
+
             if (!acceptPk) {
                 reason = $"Unsupported public key algorithm OID '{pkOid}'";
                 return false;
