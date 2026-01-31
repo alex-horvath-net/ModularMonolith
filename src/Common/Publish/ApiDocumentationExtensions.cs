@@ -29,7 +29,7 @@ internal static class ApiDocumentationExtensions {
 
             options.AddOperationTransformer((operation, ctx, ct) => {
                 // Apply Bearer auth requirement to all operations (Swagger UI will send JWT when authorized)
-                operation.Security ??= new List<OpenApiSecurityRequirement>();
+                operation.Security ??= [];
                 operation.Security.Add(new OpenApiSecurityRequirement {
                     [
                         new OpenApiSecurityScheme {

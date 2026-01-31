@@ -87,7 +87,7 @@ public class Authenticate(
 
         private static IReadOnlyCollection<string> ParseRoles(string? rawRoles) {
             if (string.IsNullOrWhiteSpace(rawRoles)) {
-                return Array.Empty<string>();
+                return [];
             }
 
             return rawRoles

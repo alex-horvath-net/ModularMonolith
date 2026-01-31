@@ -2,33 +2,33 @@
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 
-namespace Common.Security {
-    internal static class IncomingHttpRequestsFromBrowserExtensions {
+namespace Common.Security;
 
-        internal static IServiceCollection AddBrowserRequestRestrictions(this IServiceCollection services, IConfiguration configuration) {
+internal static class IncomingHttpRequestsFromBrowserExtensions {
 
-            var origins = configuration
-                .GetSection("Cors:AllowedOrigins")
-                .Get<string[]>() ??
-                Array.Empty<string>();
+    internal static IServiceCollection AddBrowserRequestRestrictions(this IServiceCollection services, IConfiguration configuration) {
 
-            services.AddCors(options => {
-                options.AddPolicy("DefaultCors", policy => {
-                    if (origins.Length > 0) {
-                        policy
-                            .WithOrigins(origins)
-                            .AllowAnyHeader()
-                            .AllowAnyMethod();
-                    }
-                });
+        var origins = configuration
+            .GetSection("Cors:AllowedOrigins")
+            .Get<string[]>() ??
+            [];
+
+        services.AddCors(options => {
+            options.AddPolicy("DefaultCors", policy => {
+                if (origins.Length > 0) {
+                    policy
+                        .WithOrigins(origins)
+                        .AllowAnyHeader()
+                        .AllowAnyMethod();
+                }
             });
-            return services;
-        }
+        });
+        return services;
+    }
 
-        internal static WebApplication UseBrowserRequestRestrictions(this WebApplication app) {
-            app.UseCors("DefaultCors");       // Apply configured CORS policy
+    internal static WebApplication UseBrowserRequestRestrictions(this WebApplication app) {
+        app.UseCors("DefaultCors");       // Apply configured CORS policy
 
-            return app;
-        }
+        return app;
     }
 }

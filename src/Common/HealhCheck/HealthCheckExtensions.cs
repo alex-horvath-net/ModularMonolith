@@ -11,7 +11,7 @@ internal static class HealthCheckExtensions {
 
     public static IServiceCollection AddAllowedIPsForHealthProbes(this IServiceCollection services, IConfiguration configuration) {
         // Rename from AddAllowdIPsForHealthProbes; register concrete filter so generic AddEndpointFilter<T>() can resolve it directly.
-        var allowedIps = configuration.GetSection("Health:AllowedIps").Get<string[]>() ?? Array.Empty<string>();
+        var allowedIps = configuration.GetSection("Health:AllowedIps").Get<string[]>() ?? [];
         services.AddSingleton(new IpEndpointFilter(allowedIps));
         return services;
     }

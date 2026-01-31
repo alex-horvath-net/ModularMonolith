@@ -1,3 +1,4 @@
+using System.Collections.ObjectModel;
 using Experts.SecurityOfficer.Shared.Domain;
 using Experts.SecurityOfficer.Shared.Security;
 
@@ -49,7 +50,7 @@ public sealed class UserStory {
             email,
             userName,
             hasher.Hash(request.Password),
-            roles,
+            [.. roles],
             IsLocked: false,
             CreatedAtUtc: clock.UtcNow);
 
@@ -74,8 +75,8 @@ public sealed class UserStory {
         return userName.Trim();
     }
 
-    private static IReadOnlyCollection<string> NormalizeRoles(IReadOnlyCollection<string>? roles) {
-        if (roles is null || roles.Count == 0) {
+    private static IEnumerable<string> NormalizeRoles(IEnumerable<string>? roles) {
+        if (roles is null || !roles.Any()) {
             throw new ArgumentException("At least one role must be provided.", nameof(roles));
         }
 

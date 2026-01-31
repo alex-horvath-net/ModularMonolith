@@ -19,26 +19,26 @@ public class RegisterUserStoryTests {
             Email: "Trader@Bank.Com ",
             UserName: "  Jane Trader ",
             Password: "Sup3r$ecretPwd",
-            Roles: new[] { "Trader", "trader", "RiskManager" });
+            Roles: ["Trader", "trader", "RiskManager"]);
 
         var response = await sut.RegisterAsync(request);
 
         Assert.Equal("trader@bank.com", response.Email);
-        AssertEquivalent(new[] { "Trader", "RiskManager" }, response.Roles);
+        AssertEquivalent(["Trader", "RiskManager"], response.Roles);
 
         Assert.NotNull(store.Created);
         Assert.Equal("trader@bank.com", store.Created!.Email);
         Assert.Equal("Jane Trader", store.Created.UserName);
-        AssertEquivalent(new[] { "Trader", "RiskManager" }, store.Created.Roles);
+        AssertEquivalent(["Trader", "RiskManager"], store.Created.Roles);
         Assert.Equal(clock.UtcNow, store.Created.CreatedAtUtc);
         Assert.Contains("Sup3r$ecretPwd", hasher.HashInputs);
     }
 
     [Fact]
     public async Task RegisterAsync_WhenEmailAlreadyExists_Throws() {
-        store.Existing = new Account(Guid.NewGuid(), "user@example.com", "Existing", "hash", Array.Empty<string>(), false, clock.UtcNow);
+        store.Existing = new Account(Guid.NewGuid(), "user@example.com", "Existing", "hash", [], false, clock.UtcNow);
         var sut = CreateSut();
-        var request = new UserStory.Request("user@example.com", "New", "Sup3r$ecretPwd", new[] { "Trader" });
+        var request = new UserStory.Request("user@example.com", "New", "Sup3r$ecretPwd", ["Trader"]);
 
         await Assert.ThrowsAsync<InvalidOperationException>(() => sut.RegisterAsync(request));
     }
@@ -46,7 +46,7 @@ public class RegisterUserStoryTests {
     [Fact]
     public async Task RegisterAsync_WhenPasswordIsWeak_Throws() {
         var sut = CreateSut();
-        var request = new UserStory.Request("user@example.com", "New", "weak", new[] { "Trader" });
+        var request = new UserStory.Request("user@example.com", "New", "weak", ["Trader"]);
 
         await Assert.ThrowsAsync<InvalidOperationException>(() => sut.RegisterAsync(request));
 

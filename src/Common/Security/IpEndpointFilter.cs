@@ -2,13 +2,14 @@ using System.Net;
 using System.Net.Sockets;
 using Microsoft.AspNetCore.Http;
 
+namespace Common.Security;
 // AllowedIpHealthFilter acts as an endpoint filter enforcing an IP allowlist for health endpoints.
 public sealed class IpEndpointFilter : IEndpointFilter {
     private readonly HashSet<string> _allowed = new(StringComparer.OrdinalIgnoreCase);
 
-    public IpEndpointFilter(IEnumerable<string>? ip_v4_List) {
-        if (ip_v4_List != null) {
-            foreach (var ip_v4 in ip_v4_List) {
+    public IpEndpointFilter(IEnumerable<string>? ipv4List) {
+        if (ipv4List != null) {
+            foreach (var ip_v4 in ipv4List) {
 
 
                 if (string.IsNullOrWhiteSpace(ip_v4))

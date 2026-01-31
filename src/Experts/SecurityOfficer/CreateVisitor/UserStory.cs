@@ -33,7 +33,7 @@ public class UserStory {
         private static readonly ApplicationUser EmptyApplicationUser = new(
             new Application(string.Empty, string.Empty),
             new Identity(Guid.Empty, DateTime.MinValue, string.Empty, string.Empty),
-            Array.Empty<string>());
+            []);
 
         public Response() : this(false, EmptyApplicationUser) { }
     }

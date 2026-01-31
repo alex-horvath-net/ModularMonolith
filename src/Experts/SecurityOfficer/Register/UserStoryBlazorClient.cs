@@ -23,7 +23,7 @@ public sealed class UserStoryBlazorClient(UserStory userStory) {
         public string Email { get; set; } = string.Empty;
         public string UserName { get; set; } = string.Empty;
         public string Password { get; set; } = string.Empty;
-        public IList<string> Roles { get; } = new List<string>();
+        public IList<string> Roles { get; } = [];
 
         public void ReplaceRoles(IEnumerable<string> roles) {
             ArgumentNullException.ThrowIfNull(roles);

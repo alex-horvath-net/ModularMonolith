@@ -6,7 +6,7 @@ public sealed class Order {
     public Guid Id { get; private set; }
     public Guid CustomerId { get; private set; }
 
-    private readonly List<OrderLine> _lines = new();
+    private readonly List<OrderLine> _lines = [];
     public IReadOnlyCollection<OrderLine> Lines => _lines;
 
 

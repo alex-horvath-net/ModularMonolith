@@ -3,7 +3,7 @@ namespace Experts.OrderExpert.Shared.Infrastructure.Data.Models;
 public sealed class Order {
     public Guid Id { get; set; }
     public Guid CustomerId { get; set; }
-    public List<OrderLine> Lines { get; set; } = new();
+    public List<OrderLine> Lines { get; set; } = [];
 
     public Business.Domain.Order ToDomain() {
         var orderDomain = new Business.Domain.Order(Id, CustomerId);

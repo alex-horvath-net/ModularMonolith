@@ -17,7 +17,7 @@ public static class ObservabilityExtensions {
                 serviceName: "WebApi",
                 serviceVersion: "1.0.0",
                 serviceInstanceId: Environment.MachineName)
-            .AddAttributes(new[] { new KeyValuePair<string, object>("deployment.environment", env.EnvironmentName) });
+            .AddAttributes([new KeyValuePair<string, object>("deployment.environment", env.EnvironmentName)]);
 
         var otlpEndpoint = config["Observability:OtlpEndpoint"];
         if (!env.IsDevelopment() && string.IsNullOrWhiteSpace(otlpEndpoint)) {

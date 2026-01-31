@@ -44,7 +44,7 @@ public sealed class AccountStore(Data.SecurityOfficerDbContext db) : UserStory.I
 
     private static IReadOnlyCollection<string> ParseRoles(string? rawRoles) {
         if (string.IsNullOrWhiteSpace(rawRoles)) {
-            return Array.Empty<string>();
+            return [];
         }
 
         return rawRoles

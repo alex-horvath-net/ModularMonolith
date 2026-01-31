@@ -93,7 +93,7 @@ static void SeedSecurityOfficerAccounts(WebApplication app) {
         defaultEmail,
         "Aladar Horvath",
         defaultPassword,
-        new[] { "Trader" });
+        ["Trader"]);
 
     registerUserStory.RegisterAsync(request).GetAwaiter().GetResult();
 }

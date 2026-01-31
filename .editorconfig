@@ -278,4 +278,16 @@ dotnet_diagnostic.CA1805.severity = error
 dotnet_diagnostic.IDE0040.severity = error
 
 # CA1859: Use concrete types when possible for improved performance
-dotnet_diagnostic.CA1859.severity = error
+dotnet_diagnostic.CA1859.severity = none
+
+# IDE0300: Simplify collection initialization
+dotnet_diagnostic.IDE0300.severity = error
+
+# IDE0028: Simplify collection initialization
+dotnet_diagnostic.IDE0028.severity = error
+
+# IDE0305: Simplify collection initialization
+dotnet_diagnostic.IDE0305.severity = none
+
+# IDE0161: Convert to file-scoped namespace
+dotnet_diagnostic.IDE0161.severity = error

@@ -13,7 +13,7 @@ public class UserStoryTests {
             "aladar.horvath@outlook.com",
             "Aladar",
             hasher.Hash("P@ssw0rd!"),
-            new[] { "Trader" },
+            ["Trader"],
             IsLocked: false,
             CreatedAtUtc: DateTime.UtcNow);
 
