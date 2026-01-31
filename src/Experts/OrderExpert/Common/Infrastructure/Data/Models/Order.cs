@@ -1,4 +1,4 @@
-namespace Experts.OrderExpert.Shared.Infrastructure.Data.Models;
+namespace Experts.OrderExpert.Common.Infrastructure.Data.Models;
 
 public sealed class Order {
     public Guid Id { get; set; }
@@ -12,11 +12,4 @@ public sealed class Order {
             orderDomain.AddLine(line.ProductId, line.Quantity, line.UnitPrice);
         return orderDomain;
     }
-
-
-    private Business.Domain.OrderLine ToInfraOrderLine(OrderLine domainOrderLine) => new(
-        productId: domainOrderLine.ProductId,
-        unitPrice: domainOrderLine.UnitPrice,
-        quantity: domainOrderLine.Quantity
-    );
 }

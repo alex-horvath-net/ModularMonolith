@@ -1,4 +1,4 @@
-namespace Experts.OrderExpert.Shared.Infrastructure.Data.Models;
+namespace Experts.OrderExpert.Common.Infrastructure.Data.Models;
 
 public sealed class OrderLine {
     public Guid Id { get; set; }

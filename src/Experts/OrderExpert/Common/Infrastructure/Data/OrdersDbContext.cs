@@ -1,7 +1,7 @@
-using Experts.OrderExpert.Shared.Infrastructure.Data.Models;
+using Experts.OrderExpert.Common.Infrastructure.Data.Models;
 using Microsoft.EntityFrameworkCore;
 
-namespace Experts.OrderExpert.Shared.Infrastructure.Data;
+namespace Experts.OrderExpert.Common.Infrastructure.Data;
 
 public sealed class OrdersDbContext(DbContextOptions<OrdersDbContext> options) : DbContext(options) {
     public DbSet<Order> Orders => Set<Order>();

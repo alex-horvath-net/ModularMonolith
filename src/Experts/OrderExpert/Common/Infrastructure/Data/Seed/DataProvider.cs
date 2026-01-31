@@ -1,6 +1,6 @@
-﻿using Experts.OrderExpert.Shared.Infrastructure.Data.Models;
+﻿using Experts.OrderExpert.Common.Infrastructure.Data.Models;
 
-namespace Experts.OrderExpert.Shared.Infrastructure.Data.Seed;
+namespace Experts.OrderExpert.Common.Infrastructure.Data.Seed;
 
 public sealed class DataProvider() {
     public IReadOnlyList<Order> GetSeedOrders() => [

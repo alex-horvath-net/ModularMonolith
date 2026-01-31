@@ -8,6 +8,6 @@ public sealed class DefaultRolePolicy : UserStory.IRolePolicy {
 
     public bool AreEligible(IEnumerable<string> requestedRoles) {
         ArgumentNullException.ThrowIfNull(requestedRoles);
-        return requestedRoles.All(role => AllowedRoles.Contains(role));
+        return requestedRoles.All(AllowedRoles.Contains);
     }
 }

@@ -54,10 +54,10 @@ public sealed class IpEndpointFilter : IEndpointFilter {
         return false;
     }
 
-    public async ValueTask<object?> InvokeAsync(EndpointFilterInvocationContext invocationContext, EndpointFilterDelegate next) {
-        if (!IsAllowed(invocationContext.HttpContext)) {
+    public async ValueTask<object?> InvokeAsync(EndpointFilterInvocationContext context, EndpointFilterDelegate next) {
+        if (!IsAllowed(context.HttpContext)) {
             return Results.StatusCode(StatusCodes.Status403Forbidden);
         }
-        return await next(invocationContext);
+        return await next(context);
     }
 }

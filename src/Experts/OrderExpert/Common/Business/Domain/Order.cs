@@ -1,6 +1,6 @@
 using Data = Experts.OrderExpert.Shared.Infrastructure.Data;
 
-namespace Experts.OrderExpert.Shared.Business.Domain;
+namespace Experts.OrderExpert.Common.Business.Domain;
 
 public sealed class Order {
     public Guid Id { get; private set; }
@@ -37,14 +37,14 @@ public sealed class Order {
     public void AddLine(Guid productId, int quantity, decimal unitPrice) => _lines.Add(
         new OrderLine(productId, quantity, unitPrice));
 
-    public Data.Models.Order ToDataModel() => new() {
+    public Infrastructure.Data.Models.Order ToDataModel() => new() {
         Id = Id,
         CustomerId = CustomerId,
         Lines = Lines.Select(ToInfraOrderLine).ToList()
     };
 
 
-    private Data.Models.OrderLine ToInfraOrderLine(OrderLine domainOrderLine) => new() {
+    private Infrastructure.Data.Models.OrderLine ToInfraOrderLine(OrderLine domainOrderLine) => new() {
         ProductId = domainOrderLine.ProductId,
         UnitPrice = domainOrderLine.UnitPrice,
         Quantity = domainOrderLine.Quantity

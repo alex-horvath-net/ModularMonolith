@@ -1,6 +1,6 @@
-using Experts.OrderExpert.Shared.Business.Domain;
-using Experts.OrderExpert.Shared.Business.Services;
-using Experts.OrderExpert.Shared.Infrastructure.Data;
+using Experts.OrderExpert.Common.Business.Domain;
+using Experts.OrderExpert.Common.Business.Services;
+using Experts.OrderExpert.Common.Infrastructure.Data;
 
 namespace Experts.OrderExpert.GetAllOrder;
 

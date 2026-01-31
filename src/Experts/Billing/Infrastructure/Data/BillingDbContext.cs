@@ -1,5 +1,5 @@
 using Experts.Billing.Infrastructure.Data.Models;
-using Experts.OrderExpert.Shared.Infrastructure.Data;
+using Experts.OrderExpert.Common.Infrastructure.Data;
 using Microsoft.EntityFrameworkCore;
 
 namespace Experts.Billing.Infrastructure.Data;

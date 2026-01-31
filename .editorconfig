@@ -291,3 +291,24 @@ dotnet_diagnostic.IDE0305.severity = none
 
 # IDE0161: Convert to file-scoped namespace
 dotnet_diagnostic.IDE0161.severity = error
+
+# CA1725: Parameter names should match base declaration
+dotnet_diagnostic.CA1725.severity = error
+
+# IDE0200: Remove unnecessary lambda expression
+dotnet_diagnostic.IDE0200.severity = error
+
+# CA1822: Mark members as static
+dotnet_diagnostic.CA1822.severity = none
+
+# EF1002: Risk of vulnerability to SQL injection.
+dotnet_diagnostic.EF1002.severity = error
+
+# IDE0051: Remove unused private members
+dotnet_diagnostic.IDE0051.severity = error
+
+# CA1707: Identifiers should not contain underscores
+dotnet_diagnostic.CA1707.severity = none
+
+# IDE0060: Remove unused parameter
+dotnet_diagnostic.IDE0060.severity = error

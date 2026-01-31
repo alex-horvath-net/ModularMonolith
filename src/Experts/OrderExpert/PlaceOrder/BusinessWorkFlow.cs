@@ -1,4 +1,4 @@
-﻿using Experts.OrderExpert.Shared.Business.Domain;
+﻿using Experts.OrderExpert.Common.Business.Domain;
 using Experts.Shared.Business.Domain;
 
 namespace Experts.OrderExpert.PlaceOrder;

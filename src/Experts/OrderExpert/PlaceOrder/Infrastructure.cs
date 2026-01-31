@@ -1,6 +1,6 @@
 ﻿
-using Experts.OrderExpert.Shared.Infrastructure.Data;
-using Experts.OrderExpert.Shared.Infrastructure.Data.Models;
+using Experts.OrderExpert.Common.Infrastructure.Data;
+using Experts.OrderExpert.Common.Infrastructure.Data.Models;
 using FluentValidation;
 
 namespace Experts.OrderExpert.PlaceOrder;

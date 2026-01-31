@@ -1,9 +1,10 @@
-﻿using Experts.OrderExpert.Shared.Business.Domain;
+﻿using Experts.OrderExpert.Common.Business.Domain;
+using Experts.OrderExpert.Common.Infrastructure.Data.Models;
 using Experts.Shared.Business.Domain;
 using Experts.Shared.Business.Events;
 using Experts.Shared.Infrastructure;
 using FluentValidation;
-using Data = Experts.OrderExpert.Shared.Infrastructure.Data;
+using Data = Experts.OrderExpert.Common.Infrastructure.Data;
 
 namespace Experts.OrderExpert.PlaceOrder;
 
@@ -44,6 +45,6 @@ internal class BusinessWorkSteps(
     }
 
     public interface IStoreInfrastructure {
-        Task Save(Data.Models.Order order, CancellationToken token);
+        Task Save(Common.Infrastructure.Data.Models.Order order, CancellationToken token);
     }
 }

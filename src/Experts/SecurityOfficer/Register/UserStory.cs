@@ -1,4 +1,3 @@
-using System.Collections.ObjectModel;
 using Experts.SecurityOfficer.Shared.Domain;
 using Experts.SecurityOfficer.Shared.Security;
 

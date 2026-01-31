@@ -1,4 +1,4 @@
-namespace Experts.OrderExpert.Shared.Business;
+namespace Experts.OrderExpert.Common.Business;
 
 public static class OrdersConstants {
     public const string Read = "Orders.Read";

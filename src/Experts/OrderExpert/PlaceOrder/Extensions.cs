@@ -1,11 +1,10 @@
 ﻿using FluentValidation;
-using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace Experts.OrderExpert.PlaceOrder;
 
 public static class Extensions {
-    public static IServiceCollection AddPlaceOrderBusinessWorkFlow(this IServiceCollection services, IConfiguration configuration) {
+    public static IServiceCollection AddPlaceOrderBusinessWorkFlow(this IServiceCollection services) {
 
         services.AddScoped<BusinessWorkFlow>();
         services.AddScoped<BusinessWorkFlow.IBusinessWorkSteps, BusinessWorkSteps>();

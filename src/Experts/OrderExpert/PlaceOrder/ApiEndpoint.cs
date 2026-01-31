@@ -1,5 +1,5 @@
 using Asp.Versioning;
-using Experts.OrderExpert.Shared.Business;
+using Experts.OrderExpert.Common.Business;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Routing;

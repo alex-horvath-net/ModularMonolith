@@ -1,9 +1,9 @@
+using Experts.OrderExpert.Common.Business;
+using Experts.OrderExpert.Common.Infrastructure.Data;
+using Experts.OrderExpert.Common.Infrastructure.Data.Seed;
 using Experts.OrderExpert.GetAllOrder;
 using Experts.OrderExpert.GetOrder;
 using Experts.OrderExpert.PlaceOrder;
-using Experts.OrderExpert.Shared.Business;
-using Experts.OrderExpert.Shared.Infrastructure.Data;
-using Experts.OrderExpert.Shared.Infrastructure.Data.Seed;
 using Experts.Shared;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Routing;
@@ -25,7 +25,7 @@ public static class OrdersExtensions {
         services.AddScoped<GetAllOrderQueryHandler>();
         services.AddScoped<GetOrderQueryHandler>();
 
-        services.AddPlaceOrderBusinessWorkFlow(configuration);
+        services.AddPlaceOrderBusinessWorkFlow();
         services.AddShared();
 
 

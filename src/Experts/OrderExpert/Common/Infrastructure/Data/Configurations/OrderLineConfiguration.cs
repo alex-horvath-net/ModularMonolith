@@ -1,8 +1,8 @@
-using Experts.OrderExpert.Shared.Infrastructure.Data.Models;
+using Experts.OrderExpert.Common.Infrastructure.Data.Models;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
-namespace Experts.OrderExpert.Shared.Infrastructure.Data.Configurations;
+namespace Experts.OrderExpert.Common.Infrastructure.Data.Configurations;
 
 public sealed class OrderLineConfiguration : IEntityTypeConfiguration<OrderLine> {
     public void Configure(EntityTypeBuilder<OrderLine> builder) {

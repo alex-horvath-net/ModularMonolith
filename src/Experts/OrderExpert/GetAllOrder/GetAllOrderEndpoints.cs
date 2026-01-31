@@ -1,6 +1,7 @@
 using Asp.Versioning;
+using Experts.OrderExpert.Common.Business;
+using Experts.OrderExpert.Common.Business.Domain;
 using Experts.OrderExpert.GetOrder;
-using Experts.OrderExpert.Shared.Business;
 using Microsoft.AspNetCore.Builder; // MapGroup extension
 using Microsoft.AspNetCore.Http; // IResult, TypedResults
 using Microsoft.AspNetCore.Http.HttpResults; // OK
@@ -17,17 +18,17 @@ public static class GetAllOrderEndpoints {
 
         group.MapGet("", GetAllOrders)
             .RequireAuthorization(OrdersConstants.Read)
-            .Produces<List<Shared.Business.Domain.Order>>(StatusCodes.Status200OK);
+            .Produces<List<Order>>(StatusCodes.Status200OK);
 
         group.MapGet("/{id:guid}", GetOrderById)
             .RequireAuthorization(OrdersConstants.Read)
-            .Produces<Shared.Business.Domain.Order>(StatusCodes.Status200OK)
+            .Produces<Order>(StatusCodes.Status200OK)
             .Produces(StatusCodes.Status404NotFound);
 
         return app;
     }
 
-    private static async Task<Ok<List<Shared.Business.Domain.Order>>> GetAllOrders(
+    private static async Task<Ok<List<Order>>> GetAllOrders(
         GetAllOrderQueryHandler queryHandler,
         CancellationToken token) {
         var orders = await queryHandler.Handle(token);
