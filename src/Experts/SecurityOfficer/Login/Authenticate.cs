@@ -1,60 +1,50 @@
-﻿using Experts.SecurityOfficer.Shared.Security;
+﻿using Experts.SecurityOfficer.Common.Security;
 using Microsoft.EntityFrameworkCore;
-using Data = Experts.SecurityOfficer.Shared.Infrastructure.Data;
-using Domain = Experts.SecurityOfficer.Shared.Domain;
+using Domain = Experts.SecurityOfficer.Common.Domain;
+using Data = Experts.SecurityOfficer.Common.Infrastructure.Data;
 
 namespace Experts.SecurityOfficer.Login;
 
 public class Authenticate(
     Authenticate.IStore store,
     IPasswordHasher hasher) {
-    public async Task Run(
-        UserStory.Request request,
-        UserStory.Response response,
-        CancellationToken token) {
+    public async Task Run(UserStory.State state) {
 
-        if (request.AccountType != UserStory.AccountType.LocalAccount) {
-            response.ErrorMessage = "Account type not found";
+        if (state.Request.AccountType != UserStory.AccountType.LocalAccount) {
+            state.Response.ErrorMessage = "Account type not found";
             return;
         }
 
-        await LocalAccountAuthentication(request, response, token);
-        if (response.ErrorMessage != null) {
+        if (!state.Request.Credentials.TryGetValue("Email", out var email)) {
+            state.Response.ErrorMessage = "Credential not found. Missing Email";
             return;
         }
+
+        if (!state.Request.Credentials.TryGetValue("Password", out var password)) {
+            state.Response.ErrorMessage = "Credential not found. Missing Password";
+            return;
+        }
+
+        state.Account = await store.FindByEmail(email, state.Token);
+
+        if (state.Account is null) {
+            state.Response.ErrorMessage = "Account not found";
+            return;
+        }
+
+        if (state.Account.IsLocked) {
+            state.Response.ErrorMessage = "Account locked";
+            return;
+        }
+
+        if (!hasher.Verify(password, state.Account.PasswordHash)) {
+            state.Response.ErrorMessage = "Invalid password";
+            return;
+        }
+
+        state.Response.AuthenticationId = state.Account.Id;
 
         return;
-    }
-
-    private async Task LocalAccountAuthentication(UserStory.Request request, UserStory.Response response, CancellationToken token) {
-        if (!request.Credentials.TryGetValue("Email", out var email)) {
-            response.ErrorMessage = "Credential not found. Missing Email";
-            return;
-        }
-
-        if (!request.Credentials.TryGetValue("Password", out var password)) {
-            response.ErrorMessage = "Credential not found. Missing Password";
-            return;
-        }
-
-        var account = await store.FindByEmail(email, token);
-
-        if (account is null) {
-            response.ErrorMessage = "Account not found";
-            return;
-        }
-
-        if (account.IsLocked) {
-            response.ErrorMessage = "Account locked";
-            return;
-        }
-
-        if (!hasher.Verify(password, account.PasswordHash)) {
-            response.ErrorMessage = "Invalid password";
-            return;
-        }
-
-        response.AuthenticationId = account.Id;
     }
 
     public interface IStore {
@@ -66,35 +56,25 @@ public class Authenticate(
             var accountInfra =
                 await db
                     .Accounts
+                    .Include(account => account.Roles)
                     .Where(account => account.Email == email)
                     .FirstOrDefaultAsync(token);
-
-            if (accountInfra is null) {
-                return null;
-            }
 
             return MapToDomain(accountInfra);
         }
 
-        private static Domain.Account MapToDomain(Data.Models.Account accountData) => new(
-            accountData.Id,
-            accountData.Email,
-            accountData.UserName,
-            accountData.PasswordHash,
-            ParseRoles(accountData.Roles),
-            accountData.IsLocked,
-            accountData.CreatedAtUtc);
+        private static Domain.Account? MapToDomain(Data.Models.Account? data) =>
+            data == null ? null :
+            new(
+                data.Id,
+                data.Email,
+                data.UserName,
+                data.PasswordHash,
+                data.Roles.Select(MapToDomain).ToHashSet(),
+                data.IsLocked,
+                data.CreatedAtUtc);
 
-        private static IReadOnlyCollection<string> ParseRoles(string? rawRoles) {
-            if (string.IsNullOrWhiteSpace(rawRoles)) {
-                return [];
-            }
-
-            return rawRoles
-                .Split(',', StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries)
-                .Distinct(StringComparer.OrdinalIgnoreCase)
-                .ToArray();
-        }
+        private static string MapToDomain(Data.Models.Role data) =>
+            data.Name;
     }
-
 }

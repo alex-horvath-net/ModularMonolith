@@ -1,6 +1,6 @@
+using Experts.SecurityOfficer.Common.Domain;
+using Experts.SecurityOfficer.Common.Security;
 using Experts.SecurityOfficer.Register;
-using Experts.SecurityOfficer.Shared.Domain;
-using Experts.SecurityOfficer.Shared.Security;
 
 namespace Tests.SecurityOfficer.Register;
 

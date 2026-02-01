@@ -1,4 +1,4 @@
-﻿namespace Experts.SecurityOfficer.Shared.Infrastructure.Data.Models;
+﻿namespace Experts.SecurityOfficer.Common.Infrastructure.Data.Models;
 
 public class Account {
     public Guid Id { get; internal set; }
@@ -6,6 +6,6 @@ public class Account {
     public string Email { get; set; } = string.Empty;
     public string PasswordHash { get; set; } = string.Empty;
     public bool IsLocked { get; set; }
-    public string Roles { get; set; } = string.Empty;
+    public ISet<Role> Roles { get; set; } = new HashSet<Role>();
     public DateTime CreatedAtUtc { get; set; }
 }

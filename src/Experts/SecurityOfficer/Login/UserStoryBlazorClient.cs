@@ -1,4 +1,4 @@
-﻿using Experts.SecurityOfficer.Shared.Domain;
+﻿using Experts.SecurityOfficer.Common.Domain;
 using static Experts.SecurityOfficer.Login.UserStory;
 
 namespace Experts.SecurityOfficer.Login;

@@ -4,11 +4,10 @@ using Experts.Shared.Business.Domain;
 using Experts.Shared.Business.Events;
 using Experts.Shared.Infrastructure;
 using FluentValidation;
-using Data = Experts.OrderExpert.Common.Infrastructure.Data;
 
 namespace Experts.OrderExpert.PlaceOrder;
 
-internal class BusinessWorkSteps(
+internal sealed class BusinessWorkSteps(
     IValidator<PlaceOrderRequest> validator,
     BusinessWorkSteps.IStoreInfrastructure store,
     IBusinessEventPublisher publisher) : BusinessWorkFlow.IBusinessWorkSteps {

@@ -5,8 +5,8 @@ using FluentValidation;
 
 namespace Experts.OrderExpert.PlaceOrder;
 
-internal class Infrastructure {
-    internal class Store(OrdersDbContext db) : BusinessWorkSteps.IStoreInfrastructure {
+internal sealed class Infrastructure {
+    internal sealed class Store(OrdersDbContext db) : BusinessWorkSteps.IStoreInfrastructure {
         public async Task Save(Order order, CancellationToken token) {
             db.Add(order);
             await db.SaveChangesAsync(token);

@@ -1,5 +1,3 @@
-using Data = Experts.OrderExpert.Shared.Infrastructure.Data;
-
 namespace Experts.OrderExpert.Common.Business.Domain;
 
 public sealed class Order {

@@ -1,11 +1,16 @@
-﻿using Data = Experts.SecurityOfficer.Shared.Infrastructure.Data;
-using Domain = Experts.SecurityOfficer.Shared.Domain;
+﻿using Data = Experts.SecurityOfficer.Common.Infrastructure.Data;
+using Domain = Experts.SecurityOfficer.Common.Domain;
 
 namespace Experts.SecurityOfficer.Login;
 
 public class Authorize(Authorize.IStore store) {
-    public async Task Run(UserStory.Response response, CancellationToken token) {
-        var account = await store.FindById(response.AuthenticationId!.Value, token);
+    public async Task Run(UserStory.State state) {
+        if (state.Account is null) {
+            state.Response.ErrorMessage = "Account not found";
+            return;
+        }
+
+        state.Response.Roles = state.Account.Roles.ToList();
     }
 
     public interface IStore {

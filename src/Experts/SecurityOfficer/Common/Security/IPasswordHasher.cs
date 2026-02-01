@@ -1,6 +1,6 @@
 using System.Security.Cryptography;
 
-namespace Experts.SecurityOfficer.Shared.Security;
+namespace Experts.SecurityOfficer.Common.Security;
 
 /// <summary>
 /// Provides hashing and verification for credentials stored by the security officer expert.

@@ -28,7 +28,7 @@ dotnet_search_reference_assemblies = true
 #### .NET Coding Conventions ####
 dotnet_diagnostic.IDE0058.severity = none  # unused value analyzer
 dotnet_diagnostic.CA1848.severity = none   # prefer 'AsSpan' analyzer
-dotnet_diagnostic.IDE0005.severity = error # usings analyzer
+dotnet_diagnostic.IDE0005.severity = error # Using directive is unnecessary
 dotnet_diagnostic.IDE0290.severity = error # prefer 'is not null' analyzer
 dotnet_diagnostic.IDE0055.severity = error # formatting analyzer  
 dotnet_diagnostic.IDE0330.severity = error # 'var' usage analyzer
@@ -312,3 +312,14 @@ dotnet_diagnostic.CA1707.severity = none
 
 # IDE0060: Remove unused parameter
 dotnet_diagnostic.IDE0060.severity = error
+
+dotnet_diagnostic.CA1852.severity = error # seal the type
+        
+# CS8618: Non-nullable field must contain a non-null value when exiting constructor. Consider adding the 'required' modifier or declaring as nullable.
+dotnet_diagnostic.CS8618.severity = error
+
+dotnet_diagnostic.CA1716.severity = error
+
+# CA1310: Specify StringComparison for correctness
+dotnet_diagnostic.CA1310.severity = error
+

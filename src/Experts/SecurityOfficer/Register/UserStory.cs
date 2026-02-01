@@ -1,5 +1,5 @@
-using Experts.SecurityOfficer.Shared.Domain;
-using Experts.SecurityOfficer.Shared.Security;
+using Experts.SecurityOfficer.Common.Domain;
+using Experts.SecurityOfficer.Common.Security;
 
 namespace Experts.SecurityOfficer.Register;
 
@@ -101,8 +101,8 @@ public sealed class UserStory {
     public sealed record Response(Guid AccountId, string Email, IReadOnlyCollection<string> Roles);
 
     public interface IAccountStore {
-        Task<Account?> FindByEmailAsync(string normalizedEmail, CancellationToken cancellationToken);
-        Task CreateAsync(Account account, CancellationToken cancellationToken);
+        Task<Account?> FindByEmailAsync(string email, CancellationToken token);
+        Task CreateAsync(Account account, CancellationToken token);
     }
 
     public interface IRolePolicy {

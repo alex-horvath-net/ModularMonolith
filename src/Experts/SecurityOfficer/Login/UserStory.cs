@@ -1,26 +1,31 @@
-﻿using Experts.SecurityOfficer.Shared.Domain;
+﻿using Experts.SecurityOfficer.Common.Domain;
 
 namespace Experts.SecurityOfficer.Login;
 
 public class UserStory(
     Authenticate authenticate,
     Authorize authorize) {
+
+    private State state;
     public async Task<Response> Run(Request request, CancellationToken token) {
-        var response = new Response();
+        state = new State(request, new Response(), token);
 
         // Authenticate
-        await authenticate.Run(request, response, token);
-        if (response.ErrorMessage != null)
-            return response;
+        await authenticate.Run(state);
+        if (state.Response.ErrorMessage != null)
+            return state.Response;
 
-        await authorize.Run(response, token);
-        if (response.ErrorMessage != null)
-            return response;
+        await authorize.Run(state);
+        if (state.Response.ErrorMessage != null)
+            return state.Response;
 
-        response.IsUserStoryEnabled = true;
-        return response;
+        state.Response.IsUserStoryEnabled = true;
+        return state.Response;
     }
 
+    public sealed record State(Request Request, Response Response, CancellationToken Token) {
+        internal Account? Account { get; set; }
+    }
 
     public record Request(
         Guid VisitorId,
@@ -51,5 +56,4 @@ public class UserStory(
         IdentityNotFound,
         IdentityLocked
     }
-
 }

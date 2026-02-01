@@ -1,4 +1,4 @@
-﻿using Experts.SecurityOfficer.Shared.Domain;
+﻿using Experts.SecurityOfficer.Common.Domain;
 
 namespace Experts.SecurityOfficer.CreateVisitor;
 

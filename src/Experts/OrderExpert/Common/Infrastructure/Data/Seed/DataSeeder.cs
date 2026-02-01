@@ -1,6 +1,4 @@
-﻿using Experts.OrderExpert.Common.Infrastructure.Data;
-
-namespace Experts.OrderExpert.Common.Infrastructure.Data.Seed;
+﻿namespace Experts.OrderExpert.Common.Infrastructure.Data.Seed;
 
 public sealed class DataSeeder(OrdersDbContext db, DataProvider data) {
     public void Seed() => SeedOrders();

@@ -1,4 +1,4 @@
-﻿namespace Experts.SecurityOfficer.Shared.Domain;
+﻿namespace Experts.SecurityOfficer.Common.Domain;
 
 public record Identity(
     Guid VisitorId,

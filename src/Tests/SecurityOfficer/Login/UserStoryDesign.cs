@@ -1,6 +1,6 @@
-﻿using Experts.SecurityOfficer.Login;
-using Experts.SecurityOfficer.Shared.Domain;
-using Experts.SecurityOfficer.Shared.Security;
+﻿using Experts.SecurityOfficer.Common.Domain;
+using Experts.SecurityOfficer.Login;
+using Experts.SecurityOfficer.Common.Security;
 
 namespace Tests.SecurityOfficer.Login;
 
@@ -13,7 +13,7 @@ public class UserStoryTests {
             "aladar.horvath@outlook.com",
             "Aladar",
             hasher.Hash("P@ssw0rd!"),
-            ["Trader"],
+            new HashSet<string>(["Trader"]),
             IsLocked: false,
             CreatedAtUtc: DateTime.UtcNow);
 

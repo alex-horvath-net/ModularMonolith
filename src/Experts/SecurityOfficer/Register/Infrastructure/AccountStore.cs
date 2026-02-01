@@ -1,55 +1,57 @@
-using Experts.SecurityOfficer.Shared.Domain;
+using Domain = Experts.SecurityOfficer.Common.Domain;
+using Data = Experts.SecurityOfficer.Common.Infrastructure.Data;
 using Microsoft.EntityFrameworkCore;
-using Data = Experts.SecurityOfficer.Shared.Infrastructure.Data;
 
 namespace Experts.SecurityOfficer.Register.Infrastructure;
 
 public sealed class AccountStore(Data.SecurityOfficerDbContext db) : UserStory.IAccountStore {
-    public async Task<Account?> FindByEmailAsync(string normalizedEmail, CancellationToken cancellationToken) {
-        ArgumentException.ThrowIfNullOrWhiteSpace(normalizedEmail);
+    public async Task<Domain.Account?> FindByEmailAsync(string email, CancellationToken token) {
+        ArgumentException.ThrowIfNullOrWhiteSpace(email);
 
         var entity = await db.Accounts
             .AsNoTracking()
-            .FirstOrDefaultAsync(a => a.Email == normalizedEmail, cancellationToken)
+            .FirstOrDefaultAsync(account => account.Email == email, token)
             .ConfigureAwait(false);
 
-        return entity is null ? null : Map(entity);
+        return MapToDomain(entity);
     }
 
-    public async Task CreateAsync(Account account, CancellationToken cancellationToken) {
+    public async Task CreateAsync(Domain.Account account, CancellationToken token) {
         ArgumentNullException.ThrowIfNull(account);
 
-        var entity = new Data.Models.Account {
-            Id = account.Id,
-            Email = account.Email,
-            UserName = account.UserName,
-            PasswordHash = account.PasswordHash,
-            IsLocked = account.IsLocked,
-            Roles = string.Join(',', account.Roles),
-            CreatedAtUtc = account.CreatedAtUtc
-        };
+        var data = MapToData(account)!;
 
-        db.Accounts.Add(entity);
-        await db.SaveChangesAsync(cancellationToken).ConfigureAwait(false);
+        db.Accounts.Add(data);
+
+        await db
+            .SaveChangesAsync(token)
+            .ConfigureAwait(false);
     }
 
-    private static Account Map(Data.Models.Account entity) => new(
-        entity.Id,
-        entity.Email,
-        entity.UserName,
-        entity.PasswordHash,
-        ParseRoles(entity.Roles),
-        entity.IsLocked,
-        entity.CreatedAtUtc);
+    private static Data.Models.Account MapToData(Domain.Account domain) => new() {
+        Id = domain.Id,
+        Email = domain.Email,
+        UserName = domain.UserName,
+        PasswordHash = domain.PasswordHash,
+        Roles = domain.Roles.Select(MapToData).ToHashSet(),
+        IsLocked = domain.IsLocked,
+        CreatedAtUtc = domain.CreatedAtUtc
+    };
 
-    private static IReadOnlyCollection<string> ParseRoles(string? rawRoles) {
-        if (string.IsNullOrWhiteSpace(rawRoles)) {
-            return [];
-        }
+    private static Data.Models.Role MapToData(string role) => new() {
+        Name = role
+    };
 
-        return rawRoles
-            .Split(',', StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries)
-            .Distinct(StringComparer.OrdinalIgnoreCase)
-            .ToArray();
-    }
+    private static Domain.Account? MapToDomain(Data.Models.Account? entity) =>
+        entity is null ? null : new(
+            entity.Id,
+            entity.Email,
+            entity.UserName,
+            entity.PasswordHash,
+            entity.Roles.Select(MapToDomain).ToHashSet(),
+            entity.IsLocked,
+            entity.CreatedAtUtc);
+
+    private static string MapToDomain(Data.Models.Role data) =>
+        data.Name;
 }

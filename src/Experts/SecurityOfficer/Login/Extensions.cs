@@ -1,4 +1,4 @@
-﻿using Experts.SecurityOfficer.Shared.Security;
+﻿using Experts.SecurityOfficer.Common.Security;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 

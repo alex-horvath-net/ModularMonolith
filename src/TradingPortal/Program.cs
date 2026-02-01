@@ -1,8 +1,8 @@
 using Experts.Billing;
 using Experts.OrderExpert;
 using Experts.SecurityOfficer;
+using Experts.SecurityOfficer.Common.Infrastructure.Data;
 using Experts.SecurityOfficer.CreateToken;
-using Experts.SecurityOfficer.Shared.Infrastructure.Data;
 using TradingPortal;
 using TradingPortal.Components;
 

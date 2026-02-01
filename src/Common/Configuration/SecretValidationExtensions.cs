@@ -18,9 +18,9 @@ public static class SecretValidationExtensions {
             var lower = conn.ToLowerInvariant();
             var pwdIndex = lower.IndexOf("password=", StringComparison.OrdinalIgnoreCase);
             if (pwdIndex >= 0) {
-                var after = conn.Substring(pwdIndex + "password=".Length);
+                var after = conn[(pwdIndex + "password=".Length)..];
                 var end = after.IndexOf(';');
-                var pwd = end >= 0 ? after.Substring(0, end) : after;
+                var pwd = end >= 0 ? after[..end] : after;
                 if (string.IsNullOrWhiteSpace(pwd)) {
                     missing.Add("ConnectionStrings:AppDB (missing password)");
                 }
@@ -36,7 +36,7 @@ public static class SecretValidationExtensions {
         }
 
         // Signing certificate / auth key: do not allow SecurityKey in non-dev
-        var authDevKey = config["Authentication:SecurityKey"]; // development-only
+        // var authDevKey = config["Authentication:SecurityKey"]; // development-only
         var certThumb = config["Certificates:Service:Thumbprint"] ?? config["Certificates:WebApi:Thumbprint"] ?? config["DataProtection:CertificateThumbprint"];
         if (!env.IsDevelopment()) {
             if (string.IsNullOrWhiteSpace(certThumb)) {
