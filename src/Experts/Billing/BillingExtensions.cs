@@ -2,7 +2,7 @@ using Experts.Billing.CreateInvoice;
 using Experts.Billing.GetInvoice.API;
 using Experts.Billing.GetInvoice.QueryHandlers;
 using Experts.Billing.Infrastructure.Data;
-using Experts.Shared.Business.Events;
+using Experts.Common.Business.Events;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Routing;
 using Microsoft.EntityFrameworkCore;
@@ -18,7 +18,7 @@ public static class BillingExtensions {
     public static IServiceCollection AddBilling(this IServiceCollection services, IConfiguration configuration) {
         // Application
         services.AddScoped<GetInvoiceQueryHandler>();
-        services.AddScoped<IBusinessEventHandler<OrderPlaced>, OrderPlacedEventHandler>();
+        services.AddScoped<IBusinessHandler<OrderPlaced>, OrderPlacedHandler>();
 
         //Infrastructure
         services.AddDbContext<BillingDbContext>((sp, options) => {

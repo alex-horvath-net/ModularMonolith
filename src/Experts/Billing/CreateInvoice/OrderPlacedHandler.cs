@@ -1,10 +1,10 @@
 using Experts.Billing.Infrastructure.Data;
 using Experts.Billing.Infrastructure.Data.Models;
-using Experts.Shared.Business.Events;
+using Experts.Common.Business.Events;
 
 namespace Experts.Billing.CreateInvoice;
 
-public sealed class OrderPlacedEventHandler(BillingDbContext db) : IBusinessEventHandler<OrderPlaced> {
+public sealed class OrderPlacedHandler(BillingDbContext db) : IBusinessHandler<OrderPlaced> {
     public async Task Handle(OrderPlaced orderPlaced, CancellationToken token = default) {
         var invoice = Invoice.Create(
             orderPlaced.OrderId,

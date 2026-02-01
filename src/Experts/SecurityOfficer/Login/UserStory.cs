@@ -6,7 +6,7 @@ public class UserStory(
     Authenticate authenticate,
     Authorize authorize) {
 
-    private State state;
+    private State? state;
     public async Task<Response> Run(Request request, CancellationToken token) {
         state = new State(request, new Response(), token);
 

@@ -1,3 +1,4 @@
+using System.Globalization;
 using Experts.SecurityOfficer.Common.Domain;
 using Experts.SecurityOfficer.Common.Security;
 using Experts.SecurityOfficer.Register;
@@ -8,7 +9,7 @@ public class RegisterUserStoryTests {
     private readonly FakeStore store = new();
     private readonly FakeHasher hasher = new();
     private readonly FakeRolePolicy rolePolicy = new();
-    private readonly FakeClock clock = new(DateTime.Parse("2024-01-01T00:00:00Z"));
+    private readonly FakeClock clock = new(DateTime.Parse("2024-01-01T00:00:00Z", CultureInfo.InvariantCulture));
 
     private UserStory CreateSut() => new(store, hasher, rolePolicy, clock);
 
@@ -21,7 +22,7 @@ public class RegisterUserStoryTests {
             Password: "Sup3r$ecretPwd",
             Roles: ["Trader", "trader", "RiskManager"]);
 
-        var response = await sut.RegisterAsync(request);
+        var response = await sut.Register(request, CancellationToken.None);
 
         Assert.Equal("trader@bank.com", response.Email);
         AssertEquivalent(["Trader", "RiskManager"], response.Roles);
@@ -40,7 +41,7 @@ public class RegisterUserStoryTests {
         var sut = CreateSut();
         var request = new UserStory.Request("user@example.com", "New", "Sup3r$ecretPwd", ["Trader"]);
 
-        await Assert.ThrowsAsync<InvalidOperationException>(() => sut.RegisterAsync(request));
+        await Assert.ThrowsAsync<InvalidOperationException>(() => sut.Register(request, CancellationToken.None));
     }
 
     [Fact]
@@ -48,7 +49,7 @@ public class RegisterUserStoryTests {
         var sut = CreateSut();
         var request = new UserStory.Request("user@example.com", "New", "weak", ["Trader"]);
 
-        await Assert.ThrowsAsync<InvalidOperationException>(() => sut.RegisterAsync(request));
+        await Assert.ThrowsAsync<InvalidOperationException>(() => sut.Register(request, CancellationToken.None));
 
         Assert.Null(store.Created);
     }
@@ -57,10 +58,10 @@ public class RegisterUserStoryTests {
         public Account? Existing { get; set; }
         public Account? Created { get; private set; }
 
-        public Task<Account?> FindByEmailAsync(string normalizedEmail, CancellationToken cancellationToken)
+        public Task<Account?> FindByEmailAsync(string normalizedEmail, CancellationToken token)
             => Task.FromResult(normalizedEmail == Existing?.Email ? Existing : null);
 
-        public Task CreateAsync(Account account, CancellationToken cancellationToken) {
+        public Task CreateAsync(Account account, CancellationToken token) {
             Created = account;
             return Task.CompletedTask;
         }
@@ -78,7 +79,7 @@ public class RegisterUserStoryTests {
     }
 
     private sealed class FakeRolePolicy : UserStory.IRolePolicy {
-        public bool AreEligible(IEnumerable<string> requestedRoles) => requestedRoles.All(r => r is "Trader" or "RiskManager" or "Compliance");
+        public bool AreEligible(IEnumerable<Role> requestedRoles) => requestedRoles.All(r => r is "Trader" or "RiskManager" or "Compliance");
     }
 
     private sealed class FakeClock(DateTime now) : UserStory.IClock {

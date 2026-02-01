@@ -1,7 +1,7 @@
-﻿using Experts.Shared.Business.Events;
+﻿using Experts.Common.Business.Events;
 using Microsoft.Extensions.DependencyInjection;
 
-namespace Experts.Shared;
+namespace Experts.Common;
 
 public static class Extensions {
     public static IServiceCollection AddShared(this IServiceCollection services) {

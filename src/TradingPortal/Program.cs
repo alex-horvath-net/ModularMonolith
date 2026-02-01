@@ -9,10 +9,10 @@ using TradingPortal.Components;
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddScoped<Experts.SecurityOfficer.CreateVisitor.UserStory>();
-var serviceCollection = builder.Services.AddScoped(sp => {
+builder.Services.AddScoped(async sp => {
     var userStory = sp.GetRequiredService<Experts.SecurityOfficer.CreateVisitor.UserStory>();
     var request = new Experts.SecurityOfficer.CreateVisitor.UserStory.Request("TradingPortal", "1.0", Guid.Parse("10000000-0000-0000-0000-000000000001"));
-    var response = userStory.Run(request).GetAwaiter().GetResult();
+    var response = await userStory.Run(request);
 
     var userContext = new UserContext() {
         User = response.ApplicationUser
@@ -95,7 +95,7 @@ static void SeedSecurityOfficerAccounts(WebApplication app) {
         defaultPassword,
         ["Trader"]);
 
-    registerUserStory.RegisterAsync(request).GetAwaiter().GetResult();
+    registerUserStory.RegisterAsync(request, roles).GetAwaiter().GetResult();
 }
 
 public partial class Program { }

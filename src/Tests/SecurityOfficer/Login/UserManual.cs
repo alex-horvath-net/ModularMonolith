@@ -1,8 +1,8 @@
-﻿using Tests.Shared;
+﻿using Tests.Common;
 
 namespace Tests.SecurityOfficer.Login;
 
-[Collection(UserManualCollection.Name)]
+[Collection(UserManualICollectionFixture.Name)]
 public class UserManual(PlaywrightFixture trader) {
 
     private const string DefaultEmail = "aladar.horvath@outlook.com";

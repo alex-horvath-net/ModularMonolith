@@ -1,5 +1,5 @@
-﻿using Experts.OrderExpert.Common.Business.Domain;
-using Experts.Shared.Business.Domain;
+﻿using Experts.Common.Business.Domain;
+using Experts.OrderExpert.Common.Business.Domain;
 
 namespace Experts.OrderExpert.PlaceOrder;
 
@@ -22,7 +22,7 @@ public class BusinessWorkFlow(BusinessWorkFlow.IBusinessWorkSteps workSteps) {
     }
 
     public interface IBusinessWorkSteps {
-        Task<IEnumerable<Error>> Validate(PlaceOrderRequest request, CancellationToken token);
+        Task<IEnumerable<Issue>> Validate(PlaceOrderRequest request, CancellationToken token);
         Order Create(PlaceOrderRequest request);
         Task Save(Order order, CancellationToken token);
         Task Publish(Order order, CancellationToken token);
@@ -42,5 +42,5 @@ public record PlaceOrderLineRequest(
 
 public sealed class PlaceOrderResponse {
     public Order? Order { get; set; }
-    public IEnumerable<Error> Errors { get; set; } = [];
+    public IEnumerable<Issue> Errors { get; set; } = [];
 }

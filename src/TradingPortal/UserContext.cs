@@ -3,5 +3,5 @@
 namespace TradingPortal;
 
 public class UserContext {
-    public ApplicationUser User { get; set; }
+    public required ApplicationUser User { get; set; }
 }

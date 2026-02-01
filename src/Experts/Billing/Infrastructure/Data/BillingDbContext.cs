@@ -10,7 +10,7 @@ public sealed class BillingDbContext(DbContextOptions<BillingDbContext> options)
     protected override void OnModelCreating(ModelBuilder modelBuilder) {
         var dbAssembly = typeof(OrdersDbContext).Assembly;
         modelBuilder.ApplyConfigurationsFromAssembly(
-            dbAssembly, 
+            dbAssembly,
             type => type.Namespace!.StartsWith(dbAssembly.GetName().Name!, StringComparison.InvariantCultureIgnoreCase));
     }
 }

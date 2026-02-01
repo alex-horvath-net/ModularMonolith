@@ -1,4 +1,4 @@
-namespace Experts.Shared.Business.Events;
+namespace Experts.Common.Business.Events;
 
 public sealed record OrderPlaced(
     Guid OrderId,

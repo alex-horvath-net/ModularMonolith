@@ -3,7 +3,7 @@ using System.Text.RegularExpressions;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Playwright;
 
-namespace Tests.Shared;
+namespace Tests.Common;
 
 public class PlaywrightFixture : IAsyncLifetime {
     public static readonly Lazy<bool> Skip = new(() => {

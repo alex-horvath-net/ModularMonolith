@@ -1,8 +1,8 @@
-using Tests.Shared;
+using Tests.Common;
 
 namespace Tests.SecurityOfficer.Register;
 
-[Collection(UserManualCollection.Name)]
+[Collection(UserManualICollectionFixture.Name)]
 public class UserManual(PlaywrightFixture trader) {
     [FactPlaywright]
     public async Task How_to_visit_register_page() {

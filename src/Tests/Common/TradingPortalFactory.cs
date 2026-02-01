@@ -5,7 +5,7 @@ using Microsoft.AspNetCore.Mvc.Testing;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 
-namespace Tests.Shared;
+namespace Tests.Common;
 
 public sealed class TradingPortalFactory : WebApplicationFactory<TradingPortal.UserContext> {
     public string BaseAddress { get; private set; } = string.Empty;

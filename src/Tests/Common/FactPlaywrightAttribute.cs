@@ -1,4 +1,4 @@
-namespace Tests.Shared;
+namespace Tests.Common;
 
 [AttributeUsage(AttributeTargets.Method, AllowMultiple = false)]
 internal sealed class FactPlaywrightAttribute : FactAttribute {

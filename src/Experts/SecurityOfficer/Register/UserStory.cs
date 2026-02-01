@@ -24,7 +24,7 @@ public sealed class UserStory {
         this.clock = clock;
     }
 
-    public async Task<Response> RegisterAsync(Request request, CancellationToken cancellationToken = default) {
+    public async Task<Response> Register(Request request, CancellationToken token) {
         ArgumentNullException.ThrowIfNull(request);
 
         var email = NormalizeEmail(request.Email);
@@ -39,7 +39,7 @@ public sealed class UserStory {
             throw new InvalidOperationException("Requested roles are not eligible for registration.");
         }
 
-        var existing = await store.FindByEmailAsync(email, cancellationToken).ConfigureAwait(false);
+        var existing = await store.FindByEmailAsync(email, token).ConfigureAwait(false);
         if (existing is not null) {
             throw new InvalidOperationException("An account with this email already exists.");
         }
@@ -49,11 +49,11 @@ public sealed class UserStory {
             email,
             userName,
             hasher.Hash(request.Password),
-            [.. roles],
+            new HashSet<string>(roles, StringComparer.OrdinalIgnoreCase),
             IsLocked: false,
             CreatedAtUtc: clock.UtcNow);
 
-        await store.CreateAsync(account, cancellationToken).ConfigureAwait(false);
+        await store.CreateAsync(account, token).ConfigureAwait(false);
 
         return new Response(account.Id, account.Email, account.Roles);
     }
@@ -106,7 +106,7 @@ public sealed class UserStory {
     }
 
     public interface IRolePolicy {
-        bool AreEligible(IEnumerable<string> requestedRoles);
+        boolean AreEligible(IEnumerable<string> requestedRoles);
     }
 
     public interface IClock {
@@ -116,7 +116,7 @@ public sealed class UserStory {
     public static class PasswordPolicy {
         public const string ValidationMessage = "Password must be at least 12 characters and contain upper, lower, digit, and symbol.";
 
-        public static bool IsValid(string password) {
+        public static boolean IsValid(string password) {
             if (string.IsNullOrWhiteSpace(password) || password.Length < 12) {
                 return false;
             }

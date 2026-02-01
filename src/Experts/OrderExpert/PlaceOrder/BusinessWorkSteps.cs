@@ -1,8 +1,8 @@
-﻿using Experts.OrderExpert.Common.Business.Domain;
+﻿using Experts.Common.Business.Domain;
+using Experts.Common.Business.Events;
+using Experts.Common.Infrastructure;
+using Experts.OrderExpert.Common.Business.Domain;
 using Experts.OrderExpert.Common.Infrastructure.Data.Models;
-using Experts.Shared.Business.Domain;
-using Experts.Shared.Business.Events;
-using Experts.Shared.Infrastructure;
 using FluentValidation;
 
 namespace Experts.OrderExpert.PlaceOrder;
@@ -12,7 +12,7 @@ internal sealed class BusinessWorkSteps(
     BusinessWorkSteps.IStoreInfrastructure store,
     IBusinessEventPublisher publisher) : BusinessWorkFlow.IBusinessWorkSteps {
 
-    public async Task<IEnumerable<Error>> Validate(PlaceOrderRequest request, CancellationToken token) {
+    public async Task<IEnumerable<Issue>> Validate(PlaceOrderRequest request, CancellationToken token) {
         var infraModel = await validator.ValidateAsync(request, token);
         var domainModel = infraModel.Errors.Select(error => error.ToDomain());
         return domainModel;
