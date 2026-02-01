@@ -7,10 +7,10 @@ namespace Common.Security;
 public static class SecurityHeadersMiddleware {
     public static IApplicationBuilder UseSecurityHeaders(this WebApplication app) => app.Use(async (context, next) => {
         var headers = context.Response.Headers;
-        headers["X-Content-Type-Options"] = "nosniff";
-        headers["X-Frame-Options"] = "DENY";
-        headers["Referrer-Policy"] = "no-referrer";
-        headers["X-XSS-Protection"] = "0"; // modern browsers ignore, use CSP
+        headers.XContentTypeOptions = "nosniff";
+        headers.XFrameOptions = "DENY";
+        headers.Referer = "no-referrer";
+        headers.XXSSProtection = "0"; // modern browsers ignore, use CSP
         headers["Permissions-Policy"] = "geolocation=(), microphone=(), camera=()";
 
         /* Dev/Local: relax CSP for hot reload and tooling
@@ -29,13 +29,13 @@ public static class SecurityHeadersMiddleware {
         } else {
             // Strict in prod: remove unsafe-inline, require nonce
             csp = $"default-src 'self'; script-src 'self' 'nonce-{nonce}'; style-src 'self' 'nonce-{nonce}'; img-src 'self' data:; connect-src 'self'; frame-ancestors 'none'; base-uri 'self'; form-action 'self'";
-            headers["Strict-Transport-Security"] = "max-age=63072000; includeSubDomains; preload";
+            headers.StrictTransportSecurity = "max-age=63072000; includeSubDomains; preload";
         }
-        headers["Content-Security-Policy"] = csp;
+        headers.ContentSecurityPolicy = csp;
 
         // Cache control for sensitive content
-        headers["Cache-Control"] = "no-store";
-        headers["Pragma"] = "no-cache";
+        headers.CacheControl = "no-store";
+        headers.Pragma = "no-cache";
 
         await next();
     });

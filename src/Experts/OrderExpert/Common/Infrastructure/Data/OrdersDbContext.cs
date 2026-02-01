@@ -8,7 +8,9 @@ public sealed class OrdersDbContext(DbContextOptions<OrdersDbContext> options) :
     public DbSet<OrderLine> OrderLines => Set<OrderLine>();
 
     protected override void OnModelCreating(ModelBuilder modelBuilder) {
-        var type = typeof(OrdersDbContext);
-        modelBuilder.ApplyConfigurationsFromAssembly(type.Assembly, x => x.Namespace!.StartsWith(type.Namespace!));
+        var dbAssembly = typeof(OrdersDbContext).Assembly;
+        modelBuilder.ApplyConfigurationsFromAssembly(
+            dbAssembly,
+            type => type.Namespace!.StartsWith(type.Namespace!, StringComparison.InvariantCultureIgnoreCase));
     }
 }

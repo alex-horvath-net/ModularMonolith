@@ -8,7 +8,9 @@ public sealed class BillingDbContext(DbContextOptions<BillingDbContext> options)
     public DbSet<Invoice> Invoices => Set<Invoice>();
 
     protected override void OnModelCreating(ModelBuilder modelBuilder) {
-        var type = typeof(OrdersDbContext);
-        modelBuilder.ApplyConfigurationsFromAssembly(type.Assembly, x => x.Namespace!.StartsWith(type.Namespace!));
+        var dbAssembly = typeof(OrdersDbContext).Assembly;
+        modelBuilder.ApplyConfigurationsFromAssembly(
+            dbAssembly, 
+            type => type.Namespace!.StartsWith(dbAssembly.GetName().Name!, StringComparison.InvariantCultureIgnoreCase));
     }
 }

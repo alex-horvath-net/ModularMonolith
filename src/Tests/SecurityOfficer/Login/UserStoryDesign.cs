@@ -1,6 +1,6 @@
 ﻿using Experts.SecurityOfficer.Common.Domain;
-using Experts.SecurityOfficer.Login;
 using Experts.SecurityOfficer.Common.Security;
+using Experts.SecurityOfficer.Login;
 
 namespace Tests.SecurityOfficer.Login;
 

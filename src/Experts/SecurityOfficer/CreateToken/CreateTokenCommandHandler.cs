@@ -1,3 +1,4 @@
+using System.Globalization;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
@@ -9,10 +10,11 @@ namespace Experts.SecurityOfficer.CreateToken;
 
 public sealed class CreateTokenCommandHandler(IOptions<JwtOptions> options) {
     public async Task<string> Handle(CreateTokenCommand command) {
+
         var claims = new List<Claim> {
             new(JwtRegisteredClaimNames.Sub, command.Subject),
             new(JwtRegisteredClaimNames.Jti, command.JwtId.ToString("N")),
-            new(JwtRegisteredClaimNames.Iat, EpochTime.GetIntDate(command.IssuedAt).ToString(), ClaimValueTypes.Integer64)
+            new(JwtRegisteredClaimNames.Iat, EpochTime.GetIntDate(command.IssuedAt).ToString(CultureInfo.InvariantCulture), ClaimValueTypes.Integer64)
         };
 
         foreach (var scope in options.Value.DevScopes) {
