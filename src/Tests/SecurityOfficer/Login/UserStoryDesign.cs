@@ -18,7 +18,7 @@ public class UserStoryTests {
             CreatedAtUtc: DateTime.UtcNow);
 
         var authenticate = new Authenticate(new FakeAuthenticateStore(account), hasher);
-        var authorize = new Authorize(new FakeAuthorizeStore(account));
+        var authorize = new Authorize();
         var userStory = new UserStory(authenticate, authorize);
 
         var request = new UserStory.Request(

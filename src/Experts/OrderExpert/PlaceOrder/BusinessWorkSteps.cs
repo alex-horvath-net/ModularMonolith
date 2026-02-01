@@ -1,10 +1,9 @@
 ﻿using Experts.Common.Business.Domain;
 using Experts.Common.Business.Events;
 using Experts.Common.Infrastructure;
-using OrderDomain = Experts.OrderExpert.Common.Business.Domain.Order;
-using Experts.OrderExpert.Common.Business.Domain;
-using OrderData = Experts.OrderExpert.Common.Infrastructure.Data.Models.Order;
 using FluentValidation;
+using OrderData = Experts.OrderExpert.Common.Infrastructure.Data.Models.Order;
+using OrderDomain = Experts.OrderExpert.Common.Business.Domain.Order;
 
 namespace Experts.OrderExpert.PlaceOrder;
 

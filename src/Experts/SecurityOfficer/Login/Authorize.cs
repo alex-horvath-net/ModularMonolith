@@ -3,8 +3,7 @@ using Domain = Experts.SecurityOfficer.Common.Domain;
 
 namespace Experts.SecurityOfficer.Login;
 
-public class Authorize(Authorize.IStore store) {
-    private readonly IStore store = store ?? throw new ArgumentNullException(nameof(store));
+public class Authorize() {
     public async Task Run(UserStory.State state) {
         if (state.Account is null) {
             state.Response.ErrorMessage = "Account not found";
