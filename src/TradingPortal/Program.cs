@@ -9,16 +9,14 @@ using TradingPortal.Components;
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddScoped<Experts.SecurityOfficer.CreateVisitor.UserStory>();
-builder.Services.AddScoped(async sp => {
+builder.Services.AddScoped<UserContext>(sp => {
     var userStory = sp.GetRequiredService<Experts.SecurityOfficer.CreateVisitor.UserStory>();
     var request = new Experts.SecurityOfficer.CreateVisitor.UserStory.Request("TradingPortal", "1.0", Guid.Parse("10000000-0000-0000-0000-000000000001"));
-    var response = await userStory.Run(request);
+    var response = userStory.Run(request).GetAwaiter().GetResult();
 
-    var userContext = new UserContext() {
+    return new UserContext {
         User = response.ApplicationUser
     };
-
-    return userContext;
 });
 
 builder.Services.AddSecurityOfficer();
@@ -66,7 +64,9 @@ if (!app.Environment.IsDevelopment()) {
     app.UseHsts();
 }
 
-app.UseHttpsRedirection();
+if (app.Environment.IsProduction()) {
+    app.UseHttpsRedirection();
+}
 app.UseAuthentication();
 app.UseAuthorization();
 app.UseAntiforgery();

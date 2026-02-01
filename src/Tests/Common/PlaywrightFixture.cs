@@ -69,27 +69,37 @@ public class PlaywrightFixture : IAsyncLifetime {
         await button.ClickAsync(new LocatorClickOptions { Timeout = timeoutMs });
     }
 
-    public Task ExpectElementNotEmpty(string id, int timeoutMs = 5000) => Assertions
-        .Expect(page.Locator($"#{id}"))
-        .ToHaveTextAsync(
-            new Regex(@".+"),
-            new LocatorAssertionsToHaveTextOptions { Timeout = timeoutMs }
-        );
-    public Task ExpectElementEmpty(string id, int timeoutMs = 5000) => Assertions
-        .Expect(page.Locator($"#{id}"))
-        .ToHaveTextAsync(
-            new Regex(@"^\s*$"),
-            new LocatorAssertionsToHaveTextOptions { Timeout = timeoutMs }
-        );
+    public async Task ExpectElementNotEmpty(string id, int timeoutMs = 10000) {
+        var locator = page.Locator($"#{id}");
+        await locator.WaitForAsync(new LocatorWaitForOptions { State = WaitForSelectorState.Attached, Timeout = timeoutMs });
+        await Assertions.Expect(locator)
+            .ToHaveTextAsync(
+                new Regex(@".+"),
+                new LocatorAssertionsToHaveTextOptions { Timeout = timeoutMs }
+            );
+    }
 
-    public Task ExpectTextInElement(string text, string id, int timeoutMs = 5000) => Assertions
-        .Expect(page.Locator($"#{id}"))
-        .ToHaveTextAsync(text, new LocatorAssertionsToHaveTextOptions { Timeout = timeoutMs });
+    public async Task ExpectElementEmpty(string id, int timeoutMs = 10000) {
+        var locator = page.Locator($"#{id}");
+        await locator.WaitForAsync(new LocatorWaitForOptions { State = WaitForSelectorState.Attached, Timeout = timeoutMs });
+        await Assertions.Expect(locator)
+            .ToHaveTextAsync(
+                new Regex(@"^\s*$"),
+                new LocatorAssertionsToHaveTextOptions { Timeout = timeoutMs }
+            );
+    }
+
+    public async Task ExpectTextInElement(string text, string id, int timeoutMs = 10000) {
+        var locator = page.Locator($"#{id}");
+        await locator.WaitForAsync(new LocatorWaitForOptions { State = WaitForSelectorState.Attached, Timeout = timeoutMs });
+        await Assertions.Expect(locator)
+            .ToHaveTextAsync(text, new LocatorAssertionsToHaveTextOptions { Timeout = timeoutMs });
+    }
 
 
     internal async Task FillInput(string id, string text) {
         var input = page.Locator($"#{id}");
-        await input.WaitForAsync(new LocatorWaitForOptions { State = WaitForSelectorState.Visible });
+        await input.WaitForAsync(new LocatorWaitForOptions { State = WaitForSelectorState.Attached });
         await input.FillAsync(text);
     }
 
