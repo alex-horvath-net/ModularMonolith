@@ -1,8 +1,9 @@
 ﻿using Experts.Common.Business.Domain;
 using Experts.Common.Business.Events;
 using Experts.Common.Infrastructure;
+using OrderDomain = Experts.OrderExpert.Common.Business.Domain.Order;
 using Experts.OrderExpert.Common.Business.Domain;
-using Experts.OrderExpert.Common.Infrastructure.Data.Models;
+using OrderData = Experts.OrderExpert.Common.Infrastructure.Data.Models.Order;
 using FluentValidation;
 
 namespace Experts.OrderExpert.PlaceOrder;
@@ -18,8 +19,8 @@ internal sealed class BusinessWorkSteps(
         return domainModel;
     }
 
-    public Order Create(PlaceOrderRequest request) {
-        var order = new Order(request.CustomerId);
+    public OrderDomain Create(PlaceOrderRequest request) {
+        var order = new OrderDomain(request.CustomerId);
 
         foreach (var line in request.Lines) {
             order.AddLine(line.ProductId, line.Quantity, line.UnitPrice);
@@ -28,12 +29,12 @@ internal sealed class BusinessWorkSteps(
         return order;
     }
 
-    public Task Save(Order order, CancellationToken token) {
+    public Task Save(OrderDomain order, CancellationToken token) {
         var orderDataModel = order.ToDataModel();
         return store.Save(orderDataModel, token);
     }
 
-    public Task Publish(Order order, CancellationToken token) {
+    public Task Publish(OrderDomain order, CancellationToken token) {
 
         var orderPlacedBusinessEvent = new OrderPlaced(
             order.Id,
@@ -44,6 +45,6 @@ internal sealed class BusinessWorkSteps(
     }
 
     public interface IStoreInfrastructure {
-        Task Save(Common.Infrastructure.Data.Models.Order order, CancellationToken token);
+        Task Save(OrderData order, CancellationToken token);
     }
 }

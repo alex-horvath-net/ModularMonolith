@@ -4,6 +4,7 @@ using Domain = Experts.SecurityOfficer.Common.Domain;
 namespace Experts.SecurityOfficer.Login;
 
 public class Authorize(Authorize.IStore store) {
+    private readonly IStore store = store ?? throw new ArgumentNullException(nameof(store));
     public async Task Run(UserStory.State state) {
         if (state.Account is null) {
             state.Response.ErrorMessage = "Account not found";
@@ -33,15 +34,16 @@ public class Authorize(Authorize.IStore store) {
                 dataAccount.CreatedAtUtc);
         }
 
-        private static IReadOnlyCollection<string> ParseRoles(string? rawRoles) {
-            if (string.IsNullOrWhiteSpace(rawRoles)) {
-                return [];
+        private static IReadOnlySet<string> ParseRoles(IEnumerable<Data.Models.Role> roles) {
+            if (roles is null) {
+                return new HashSet<string>(StringComparer.OrdinalIgnoreCase);
             }
 
-            return rawRoles
-                .Split(',', StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries)
-                .Distinct(StringComparer.OrdinalIgnoreCase)
-                .ToArray();
+            return new HashSet<string>(
+                roles
+                .Select(r => r.Name)
+                .Where(name => !string.IsNullOrWhiteSpace(name)),
+                StringComparer.OrdinalIgnoreCase);
         }
     }
 }

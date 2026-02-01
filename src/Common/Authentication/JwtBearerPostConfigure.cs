@@ -15,7 +15,7 @@ internal sealed class JwtBearerPostConfigure(IOptions<JwtOptions> jwtOptions, IJ
     private readonly IHostEnvironment _env = env ?? throw new ArgumentNullException(nameof(env));
     private readonly ILogger<JwtBearerPostConfigure> _logger = logger ?? throw new ArgumentNullException(nameof(logger));
 
-    public void PostConfigure(string name, JwtBearerOptions options) {
+    public void PostConfigure(string? name, JwtBearerOptions options) {
 
         _logger.LogInformation($"{nameof(PostConfigure)} is called");
 

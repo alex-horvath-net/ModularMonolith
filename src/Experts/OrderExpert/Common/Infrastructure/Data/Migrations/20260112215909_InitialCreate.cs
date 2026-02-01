@@ -2,7 +2,7 @@
 
 #nullable disable
 
-namespace Experts.OrderExpert.Shared.Infrastructure.Data.Migrations;
+namespace Experts.OrderExpert.Common.Infrastructure.Data.Migrations;
 
 /// <inheritdoc />
 public partial class InitialCreate : Migration {

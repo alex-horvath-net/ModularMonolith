@@ -29,7 +29,7 @@ internal sealed class JwtOptionsValidator(IHostEnvironment env, ILogger<JwtOptio
     private readonly IHostEnvironment env = env ?? throw new ArgumentNullException(nameof(env));
     private readonly ILogger<JwtOptionsValidator> logger = logger ?? throw new ArgumentNullException(nameof(logger));
 
-    public ValidateOptionsResult Validate(string name, JwtOptions options) {
+    public ValidateOptionsResult Validate(string? name, JwtOptions options) {
         logger.LogInformation($"{nameof(Validate)} is called");
 
         if (options == null)

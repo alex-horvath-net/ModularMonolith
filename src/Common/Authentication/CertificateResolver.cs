@@ -70,7 +70,7 @@ internal sealed class CertificateResolver(ILogger<CertificateResolver> logger) :
         if (!string.IsNullOrWhiteSpace(options.CertificatePath)) {
             try {
                 _logger.LogDebug("Attempting to load certificate from PFX path {Path}", options.CertificatePath);
-                var cert = new X509Certificate2(options.CertificatePath, options.CertificatePassword, X509KeyStorageFlags.MachineKeySet | X509KeyStorageFlags.PersistKeySet);
+                var cert = X509CertificateLoader.LoadPkcs12FromFile(options.CertificatePath, options.CertificatePassword, X509KeyStorageFlags.MachineKeySet | X509KeyStorageFlags.PersistKeySet);
                 if (cert != null) {
                     if (IsValidForJwtValidation(cert, options, out var reason)) {
                         _logger.LogInformation("Loaded certificate from PFX {Path}, thumbprint {Thumbprint}, expires {NotAfter:u}", options.CertificatePath, cert.Thumbprint, cert.NotAfter.ToUniversalTime());

@@ -30,7 +30,7 @@ public class WebAppFactory : WebApplicationFactory<TradingApi.User>, IAsyncLifet
     }
 
 
-    public async Task<HttpResponseMessage> Get(string url, Action<HttpRequestMessage> config = null) {
+    public async Task<HttpResponseMessage> Get(string url, Action<HttpRequestMessage>? config = null) {
 
         var client = CreateClient();
 
@@ -44,7 +44,7 @@ public class WebAppFactory : WebApplicationFactory<TradingApi.User>, IAsyncLifet
     }
 
 
-    public async Task<HttpResponseMessage> Post<T>(string url, T content, Action<HttpRequestMessage> config = null) {
+    public async Task<HttpResponseMessage> Post<T>(string url, T content, Action<HttpRequestMessage>? config = null) {
 
         var client = CreateClient();
 

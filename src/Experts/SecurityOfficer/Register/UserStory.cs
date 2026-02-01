@@ -106,7 +106,7 @@ public sealed class UserStory {
     }
 
     public interface IRolePolicy {
-        boolean AreEligible(IEnumerable<string> requestedRoles);
+        bool AreEligible(IEnumerable<string> requestedRoles);
     }
 
     public interface IClock {
@@ -116,7 +116,7 @@ public sealed class UserStory {
     public static class PasswordPolicy {
         public const string ValidationMessage = "Password must be at least 12 characters and contain upper, lower, digit, and symbol.";
 
-        public static boolean IsValid(string password) {
+        public static bool IsValid(string password) {
             if (string.IsNullOrWhiteSpace(password) || password.Length < 12) {
                 return false;
             }

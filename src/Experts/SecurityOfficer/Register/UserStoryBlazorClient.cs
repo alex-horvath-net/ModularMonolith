@@ -15,7 +15,7 @@ public sealed class UserStoryBlazorClient(UserStory userStory) {
             clientRequest.Password,
             clientRequest.Roles.ToArray());
 
-        var response = await userStory.RegisterAsync(request, roles, cancellationToken).ConfigureAwait(false);
+        var response = await userStory.Register(request, cancellationToken).ConfigureAwait(false);
         return new ClientResponse(response.AccountId, response.Email, response.Roles);
     }
 

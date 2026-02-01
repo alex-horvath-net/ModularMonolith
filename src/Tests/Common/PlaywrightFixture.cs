@@ -22,7 +22,7 @@ public class PlaywrightFixture : IAsyncLifetime {
     private IBrowserContext? browserContext;
     private IPage page = null!;
     private readonly List<IBrowserContext> browserContexts = [];
-    private string baseUrl = null!;
+    private string baseUrl = string.Empty;
 
     public async Task InitializeAsync() {
         if (Skip.Value) {
@@ -42,7 +42,10 @@ public class PlaywrightFixture : IAsyncLifetime {
             .AddEnvironmentVariables()
             .Build();
 
-        baseUrl = configuration["Playwright:BaseUrl"];
+        baseUrl = configuration["Playwright:BaseUrl"] ?? string.Empty;
+        if (string.IsNullOrWhiteSpace(baseUrl)) {
+            throw new InvalidOperationException("Playwright:BaseUrl is not configured.");
+        }
         StartTradingPortal();
         await WaitForPortal(60_000);
     }

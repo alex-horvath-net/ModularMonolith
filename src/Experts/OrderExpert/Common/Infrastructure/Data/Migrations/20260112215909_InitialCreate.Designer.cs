@@ -9,7 +9,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
 
-namespace Experts.OrderExpert.Shared.Infrastructure.Data.Migrations
+namespace Experts.OrderExpert.Common.Infrastructure.Data.Migrations
 {
     [DbContext(typeof(OrdersDbContext))]
     [Migration("20260112215909_InitialCreate")]
@@ -25,7 +25,7 @@ namespace Experts.OrderExpert.Shared.Infrastructure.Data.Migrations
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
 
-            modelBuilder.Entity("Experts.OrderExpert.Shared.Infrastructure.Data.Models.Order", b =>
+            modelBuilder.Entity("Experts.OrderExpert.Common.Infrastructure.Data.Models.Order", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -62,7 +62,7 @@ namespace Experts.OrderExpert.Shared.Infrastructure.Data.Migrations
                         });
                 });
 
-            modelBuilder.Entity("Experts.OrderExpert.Shared.Infrastructure.Data.Models.OrderLine", b =>
+            modelBuilder.Entity("Experts.OrderExpert.Common.Infrastructure.Data.Models.OrderLine", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()

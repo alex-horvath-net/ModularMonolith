@@ -95,7 +95,7 @@ static void SeedSecurityOfficerAccounts(WebApplication app) {
         defaultPassword,
         ["Trader"]);
 
-    registerUserStory.RegisterAsync(request, roles).GetAwaiter().GetResult();
+    registerUserStory.Register(request, CancellationToken.None).GetAwaiter().GetResult();
 }
 
 public partial class Program { }

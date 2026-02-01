@@ -37,7 +37,7 @@ public class RegisterUserStoryTests {
 
     [Fact]
     public async Task RegisterAsync_WhenEmailAlreadyExists_Throws() {
-        store.Existing = new Account(Guid.NewGuid(), "user@example.com", "Existing", "hash", [], false, clock.UtcNow);
+        store.Existing = new Account(Guid.NewGuid(), "user@example.com", "Existing", "hash", new HashSet<string>(StringComparer.OrdinalIgnoreCase), false, clock.UtcNow);
         var sut = CreateSut();
         var request = new UserStory.Request("user@example.com", "New", "Sup3r$ecretPwd", ["Trader"]);
 
@@ -79,7 +79,7 @@ public class RegisterUserStoryTests {
     }
 
     private sealed class FakeRolePolicy : UserStory.IRolePolicy {
-        public bool AreEligible(IEnumerable<Role> requestedRoles) => requestedRoles.All(r => r is "Trader" or "RiskManager" or "Compliance");
+        public bool AreEligible(IEnumerable<string> requestedRoles) => requestedRoles.All(r => r is "Trader" or "RiskManager" or "Compliance");
     }
 
     private sealed class FakeClock(DateTime now) : UserStory.IClock {
