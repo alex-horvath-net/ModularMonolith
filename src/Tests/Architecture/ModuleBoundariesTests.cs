@@ -1,6 +1,6 @@
 using Experts.Billing;
 using Experts.OrderExpert;
-using FluentAssertions;
+using Shouldly;
 using NetArchTest.Rules;
 
 namespace Tests.Architecture;
@@ -12,7 +12,7 @@ public class ModuleBoundariesTests {
             .Should().NotHaveDependencyOnAny("Experts.Orders", "Experts.Billing")
             .GetResult();
 
-        result.IsSuccessful.Should().BeTrue(string.Join(Environment.NewLine, result.FailingTypeNames ?? []));
+        result.IsSuccessful.ShouldBeTrue(string.Join(Environment.NewLine, result.FailingTypeNames ?? []));
     }
 
     [Fact]
@@ -23,7 +23,7 @@ public class ModuleBoundariesTests {
             .Should().NotHaveDependencyOnAny("Experts.Billing")
             .GetResult();
 
-        result.IsSuccessful.Should().BeTrue(string.Join(Environment.NewLine, result.FailingTypeNames ?? []));
+        result.IsSuccessful.ShouldBeTrue(string.Join(Environment.NewLine, result.FailingTypeNames ?? []));
     }
 
     [Fact]
@@ -34,7 +34,7 @@ public class ModuleBoundariesTests {
             .Should().NotHaveDependencyOnAny("Experts.Orders")
             .GetResult();
 
-        result.IsSuccessful.Should().BeTrue(string.Join(Environment.NewLine, result.FailingTypeNames ?? []));
+        result.IsSuccessful.ShouldBeTrue(string.Join(Environment.NewLine, result.FailingTypeNames ?? []));
     }
 
     [Fact]
@@ -58,6 +58,6 @@ public class ModuleBoundariesTests {
             failures.AddRange(billing.FailingTypeNames ?? []);
 
         (orders.IsSuccessful && billing.IsSuccessful)
-            .Should().BeTrue(string.Join(Environment.NewLine, failures));
+            .ShouldBeTrue(string.Join(Environment.NewLine, failures));
     }
 }

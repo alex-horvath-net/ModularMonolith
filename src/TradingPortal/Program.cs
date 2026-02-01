@@ -9,7 +9,7 @@ using TradingPortal.Components;
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddScoped<Experts.SecurityOfficer.CreateVisitor.UserStory>();
-builder.Services.AddScoped<UserContext>(sp => {
+builder.Services.AddScoped(sp => {
     var userStory = sp.GetRequiredService<Experts.SecurityOfficer.CreateVisitor.UserStory>();
     var request = new Experts.SecurityOfficer.CreateVisitor.UserStory.Request("TradingPortal", "1.0", Guid.Parse("10000000-0000-0000-0000-000000000001"));
     var response = userStory.Run(request).GetAwaiter().GetResult();
