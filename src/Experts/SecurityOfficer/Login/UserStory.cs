@@ -6,24 +6,23 @@ public class UserStory(
     Authenticate authenticate,
     Authorize authorize) {
 
-    private State? state;
+    private Context? context;
     public async Task<Response> Run(Request request, CancellationToken token) {
-        state = new State(request, new Response(), token);
+        context = new Context(request, new Response(), token);
 
-        // Authenticate
-        await authenticate.Run(state);
-        if (state.Response.ErrorMessage != null)
-            return state.Response;
+        await authenticate.Run(context);
+        if (context.Response.ErrorMessage != null)
+            return context.Response;
 
-        await authorize.Run(state);
-        if (state.Response.ErrorMessage != null)
-            return state.Response;
+        await authorize.Run(context);
+        if (context.Response.ErrorMessage != null)
+            return context.Response;
 
-        state.Response.IsUserStoryEnabled = true;
-        return state.Response;
+        context.Response.IsUserStoryEnabled = true;
+        return context.Response;
     }
 
-    public sealed record State(Request Request, Response Response, CancellationToken Token) {
+    public sealed record Context(Request Request, Response Response, CancellationToken Token) {
         internal Account? Account { get; set; }
     }
 

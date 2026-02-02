@@ -8,41 +8,41 @@ namespace Experts.SecurityOfficer.Login;
 public class Authenticate(
     Authenticate.IStore store,
     IPasswordHasher hasher) {
-    public async Task Run(UserStory.State state) {
+    public async Task Run(UserStory.Context context) {
 
-        if (state.Request.AccountType != UserStory.AccountType.LocalAccount) {
-            state.Response.ErrorMessage = "Account type not found";
+        if (context.Request.AccountType != UserStory.AccountType.LocalAccount) {
+            context.Response.ErrorMessage = "Account type not found";
             return;
         }
 
-        if (!state.Request.Credentials.TryGetValue("Email", out var email)) {
-            state.Response.ErrorMessage = "Credential not found. Missing Email";
+        if (!context.Request.Credentials.TryGetValue("Email", out var email)) {
+            context.Response.ErrorMessage = "Credential not found. Missing Email";
             return;
         }
 
-        if (!state.Request.Credentials.TryGetValue("Password", out var password)) {
-            state.Response.ErrorMessage = "Credential not found. Missing Password";
+        if (!context.Request.Credentials.TryGetValue("Password", out var password)) {
+            context.Response.ErrorMessage = "Credential not found. Missing Password";
             return;
         }
 
-        state.Account = await store.FindByEmail(email, state.Token);
+        context.Account = await store.FindByEmail(email, context.Token);
 
-        if (state.Account is null) {
-            state.Response.ErrorMessage = "Account not found";
+        if (context.Account is null) {
+            context.Response.ErrorMessage = "Account not found";
             return;
         }
 
-        if (state.Account.IsLocked) {
-            state.Response.ErrorMessage = "Account locked";
+        if (context.Account.IsLocked) {
+            context.Response.ErrorMessage = "Account locked";
             return;
         }
 
-        if (!hasher.Verify(password, state.Account.PasswordHash)) {
-            state.Response.ErrorMessage = "Invalid password";
+        if (!hasher.Verify(password, context.Account.PasswordHash)) {
+            context.Response.ErrorMessage = "Invalid password";
             return;
         }
 
-        state.Response.AuthenticationId = state.Account.Id;
+        context.Response.AuthenticationId = context.Account.Id;
 
         return;
     }
@@ -63,16 +63,14 @@ public class Authenticate(
             return MapToDomain(accountInfra);
         }
 
-        private static Domain.Account? MapToDomain(Data.Models.Account? data) =>
-            data == null ? null :
-            new(
-                data.Id,
-                data.Email,
-                data.UserName,
-                data.PasswordHash,
-                data.Roles.Select(MapToDomain).ToHashSet(),
-                data.IsLocked,
-                data.CreatedAtUtc);
+        private static Domain.Account? MapToDomain(Data.Models.Account? data) => data == null ? null : new(
+            data.Id,
+            data.Email,
+            data.UserName,
+            data.PasswordHash,
+            data.Roles.Select(MapToDomain).ToHashSet(),
+            data.IsLocked,
+            data.CreatedAtUtc);
 
         private static string MapToDomain(Data.Models.Role data) =>
             data.Name;

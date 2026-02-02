@@ -4,7 +4,7 @@ using Domain = Experts.SecurityOfficer.Common.Domain;
 namespace Experts.SecurityOfficer.Login;
 
 public class Authorize() {
-    public async Task Run(UserStory.State state) {
+    public async Task Run(UserStory.Context state) {
         if (state.Account is null) {
             state.Response.ErrorMessage = "Account not found";
             return;
