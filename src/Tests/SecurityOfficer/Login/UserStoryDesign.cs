@@ -31,7 +31,7 @@ public class UserStoryTests {
 
         var response = await userStory.Run(request, CancellationToken.None);
 
-        Assert.True(response.IsEnabled);
+        Assert.Equal("Aladar", response.UserName);
         Assert.Null(response.ErrorMessage);
         Assert.Equal(account.Id, response.AuthenticationId);
     }

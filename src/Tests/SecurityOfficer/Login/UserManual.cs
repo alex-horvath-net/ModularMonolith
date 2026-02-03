@@ -8,8 +8,6 @@ public class UserManual(PlaywrightFixture trader) {
     private const string DefaultEmail = "aladar.horvath@outlook.com";
     private const string DefaultPassword = "Sup3r$ecretPwd!";
 
-
-
     [FactPlaywright]
     public async Task How_to_visit_login_page() {
         await trader.GoToPage("access/login");
@@ -24,7 +22,7 @@ public class UserManual(PlaywrightFixture trader) {
 
         await trader.ExpectElementNotEmpty("Role1");
 
-        await trader.ExpectElementEmpty("IsUserStoryEnabled");
+        await trader.ExpectElementEmpty("UserName2");
     }
 
     [FactPlaywright]
@@ -45,6 +43,6 @@ public class UserManual(PlaywrightFixture trader) {
 
         await trader.ExpectElementNotEmpty("Role1");
 
-        await trader.ExpectTextInElement("True", "IsUserStoryEnabled");
+        await trader.ExpectTextInElement("Aladar Horvath", "UserName2");
     }
 }
