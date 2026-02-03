@@ -1,4 +1,4 @@
-﻿using Tests.Common;
+﻿using Tests.TestFrame;
 
 namespace Tests.SecurityOfficer.Login;
 

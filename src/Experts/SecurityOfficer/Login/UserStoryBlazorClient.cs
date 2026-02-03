@@ -22,7 +22,7 @@ public class UserStoryBlazorClient(UserStory userStory) {
 
 
     private ClientResponse GetClientResponse(Response response) => new(
-        response.IsUserStoryEnabled);
+        response.IsEnabled);
 
     public class ClientRequest(ApplicationUser applicationUser) {
         public ApplicationUser ApplicationUser { get; } = applicationUser ?? throw new ArgumentNullException(nameof(applicationUser));

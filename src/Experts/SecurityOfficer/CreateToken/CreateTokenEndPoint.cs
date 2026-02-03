@@ -32,9 +32,9 @@ public static class CreateTokenEndPoint {
         return app;
     }
 
-    private static async Task<IResult> CreateDevTokenHandler(CreateTokenCommandHandler handler, CreateTokenCommand command) {
+    private static IResult CreateDevTokenHandler(CreateTokenCommandHandler handler, CreateTokenCommand command) {
 
-        var accessToken = await handler.Handle(command);
+        var accessToken = handler.Handle(command);
 
         return Results.Created(string.Empty, accessToken);
     }

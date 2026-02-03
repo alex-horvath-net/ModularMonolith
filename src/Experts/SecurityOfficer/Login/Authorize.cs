@@ -1,16 +1,22 @@
 ﻿using Data = Experts.SecurityOfficer.Common.Infrastructure.Data;
 using Domain = Experts.SecurityOfficer.Common.Domain;
+using Common.Tasks;
+using Microsoft.EntityFrameworkCore;
 
 namespace Experts.SecurityOfficer.Login;
 
 public class Authorize() {
-    public async Task Run(UserStory.Context state) {
-        if (state.Account is null) {
-            state.Response.ErrorMessage = "Account not found";
-            return;
+    public async Task<bool> Run(UserStory.Context context) {
+        if (context.Account is null) {
+            context.Response.ErrorMessage = "Account not found";
+            return false;
         }
 
-        state.Response.Roles = state.Account.Roles.ToList();
+        context.Response.Roles = context.Account.Roles.ToList();
+
+        await Task.CompletedTask;
+
+        return true;
     }
 
     public interface IStore {
@@ -18,8 +24,11 @@ public class Authorize() {
     }
 
     public class Store(Data.SecurityOfficerDbContext db) : IStore {
-        public async Task<Domain.Account?> FindById(Guid id, CancellationToken token) {
-            var dataAccount = await db.Accounts.FindAsync([id], token);
+        public Task<Domain.Account?> FindById(Guid id, CancellationToken token) => db.Accounts
+            .FirstOrDefaultAsync(x => x.Id == id, token)
+            .Then(ToDomain);
+
+        private static Domain.Account? ToDomain(Data.Models.Account? dataAccount) {
             if (dataAccount == null)
                 return null;
             // Map Infrastructure.Data.Models.Account to Domain.Account

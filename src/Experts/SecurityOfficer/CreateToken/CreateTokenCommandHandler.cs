@@ -9,7 +9,7 @@ using Microsoft.IdentityModel.Tokens;
 namespace Experts.SecurityOfficer.CreateToken;
 
 public sealed class CreateTokenCommandHandler(IOptions<JwtOptions> options) {
-    public async Task<string> Handle(CreateTokenCommand command) {
+    public string Handle(CreateTokenCommand command) {
 
         var claims = new List<Claim> {
             new(JwtRegisteredClaimNames.Sub, command.Subject),

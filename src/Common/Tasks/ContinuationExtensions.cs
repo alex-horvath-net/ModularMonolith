@@ -25,6 +25,7 @@ public static class ContinuationExtensions {
     }
 
     // e.g. read a record from db in data format then refine its content.
+    //
     public static async Task Then<TInput>(this Task<TInput> slowInputFactory, Action<TInput> fastInputOperation) {
         var input = await slowInputFactory;
         fastInputOperation(input);

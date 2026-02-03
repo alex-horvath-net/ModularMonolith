@@ -1,4 +1,4 @@
-namespace Tests.Common;
+namespace Tests.TestFrame;
 
 [CollectionDefinition(Name)]
 public class UserManualICollectionFixture : ICollectionFixture<PlaywrightFixture> {
