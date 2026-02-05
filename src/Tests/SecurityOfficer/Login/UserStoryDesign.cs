@@ -29,7 +29,7 @@ public class UserStoryTests {
 
         var response = await userStory.Run(request, CancellationToken.None);
 
-        response.ErrorMessage.ShouldNotBe(Authenticate.AccountTypeNotFound);
+        response.ErrorMessage.ShouldBe(AuthenticateConstants.AccountTypeNotFound);
         response.AuthenticationId.ShouldBeNull();
         response.UserName.ShouldBeNull();
         response.Roles.ShouldBeEmpty();
@@ -39,12 +39,33 @@ public class UserStoryTests {
     public async Task Login_Fails_ForMissingPasswordCredential() {
         var account = AccountOfAlex();
         var userStory = GetLoginUserStory(account);
+
         var request = GoodRequest();
-        request.Credentials.ToDictionary().Remove("Password");
+        var cedentials = request.Credentials.ToDictionary();
+        cedentials.Remove(LocalAccountConstants.Password);
+        request = request with { Credentials = cedentials };
 
         var response = await userStory.Run(request, CancellationToken.None);
 
-        response.ErrorMessage.ShouldNotBe(Authenticate.MissingPassword);
+        response.ErrorMessage.ShouldBe(AuthenticateConstants.MissingPassword);
+        response.AuthenticationId.ShouldBeNull();
+        response.UserName.ShouldBeNull();
+        response.Roles.ShouldBeEmpty();
+    }
+
+    [Fact]
+    public async Task Login_Fails_ForMisingEmailCredential() {
+        var account = AccountOfAlex();
+        var userStory = GetLoginUserStory(account);
+
+        var request = GoodRequest();
+        var cedentials = request.Credentials.ToDictionary();
+        cedentials.Remove(LocalAccountConstants.Email);
+        request = request with { Credentials = cedentials };
+
+        var response = await userStory.Run(request, CancellationToken.None);
+
+        response.ErrorMessage.ShouldBe(AuthenticateConstants.MissingEmail);
         response.AuthenticationId.ShouldBeNull();
         response.UserName.ShouldBeNull();
         response.Roles.ShouldBeEmpty();
