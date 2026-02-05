@@ -6,55 +6,40 @@ using Domain = Experts.SecurityOfficer.Common.Domain;
 
 namespace Experts.SecurityOfficer.Login;
 
-public static class AuthenticateConstants {
-    public const string AccountTypeNotFound = "Account type not found";
-    public const string MissingEmail = "Credential not found. Missing Email";
-    public const string MissingPassword = "Credential not found. Missing Password";
-    public const string AccountNotFound = "Account not found";
-    public const string AccontLocked = "Account locked";
-    public const string InvalidPassword = "Invalid password";
-}
-
-public static class LocalAccountConstants {
-    public const string Email = "Email";
-    public const string Password = "Password";
-}
-
-
 public class Authenticate(
     Authenticate.IStore store,
     IPasswordHasher hasher) {
     public async Task<bool> Run(UserStory.Context context) {
 
         if (context.Request.AccountType != UserStory.AccountType.LocalAccount) {
-            context.Response.ErrorMessage = AuthenticateConstants.AccountTypeNotFound;
+            context.Response.ErrorMessage = Constants.AccountTypeNotFound;
             return false;
         }
 
-        if (!context.Request.Credentials.TryGetValue(LocalAccountConstants.Email, out var email)) {
-            context.Response.ErrorMessage = AuthenticateConstants.MissingEmail;
+        if (!context.Request.Credentials.TryGetValue(Constants.Email, out var email)) {
+            context.Response.ErrorMessage = Constants.MissingEmail;
             return false;
         }
 
-        if (!context.Request.Credentials.TryGetValue(LocalAccountConstants.Password, out var password)) {
-            context.Response.ErrorMessage = AuthenticateConstants.MissingPassword;
+        if (!context.Request.Credentials.TryGetValue(Constants.Password, out var password)) {
+            context.Response.ErrorMessage = Constants.MissingPassword;
             return false;
         }
 
         context.Account = await store.FindByEmail(email, context.Token);
 
         if (context.Account is null) {
-            context.Response.ErrorMessage = AuthenticateConstants.AccountNotFound;
+            context.Response.ErrorMessage = Constants.AccountNotFound;
             return false;
         }
 
         if (context.Account.IsLocked) {
-            context.Response.ErrorMessage = AuthenticateConstants.AccontLocked;
+            context.Response.ErrorMessage = Constants.AccontLocked;
             return false;
         }
 
         if (!hasher.Verify(password, context.Account.PasswordHash)) {
-            context.Response.ErrorMessage = AuthenticateConstants.InvalidPassword;
+            context.Response.ErrorMessage = Constants.InvalidPassword;
             return false;
         }
 
@@ -62,6 +47,17 @@ public class Authenticate(
         context.Response.UserName = context.Account.UserName;
 
         return true;
+    }
+
+    public static class Constants {
+        public const string AccountTypeNotFound = "Account type not found";
+        public const string MissingEmail = "Credential not found. Missing Email";
+        public const string MissingPassword = "Credential not found. Missing Password";
+        public const string AccountNotFound = "Account not found";
+        public const string AccontLocked = "Account locked";
+        public const string InvalidPassword = "Invalid password";
+        public const string Email = "Email";
+        public const string Password = "Password";
     }
 
     public interface IStore {
