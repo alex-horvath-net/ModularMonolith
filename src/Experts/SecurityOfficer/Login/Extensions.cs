@@ -11,7 +11,6 @@ public static class Extensions {
         services.AddScoped<Authenticate>();
         services.AddScoped<Authenticate.IStore, Authenticate.Store>();
         services.AddScoped<Authorize>();
-        services.AddScoped<Authorize.IStore, Authorize.Store>();
         services.TryAddSingleton<IPasswordHasher, Pbkdf2PasswordHasher>();
         return services;
     }

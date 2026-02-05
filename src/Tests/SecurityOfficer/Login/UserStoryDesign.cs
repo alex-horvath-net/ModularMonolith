@@ -1,46 +1,91 @@
-﻿using Experts.SecurityOfficer.Common.Domain;
+﻿using Common.Tasks;
+using Experts.SecurityOfficer.Common.Domain;
 using Experts.SecurityOfficer.Common.Security;
 using Experts.SecurityOfficer.Login;
+using Shouldly;
 
 namespace Tests.SecurityOfficer.Login;
 
 public class UserStoryTests {
     [Fact]
     public async Task Login_Succeeds_ForRegisteredAccount() {
-        var hasher = new Pbkdf2PasswordHasher();
-        var account = new Account(
-            Guid.Parse("20000000-0000-0000-0000-000000000001"),
-            "aladar.horvath@outlook.com",
-            "Aladar",
-            hasher.Hash("P@ssw0rd!"),
-            new HashSet<string>(["Trader"]),
-            IsLocked: false,
-            CreatedAtUtc: DateTime.UtcNow);
-
-        var authenticate = new Authenticate(new FakeAuthenticateStore(account), hasher);
-        var authorize = new Authorize();
-        var userStory = new UserStory(authenticate, authorize);
-
-        var request = new UserStory.Request(
-            Guid.Parse("10000000-0000-0000-0000-000000000001"),
-            UserStory.AccountType.LocalAccount,
-            new Dictionary<string, string> {
-                ["Email"] = "aladar.horvath@outlook.com",
-                ["Password"] = "P@ssw0rd!"
-            });
+        var account = AccountOfAlex();
+        var userStory = GetLoginUserStory(account);
+        var request = GoodRequest();
 
         var response = await userStory.Run(request, CancellationToken.None);
 
-        Assert.Equal("Aladar", response.UserName);
-        Assert.Null(response.ErrorMessage);
-        Assert.Equal(account.Id, response.AuthenticationId);
+        response.ErrorMessage.ShouldBeNull();
+        response.AuthenticationId.ShouldBe(account.Id);
+        response.UserName.ShouldBe(account.UserName);
+        response.Roles.ShouldBe(account.Roles);
     }
 
-    private sealed class FakeAuthenticateStore(Account account) : Authenticate.IStore {
-        public Task<Account?> FindByEmail(string email, CancellationToken token) => Task.FromResult(string.Equals(email, account.Email, StringComparison.OrdinalIgnoreCase) ? account : null);
+    [Fact]
+    public async Task Login_Fails_ForUnKnownAccountType() {
+        var account = AccountOfAlex();
+        var userStory = GetLoginUserStory(account);
+        var request = GoodRequest() with { AccountType = UserStory.AccountType.AzureAccount };
+
+        var response = await userStory.Run(request, CancellationToken.None);
+
+        response.ErrorMessage.ShouldNotBe(Authenticate.AccountTypeNotFound);
+        response.AuthenticationId.ShouldBeNull();
+        response.UserName.ShouldBeNull();
+        response.Roles.ShouldBeEmpty();
     }
 
-    private sealed class FakeAuthorizeStore(Account account) : Authorize.IStore {
-        public Task<Account?> FindById(Guid id, CancellationToken token) => Task.FromResult(account.Id == id ? account : null);
+    [Fact]
+    public async Task Login_Fails_ForMissingPasswordCredential() {
+        var account = AccountOfAlex();
+        var userStory = GetLoginUserStory(account);
+        var request = GoodRequest();
+        request.Credentials.ToDictionary().Remove("Password");
+
+        var response = await userStory.Run(request, CancellationToken.None);
+
+        response.ErrorMessage.ShouldNotBe(Authenticate.MissingPassword);
+        response.AuthenticationId.ShouldBeNull();
+        response.UserName.ShouldBeNull();
+        response.Roles.ShouldBeEmpty();
+    }
+
+
+
+    private static UserStory GetLoginUserStory(Account account) {
+        var authenticate = GetAuthenticate(account);
+        var authorize = GetAuthorize();
+        var login = new UserStory(authenticate, authorize);
+        return login;
+    }
+
+    private static Authorize GetAuthorize() => new();
+
+    private static Authenticate GetAuthenticate(Account account) {
+        var authenticateStore = new FakeAuthenticateStore([account]);
+        var hasher = new Pbkdf2PasswordHasher();
+        var authenticate = new Authenticate(authenticateStore, hasher);
+        return authenticate;
+    }
+
+    private static UserStory.Request GoodRequest() => new(
+        Guid.Parse("10000000-0000-0000-0000-000000000001"),
+            UserStory.AccountType.LocalAccount,
+            new Dictionary<string, string> {
+                ["Email"] = "alex.horvath.net@outlook.com",
+                ["Password"] = "P@ssw0rd!"
+            });
+    private Account AccountOfAlex() => new(
+        Id: Guid.Parse("20000000-0000-0000-0000-000000000001"),
+        Email: "alex.horvath.net@outlook.com",
+        UserName: "Alex",
+        PasswordHash: "FG9LGgLaReKuqwOfARhgaO7cD2CGvOMuq641z3LqcX54sfiWZyFAdnWpLDgeL6/r", // hash of P@ssw0rd!
+        Roles: new HashSet<string>(["Trader"]),
+        IsLocked: false,
+        CreatedAtUtc: DateTime.UtcNow);
+
+    private sealed class FakeAuthenticateStore(Account[] accounts) : Authenticate.IStore {
+        public Task<Account?> FindByEmail(string email, CancellationToken token) =>
+            accounts.FirstOrDefault(account => account.Email == email).ToTask();
     }
 }

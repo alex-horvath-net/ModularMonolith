@@ -9,38 +9,44 @@ namespace Experts.SecurityOfficer.Login;
 public class Authenticate(
     Authenticate.IStore store,
     IPasswordHasher hasher) {
+    public const string AccountTypeNotFound = "Account type not found";
+    public const string MissingEmail = "Credential not found. Missing Email";
+    public const string MissingPassword = "Credential not found. Missing Password";
+    public const string AccountNotFound = "Account not found";
+    public const string AccontLocked = "Account locked";
+    public const string InvalidPassword = "Invalid password";
 
     public async Task<bool> Run(UserStory.Context context) {
 
         if (context.Request.AccountType != UserStory.AccountType.LocalAccount) {
-            context.Response.ErrorMessage = "Account type not found";
+            context.Response.ErrorMessage = AccountTypeNotFound;
             return false;
         }
 
         if (!context.Request.Credentials.TryGetValue("Email", out var email)) {
-            context.Response.ErrorMessage = "Credential not found. Missing Email";
+            context.Response.ErrorMessage = MissingEmail;
             return false;
         }
 
         if (!context.Request.Credentials.TryGetValue("Password", out var password)) {
-            context.Response.ErrorMessage = "Credential not found. Missing Password";
+            context.Response.ErrorMessage = MissingPassword;
             return false;
         }
 
         context.Account = await store.FindByEmail(email, context.Token);
 
         if (context.Account is null) {
-            context.Response.ErrorMessage = "Account not found";
+            context.Response.ErrorMessage = AccountNotFound;
             return false;
         }
 
         if (context.Account.IsLocked) {
-            context.Response.ErrorMessage = "Account locked";
+            context.Response.ErrorMessage = AccontLocked;
             return false;
         }
 
         if (!hasher.Verify(password, context.Account.PasswordHash)) {
-            context.Response.ErrorMessage = "Invalid password";
+            context.Response.ErrorMessage = InvalidPassword;
             return false;
         }
 
