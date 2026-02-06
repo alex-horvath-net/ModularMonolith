@@ -8,6 +8,7 @@ public sealed class SecurityOfficerDbContext(DbContextOptions<SecurityOfficerDbC
 
     protected override void OnModelCreating(ModelBuilder modelBuilder) {
         var type = typeof(SecurityOfficerDbContext);
+        modelBuilder.HasDefaultSchema("security");
         modelBuilder.ApplyConfigurationsFromAssembly(type.Assembly, x => x.Namespace!.StartsWith(type.Namespace!, StringComparison.Ordinal));
     }
 }

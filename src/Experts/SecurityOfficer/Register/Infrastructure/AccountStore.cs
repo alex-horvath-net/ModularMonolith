@@ -8,9 +8,10 @@ public sealed class AccountStore(Data.SecurityOfficerDbContext db) : UserStory.I
     public async Task<Domain.Account?> FindByEmailAsync(string email, CancellationToken token) {
         ArgumentException.ThrowIfNullOrWhiteSpace(email);
 
+        var normalizedEmail = NormalizeEmail(email);
         var entity = await db.Accounts
             .AsNoTracking()
-            .FirstOrDefaultAsync(account => account.Email == email, token)
+            .FirstOrDefaultAsync(account => account.EmailNormalized == normalizedEmail, token)
             .ConfigureAwait(false);
 
         return MapToDomain(entity);
@@ -31,15 +32,22 @@ public sealed class AccountStore(Data.SecurityOfficerDbContext db) : UserStory.I
     private static Data.Models.Account MapToData(Domain.Account domain) => new() {
         Id = domain.Id,
         Email = domain.Email,
+        EmailNormalized = NormalizeEmail(domain.Email),
         UserName = domain.UserName,
+        UserNameNormalized = NormalizeUserName(domain.UserName),
         PasswordHash = domain.PasswordHash,
+        PasswordChangedAtUtc = domain.CreatedAtUtc,
         Roles = domain.Roles.Select(MapToData).ToHashSet(),
         IsLocked = domain.IsLocked,
-        CreatedAtUtc = domain.CreatedAtUtc
+        FailedAccessCount = 0,
+        CreatedAtUtc = domain.CreatedAtUtc,
+        UpdatedAtUtc = domain.CreatedAtUtc,
+        IsDeleted = false
     };
 
     private static Data.Models.Role MapToData(string role) => new() {
-        Name = role
+        Name = role,
+        NormalizedName = NormalizeRoleName(role)
     };
 
     private static Domain.Account? MapToDomain(Data.Models.Account? entity) =>
@@ -54,4 +62,13 @@ public sealed class AccountStore(Data.SecurityOfficerDbContext db) : UserStory.I
 
     private static string MapToDomain(Data.Models.Role data) =>
         data.Name;
+
+    private static string NormalizeEmail(string email) =>
+        email.Trim().ToLowerInvariant();
+
+    private static string NormalizeUserName(string userName) =>
+        userName.Trim().ToUpperInvariant();
+
+    private static string NormalizeRoleName(string roleName) =>
+        roleName.Trim().ToUpperInvariant();
 }

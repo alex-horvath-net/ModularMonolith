@@ -65,10 +65,17 @@ public class Authenticate(
     }
 
     public class Store(Data.SecurityOfficerDbContext db) : IStore {
-        public Task<Domain.Account?> FindByEmail(string email, CancellationToken token) => db.Accounts
-            .Include(account => account.Roles)
-            .Where(account => account.Email == email)
-            .FirstOrDefaultAsync(token)
-            .Then(Data.Models.AccountMapper.ToDomain);
+        public Task<Domain.Account?> FindByEmail(string email, CancellationToken token) {
+            var normalizedEmail = NormalizeEmail(email);
+
+            return db.Accounts
+                .Include(account => account.Roles)
+                .Where(account => account.EmailNormalized == normalizedEmail)
+                .FirstOrDefaultAsync(token)
+                .Then(Data.Models.AccountMapper.ToDomain);
+        }
+
+        private static string NormalizeEmail(string email) =>
+            email.Trim().ToLowerInvariant();
     }
 }
