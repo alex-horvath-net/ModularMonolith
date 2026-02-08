@@ -10,7 +10,7 @@ internal sealed class UserStoryBlazorClient(UserStory userStory) : IUserStoryBla
     public async Task<UserStoryBlazorClientResponse> Run(UserStoryBlazorClientRequest clientRequest, CancellationToken cancellationToken = default) {
         ArgumentNullException.ThrowIfNull(clientRequest);
 
-        var request = new UserStory.Request(
+        var request = new UserStoryRequest(
             clientRequest.Email,
             clientRequest.UserName,
             clientRequest.Password,

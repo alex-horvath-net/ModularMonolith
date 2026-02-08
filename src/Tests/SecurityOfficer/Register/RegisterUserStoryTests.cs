@@ -11,7 +11,7 @@ public class RegisterUserStoryTests {
     private UserStory.IAccountStore store = default!;
     private IRandomNumberGenerator random = default!;
     private UserStory.IClock clock = default!;
-    private UserStory.Request request = default!;
+    private UserStoryRequest request = default!;
     private CancellationToken token = default!;
     private Account? createdAccount;
 
@@ -41,13 +41,13 @@ public class RegisterUserStoryTests {
 
     [Fact]
     public async Task RegisterAsync_WhenPasswordIsWeak_Throws() {
-        Arrange(() => new UserStory.Request("user@example.com", "New", "weak", ["Trader"]));
+        Arrange(() => new UserStoryRequest("user@example.com", "New", "weak", ["Trader"]));
 
         var userStory = new UserStory(store, random, clock);
         await Should.ThrowAsync<InvalidOperationException>(() => userStory.Register(request, token));
     }
 
-    private void Arrange(Func<UserStory.Request>? requestFactory = null) {
+    private void Arrange(Func<UserStoryRequest>? requestFactory = null) {
         request = requestFactory == null ? DefaultRequest() : requestFactory();
         token = CancellationToken.None;
 
@@ -63,16 +63,16 @@ public class RegisterUserStoryTests {
         clock.UtcNow.Returns(DateTime.Parse("2024-01-01T00:00:00Z", CultureInfo.InvariantCulture));
     }
 
-    private UserStory.Request DefaultRequest() => new(
+    private UserStoryRequest DefaultRequest() => new(
         Email: "Trader@Bank.Com ",
         UserName: "  Jane Trader ",
         Password: "Sup3r$ecretPwd",
         Roles: ["Trader", "trader", "RiskManager"]);
 
-    private UserStory.Request WithExistingAccount() {
+    private UserStoryRequest WithExistingAccount() {
         var existing = new Account(Guid.NewGuid(), "user@example.com", "Existing", "hash", new HashSet<string>(StringComparer.OrdinalIgnoreCase), false, clock.UtcNow);
         store.FindByEmailAsync(Arg.Any<string>(), Arg.Any<CancellationToken>()).Returns(existing);
-        return new UserStory.Request("user@example.com", "New", "Sup3r$ecretPwd", ["Trader"]);
+        return new UserStoryRequest("user@example.com", "New", "Sup3r$ecretPwd", ["Trader"]);
     }
 
 }

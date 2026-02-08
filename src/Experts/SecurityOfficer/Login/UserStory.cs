@@ -27,7 +27,6 @@ internal sealed class UserStory {
 
     public sealed record Context(UserStoryRequest Request, UserStoryResponse Response, CancellationToken Token) {
         internal Account? Account { get; set; }
-        internal bool Failed { get; set; }
     }
 }
 

@@ -4,31 +4,16 @@ using Experts.SecurityOfficer.Register.Infrastructure;
 
 namespace Experts.SecurityOfficer.Register;
 
-/// <summary>
-/// Business command that provisions identities for future authentication.
-/// </summary>
-internal sealed class UserStory {
-    private readonly IAccountStore store;
-    private readonly Pbkdf2PasswordHasher hasher;
-    private readonly DefaultRolePolicy rolePolicy;
-    private readonly IClock clock;
+internal sealed class UserStory(UserStory.IAccountStore store, IRandomNumberGenerator random, UserStory.IClock clock) {
+    private readonly IAccountStore store = store ?? throw new ArgumentNullException(nameof(store));
+    private readonly Pbkdf2PasswordHasher hasher = new(random ?? throw new ArgumentNullException(nameof(random)));
+    private readonly DefaultRolePolicy rolePolicy = new();
+    private readonly IClock clock = clock ?? throw new ArgumentNullException(nameof(clock));
 
-    public UserStory(
-        IAccountStore store,
-        IRandomNumberGenerator random,
-        IClock clock) {
-        ArgumentNullException.ThrowIfNull(store);
-        ArgumentNullException.ThrowIfNull(random);
-        ArgumentNullException.ThrowIfNull(rolePolicy);
-        ArgumentNullException.ThrowIfNull(clock);
+    public async Task<UserStoryResponse> Register(UserStoryRequest request, CancellationToken token) {
 
-        this.store = store;
-        hasher = new Pbkdf2PasswordHasher(random);
-        rolePolicy = new DefaultRolePolicy();
-        this.clock = clock;
-    }
+        //Validate
 
-    public async Task<Response> Register(Request request, CancellationToken token) {
         ArgumentNullException.ThrowIfNull(request);
 
         var email = NormalizeEmail(request.Email);
@@ -59,7 +44,7 @@ internal sealed class UserStory {
 
         await store.CreateAsync(account, token).ConfigureAwait(false);
 
-        return new Response(account.Id, account.Email, account.UserName, account.Roles);
+        return new UserStoryResponse(account.Id, account.Email, account.UserName, account.Roles);
     }
 
     private static string NormalizeEmail(string email) {
@@ -96,14 +81,6 @@ internal sealed class UserStory {
         return normalized;
     }
 
-    public sealed record Request(
-        string Email,
-        string UserName,
-        string Password,
-        IReadOnlyCollection<string> Roles);
-
-    public sealed record Response(Guid AccountId, string Email, string UserName, IReadOnlyCollection<string> Roles);
-
     public interface IAccountStore {
         Task<Account?> FindByEmailAsync(string email, CancellationToken token);
         Task CreateAsync(Account account, CancellationToken token);
@@ -133,4 +110,19 @@ internal sealed class UserStory {
             return hasUpper && hasLower && hasDigit && hasSymbol;
         }
     }
+
+    public sealed record Context(UserStoryRequest Request, UserStoryResponse Response, CancellationToken Token) {
+        internal Account? ManchingAccount { get; set; }
+    }
+
+
 }
+
+public sealed record UserStoryRequest(
+    string Email,
+    string UserName,
+    string Password,
+    IReadOnlyCollection<string> Roles);
+
+public sealed record UserStoryResponse(Guid AccountId, string Email, string UserName, IReadOnlyCollection<string> Roles);
+
