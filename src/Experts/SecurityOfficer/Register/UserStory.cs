@@ -4,82 +4,33 @@ using Experts.SecurityOfficer.Register.Infrastructure;
 
 namespace Experts.SecurityOfficer.Register;
 
-internal sealed class UserStory(UserStory.IAccountStore store, IRandomNumberGenerator random, UserStory.IClock clock) {
-    private readonly IAccountStore store = store ?? throw new ArgumentNullException(nameof(store));
-    private readonly Pbkdf2PasswordHasher hasher = new(random ?? throw new ArgumentNullException(nameof(random)));
+internal sealed class UserStory {
+    private readonly IAccountStore store;
+    private readonly Pbkdf2PasswordHasher hasher;
     private readonly DefaultRolePolicy rolePolicy = new();
-    private readonly IClock clock = clock ?? throw new ArgumentNullException(nameof(clock));
+    private readonly IClock clock;
+    private readonly Create create;
+
+    internal UserStory(IAccountStore store, IRandomNumberGenerator random, IClock clock) {
+        this.store = store ?? throw new ArgumentNullException(nameof(store));
+        hasher = new(random ?? throw new ArgumentNullException(nameof(random)));
+        this.clock = clock ?? throw new ArgumentNullException(nameof(clock));
+
+        create = new Create(store, random, clock);
+    }
 
     public async Task<UserStoryResponse> Register(UserStoryRequest request, CancellationToken token) {
+        var context = new Context(request, new(), token);
+        //Crate
 
-        //Validate
-
-        ArgumentNullException.ThrowIfNull(request);
-
-        var email = NormalizeEmail(request.Email);
-        var userName = NormalizeUserName(request.UserName);
-        var roles = NormalizeRoles(request.Roles);
-
-        if (!PasswordPolicy.IsValid(request.Password)) {
-            throw new InvalidOperationException(PasswordPolicy.ValidationMessage);
+        if (await !create.Run(context)) {
+            return context.Response;
         }
 
-        if (!rolePolicy.AreEligible(roles)) {
-            throw new InvalidOperationException("Requested roles are not eligible for registration.");
-        }
-
-        var existing = await store.FindByEmailAsync(email, token).ConfigureAwait(false);
-        if (existing is not null) {
-            throw new InvalidOperationException("An account with this email already exists.");
-        }
-
-        var account = new Account(
-            Guid.NewGuid(),
-            email,
-            userName,
-            hasher.Hash(request.Password),
-            new HashSet<string>(roles, StringComparer.OrdinalIgnoreCase),
-            IsLocked: false,
-            CreatedAtUtc: clock.UtcNow);
-
-        await store.CreateAsync(account, token).ConfigureAwait(false);
-
-        return new UserStoryResponse(account.Id, account.Email, account.UserName, account.Roles);
+        //Activate email
+        //Activate MFA
     }
 
-    private static string NormalizeEmail(string email) {
-        if (string.IsNullOrWhiteSpace(email)) {
-            throw new ArgumentException("Email is required.", nameof(email));
-        }
-
-        return email.Trim().ToLowerInvariant();
-    }
-
-    private static string NormalizeUserName(string userName) {
-        if (string.IsNullOrWhiteSpace(userName)) {
-            throw new ArgumentException("User name is required.", nameof(userName));
-        }
-
-        return userName.Trim();
-    }
-
-    private static IEnumerable<string> NormalizeRoles(IEnumerable<string>? roles) {
-        if (roles is null || !roles.Any()) {
-            throw new ArgumentException("At least one role must be provided.", nameof(roles));
-        }
-
-        var normalized = roles
-            .Where(role => !string.IsNullOrWhiteSpace(role))
-            .Select(role => role.Trim())
-            .Distinct(StringComparer.OrdinalIgnoreCase)
-            .ToArray();
-
-        if (normalized.Length == 0) {
-            throw new ArgumentException("At least one role must be provided.", nameof(roles));
-        }
-
-        return normalized;
-    }
 
     public interface IAccountStore {
         Task<Account?> FindByEmailAsync(string email, CancellationToken token);
@@ -94,28 +45,9 @@ internal sealed class UserStory(UserStory.IAccountStore store, IRandomNumberGene
         DateTime UtcNow { get; }
     }
 
-    public static class PasswordPolicy {
-        public const string ValidationMessage = "Password must be at least 12 characters and contain upper, lower, digit, and symbol.";
-
-        public static bool IsValid(string password) {
-            if (string.IsNullOrWhiteSpace(password) || password.Length < 12) {
-                return false;
-            }
-
-            var hasUpper = password.Any(char.IsUpper);
-            var hasLower = password.Any(char.IsLower);
-            var hasDigit = password.Any(char.IsDigit);
-            var hasSymbol = password.Any(ch => !char.IsLetterOrDigit(ch));
-
-            return hasUpper && hasLower && hasDigit && hasSymbol;
-        }
-    }
-
-    public sealed record Context(UserStoryRequest Request, UserStoryResponse Response, CancellationToken Token) {
+    internal sealed record Context(UserStoryRequest Request, UserStoryResponse Response, CancellationToken Token) {
         internal Account? ManchingAccount { get; set; }
     }
-
-
 }
 
 public sealed record UserStoryRequest(
@@ -124,5 +56,19 @@ public sealed record UserStoryRequest(
     string Password,
     IReadOnlyCollection<string> Roles);
 
-public sealed record UserStoryResponse(Guid AccountId, string Email, string UserName, IReadOnlyCollection<string> Roles);
+public sealed class UserStoryResponse {
+    public string? ErrorMessage { get; internal set; }
+    public Guid AccountId { get; internal set; }
+    public string Email { get; internal set; }
+    public string UserName { get; internal set; }
+    public IReadOnlyCollection<string> Roles { get; internal set; }
 
+}
+
+public static class UserStoryConstants {
+    public const string RequestCanNotBeNell = "Request can not be null";
+    public const string EmailIsRequired = "Email is required";
+    public const string PasswordMutBeContain = "Password must be at least 12 characters and contain upper, lower, digit, and symbol";
+    public const string UserNameIsRequired = "UserName is required";
+    public const string AtLeastOneRoleRequired = "At least one role is required";
+}

@@ -6,7 +6,6 @@ namespace Experts.SecurityOfficer.Register.Infrastructure;
 
 public sealed class AccountStore(Data.SecurityOfficerDbContext db) : UserStory.IAccountStore {
     public async Task<Domain.Account?> FindByEmailAsync(string email, CancellationToken token) {
-        ArgumentException.ThrowIfNullOrWhiteSpace(email);
 
         var normalizedEmail = NormalizeEmail(email);
         var entity = await db.Accounts

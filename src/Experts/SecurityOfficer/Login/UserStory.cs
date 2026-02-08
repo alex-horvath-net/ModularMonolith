@@ -14,7 +14,7 @@ internal sealed class UserStory {
     }
 
     public async Task<UserStoryResponse> Run(UserStoryRequest request, CancellationToken token) {
-        var context = new Context(request, new UserStoryResponse(), token);
+        var context = new Context(request, new(), token);
 
         if (!await authenticate.Run(context))
             return context.Response;
@@ -40,7 +40,6 @@ internal enum AccountType {
     AzureAccount,
     SSOAccount,
 }
-
 
 public sealed record UserStoryResponse() {
     public string? ErrorMessage { get; internal set; }
