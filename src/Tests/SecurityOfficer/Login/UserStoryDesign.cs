@@ -1,18 +1,24 @@
-﻿using Common.Tasks;
-using Experts.SecurityOfficer.Common.Domain;
+﻿using Experts.SecurityOfficer.Common.Domain;
 using Experts.SecurityOfficer.Common.Infrastructure.Security;
 using Experts.SecurityOfficer.Login;
+using NSubstitute;
 using Shouldly;
 
 namespace Tests.SecurityOfficer.Login;
 
 public class UserStoryTests {
-    private UserStory userStory = default!;
+    private IAuthenticateStore authenticateStore = default!;
+    private IRandomNumberGenerator random = default!;
+    private UserStoryRequest request = default!;
+    private CancellationToken token = default!;
+    private Account account = default!;
+
 
     [Fact]
     public async Task Login_Should_Succeed_For_Registered_Account() {
         Arrange();
 
+        var userStory = new UserStory(authenticateStore, random);
         var response = await userStory.Run(request, token);
 
         response.ErrorMessage.ShouldBeNull();
@@ -25,6 +31,7 @@ public class UserStoryTests {
     public async Task Login_Should_Fail_If_Request_Wrong_Beacause_AccountType() {
         Arrange(WithRequestWithWrongAccountType);
 
+        var userStory = new UserStory(authenticateStore, random);
         var response = await userStory.Run(request, token);
 
         response.ErrorMessage.ShouldBe(UserStoryConstants.AccountTypeNotFound);
@@ -37,6 +44,7 @@ public class UserStoryTests {
     public async Task Login_Should_Fail_If_Request_Wrong_Beacause_Password_Missing() {
         Arrange(WithRequestWithoutPassword);
 
+        var userStory = new UserStory(authenticateStore, random);
         var response = await userStory.Run(request, token);
 
         response.ErrorMessage.ShouldBe(UserStoryConstants.MissingPassword);
@@ -49,6 +57,7 @@ public class UserStoryTests {
     public async Task Login_Should_Fail_If_Request_Wrong_Beacause_Email_Missing() {
         Arrange(WithRequestWithotEmail);
 
+        var userStory = new UserStory(authenticateStore, random);
         var response = await userStory.Run(request, token);
 
         response.ErrorMessage.ShouldBe(UserStoryConstants.MissingEmail);
@@ -63,19 +72,18 @@ public class UserStoryTests {
         token = CancellationToken.None;
 
         account = DefaultAccount();
-        authenticateStore = new FakeAuthenticateStore([account]);
-        random = new FakeRandomNumberGenerator();
-        userStory = new UserStory(authenticateStore, random);
-    }
+        authenticateStore = Substitute.For<IAuthenticateStore>();
+        authenticateStore.FindByEmail(Arg.Any<string>(), Arg.Any<CancellationToken>()).Returns(account);
 
-    private UserStoryRequest request = default!;
+        random = Substitute.For<IRandomNumberGenerator>();
+    }
     private UserStoryRequest DefaultRequest() => new(
-        VisitorId: Guid.Parse("10000000-0000-0000-0000-000000000001"),
-        AccountType: AccountType.LocalAccount,
-        Credentials: new Dictionary<string, string> {
-            ["Email"] = "alex.horvath.net@outlook.com",
-            ["Password"] = "P@ssw0rd!"
-        });
+       VisitorId: Guid.Parse("10000000-0000-0000-0000-000000000001"),
+           AccountType: AccountType.LocalAccount,
+           Credentials: new Dictionary<string, string> {
+               ["Email"] = "alex.horvath.net@outlook.com",
+               ["Password"] = "P@ssw0rd!"
+           });
     private UserStoryRequest WithRequestWithWrongAccountType() => new(
       VisitorId: Guid.Parse("10000000-0000-0000-0000-000000000001"),
       AccountType: AccountType.AzureAccount,
@@ -96,10 +104,6 @@ public class UserStoryTests {
             ["Password"] = "P@ssw0rd!"
         });
 
-    private CancellationToken token = default!;
-
-
-    private Account account = default!;
     private Account DefaultAccount() => new(
         Id: Guid.Parse("20000000-0000-0000-0000-000000000001"),
         Email: "alex.horvath.net@outlook.com",
@@ -108,24 +112,4 @@ public class UserStoryTests {
         Roles: new HashSet<string>(["Trader"], StringComparer.OrdinalIgnoreCase),
         IsLocked: false,
         CreatedAtUtc: DateTime.UtcNow);
-
-
-    private IAuthenticateStore authenticateStore = default!;
-
-    private IRandomNumberGenerator random = default!;
-
-    private sealed class FakeAuthenticateStore(Account[] accounts) : IAuthenticateStore {
-        public Task<Account?> FindByEmail(string email, CancellationToken token) {
-            _ = token;
-            return accounts.FirstOrDefault(account => account.Email == email).ToTask();
-        }
-    }
-
-    private sealed class FakeRandomNumberGenerator : IRandomNumberGenerator {
-        public void Fill(Span<byte> data) {
-            foreach (ref var b in data) {
-                b = 0x42; // deterministic byte for testing
-            }
-        }
-    }
 }
