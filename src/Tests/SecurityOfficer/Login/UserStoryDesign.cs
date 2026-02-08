@@ -13,7 +13,6 @@ public class UserStoryTests {
     private CancellationToken token = default!;
     private Account account = default!;
 
-
     [Fact]
     public async Task Login_Should_Succeed_For_Registered_Account() {
         Arrange();

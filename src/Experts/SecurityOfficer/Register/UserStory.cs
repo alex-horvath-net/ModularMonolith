@@ -59,7 +59,7 @@ internal sealed class UserStory {
 
         await store.CreateAsync(account, token).ConfigureAwait(false);
 
-        return new Response(account.Id, account.Email, account.Roles);
+        return new Response(account.Id, account.Email, account.UserName, account.Roles);
     }
 
     private static string NormalizeEmail(string email) {
@@ -102,7 +102,7 @@ internal sealed class UserStory {
         string Password,
         IReadOnlyCollection<string> Roles);
 
-    public sealed record Response(Guid AccountId, string Email, IReadOnlyCollection<string> Roles);
+    public sealed record Response(Guid AccountId, string Email, string UserName, IReadOnlyCollection<string> Roles);
 
     public interface IAccountStore {
         Task<Account?> FindByEmailAsync(string email, CancellationToken token);
