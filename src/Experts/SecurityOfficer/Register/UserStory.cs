@@ -1,26 +1,30 @@
 using Experts.SecurityOfficer.Common.Domain;
-using Experts.SecurityOfficer.Common.Security;
+using Experts.SecurityOfficer.Common.Infrastructure.Security;
+using Experts.SecurityOfficer.Register.Infrastructure;
 
 namespace Experts.SecurityOfficer.Register;
 
 /// <summary>
 /// Business command that provisions identities for future authentication.
 /// </summary>
-public sealed class UserStory {
+internal sealed class UserStory {
     private readonly IAccountStore store;
-    private readonly IPasswordHasher hasher;
-    private readonly IRolePolicy rolePolicy;
+    private readonly Pbkdf2PasswordHasher hasher;
+    private readonly DefaultRolePolicy rolePolicy;
     private readonly IClock clock;
 
-    public UserStory(IAccountStore store, IPasswordHasher hasher, IRolePolicy rolePolicy, IClock clock) {
+    public UserStory(
+        IAccountStore store,
+        IRandomNumberGenerator random,
+        IClock clock) {
         ArgumentNullException.ThrowIfNull(store);
-        ArgumentNullException.ThrowIfNull(hasher);
+        ArgumentNullException.ThrowIfNull(random);
         ArgumentNullException.ThrowIfNull(rolePolicy);
         ArgumentNullException.ThrowIfNull(clock);
 
         this.store = store;
-        this.hasher = hasher;
-        this.rolePolicy = rolePolicy;
+        hasher = new Pbkdf2PasswordHasher(random);
+        rolePolicy = new DefaultRolePolicy();
         this.clock = clock;
     }
 

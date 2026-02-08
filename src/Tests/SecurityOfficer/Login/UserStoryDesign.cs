@@ -1,74 +1,19 @@
 ﻿using Common.Tasks;
 using Experts.SecurityOfficer.Common.Domain;
-using Experts.SecurityOfficer.Common.Security;
+using Experts.SecurityOfficer.Common.Infrastructure.Security;
 using Experts.SecurityOfficer.Login;
 using Shouldly;
 
 namespace Tests.SecurityOfficer.Login;
 
 public class UserStoryTests {
-    private Func<UserStory.Request> requestFactory = default!;
-    private Func<Account> accountFactoy = default!;
-    private Func<FakeAuthenticateStore> authenticateStoreFactory = default!;
-    private Func<Pbkdf2PasswordHasher> hasherFactory = default!;
-    private Func<Authenticate> authenticateFactory = default!;
-    private Func<Authorize> authorizeFactory = default!;
-    private Func<UserStory> userStoryFactory = default!;
-    private Func<Task<UserStory.Response>> Act = default!;
-    private Account account = default!;
-
-    public UserStoryTests() {
-        requestFactory = () => new UserStory.Request(
-            VisitorId: Guid.Parse("10000000-0000-0000-0000-000000000001"),
-            AccountType: UserStory.AccountType.LocalAccount,
-            Credentials: new Dictionary<string, string> {
-                ["Email"] = "alex.horvath.net@outlook.com",
-                ["Password"] = "P@ssw0rd!"
-            });
-
-        accountFactoy = () => new(
-            Id: Guid.Parse("20000000-0000-0000-0000-000000000001"),
-            Email: "alex.horvath.net@outlook.com",
-            UserName: "Alex",
-            PasswordHash: "FG9LGgLaReKuqwOfARhgaO7cD2CGvOMuq641z3LqcX54sfiWZyFAdnWpLDgeL6/r", // hash of P@ssw0rd!
-            Roles: new HashSet<string>(["Trader"], StringComparer.OrdinalIgnoreCase),
-            IsLocked: false,
-            CreatedAtUtc: DateTime.UtcNow);
-
-        authenticateStoreFactory = () => {
-            account = accountFactoy();
-            return new FakeAuthenticateStore([account]);
-        };
-
-        hasherFactory = () => new Pbkdf2PasswordHasher();
-
-        authenticateFactory = () => {
-            var authenticateStore = authenticateStoreFactory();
-            var hasher = hasherFactory();
-            return new Authenticate(authenticateStore, hasher);
-        };
-
-        authorizeFactory = () => new Authorize();
-
-        userStoryFactory = () => {
-            var authenticate = authenticateFactory();
-            var authorize = authorizeFactory();
-            return new UserStory(authenticate, authorize);
-        };
-
-        Act = async () => {
-            var userStory = userStoryFactory();
-            var request = requestFactory();
-            var token = CancellationToken.None;
-            return await userStory.Run(request, token);
-        };
-    }
-
+    private UserStory userStory = default!;
 
     [Fact]
-    public async Task Login_Succeeds_ForRegisteredAccount() {
+    public async Task Login_Should_Succeed_For_Registered_Account() {
+        Arrange();
 
-        var response = await Act();
+        var response = await userStory.Run(request, token);
 
         response.ErrorMessage.ShouldBeNull();
         response.AuthenticationId.ShouldBe(account.Id);
@@ -77,56 +22,110 @@ public class UserStoryTests {
     }
 
     [Fact]
-    public async Task Login_Fails_ForUnKnownAccountType() {
-        requestFactory = () => requestFactory() with { AccountType = UserStory.AccountType.AzureAccount };
+    public async Task Login_Should_Fail_If_Request_Wrong_Beacause_AccountType() {
+        Arrange(WithRequestWithWrongAccountType);
 
-        var response = await Act();
+        var response = await userStory.Run(request, token);
 
-        response.ErrorMessage.ShouldBe(Authenticate.Constants.AccountTypeNotFound);
+        response.ErrorMessage.ShouldBe(UserStoryConstants.AccountTypeNotFound);
         response.AuthenticationId.ShouldBeNull();
         response.UserName.ShouldBeNull();
         response.Roles.ShouldBeEmpty();
     }
 
     [Fact]
-    public async Task Login_Fails_ForMissingPasswordCredential() {
-        requestFactory = () => {
-            var request = requestFactory();
-            var credentials = request.Credentials.ToDictionary();
-            credentials.Remove(Authenticate.Constants.Password);
-            return request with { Credentials = credentials };
-        };
+    public async Task Login_Should_Fail_If_Request_Wrong_Beacause_Password_Missing() {
+        Arrange(WithRequestWithoutPassword);
 
-        var response = await Act();
+        var response = await userStory.Run(request, token);
 
-        response.ErrorMessage.ShouldBe(Authenticate.Constants.MissingPassword);
+        response.ErrorMessage.ShouldBe(UserStoryConstants.MissingPassword);
         response.AuthenticationId.ShouldBeNull();
         response.UserName.ShouldBeNull();
         response.Roles.ShouldBeEmpty();
     }
 
     [Fact]
-    public async Task Login_Fails_ForMisingEmailCredential() {
-        requestFactory = () => {
-            var request = requestFactory();
-            var credentials = request.Credentials.ToDictionary();
-            credentials.Remove(Authenticate.Constants.Email);
-            return request with { Credentials = credentials };
-        };
+    public async Task Login_Should_Fail_If_Request_Wrong_Beacause_Email_Missing() {
+        Arrange(WithRequestWithotEmail);
 
-        var response = await Act();
+        var response = await userStory.Run(request, token);
 
-        response.ErrorMessage.ShouldBe(Authenticate.Constants.MissingEmail);
+        response.ErrorMessage.ShouldBe(UserStoryConstants.MissingEmail);
         response.AuthenticationId.ShouldBeNull();
         response.UserName.ShouldBeNull();
         response.Roles.ShouldBeEmpty();
     }
 
 
-    private sealed class FakeAuthenticateStore(Account[] accounts) : Authenticate.IStore {
+    private void Arrange(Func<UserStoryRequest>? requestFactory = null) {
+        request = requestFactory == null ? DefaultRequest() : requestFactory();
+        token = CancellationToken.None;
+
+        account = DefaultAccount();
+        authenticateStore = new FakeAuthenticateStore([account]);
+        random = new FakeRandomNumberGenerator();
+        userStory = new UserStory(authenticateStore, random);
+    }
+
+    private UserStoryRequest request = default!;
+    private UserStoryRequest DefaultRequest() => new(
+        VisitorId: Guid.Parse("10000000-0000-0000-0000-000000000001"),
+        AccountType: AccountType.LocalAccount,
+        Credentials: new Dictionary<string, string> {
+            ["Email"] = "alex.horvath.net@outlook.com",
+            ["Password"] = "P@ssw0rd!"
+        });
+    private UserStoryRequest WithRequestWithWrongAccountType() => new(
+      VisitorId: Guid.Parse("10000000-0000-0000-0000-000000000001"),
+      AccountType: AccountType.AzureAccount,
+      Credentials: new Dictionary<string, string> {
+          ["Email"] = "alex.horvath.net@outlook.com",
+          ["Password"] = "P@ssw0rd!"
+      });
+    private UserStoryRequest WithRequestWithoutPassword() => new(
+        VisitorId: Guid.Parse("10000000-0000-0000-0000-000000000001"),
+        AccountType: AccountType.LocalAccount,
+        Credentials: new Dictionary<string, string> {
+            ["Email"] = "alex.horvath.net@outlook.com"
+        });
+    private UserStoryRequest WithRequestWithotEmail() => new(
+        VisitorId: Guid.Parse("10000000-0000-0000-0000-000000000001"),
+        AccountType: AccountType.LocalAccount,
+        Credentials: new Dictionary<string, string> {
+            ["Password"] = "P@ssw0rd!"
+        });
+
+    private CancellationToken token = default!;
+
+
+    private Account account = default!;
+    private Account DefaultAccount() => new(
+        Id: Guid.Parse("20000000-0000-0000-0000-000000000001"),
+        Email: "alex.horvath.net@outlook.com",
+        UserName: "Alex",
+        PasswordHash: "FG9LGgLaReKuqwOfARhgaO7cD2CGvOMuq641z3LqcX54sfiWZyFAdnWpLDgeL6/r", // hash of P@ssw0rd!
+        Roles: new HashSet<string>(["Trader"], StringComparer.OrdinalIgnoreCase),
+        IsLocked: false,
+        CreatedAtUtc: DateTime.UtcNow);
+
+
+    private IAuthenticateStore authenticateStore = default!;
+
+    private IRandomNumberGenerator random = default!;
+
+    private sealed class FakeAuthenticateStore(Account[] accounts) : IAuthenticateStore {
         public Task<Account?> FindByEmail(string email, CancellationToken token) {
             _ = token;
             return accounts.FirstOrDefault(account => account.Email == email).ToTask();
+        }
+    }
+
+    private sealed class FakeRandomNumberGenerator : IRandomNumberGenerator {
+        public void Fill(Span<byte> data) {
+            foreach (ref var b in data) {
+                b = 0x42; // deterministic byte for testing
+            }
         }
     }
 }

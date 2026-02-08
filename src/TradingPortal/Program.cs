@@ -79,23 +79,22 @@ app.Run();
 static void SeedSecurityOfficerAccounts(WebApplication app) {
     using var scope = app.Services.CreateScope();
     var db = scope.ServiceProvider.GetRequiredService<SecurityOfficerDbContext>();
-    var registerUserStory = scope.ServiceProvider.GetRequiredService<Experts.SecurityOfficer.Register.UserStory>();
+    var register = scope.ServiceProvider.GetRequiredService<Experts.SecurityOfficer.Register.IUserStoryBlazorClient>();
 
     db.Database.EnsureCreated();
 
-    const string defaultEmail = "aladar.horvath@outlook.com";
-    const string defaultPassword = "Sup3r$ecretPwd!";
-    if (db.Accounts.Any(a => a.Email == defaultEmail)) {
+    var request = new Experts.SecurityOfficer.Register.UserStoryBlazorClientRequest() {
+        Email = "aladar.horvath@outlook.com",
+        UserName = "Aladar Horvath",
+        Password = "Sup3r$ecretPwd!",
+        Roles = { "Trader" }
+    };
+
+    if (db.Accounts.Any(a => a.Email == request.Email)) {
         return;
     }
 
-    var request = new Experts.SecurityOfficer.Register.UserStory.Request(
-        defaultEmail,
-        "Aladar Horvath",
-        defaultPassword,
-        ["Trader"]);
-
-    registerUserStory.Register(request, CancellationToken.None).GetAwaiter().GetResult();
+    register.Run(request, CancellationToken.None).GetAwaiter().GetResult();
 }
 
 public partial class Program { }

@@ -1,16 +1,16 @@
 using System.Security.Cryptography;
 
-namespace Experts.SecurityOfficer.Common.Security;
+namespace Experts.SecurityOfficer.Common.Infrastructure.Security;
 
-/// <summary>
-/// Provides hashing and verification for credentials stored by the security officer expert.
-/// </summary>
-public interface IPasswordHasher {
-    string Hash(string password);
-    bool Verify(string password, string storedHash);
-}
+///// <summary>
+///// Provides hashing and verification for credentials stored by the security officer expert.
+///// </summary>
+//internal interface IPasswordHasher {
+//    string Hash(string password);
+//    bool Verify(string password, string storedHash);
+//}
 
-public sealed class Pbkdf2PasswordHasher : IPasswordHasher {
+internal sealed class Pbkdf2PasswordHasher(IRandomNumberGenerator random) {
     private const int SaltSize = 16; // 128-bit salt
     private const int HashSize = 32; // 256-bit hash
     private const int Iterations = 100_000;
@@ -19,7 +19,7 @@ public sealed class Pbkdf2PasswordHasher : IPasswordHasher {
         ArgumentException.ThrowIfNullOrWhiteSpace(password);
 
         Span<byte> salt = stackalloc byte[SaltSize];
-        RandomNumberGenerator.Fill(salt);
+        random.Fill(salt);
 
         var derived = Rfc2898DeriveBytes.Pbkdf2(
             password,
@@ -36,9 +36,8 @@ public sealed class Pbkdf2PasswordHasher : IPasswordHasher {
     }
 
     public bool Verify(string password, string storedHash) {
-        if (string.IsNullOrWhiteSpace(password) || string.IsNullOrWhiteSpace(storedHash)) {
+        if (string.IsNullOrWhiteSpace(password) || string.IsNullOrWhiteSpace(storedHash))
             return false;
-        }
 
         byte[] payload;
         try {
@@ -47,9 +46,8 @@ public sealed class Pbkdf2PasswordHasher : IPasswordHasher {
             return false;
         }
 
-        if (payload.Length != SaltSize + HashSize) {
+        if (payload.Length != SaltSize + HashSize)
             return false;
-        }
 
         Span<byte> salt = stackalloc byte[SaltSize];
         payload.AsSpan(0, SaltSize).CopyTo(salt);

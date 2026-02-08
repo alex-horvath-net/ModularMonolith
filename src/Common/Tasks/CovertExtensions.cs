@@ -5,6 +5,8 @@ public static class CovertExtensions {
     public static Task<TOutput> ToTask<TOutput>(this TOutput output) =>
         Task.FromResult(output);
 
+    public static TOutput? ToNullable<TOutput>(this TOutput output) => output;
+
     public static Task<TOutput> ToTask<TOutput>(this Func<TOutput> fastOutputFactory) {
         var output = fastOutputFactory();
         return Task.FromResult(output);

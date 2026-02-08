@@ -1,5 +1,5 @@
 ﻿using Experts.SecurityOfficer.Common.Infrastructure.Data;
-using Experts.SecurityOfficer.Common.Security;
+using Experts.SecurityOfficer.Common.Infrastructure.Security;
 using Experts.SecurityOfficer.Login;
 using Experts.SecurityOfficer.Register;
 using Microsoft.EntityFrameworkCore;

@@ -34,6 +34,10 @@
   <ItemGroup>
     <Folder Include="Trader\" />
   </ItemGroup>
+
+  <ItemGroup>
+    <InternalsVisibleTo Include="Tests" />
+  </ItemGroup>
     
 
 </Project>

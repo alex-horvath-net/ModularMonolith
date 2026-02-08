@@ -1,13 +1,20 @@
 ﻿using Experts.SecurityOfficer.Common.Domain;
+using Experts.SecurityOfficer.Common.Infrastructure.Security;
 
 namespace Experts.SecurityOfficer.Login;
 
-public class UserStory(
-    Authenticate authenticate,
-    Authorize authorize) {
+internal sealed class UserStory {
 
-    public async Task<Response> Run(Request request, CancellationToken token) {
-        var context = new Context(request, new Response(), token);
+    private readonly Authenticate authenticate;
+    private readonly Authorize authorize;
+
+    internal UserStory(IAuthenticateStore store, IRandomNumberGenerator random) {
+        authenticate = new Authenticate(store, random);
+        authorize = new Authorize();
+    }
+
+    public async Task<UserStoryResponse> Run(UserStoryRequest request, CancellationToken token) {
+        var context = new Context(request, new UserStoryResponse(), token);
 
         if (!await authenticate.Run(context))
             return context.Response;
@@ -18,36 +25,38 @@ public class UserStory(
         return context.Response;
     }
 
-    public sealed record Context(Request Request, Response Response, CancellationToken Token) {
+    public sealed record Context(UserStoryRequest Request, UserStoryResponse Response, CancellationToken Token) {
         internal Account? Account { get; set; }
         internal bool Failed { get; set; }
     }
+}
 
-    public record Request(
-        Guid VisitorId,
-        AccountType AccountType,
-        IReadOnlyDictionary<string, string> Credentials);
+internal sealed record UserStoryRequest(
+     Guid VisitorId,
+     AccountType AccountType,
+     IReadOnlyDictionary<string, string> Credentials);
 
-    public enum AccountType {
-        LocalAccount,
-        AzureAccount,
-        SSOAccount,
-    }
-    public record Response() {
-        public string? ErrorMessage { get; internal set; }
-        public Guid? AuthenticationId { get; internal set; }
-        public string? UserName { get; internal set; }
-        public List<string> Roles { get; internal set; } = [];
-    }
+internal enum AccountType {
+    LocalAccount,
+    AzureAccount,
+    SSOAccount,
+}
 
-    public enum LoginOutcome {
-        Succeeded,
-        Failed
-    }
 
-    public enum LoginFailureReason {
-        InvalidCredentials,
-        IdentityNotFound,
-        IdentityLocked
-    }
+public sealed record UserStoryResponse() {
+    public string? ErrorMessage { get; internal set; }
+    public Guid? AuthenticationId { get; internal set; }
+    public string? UserName { get; internal set; }
+    public List<string> Roles { get; internal set; } = [];
+}
+
+public static class UserStoryConstants {
+    public const string AccountTypeNotFound = "Account type not found";
+    public const string MissingEmail = "Credential not found. Missing Email";
+    public const string MissingPassword = "Credential not found. Missing Password";
+    public const string AccountNotFound = "Account not found";
+    public const string AccontLocked = "Account locked";
+    public const string InvalidPassword = "Invalid password";
+    public const string Email = "Email";
+    public const string Password = "Password";
 }

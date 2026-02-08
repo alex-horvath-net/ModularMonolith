@@ -9,7 +9,6 @@ public static class Extensions {
         services.AddScoped<UserStory>();
         services.AddScoped<UserStoryBlazorClient>();
         services.AddScoped<UserStory.IAccountStore, AccountStore>();
-        services.TryAddSingleton<UserStory.IRolePolicy, DefaultRolePolicy>();
         services.TryAddSingleton<UserStory.IClock, SystemClock>();
         return services;
     }

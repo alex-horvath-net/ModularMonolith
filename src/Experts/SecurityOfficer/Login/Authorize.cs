@@ -1,6 +1,6 @@
 ﻿namespace Experts.SecurityOfficer.Login;
 
-public class Authorize() {
+internal sealed class Authorize() {
     public static readonly string AccountNotFound = "Account not found";
     public async Task<bool> Run(UserStory.Context context) {
         if (context.Account is null) {
