@@ -4,13 +4,12 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Experts.SecurityOfficer.Register.Infrastructure;
 
-public sealed class AccountStore(Data.SecurityOfficerDbContext db) : UserStory.IAccountStore {
-    public async Task<Domain.Account?> FindByEmailAsync(string email, CancellationToken token) {
+public sealed class AccountStore(Data.SecurityOfficerDbContext db) : ICreateAccountStore {
+    public async Task<Domain.Account?> FindAccont(string email, CancellationToken token) {
 
-        var normalizedEmail = NormalizeEmail(email);
         var entity = await db.Accounts
             .AsNoTracking()
-            .FirstOrDefaultAsync(account => account.EmailNormalized == normalizedEmail, token)
+            .FirstOrDefaultAsync(account => account.EmailNormalized == email, token)
             .ConfigureAwait(false);
 
         return MapToDomain(entity);
@@ -31,9 +30,9 @@ public sealed class AccountStore(Data.SecurityOfficerDbContext db) : UserStory.I
     private static Data.Models.Account MapToData(Domain.Account domain) => new() {
         Id = domain.Id,
         Email = domain.Email,
-        EmailNormalized = NormalizeEmail(domain.Email),
+        EmailNormalized = domain.Email,
         UserName = domain.UserName,
-        UserNameNormalized = NormalizeUserName(domain.UserName),
+        UserNameNormalized = domain.UserName,
         PasswordHash = domain.PasswordHash,
         PasswordChangedAtUtc = domain.CreatedAtUtc,
         Roles = domain.Roles.Select(MapToData).ToHashSet(),
@@ -46,7 +45,7 @@ public sealed class AccountStore(Data.SecurityOfficerDbContext db) : UserStory.I
 
     private static Data.Models.Role MapToData(string role) => new() {
         Name = role,
-        NormalizedName = NormalizeRoleName(role)
+        NormalizedName = role
     };
 
     private static Domain.Account? MapToDomain(Data.Models.Account? entity) =>

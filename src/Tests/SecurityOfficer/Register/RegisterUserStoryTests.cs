@@ -1,6 +1,6 @@
 using System.Globalization;
 using Experts.SecurityOfficer.Common.Domain;
-using Experts.SecurityOfficer.Common.Infrastructure.Security;
+using Experts.SecurityOfficer.Common.Infrastructure.Cryptography;
 using Experts.SecurityOfficer.Register;
 using NSubstitute;
 using Shouldly;
@@ -52,7 +52,7 @@ public class RegisterUserStoryTests {
         token = CancellationToken.None;
 
         store = Substitute.For<UserStory.IAccountStore>();
-        store.FindByEmailAsync(Arg.Any<string>(), Arg.Any<CancellationToken>())
+        store.FindByEmail(Arg.Any<string>(), Arg.Any<CancellationToken>())
             .Returns(Task.FromResult<Account?>(null));
         store.CreateAsync(Arg.Do<Account>(account => createdAccount = account), Arg.Any<CancellationToken>())
             .Returns(Task.CompletedTask);
@@ -71,7 +71,7 @@ public class RegisterUserStoryTests {
 
     private UserStoryRequest WithExistingAccount() {
         var existing = new Account(Guid.NewGuid(), "user@example.com", "Existing", "hash", new HashSet<string>(StringComparer.OrdinalIgnoreCase), false, clock.UtcNow);
-        store.FindByEmailAsync(Arg.Any<string>(), Arg.Any<CancellationToken>()).Returns(existing);
+        store.FindByEmail(Arg.Any<string>(), Arg.Any<CancellationToken>()).Returns(existing);
         return new UserStoryRequest("user@example.com", "New", "Sup3r$ecretPwd", ["Trader"]);
     }
 

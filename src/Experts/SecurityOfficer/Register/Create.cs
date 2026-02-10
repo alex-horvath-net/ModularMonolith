@@ -1,25 +1,25 @@
 ﻿using System.Collections.Immutable;
-using Experts.SecurityOfficer.Common.Infrastructure.Security;
-using static Experts.SecurityOfficer.Login.UserStory;
-using static Experts.SecurityOfficer.Register.UserStory;
+using Experts.SecurityOfficer.Common.Domain;
+using Experts.SecurityOfficer.Common.Infrastructure.Clock;
+using Experts.SecurityOfficer.Common.Infrastructure.Cryptography;
 
 namespace Experts.SecurityOfficer.Register;
 internal class Create {
-    private UserStory.IAccountStore store;
-    private IRandomNumberGenerator random;
-    private UserStory.IClock clock;
-    private PasswordPolicy passwordPolicy;
-    private RoleRolePolicy rolesPolicy;
+    private readonly ICreateAccountStore store;
+    private readonly Pbkdf2PasswordHasher hasher;
+    private readonly ICreateClock clock;
+    private readonly CreatePasswordPolicy passwordPolicy;
+    private readonly CreateRoleRolePolicy rolesPolicy;
 
-    internal Create(UserStory.IAccountStore store, IRandomNumberGenerator random, UserStory.IClock clock) {
+    internal Create(ICreateAccountStore store, IRandomNumberGenerator random, ICreateClock clock) {
         this.store = store;
-        this.random = random;
+        hasher = new Pbkdf2PasswordHasher(random);
         this.clock = clock;
-        passwordPolicy = new PasswordPolicy();
-        rolesPolicy = new RoleRolePolicy();
+        passwordPolicy = new CreatePasswordPolicy();
+        rolesPolicy = new CreateRoleRolePolicy();
     }
 
-    public bool Run(UserStory.Context context) {
+    public async Task<bool> Run(UserStory.Context context) {
 
         // validate
         if (context.Request is null) {
@@ -48,36 +48,43 @@ internal class Create {
         }
 
         // normalize
-        var email = context.Request.Email.Trim().ToLowerInvariant();
-        var userName = context.Request.UserName.Trim();
-        var roles = context.Request.Roles
-            .Where(role => !string.IsNullOrWhiteSpace(role))
-            .Select(role => role.Trim())
-            .Distinct(StringComparer.OrdinalIgnoreCase)
-            .ToArray();
+        context.NormalizedRequest = context.Request with {
+            Email = context.Request.Email.Trim().ToLowerInvariant(),
+            UserName = context.Request.UserName.Trim().ToLowerInvariant(),
+            Roles = context.Request.Roles
+                        .Where(role => !string.IsNullOrWhiteSpace(role))
+                        .Select(role => role.Trim())
+                        .Distinct(StringComparer.OrdinalIgnoreCase)
+                        .ToArray()
+        };
 
 
-        var existing = await store.FindByEmailAsync(email, token);
-        if (existing is not null) {
-            throw new InvalidOperationException("An account with this email already exists.");
+        var mathingAccount = await store.FindByEmail(context.NormalizedRequest, context.Token);
+        if (mathingAccount is not null) {
+            context.Response.ErrorMessage = UserStoryConstants.AccountAlreadyExists;
+            return false;
         }
 
-        var account = new Account(
-            Guid.NewGuid(),
-            email,
-            userName,
-            hasher.Hash(request.Password),
-            new HashSet<string>(roles, StringComparer.OrdinalIgnoreCase),
-            IsLocked: false,
-            CreatedAtUtc: clock.UtcNow);
+       await store.CreateAccont(context.Request., context.Token);
 
-        await store.CreateAsync(account, token).ConfigureAwait(false);
+        context.Response.AccountId = account.Id;
+        context.Response.Email = account.Email;
+        context.Response.UserName = account.UserName;
+        context.Response.Roles = account.Roles;
 
-        return new UserStoryResponse(account.Id, account.Email, account.UserName, account.Roles);
+        return true;
     }
 }
 
-public class PasswordPolicy {
+public interface ICreateAccountStore {
+    Task<Account?> FindAccont(UserStoryRequest NormailizedRequest, CancellationToken token);
+    Task<Account?> CreateAccont(UserStoryRequest request, UserStoryRequest NormailizedRequest, CancellationToken token);
+}
+
+public interface ICreateClock : IClock { }
+
+public sealed class CreateClock : SystemClock, ICreateClock { }
+public class CreatePasswordPolicy {
     public bool IsValid(string password) {
         if (string.IsNullOrWhiteSpace(password))
             return false;
@@ -101,7 +108,7 @@ public class PasswordPolicy {
     }
 }
 
-public sealed class RoleRolePolicy {
+public sealed class CreateRoleRolePolicy {
     private static readonly ImmutableHashSet<string> allowedRoles =
         ["Trader", "RiskManager", "Compliance"];
 

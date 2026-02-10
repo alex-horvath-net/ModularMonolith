@@ -1,5 +1,5 @@
 ﻿using Common.Tasks;
-using Experts.SecurityOfficer.Common.Infrastructure.Security;
+using Experts.SecurityOfficer.Common.Infrastructure.Cryptography;
 using Microsoft.EntityFrameworkCore;
 using Data = Experts.SecurityOfficer.Common.Infrastructure.Data;
 using Domain = Experts.SecurityOfficer.Common.Domain;
@@ -58,6 +58,7 @@ internal sealed class Authenticate {
 public interface IAuthenticateStore {
     Task<Domain.Account?> FindByEmail(string email, CancellationToken token);
 }
+
 internal sealed class AuthenticateStore(Data.SecurityOfficerDbContext db) : IAuthenticateStore {
     public Task<Domain.Account?> FindByEmail(string email, CancellationToken token) {
         var normalizedEmail = NormalizeEmail(email);

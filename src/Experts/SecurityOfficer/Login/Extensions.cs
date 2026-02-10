@@ -1,4 +1,4 @@
-﻿using Experts.SecurityOfficer.Common.Infrastructure.Security;
+﻿using Experts.SecurityOfficer.Common.Infrastructure.Cryptography;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace Experts.SecurityOfficer.Login;

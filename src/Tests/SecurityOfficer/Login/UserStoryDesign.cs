@@ -1,5 +1,5 @@
 ﻿using Experts.SecurityOfficer.Common.Domain;
-using Experts.SecurityOfficer.Common.Infrastructure.Security;
+using Experts.SecurityOfficer.Common.Infrastructure.Cryptography;
 using Experts.SecurityOfficer.Login;
 using NSubstitute;
 using Shouldly;

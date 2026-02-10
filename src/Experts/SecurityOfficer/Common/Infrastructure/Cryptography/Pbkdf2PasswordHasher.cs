@@ -1,14 +1,6 @@
 using System.Security.Cryptography;
 
-namespace Experts.SecurityOfficer.Common.Infrastructure.Security;
-
-///// <summary>
-///// Provides hashing and verification for credentials stored by the security officer expert.
-///// </summary>
-//internal interface IPasswordHasher {
-//    string Hash(string password);
-//    bool Verify(string password, string storedHash);
-//}
+namespace Experts.SecurityOfficer.Common.Infrastructure.Cryptography;
 
 internal sealed class Pbkdf2PasswordHasher(IRandomNumberGenerator random) {
     private const int SaltSize = 16; // 128-bit salt
