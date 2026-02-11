@@ -1,4 +1,6 @@
-﻿using System.Collections.Immutable;
+﻿using System.Collections.Generic;
+using System.Collections.Immutable;
+using System.Collections.ObjectModel;
 using Experts.SecurityOfficer.Common.Domain;
 using Experts.SecurityOfficer.Common.Infrastructure.Clock;
 using Experts.SecurityOfficer.Common.Infrastructure.Cryptography;
@@ -59,26 +61,35 @@ internal class Create {
         };
 
 
-        var mathingAccount = await store.FindByEmail(context.NormalizedRequest, context.Token);
-        if (mathingAccount is not null) {
+        context.MathingAccount = await store.FindAccountByEmail(context.NormalizedRequest.Email, context.Token);
+        if (context.MathingAccount is not null) {
             context.Response.ErrorMessage = UserStoryConstants.AccountAlreadyExists;
             return false;
         }
 
-       await store.CreateAccont(context.Request., context.Token);
+        context.Account = new Account(
+            Id: Guid.NewGuid(),
+            Email: context.NormalizedRequest.Email,
+            UserName: context.NormalizedRequest.UserName,
+            PasswordHash: hasher.Hash(context.NormalizedRequest.Password),
+            Roles: context.Request.Roles.ToHashSet(),
+            IsLocked: false,
+            CreatedAtUtc: clock.UtcNow);
 
-        context.Response.AccountId = account.Id;
-        context.Response.Email = account.Email;
-        context.Response.UserName = account.UserName;
-        context.Response.Roles = account.Roles;
+        await store.CreateAccount(context.Account, context.Token);
+
+        context.Response.AccountId = context.Account.Id;
+        context.Response.Email = context.Account.Email;
+        context.Response.UserName = context.Account.UserName;
+        context.Response.Roles = context.Account.Roles;
 
         return true;
     }
 }
 
 public interface ICreateAccountStore {
-    Task<Account?> FindAccont(UserStoryRequest NormailizedRequest, CancellationToken token);
-    Task<Account?> CreateAccont(UserStoryRequest request, UserStoryRequest NormailizedRequest, CancellationToken token);
+    Task<Account?> FindAccountByEmail(string email, CancellationToken token);
+    Task<Account?> CreateAccount(Account account, CancellationToken token);
 }
 
 public interface ICreateClock : IClock { }

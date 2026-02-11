@@ -27,9 +27,10 @@ internal sealed class UserStory {
         return context.Response;
     }
 
-    internal sealed record Context(UserStoryRequest Request, UserStoryResponse Response, CancellationToken Token) {
+    public sealed record Context(UserStoryRequest Request, UserStoryResponse Response, CancellationToken Token) {
         public UserStoryRequest? NormalizedRequest { get; set; }
-        internal Account? ManchingAccount { get; set; }
+        public Account? MathingAccount { get; internal set; }
+        public Account? Account { get; internal set; }
     }
 }
 

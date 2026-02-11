@@ -5,7 +5,7 @@ using Microsoft.EntityFrameworkCore;
 namespace Experts.SecurityOfficer.Register.Infrastructure;
 
 public sealed class AccountStore(Data.SecurityOfficerDbContext db) : ICreateAccountStore {
-    public async Task<Domain.Account?> FindAccont(string email, CancellationToken token) {
+    public async Task<Domain.Account?> FindAccountByEmail(string email, CancellationToken token) {
 
         var entity = await db.Accounts
             .AsNoTracking()
@@ -15,16 +15,14 @@ public sealed class AccountStore(Data.SecurityOfficerDbContext db) : ICreateAcco
         return MapToDomain(entity);
     }
 
-    public async Task CreateAsync(Domain.Account account, CancellationToken token) {
-        ArgumentNullException.ThrowIfNull(account);
+    public async Task CreateAccount(Domain.Account account, CancellationToken token) {
 
         var data = MapToData(account)!;
 
         db.Accounts.Add(data);
 
         await db
-            .SaveChangesAsync(token)
-            .ConfigureAwait(false);
+            .SaveChangesAsync(token);
     }
 
     private static Data.Models.Account MapToData(Domain.Account domain) => new() {
