@@ -1,5 +1,4 @@
 ﻿using Business.Modules.SecurityOfficer.Infrastructure.Random;
-using Business.Modules.SecurityOfficer.Infrastructure.Cryptography;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace Business.Modules.SecurityOfficer.Features.Login;

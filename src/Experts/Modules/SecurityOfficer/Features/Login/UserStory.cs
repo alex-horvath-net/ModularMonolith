@@ -1,6 +1,5 @@
 ﻿using Business.Modules.SecurityOfficer.Domain;
 using Business.Modules.SecurityOfficer.Infrastructure.Random;
-using Business.Modules.SecurityOfficer.Infrastructure.Cryptography;
 
 namespace Business.Modules.SecurityOfficer.Features.Login;
 
