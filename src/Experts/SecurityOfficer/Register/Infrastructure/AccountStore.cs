@@ -58,13 +58,4 @@ public sealed class AccountStore(Data.SecurityOfficerDbContext db) : ICreateAcco
 
     private static string MapToDomain(Data.Models.Role data) =>
         data.Name;
-
-    private static string NormalizeEmail(string email) =>
-        email.Trim().ToLowerInvariant();
-
-    private static string NormalizeUserName(string userName) =>
-        userName.Trim().ToUpperInvariant();
-
-    private static string NormalizeRoleName(string roleName) =>
-        roleName.Trim().ToUpperInvariant();
 }

@@ -1,5 +1,6 @@
 ﻿using Experts.SecurityOfficer.Common.Domain;
 using Experts.SecurityOfficer.Common.Infrastructure.Cryptography;
+using Experts.SecurityOfficer.Common.Infrastructure.Random;
 using Experts.SecurityOfficer.Login;
 using NSubstitute;
 using Shouldly;
@@ -8,7 +9,7 @@ namespace Tests.SecurityOfficer.Login;
 
 public class UserStoryTests {
     private IAuthenticateStore authenticateStore = default!;
-    private IRandomNumberGenerator random = default!;
+    private IRandom random = default!;
     private UserStoryRequest request = default!;
     private CancellationToken token = default!;
     private Account account = default!;
@@ -74,7 +75,7 @@ public class UserStoryTests {
         authenticateStore = Substitute.For<IAuthenticateStore>();
         authenticateStore.FindByEmail(Arg.Any<string>(), Arg.Any<CancellationToken>()).Returns(account);
 
-        random = Substitute.For<IRandomNumberGenerator>();
+        random = Substitute.For<IRandom>();
     }
     private UserStoryRequest DefaultRequest() => new(
        VisitorId: Guid.Parse("10000000-0000-0000-0000-000000000001"),

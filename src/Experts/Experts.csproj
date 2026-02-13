@@ -38,6 +38,10 @@
   <ItemGroup>
     <InternalsVisibleTo Include="Tests" />
   </ItemGroup>
+
+  <ItemGroup>
+    <None Include="SecurityOfficer\Common\Infrastructure\Hash\Pbkdf2HashGenerator.cs" />
+  </ItemGroup>
     
 
 </Project>

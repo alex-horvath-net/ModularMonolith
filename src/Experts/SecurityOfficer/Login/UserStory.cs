@@ -1,5 +1,6 @@
 ﻿using Experts.SecurityOfficer.Common.Domain;
 using Experts.SecurityOfficer.Common.Infrastructure.Cryptography;
+using Experts.SecurityOfficer.Common.Infrastructure.Random;
 
 namespace Experts.SecurityOfficer.Login;
 
@@ -8,7 +9,7 @@ internal sealed class UserStory {
     private readonly Authenticate authenticate;
     private readonly Authorize authorize;
 
-    internal UserStory(IAuthenticateStore store, IRandomNumberGenerator random) {
+    internal UserStory(IAuthenticateStore store, IRandom random) {
         authenticate = new Authenticate(store, random);
         authorize = new Authorize();
     }

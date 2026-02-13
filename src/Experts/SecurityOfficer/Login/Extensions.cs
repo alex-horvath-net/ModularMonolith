@@ -1,4 +1,5 @@
 ﻿using Experts.SecurityOfficer.Common.Infrastructure.Cryptography;
+using Experts.SecurityOfficer.Common.Infrastructure.Random;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace Experts.SecurityOfficer.Login;
@@ -8,7 +9,7 @@ public static class Extensions {
         services.AddScoped<UserStoryBlazorClient>();
         services.AddScoped<UserStory>();
         services.AddScoped<IAuthenticateStore, AuthenticateStore>();
-        services.AddScoped<IRandomNumberGenerator, RandomNumberGenerator>();
+        services.AddScoped<IRandom, Common.Infrastructure.Random.RandomGenerator>();
         return services;
     }
 }

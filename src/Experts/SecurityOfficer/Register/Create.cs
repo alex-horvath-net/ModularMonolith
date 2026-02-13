@@ -1,27 +1,26 @@
-﻿using System.Collections.Generic;
-using System.Collections.Immutable;
-using System.Collections.ObjectModel;
+﻿using System.Collections.Immutable;
 using Experts.SecurityOfficer.Common.Domain;
 using Experts.SecurityOfficer.Common.Infrastructure.Clock;
-using Experts.SecurityOfficer.Common.Infrastructure.Cryptography;
+using Experts.SecurityOfficer.Common.Infrastructure.Hash;
+using Experts.SecurityOfficer.Common.Infrastructure.Random;
 
 namespace Experts.SecurityOfficer.Register;
 internal class Create {
     private readonly ICreateAccountStore store;
-    private readonly Pbkdf2PasswordHasher hasher;
+    private readonly Pbkdf2HashGenerator hasher;
     private readonly ICreateClock clock;
     private readonly CreatePasswordPolicy passwordPolicy;
     private readonly CreateRoleRolePolicy rolesPolicy;
 
-    internal Create(ICreateAccountStore store, IRandomNumberGenerator random, ICreateClock clock) {
+    internal Create(ICreateAccountStore store, IRandom random, ICreateClock clock) {
         this.store = store;
-        hasher = new Pbkdf2PasswordHasher(random);
+        hasher = new Pbkdf2HashGenerator(random);
         this.clock = clock;
         passwordPolicy = new CreatePasswordPolicy();
         rolesPolicy = new CreateRoleRolePolicy();
     }
 
-    public async Task<bool> Run(UserStory.Context context) {
+    public async Task<bool> Run(UserStory.UserStoryContext context) {
 
         // validate
         if (context.Request is null) {
@@ -95,6 +94,7 @@ public interface ICreateAccountStore {
 public interface ICreateClock : IClock { }
 
 public sealed class CreateClock : SystemClock, ICreateClock { }
+
 public class CreatePasswordPolicy {
     public bool IsValid(string password) {
         if (string.IsNullOrWhiteSpace(password))
@@ -134,5 +134,3 @@ public sealed class CreateRoleRolePolicy {
         return true;
     }
 }
-
-

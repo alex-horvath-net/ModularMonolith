@@ -1,5 +1,6 @@
 ﻿using Common.Tasks;
-using Experts.SecurityOfficer.Common.Infrastructure.Cryptography;
+using Experts.SecurityOfficer.Common.Infrastructure.Hash;
+using Experts.SecurityOfficer.Common.Infrastructure.Random;
 using Microsoft.EntityFrameworkCore;
 using Data = Experts.SecurityOfficer.Common.Infrastructure.Data;
 using Domain = Experts.SecurityOfficer.Common.Domain;
@@ -8,10 +9,10 @@ namespace Experts.SecurityOfficer.Login;
 
 internal sealed class Authenticate {
     private readonly IAuthenticateStore store;
-    private readonly Pbkdf2PasswordHasher hasher;
-    internal Authenticate(IAuthenticateStore store, IRandomNumberGenerator random) {
+    private readonly Pbkdf2HashGenerator hasher;
+    internal Authenticate(IAuthenticateStore store, IRandom random) {
         this.store = store;
-        hasher = new Pbkdf2PasswordHasher(random);
+        hasher = new Pbkdf2HashGenerator(random);
     }
 
     public async Task<bool> Run(UserStory.Context context) {

@@ -1,20 +1,17 @@
 using Experts.SecurityOfficer.Common.Domain;
-using Experts.SecurityOfficer.Common.Infrastructure.Cryptography;
+using Experts.SecurityOfficer.Common.Infrastructure.Random;
 
 namespace Experts.SecurityOfficer.Register;
 
 internal sealed class UserStory {
     private readonly Create create;
 
-    internal UserStory(ICreateAccountStore store, IRandomNumberGenerator random, ICreateClock clock) {
-        create = new Create(
-            store ?? throw new ArgumentNullException(nameof(store)),
-            random ?? throw new ArgumentNullException(nameof(random)),
-            clock ?? throw new ArgumentNullException(nameof(clock)));
+    internal UserStory(ICreateAccountStore store, IRandom random, ICreateClock clock) {
+        create = new Create(store, random, clock);
     }
 
     public async Task<UserStoryResponse> Register(UserStoryRequest request, CancellationToken token) {
-        var context = new Context(request, new(), token);
+        var context = new UserStoryContext(request, new(), token);
         //Crate
 
         if (!await create.Run(context)) {
@@ -27,7 +24,7 @@ internal sealed class UserStory {
         return context.Response;
     }
 
-    public sealed record Context(UserStoryRequest Request, UserStoryResponse Response, CancellationToken Token) {
+    public sealed record UserStoryContext(UserStoryRequest Request, UserStoryResponse Response, CancellationToken Token) {
         public UserStoryRequest? NormalizedRequest { get; set; }
         public Account? MathingAccount { get; internal set; }
         public Account? Account { get; internal set; }

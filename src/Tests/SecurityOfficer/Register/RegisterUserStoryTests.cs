@@ -1,6 +1,7 @@
 using System.Globalization;
 using Experts.SecurityOfficer.Common.Domain;
 using Experts.SecurityOfficer.Common.Infrastructure.Cryptography;
+using Experts.SecurityOfficer.Common.Infrastructure.Random;
 using Experts.SecurityOfficer.Register;
 using NSubstitute;
 using Shouldly;
@@ -9,7 +10,7 @@ namespace Tests.SecurityOfficer.Register;
 
 public class RegisterUserStoryTests {
     private UserStory.IAccountStore store = default!;
-    private IRandomNumberGenerator random = default!;
+    private IRandom random = default!;
     private UserStory.IClock clock = default!;
     private UserStoryRequest request = default!;
     private CancellationToken token = default!;
@@ -57,7 +58,7 @@ public class RegisterUserStoryTests {
         store.CreateAsync(Arg.Do<Account>(account => createdAccount = account), Arg.Any<CancellationToken>())
             .Returns(Task.CompletedTask);
 
-        random = Substitute.For<IRandomNumberGenerator>();
+        random = Substitute.For<IRandom>();
 
         clock = Substitute.For<UserStory.IClock>();
         clock.UtcNow.Returns(DateTime.Parse("2024-01-01T00:00:00Z", CultureInfo.InvariantCulture));

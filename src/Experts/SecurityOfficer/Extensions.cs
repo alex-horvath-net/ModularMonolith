@@ -1,11 +1,12 @@
-﻿using Experts.SecurityOfficer.Common.Infrastructure.Cryptography;
-using Experts.SecurityOfficer.Common.Infrastructure.Data;
+﻿using Experts.SecurityOfficer.Common.Infrastructure.Data;
+using Experts.SecurityOfficer.Common.Infrastructure.GuidNumber;
+using Experts.SecurityOfficer.Common.Infrastructure.Hash;
+using Experts.SecurityOfficer.Common.Infrastructure.Random;
 using Experts.SecurityOfficer.Login;
 using Experts.SecurityOfficer.Register;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.DependencyInjection.Extensions;
 
 namespace Experts.SecurityOfficer;
 
@@ -15,7 +16,12 @@ public static class Extensions {
         services.AddRegistration();
         services.AddDbContext<SecurityOfficerDbContext>(options =>
             options.UseSqlServer(configuration.GetConnectionString("AppDB")));
-        services.TryAddSingleton<IPasswordHasher, Pbkdf2PasswordHasher>();
+
+        // random
+        services.AddSingleton<IRandom, RandomGenerator>();
+        services.AddSingleton<IHasher, Pbkdf2HashGenerator>();
+        services.AddSingleton<IGuid, GuidGenerator>();
+
         return services;
     }
 }
