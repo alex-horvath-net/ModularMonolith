@@ -1,8 +1,8 @@
 using System.Globalization;
-using Experts.SecurityOfficer.Common.Domain;
+using Business.Modules.SecurityOfficer.Domain;
+using Business.Modules.SecurityOfficer.Features.Register;
+using Business.Modules.SecurityOfficer.Infrastructure.Random;
 using Experts.SecurityOfficer.Common.Infrastructure.Cryptography;
-using Experts.SecurityOfficer.Common.Infrastructure.Random;
-using Experts.SecurityOfficer.Register;
 using NSubstitute;
 using Shouldly;
 
@@ -42,7 +42,7 @@ public class RegisterUserStoryTests {
 
     [Fact]
     public async Task RegisterAsync_WhenPasswordIsWeak_Throws() {
-        Arrange(() => new UserStoryRequest("user@example.com", "New", "weak", ["Trader"]));
+        Arrange(() => new UserStoryRequest("user@example.com", "Generate", "weak", ["Trader"]));
 
         var userStory = new UserStory(store, random, clock);
         await Should.ThrowAsync<InvalidOperationException>(() => userStory.Register(request, token));
@@ -73,7 +73,7 @@ public class RegisterUserStoryTests {
     private UserStoryRequest WithExistingAccount() {
         var existing = new Account(Guid.NewGuid(), "user@example.com", "Existing", "hash", new HashSet<string>(StringComparer.OrdinalIgnoreCase), false, clock.UtcNow);
         store.FindByEmail(Arg.Any<string>(), Arg.Any<CancellationToken>()).Returns(existing);
-        return new UserStoryRequest("user@example.com", "New", "Sup3r$ecretPwd", ["Trader"]);
+        return new UserStoryRequest("user@example.com", "Generate", "Sup3r$ecretPwd", ["Trader"]);
     }
 
 }

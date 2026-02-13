@@ -1,17 +1,19 @@
-using Experts.Billing;
-using Experts.OrderExpert;
-using Experts.SecurityOfficer;
-using Experts.SecurityOfficer.Common.Infrastructure.Data;
-using Experts.SecurityOfficer.CreateToken;
+using Business.Modules.Billing;
+using Business.Modules.OrderExpert;
+using Business.Modules.SecurityOfficer;
+using Business.Modules.SecurityOfficer.Features.CreateToken;
+using Business.Modules.SecurityOfficer.Features.CreateVisitor;
+using Business.Modules.SecurityOfficer.Features.Register;
+using Business.Modules.SecurityOfficer.Infrastructure.Data;
 using TradingPortal;
 using TradingPortal.Components;
 
 var builder = WebApplication.CreateBuilder(args);
 
-builder.Services.AddScoped<Experts.SecurityOfficer.CreateVisitor.UserStory>();
+builder.Services.AddScoped<UserStory>();
 builder.Services.AddScoped(sp => {
-    var userStory = sp.GetRequiredService<Experts.SecurityOfficer.CreateVisitor.UserStory>();
-    var request = new Experts.SecurityOfficer.CreateVisitor.UserStory.Request("TradingPortal", "1.0", Guid.Parse("10000000-0000-0000-0000-000000000001"));
+    var userStory = sp.GetRequiredService<UserStory>();
+    var request = new UserStory.Request("TradingPortal", "1.0", Guid.Parse("10000000-0000-0000-0000-000000000001"));
     var response = userStory.Run(request).GetAwaiter().GetResult();
 
     return new UserContext {
@@ -79,7 +81,7 @@ app.Run();
 static void SeedSecurityOfficerAccounts(WebApplication app) {
     using var scope = app.Services.CreateScope();
     var db = scope.ServiceProvider.GetRequiredService<SecurityOfficerDbContext>();
-    var register = scope.ServiceProvider.GetRequiredService<Experts.SecurityOfficer.Register.IUserStoryBlazorClient>();
+    var register = scope.ServiceProvider.GetRequiredService<IUserStoryBlazorClient>();
 
     db.Database.EnsureCreated();
 
