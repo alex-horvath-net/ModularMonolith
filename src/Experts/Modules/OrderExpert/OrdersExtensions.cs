@@ -1,4 +1,3 @@
-using Business;
 using Business.Modules.OrderExpert.Common.Business;
 using Business.Modules.OrderExpert.Common.Infrastructure.Data;
 using Business.Modules.OrderExpert.Common.Infrastructure.Data.Seed;
@@ -36,7 +35,8 @@ public static class OrdersExtensions {
             options.UseLoggerFactory(loggerFactory);
             options.ConfigureWarnings(w => w.Ignore(RelationalEventId.PendingModelChangesWarning));
 
-            if (env.IsDevelopment())                 options.EnableSensitiveDataLogging();
+            if (env.IsDevelopment())
+                options.EnableSensitiveDataLogging();
 
             options.UseSqlServer(configuration.GetConnectionString("AppDB"), sql => {
                 sql.EnableRetryOnFailure(5, TimeSpan.FromSeconds(2), null);

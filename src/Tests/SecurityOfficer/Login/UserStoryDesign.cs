@@ -1,7 +1,7 @@
 ﻿using Business.Modules.SecurityOfficer.Domain;
 using Business.Modules.SecurityOfficer.Features.Login;
 using Business.Modules.SecurityOfficer.Infrastructure.Random;
-using Experts.SecurityOfficer.Common.Infrastructure.Cryptography;
+using Business.Modules.SecurityOfficer.Infrastructure.Cryptography;
 using NSubstitute;
 using Shouldly;
 

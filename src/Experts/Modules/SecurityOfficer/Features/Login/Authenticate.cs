@@ -5,7 +5,8 @@ using Business.Modules.SecurityOfficer.Infrastructure.Hash;
 using Business.Modules.SecurityOfficer.Infrastructure.Random;
 using Common.Tasks;
 using Microsoft.EntityFrameworkCore;
-using Data = Experts.SecurityOfficer.Common.Infrastructure.Data;
+using Data2 = Business.Modules.SecurityOfficer.Infrastructure.Data;
+using Data = Experts.SecurityOfficer.Infrastructure.Data;
 using Domain = Experts.SecurityOfficer.Common.Domain;
 
 namespace Business.Modules.SecurityOfficer.Features.Login;

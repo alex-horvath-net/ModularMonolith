@@ -2,7 +2,7 @@
 
 #nullable disable
 
-namespace Experts.BillingBusinessExpert.Infrastructure.Data.Migrations;
+namespace Business.Modules.BillingBusinessExpert.Infrastructure.Data.Migrations;
 
 /// <inheritdoc />
 public partial class InitBilling : Migration {

@@ -1,7 +1,6 @@
 ﻿using Business.Domain;
 using Business.Events;
 using Business.Infrastructure;
-using Experts.Common.Business.Events;
 using FluentValidation;
 using OrderData = Business.Modules.OrderExpert.Common.Infrastructure.Data.Models.Order;
 using OrderDomain = Business.Modules.OrderExpert.Common.Business.Domain.Order;
@@ -22,7 +21,8 @@ internal sealed class BusinessWorkSteps(
     public OrderDomain Create(PlaceOrderRequest request) {
         var order = new OrderDomain(request.CustomerId);
 
-        foreach (var line in request.Lines)             order.AddLine(line.ProductId, line.Quantity, line.UnitPrice);
+        foreach (var line in request.Lines)
+            order.AddLine(line.ProductId, line.Quantity, line.UnitPrice);
 
         return order;
     }

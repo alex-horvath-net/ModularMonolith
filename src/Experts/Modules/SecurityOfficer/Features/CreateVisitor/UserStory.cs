@@ -1,5 +1,4 @@
 ﻿using Business.Modules.SecurityOfficer.Domain;
-using Experts.SecurityOfficer.Common.Domain;
 
 namespace Business.Modules.SecurityOfficer.Features.CreateVisitor;
 

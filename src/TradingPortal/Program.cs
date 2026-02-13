@@ -85,7 +85,7 @@ static void SeedSecurityOfficerAccounts(WebApplication app) {
 
     db.Database.EnsureCreated();
 
-    var request = new Experts.SecurityOfficer.Register.UserStoryBlazorClientRequest() {
+    var request = new Business.Modules.SecurityOfficer.Register.UserStoryBlazorClientRequest() {
         Email = "aladar.horvath@outlook.com",
         UserName = "Aladar Horvath",
         Password = "Sup3r$ecretPwd!",

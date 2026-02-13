@@ -1,13 +1,11 @@
-using Domain = Experts.SecurityOfficer.Common.Domain;
-using Data = Experts.SecurityOfficer.Common.Infrastructure.Data;
-using Microsoft.EntityFrameworkCore;
 using Business.Modules.SecurityOfficer.Infrastructure.Data;
+using Microsoft.EntityFrameworkCore;
 using Business.Modules.SecurityOfficer.Domain;
 using Business.Modules.SecurityOfficer.Infrastructure.Data.Models;
 
 namespace Business.Modules.SecurityOfficer.Features.Register.Infrastructure;
 
-public sealed class AccountStore(SecurityOfficerDbContext db) : ICreateAccountStore {
+public sealed class AccountStore(SecurityOfficerDbContext db) : Register.ICreateAccountStore {
     public async Task<Account?> FindAccountByEmail(string email, CancellationToken token) {
 
         var entity = await db.Accounts
