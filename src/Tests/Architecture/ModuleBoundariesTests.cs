@@ -1,7 +1,7 @@
 using Shouldly;
 using NetArchTest.Rules;
-using Business.Modules.Billing;
-using Business.Modules.OrderExpert;
+using Business.Experts.OrderExpert;
+using Business.Experts.Billing;
 
 namespace Tests.Architecture;
 

@@ -1,7 +1,7 @@
 ﻿using System.Net.Http.Headers;
 using System.Net.Http.Json;
-using Business.Modules.Billing.Infrastructure.Data;
-using Business.Modules.OrderExpert.Common.Infrastructure.Data;
+using Business.Experts.Billing.Infrastructure.Data;
+using Business.Experts.OrderExpert.Common.Infrastructure.Data;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc.Testing;
 using Microsoft.AspNetCore.TestHost;

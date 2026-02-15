@@ -1,7 +1,7 @@
 using System.Globalization;
-using Business.Modules.SecurityOfficer.Domain;
-using Business.Modules.SecurityOfficer.Features.Register;
-using Business.Modules.SecurityOfficer.Infrastructure.Random;
+using Business.Experts.SecurityOfficer.Domain;
+using Business.Experts.SecurityOfficer.Infrastructure.Random;
+using Business.Experts.SecurityOfficer.UserStories.Register;
 using NSubstitute;
 using Shouldly;
 
