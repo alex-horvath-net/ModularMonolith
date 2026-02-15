@@ -32,6 +32,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Folder Include="Experts\SecurityOfficer\UserStories\Register\Domain\" />
     <Folder Include="Experts\Trader\" />
   </ItemGroup>
 

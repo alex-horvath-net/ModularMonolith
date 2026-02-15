@@ -1,21 +1,51 @@
 using Business.Experts.SecurityOfficer.Domain;
 using Business.Experts.SecurityOfficer.Infrastructure.Random;
+using Business.Experts.SecurityOfficer.UserStories.Register.Infrastructure;
+using Business.Experts.SecurityOfficer.UserStories.Register.WorkSteps;
 
 namespace Business.Experts.SecurityOfficer.UserStories.Register;
 
 internal sealed class UserStory {
+    private readonly Validate validate;
+    private readonly Normalize normalize;
+    private readonly PreventDuplication preventDuplication;
     private readonly Create create;
+    private readonly Save save;
+    private readonly Buildresponse buildresponse;
 
     internal UserStory(ICreateAccountStore store, IRandom random, ICreateClock clock) {
-        create = new Create(store, random, clock);
+        validate = new Validate();
+        normalize = new Normalize();
+        var repository = new AccountRepository();
+        preventDuplication = new PreventDuplication(repository);
+        create = new Create(random, clock);
+        save = new Save(null);
+        buildresponse = new Buildresponse();
+
     }
 
     public async Task<UserStoryResponse> Register(UserStoryRequest request, CancellationToken token) {
         var context = new UserStoryContext(request, new(), token);
-        //Crate
 
-        if (!await create.Run(context))
+        if (!validate.Run(context))
             return context.Response;
+
+        if (!normalize.Run(context))
+            return context.Response;
+
+        if (await preventDuplication.Run(context))
+            return context.Response;
+
+        if (!create.Run(context))
+            return context.Response;
+
+        if (!await save.Run(context))
+            return context.Response;
+
+        if (!buildresponse.Run(context))
+            return context.Response;
+
+
 
         //Activate email
         //Activate MFA
