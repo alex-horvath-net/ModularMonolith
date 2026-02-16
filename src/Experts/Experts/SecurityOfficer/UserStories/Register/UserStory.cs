@@ -11,7 +11,7 @@ internal sealed class UserStory {
     private readonly PreventDuplication preventDuplication;
     private readonly Create create;
     private readonly Save save;
-    private readonly Buildresponse buildresponse;
+    private readonly BuildResponse buildresponse;
 
     internal UserStory(ICreateAccountStore store, IRandom random, ICreateClock clock) {
         validate = new Validate();
@@ -20,7 +20,7 @@ internal sealed class UserStory {
         preventDuplication = new PreventDuplication(repository);
         create = new Create(random, clock);
         save = new Save(null);
-        buildresponse = new Buildresponse();
+        buildresponse = new BuildResponse();
 
     }
 
@@ -44,8 +44,6 @@ internal sealed class UserStory {
 
         if (!buildresponse.Run(context))
             return context.Response;
-
-
 
         //Activate email
         //Activate MFA

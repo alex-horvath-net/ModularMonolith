@@ -1,6 +1,4 @@
 using Business.Experts.SecurityOfficer.Infrastructure.Clock;
-using Business.Experts.SecurityOfficer.UserStories.Register.Infrastructure;
-using Business.Experts.SecurityOfficer.UserStories.Register.WorkSteps;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 

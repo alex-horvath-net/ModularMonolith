@@ -1,6 +1,6 @@
 ﻿namespace Business.Experts.SecurityOfficer.UserStories.Register.WorkSteps;
 
-internal class Buildresponse() {
+internal class BuildResponse() {
     public bool Run(UserStory.UserStoryContext context) {
 
         context.Response.AccountId = context.Account!.Id;

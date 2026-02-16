@@ -1,6 +1,11 @@
 ﻿namespace Common.Tasks;
 
 public static class ContinuationExtensions {
+    public static TOutput Map<TInput, TOutput>(this TInput input, Func<TInput, TOutput> fastOutputFactory) {
+        var output = fastOutputFactory(input);
+        return output;
+    }
+
     public static async Task Then(this Task slowOperation, Action fastOperation) {
         await slowOperation;
         fastOperation();
@@ -12,12 +17,12 @@ public static class ContinuationExtensions {
     }
 
     // e.g. read a record from db in data format then map it to domain format.
-    public static async Task<TOutput> Then<TOutput>(this Task slowOperation, Func<TOutput> fastOutputFactory) {
+    public static async Task<TOutput> Map<TOutput>(this Task slowOperation, Func<TOutput> fastOutputFactory) {
         await slowOperation;
         var output = fastOutputFactory();
         return output;
     }
-    public static async Task<TOutput> Then<TOutput>(this Task slowOperation, Func<Task<TOutput>> fastFactoryOfSlowOutputFactory) {
+    public static async Task<TOutput> Map<TOutput>(this Task slowOperation, Func<Task<TOutput>> fastFactoryOfSlowOutputFactory) {
         await slowOperation;
         var slowOutputFactory = fastFactoryOfSlowOutputFactory();
         var output = await slowOutputFactory;
@@ -37,12 +42,12 @@ public static class ContinuationExtensions {
     }
 
     // e.g. read a record from db in data format then map it to domain format.
-    public static async Task<TOutput> Then<TInput, TOutput>(this Task<TInput> slowInputFactory, Func<TInput, TOutput> fastOutputFactory) {
+    public static async Task<TOutput> Map<TInput, TOutput>(this Task<TInput> slowInputFactory, Func<TInput, TOutput> fastOutputFactory) {
         var input = await slowInputFactory;
         var output = fastOutputFactory(input);
         return output;
     }
-    public static async Task<TOutput> Then<TInput, TOutput>(this Task<TInput> slowInputFactory, Func<TInput, Task<TOutput>> fastfactoryOfSlowOutputFactory) {
+    public static async Task<TOutput> Map<TInput, TOutput>(this Task<TInput> slowInputFactory, Func<TInput, Task<TOutput>> fastfactoryOfSlowOutputFactory) {
         var input = await slowInputFactory;
         var slowOutputFactory = fastfactoryOfSlowOutputFactory(input);
         var output = await slowOutputFactory;

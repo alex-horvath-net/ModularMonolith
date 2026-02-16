@@ -2,22 +2,20 @@
 using Data = Business.Experts.SecurityOfficer.Infrastructure.Data;
 using Microsoft.EntityFrameworkCore;
 using Business.Experts.SecurityOfficer.Infrastructure.Clock;
+using Common.Tasks;
 
 namespace Business.Experts.SecurityOfficer.UserStories.Register.Infrastructure;
 
-public sealed class AccountRepository(Data.SecurityOfficerDbContext db) : WorkSteps.PreventDuplication.IRepository {
-    public async Task<Account?> FindAccountByEmail(string email, CancellationToken token) {
-
-        var account = await db.Accounts
-            .AsNoTracking()
-            .FirstOrDefaultAsync(account => account.EmailNormalized == email, token);
-
-        return MapToDomain(account);
-    }
+public sealed class AccountRepository(Data.SecurityOfficerDbContext db) :
+    WorkSteps.PreventDuplication.IRepository {
+    public async Task<Account?> FindAccountByEmail(string email, CancellationToken token) => await db.Accounts
+        .AsNoTracking()
+        .FirstOrDefaultAsync(account => account.EmailNormalized == email, token)
+        .Map(ToDomain);
 
     public async Task CreateAccount(Account account, CancellationToken token) {
 
-        var data = MapToData(account)!;
+        var data = account.Map(ToData);
 
         db.Accounts.Add(data);
 
@@ -25,7 +23,7 @@ public sealed class AccountRepository(Data.SecurityOfficerDbContext db) : WorkSt
             .SaveChangesAsync(token);
     }
 
-    private static Data.Models.Account MapToData(Account domain) => new() {
+    private static Data.Models.Account ToData(Account domain) => new() {
         Id = domain.Id,
         Email = domain.Email,
         EmailNormalized = domain.Email,
@@ -46,7 +44,7 @@ public sealed class AccountRepository(Data.SecurityOfficerDbContext db) : WorkSt
         NormalizedName = role
     };
 
-    private static Account? MapToDomain(Data.Models.Account? account) =>
+    private static Account? ToDomain(Data.Models.Account? account) =>
         account is null ? null : new(
             account.Id,
             account.EmailNormalized,
