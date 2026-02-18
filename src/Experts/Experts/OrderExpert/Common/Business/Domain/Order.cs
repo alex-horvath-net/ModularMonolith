@@ -27,7 +27,8 @@ public sealed class Order {
 
     public Order(Guid id, Guid customerId, IEnumerable<OrderLine> lines) : this(id, customerId) {
         ArgumentNullException.ThrowIfNull(lines);
-        foreach (var line in lines)             _lines.Add(line);
+        foreach (var line in lines)
+            _lines.Add(line);
     }
 
     public void AddLine(Guid productId, int quantity, decimal unitPrice) => _lines.Add(

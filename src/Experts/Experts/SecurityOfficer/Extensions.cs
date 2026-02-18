@@ -1,4 +1,5 @@
-﻿using Business.Experts.SecurityOfficer.Infrastructure.Data;
+﻿using Business.Experts.SecurityOfficer.Infrastructure;
+using Business.Experts.SecurityOfficer.Infrastructure.Data;
 using Business.Experts.SecurityOfficer.Infrastructure.GuidNumber;
 using Business.Experts.SecurityOfficer.Infrastructure.Hash;
 using Business.Experts.SecurityOfficer.Infrastructure.Random;
@@ -14,7 +15,7 @@ public static class Extensions {
     public static IServiceCollection AddSecurityOfficer(this IServiceCollection services, IConfiguration configuration) {
         services.AddLogion();
         services.AddRegistration();
-        services.AddDbContext<SecurityOfficerDbContext>(options =>
+        services.AddDbContext<SecurityDbContext>(options =>
             options.UseSqlServer(configuration.GetConnectionString("AppDB")));
 
         // random

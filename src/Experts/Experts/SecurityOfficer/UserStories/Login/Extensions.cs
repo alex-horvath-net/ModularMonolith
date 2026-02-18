@@ -1,4 +1,5 @@
-﻿using Business.Experts.SecurityOfficer.Infrastructure.Random;
+﻿using Business.Experts.SecurityOfficer.Infrastructure;
+using Business.Experts.SecurityOfficer.Infrastructure.Random;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace Business.Experts.SecurityOfficer.UserStories.Login;

@@ -17,7 +17,8 @@ public sealed class CreateTokenCommandHandler(IOptions<JwtOptions> options) {
             new(JwtRegisteredClaimNames.Iat, EpochTime.GetIntDate(command.IssuedAt).ToString(CultureInfo.InvariantCulture), ClaimValueTypes.Integer64)
         };
 
-        foreach (var scope in options.Value.DevScopes)             claims.Add(new("scope", scope));
+        foreach (var scope in options.Value.DevScopes)
+            claims.Add(new("scope", scope));
 
         var payload = new ClaimsIdentity(claims);
         var securityKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(options.Value.SecurityKey!));

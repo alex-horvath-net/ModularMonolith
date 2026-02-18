@@ -1,7 +1,7 @@
-﻿using Business.Experts.SecurityOfficer.Domain;
+﻿using Business.Experts.SecurityOfficer.Infrastructure;
 
 namespace Business.Experts.SecurityOfficer.UserStories.Register.WorkSteps;
-internal class PreventDuplication(PreventDuplication.IRepository repository) {
+internal class PreventDuplication(IAccountRepository repository) {
     public async Task<bool> Run(UserStory.UserStoryContext context) {
 
         context.MathingAccount = await repository.FindAccountByEmail(context.NormalizedRequest!.Email, context.Token);
@@ -11,9 +11,5 @@ internal class PreventDuplication(PreventDuplication.IRepository repository) {
         }
 
         return true;
-    }
-
-    internal interface IRepository {
-        Task<Account?> FindAccountByEmail(string email, CancellationToken token);
     }
 }

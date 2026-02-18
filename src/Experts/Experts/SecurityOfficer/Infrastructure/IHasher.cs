@@ -1,4 +1,4 @@
-﻿namespace Business.Experts.SecurityOfficer.Infrastructure.Hash;
+﻿namespace Business.Experts.SecurityOfficer.Infrastructure;
 
 internal interface IHasher {
     string Generate(string text);

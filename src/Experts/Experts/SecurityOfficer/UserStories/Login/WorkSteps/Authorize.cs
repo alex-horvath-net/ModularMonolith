@@ -1,4 +1,4 @@
-﻿namespace Business.Experts.SecurityOfficer.UserStories.Login;
+﻿namespace Business.Experts.SecurityOfficer.UserStories.Login.WorkSteps;
 
 internal sealed class Authorize() {
     public static readonly string AccountNotFound = "Account not found";

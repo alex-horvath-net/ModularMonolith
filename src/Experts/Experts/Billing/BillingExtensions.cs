@@ -53,7 +53,8 @@ public static class BillingExtensions {
         if (app.Environment.IsEnvironment("IntegrationTest")) {
             db.Database.EnsureCreated();
             CleanDatabase(db);
-        } else             db.Database.Migrate();
+        } else
+            db.Database.Migrate();
 
         return BillingEndpoints.MapBilling(app);
     }
@@ -62,7 +63,8 @@ public static class BillingExtensions {
         foreach (var entityType in db.Model.GetEntityTypes()) {
             var tableName = entityType.GetTableName();
             var schema = entityType.GetSchema();
-            if (tableName is null)                 continue;
+            if (tableName is null)
+                continue;
 
             var fullName = string.IsNullOrWhiteSpace(schema)
                 ? $"[{tableName}]"

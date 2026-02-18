@@ -1,6 +1,6 @@
 using System.Globalization;
 using Business.Experts.SecurityOfficer.Domain;
-using Business.Experts.SecurityOfficer.Infrastructure.Random;
+using Business.Experts.SecurityOfficer.Infrastructure;
 using Business.Experts.SecurityOfficer.UserStories.Register;
 using NSubstitute;
 using Shouldly;

@@ -1,6 +1,5 @@
 using Business.Experts.SecurityOfficer.Domain;
-using Business.Experts.SecurityOfficer.Infrastructure.Random;
-using Business.Experts.SecurityOfficer.UserStories.Register.Infrastructure;
+using Business.Experts.SecurityOfficer.Infrastructure;
 using Business.Experts.SecurityOfficer.UserStories.Register.WorkSteps;
 
 namespace Business.Experts.SecurityOfficer.UserStories.Register;
@@ -13,13 +12,12 @@ internal sealed class UserStory {
     private readonly Save save;
     private readonly BuildResponse buildresponse;
 
-    internal UserStory(ICreateAccountStore store, IRandom random, ICreateClock clock) {
+    internal UserStory(IAccountRepository repository, IHasher hasher, IClock clock) {
         validate = new Validate();
         normalize = new Normalize();
-        var repository = new AccountRepository();
         preventDuplication = new PreventDuplication(repository);
-        create = new Create(random, clock);
-        save = new Save(null);
+        create = new Create(hasher, clock);
+        save = new Save(repository);
         buildresponse = new BuildResponse();
 
     }

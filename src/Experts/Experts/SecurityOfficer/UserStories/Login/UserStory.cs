@@ -1,20 +1,25 @@
 ﻿using Business.Experts.SecurityOfficer.Domain;
-using Business.Experts.SecurityOfficer.Infrastructure.Random;
+using Business.Experts.SecurityOfficer.Infrastructure;
+using Business.Experts.SecurityOfficer.UserStories.Login.WorkSteps;
 
 namespace Business.Experts.SecurityOfficer.UserStories.Login;
 
 internal sealed class UserStory {
-
+    private readonly Validate validate;
     private readonly Authenticate authenticate;
     private readonly Authorize authorize;
 
-    internal UserStory(IAuthenticateStore store, IRandom random) {
-        authenticate = new Authenticate(store, random);
+    internal UserStory(IAccountRepository repository, IHasher hasher) {
+        validate = new Validate();
+        authenticate = new Authenticate(repository, hasher);
         authorize = new Authorize();
     }
 
     public async Task<UserStoryResponse> Run(UserStoryRequest request, CancellationToken token) {
         var context = new Context(request, new(), token);
+
+        if (!await validate.Run(context))
+            return context.Response;
 
         if (!await authenticate.Run(context))
             return context.Response;
@@ -26,6 +31,8 @@ internal sealed class UserStory {
     }
 
     public sealed record Context(UserStoryRequest Request, UserStoryResponse Response, CancellationToken Token) {
+        public string? Email { get; set; }
+        public string? Password { get; set; }
         internal Account? Account { get; set; }
     }
 }

@@ -1,7 +1,8 @@
 ﻿using Business.Experts.SecurityOfficer.Domain;
+using Business.Experts.SecurityOfficer.Infrastructure;
 
 namespace Business.Experts.SecurityOfficer.UserStories.Register.WorkSteps;
-internal class Create(Create.IHasher hasher, Create.IClock clock) {
+internal class Create(IHasher hasher, IClock clock) {
     public bool Run(UserStory.UserStoryContext context) {
         var hash = hasher.Generate(context.NormalizedRequest!.Password);
         var now = clock.UtcNow;
@@ -16,14 +17,6 @@ internal class Create(Create.IHasher hasher, Create.IClock clock) {
             CreatedAtUtc: now);
 
         return true;
-    }
-
-    public interface IClock {
-        DateTime UtcNow { get; }
-    }
-
-    public interface IHasher {
-        string Generate(string password);
     }
 
 }

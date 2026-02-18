@@ -31,7 +31,9 @@ public sealed class UserStoryBlazorClientRequest {
         ArgumentNullException.ThrowIfNull(roles);
 
         Roles.Clear();
-        foreach (var role in roles)             if (!string.IsNullOrWhiteSpace(role))                 Roles.Add(role);
+        foreach (var role in roles)
+            if (!string.IsNullOrWhiteSpace(role))
+                Roles.Add(role);
     }
 }
 

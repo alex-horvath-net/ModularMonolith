@@ -80,12 +80,12 @@ app.Run();
 
 static void SeedSecurityOfficerAccounts(WebApplication app) {
     using var scope = app.Services.CreateScope();
-    var db = scope.ServiceProvider.GetRequiredService<SecurityOfficerDbContext>();
+    var db = scope.ServiceProvider.GetRequiredService<SecurityDbContext>();
     var register = scope.ServiceProvider.GetRequiredService<IUserStoryBlazorClient>();
 
     db.Database.EnsureCreated();
 
-    var request = new Business.Modules.SecurityOfficer.Register.UserStoryBlazorClientRequest() {
+    var request = new UserStoryBlazorClientRequest() {
         Email = "aladar.horvath@outlook.com",
         UserName = "Aladar Horvath",
         Password = "Sup3r$ecretPwd!",

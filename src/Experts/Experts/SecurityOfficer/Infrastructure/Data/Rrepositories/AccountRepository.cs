@@ -1,29 +1,21 @@
 ﻿using Business.Experts.SecurityOfficer.Domain;
-using Data = Business.Experts.SecurityOfficer.Infrastructure.Data;
-using Microsoft.EntityFrameworkCore;
-using Business.Experts.SecurityOfficer.Infrastructure.Clock;
 using Common.Tasks;
+using Microsoft.EntityFrameworkCore;
 
-namespace Business.Experts.SecurityOfficer.UserStories.Register.Infrastructure;
+namespace Business.Experts.SecurityOfficer.Infrastructure.Data.Rrepositories;
 
-public sealed class AccountRepository(Data.SecurityOfficerDbContext db) :
-    WorkSteps.PreventDuplication.IRepository {
+public sealed class AccountRepository(SecurityDbContext db) : IAccountRepository {
     public async Task<Account?> FindAccountByEmail(string email, CancellationToken token) => await db.Accounts
         .AsNoTracking()
         .FirstOrDefaultAsync(account => account.EmailNormalized == email, token)
         .Map(ToDomain);
 
-    public async Task CreateAccount(Account account, CancellationToken token) {
+    public async Task CreateAccount(Account account, CancellationToken token) => await account
+        .Map(ToData)
+        .Then(data => db.Accounts.Add(data))
+        .Then(() => db.SaveChangesAsync(token));
 
-        var data = account.Map(ToData);
-
-        db.Accounts.Add(data);
-
-        await db
-            .SaveChangesAsync(token);
-    }
-
-    private static Data.Models.Account ToData(Account domain) => new() {
+    private static Models.Account ToData(Account domain) => new() {
         Id = domain.Id,
         Email = domain.Email,
         EmailNormalized = domain.Email,
@@ -39,12 +31,12 @@ public sealed class AccountRepository(Data.SecurityOfficerDbContext db) :
         IsDeleted = false
     };
 
-    private static Data.Models.Role MapToData(string role) => new() {
+    private static Models.Role MapToData(string role) => new() {
         Name = role,
         NormalizedName = role
     };
 
-    private static Account? ToDomain(Data.Models.Account? account) =>
+    private static Account? ToDomain(Models.Account? account) =>
         account is null ? null : new(
             account.Id,
             account.EmailNormalized,
@@ -54,9 +46,8 @@ public sealed class AccountRepository(Data.SecurityOfficerDbContext db) :
             account.IsLocked,
             account.CreatedAtUtc);
 
-    private static string MapToDomain(Data.Models.Role role) =>
+    private static string MapToDomain(Models.Role role) =>
         role.Name;
 }
 
-public sealed class CreateClock : SystemClock, ICreateClock { }
 
