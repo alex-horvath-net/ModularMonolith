@@ -7,13 +7,13 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Content Include="Experts\OrderExpert\GetAllOrder\Blazor\Components\OrderDetails.razor">
+    <Content Include="Features\Orders\Slices\GetAllOrder\Blazor\Components\OrderDetails.razor">
       <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
     </Content>
-    <Content Include="Experts\OrderExpert\GetAllOrder\Blazor\Components\OrdersList.razor">
+    <Content Include="Features\Orders\Slices\GetAllOrder\Blazor\Components\OrdersList.razor">
       <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
     </Content>
-    <Content Include="Experts\OrderExpert\GetAllOrder\Blazor\_Imports.razor">
+    <Content Include="Features\Orders\Slices\GetAllOrder\Blazor\_Imports.razor">
       <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
     </Content>
   </ItemGroup>
@@ -32,15 +32,11 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Experts\Trader\" />
-  </ItemGroup>
-
-  <ItemGroup>
     <InternalsVisibleTo Include="Tests" />
   </ItemGroup>
 
   <ItemGroup>
-    <None Include="Experts\SecurityOfficer\Infrastructure\Hash\Pbkdf2HashGenerator.cs" />
+    <None Include="Features\Accounts\Infrastructure\Hash\Pbkdf2HashGenerator.cs" />
   </ItemGroup>
     
 

@@ -1,10 +1,10 @@
-using Business.Experts.Billing;
-using Business.Experts.OrderExpert;
-using Business.Experts.SecurityOfficer;
-using Business.Experts.SecurityOfficer.Infrastructure.Data;
-using Business.Experts.SecurityOfficer.UserStories.CreateToken;
-using Business.Experts.SecurityOfficer.UserStories.CreateVisitor;
-using Business.Experts.SecurityOfficer.UserStories.Register;
+using Business.Features.Accounts;
+using Business.Features.Accounts.Infrastructure.Data;
+using Business.Features.Accounts.Slices.CreateToken;
+using Business.Features.Accounts.Slices.CreateVisitor;
+using Business.Features.Accounts.Slices.Register;
+using Business.Features.Billing;
+using Business.Features.Orders;
 using TradingPortal;
 using TradingPortal.Components;
 

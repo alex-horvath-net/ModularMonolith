@@ -1,6 +1,6 @@
-﻿using Business.Experts.SecurityOfficer.Domain;
-using Business.Experts.SecurityOfficer.Infrastructure;
-using Business.Experts.SecurityOfficer.UserStories.Login;
+﻿using Business.Features.Accounts.Domain;
+using Business.Features.Accounts.Infrastructure;
+using Business.Features.Accounts.Slices.Login;
 using NSubstitute;
 using Shouldly;
 

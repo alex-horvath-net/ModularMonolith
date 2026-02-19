@@ -1,7 +1,7 @@
 using System.Globalization;
-using Business.Experts.SecurityOfficer.Domain;
-using Business.Experts.SecurityOfficer.Infrastructure;
-using Business.Experts.SecurityOfficer.UserStories.Register;
+using Business.Features.Accounts.Domain;
+using Business.Features.Accounts.Infrastructure;
+using Business.Features.Accounts.Slices.Register;
 using NSubstitute;
 using Shouldly;
 

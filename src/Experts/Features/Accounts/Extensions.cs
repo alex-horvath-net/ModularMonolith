@@ -1,0 +1,28 @@
+﻿using Business.Features.Accounts.Infrastructure;
+using Business.Features.Accounts.Infrastructure.Data;
+using Business.Features.Accounts.Infrastructure.GuidNumber;
+using Business.Features.Accounts.Infrastructure.Hash;
+using Business.Features.Accounts.Infrastructure.Random;
+using Business.Features.Accounts.Slices.Login;
+using Business.Features.Accounts.Slices.Register;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.DependencyInjection;
+
+namespace Business.Features.Accounts;
+
+public static class Extensions {
+    public static IServiceCollection AddSecurityOfficer(this IServiceCollection services, IConfiguration configuration) {
+        services.AddLogion();
+        services.AddRegistration();
+        services.AddDbContext<SecurityDbContext>(options =>
+            options.UseSqlServer(configuration.GetConnectionString("AppDB")));
+
+        // random
+        services.AddSingleton<IRandom, RandomGenerator>();
+        services.AddSingleton<IHasher, Pbkdf2HashGenerator>();
+        services.AddSingleton<IGuid, GuidGenerator>();
+
+        return services;
+    }
+}

@@ -1,4 +1,4 @@
-﻿using Business.Experts.SecurityOfficer.Domain;
+﻿using Business.Features.Accounts.Domain;
 
 namespace TradingPortal;
 
