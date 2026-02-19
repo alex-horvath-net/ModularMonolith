@@ -1,58 +1,63 @@
 ﻿namespace Common.Tasks;
 
 public static class ContinuationExtensions {
-    public static TOutput Map<TInput, TOutput>(this TInput input, Func<TInput, TOutput> blockingQuery) {
-        var output = blockingQuery(input);
+    public static TOutput Map<TInput, TOutput>(this TInput input, Func<TInput, TOutput> blockingOutputQuery) {
+        var output = blockingOutputQuery(input);
         return output;
     }
-    public static async Task<TOutput> Map<TOutput>(this Task noneBlockingCommand, Func<TOutput> blockingQuery) {
+    public static async Task<TOutput> Map<TOutput>(this Task noneBlockingCommand, Func<TOutput> blockingOutputQuery) {
         await noneBlockingCommand;
-        var output = blockingQuery();
+        var output = blockingOutputQuery();
         return output;
     }
-    public static async Task<TOutput> Map<TOutput>(this Task noneBlockingCommand, Func<Task<TOutput>> noneBockingQuery) {
+    public static async Task<TOutput> Map<TOutput>(this Task noneBlockingCommand, Func<Task<TOutput>> blockingQueryOfNoneBlockonOutputQuery) {
         await noneBlockingCommand;
-        var slowOutputFactory = noneBockingQuery();
-        var output = await slowOutputFactory;
+        var noneBlockonOutputQuery = blockingQueryOfNoneBlockonOutputQuery();
+        var output = await noneBlockonOutputQuery;
         return output;
     }
-    public static async Task<TOutput> Map<TInput, TOutput>(this Task<TInput> noneBockingQuery, Func<TInput, TOutput> bockingQuery) {
-        var input = await noneBockingQuery;
-        var output = bockingQuery(input);
+    public static async Task<TOutput> Map<TInput, TOutput>(this Task<TInput> noneBockingInputQuery, Func<TInput, TOutput> blockingOutputQuery) {
+        var input = await noneBockingInputQuery;
+        var output = blockingOutputQuery(input);
         return output;
     }
-    public static async Task<TOutput> Map<TInput, TOutput>(this Task<TInput> slowInputFactory, Func<TInput, Task<TOutput>> noneBockingQuery) {
-        var input = await slowInputFactory;
-        var slowOutputFactory = noneBockingQuery(input);
-        var output = await slowOutputFactory;
+    public static async Task<TOutput> Map<TInput, TOutput>(this Task<TInput> noneBockingInputQuery, Func<TInput, Task<TOutput>> blockingQueryOfNoneBlockonOutputQuery) {
+        var input = await noneBockingInputQuery;
+        var noneBlockingOutputFactory = blockingQueryOfNoneBlockonOutputQuery(input);
+        var output = await noneBlockingOutputFactory;
         return output;
     }
 
 
-    public static TInput Then<TInput>(this TInput input, Action<TInput> blockingCommand) {
-        blockingCommand(input);
+    public static TInput Then<TInput>(this TInput input, Action blockingInputCommand) {
+        blockingInputCommand();
         return input;
     }
-    public static async Task<TInput> Then<TInput>(this TInput input, Func<Task> fastFactoryOfNextSlowOperation) {
-        await fastFactoryOfNextSlowOperation();
+    public static TInput Then<TInput>(this TInput input, Action<TInput> blockingInputCommand) {
+        blockingInputCommand(input);
         return input;
     }
-    public static async Task Then(this Task noneBlockingCommand, Action fastOperation) {
+    public static async Task<TInput> Then<TInput>(this TInput input, Func<Task> bockingQueryOfNoneBlockingCommand) {
+        var noneBlockingCommand = bockingQueryOfNoneBlockingCommand();
         await noneBlockingCommand;
-        fastOperation();
+        return input;
     }
-    public static async Task Then(this Task noneBlockingCommand, Func<Task> fastFactoryOfNextSlowOperation) {
+    public static async Task Then(this Task noneBlockingCommand, Action blockingCommand) {
         await noneBlockingCommand;
-        var nextSlowOperation = fastFactoryOfNextSlowOperation();
-        await nextSlowOperation;
+        blockingCommand();
     }
-    public static async Task Then<TInput>(this Task<TInput> slowInputFactory, Action<TInput> fastInputOperation) {
-        var input = await slowInputFactory;
-        fastInputOperation(input);
+    public static async Task Then(this Task noneBlockingCommand, Func<Task> bockingQueryOfNoneBlockingCommand) {
+        await noneBlockingCommand;
+        var nextNoneBlockingCommand = bockingQueryOfNoneBlockingCommand();
+        await nextNoneBlockingCommand;
     }
-    public static async Task Then<TInput>(this Task<TInput> slowInputFactory, Func<TInput, Task> fastFactoryOfSlowOperation) {
-        var input = await slowInputFactory;
-        var slowOperation = fastFactoryOfSlowOperation(input);
-        await slowOperation;
+    public static async Task Then<TInput>(this Task<TInput> noneBockingInputQuery, Action<TInput> blockingInputCommand) {
+        var input = await noneBockingInputQuery;
+        blockingInputCommand(input);
+    }
+    public static async Task Then<TInput>(this Task<TInput> noneBockingInputQuery, Func<TInput, Task> bockingQueryOfNoneBlockingCommand) {
+        var input = await noneBockingInputQuery;
+        var noneBlockingCommand = bockingQueryOfNoneBlockingCommand(input);
+        await noneBlockingCommand;
     }
 }

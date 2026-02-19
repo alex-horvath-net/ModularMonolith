@@ -1,5 +1,4 @@
-﻿using Business.Experts.SecurityOfficer.Domain;
-using Business.Features.Accounts.Domain;
+﻿using Business.Features.Accounts.Domain;
 
 namespace Business.Features.Accounts.Slices.CreateVisitor;
 

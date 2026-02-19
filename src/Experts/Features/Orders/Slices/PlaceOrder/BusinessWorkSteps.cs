@@ -2,8 +2,6 @@
 using Business.Events;
 using Business.Infrastructure;
 using FluentValidation;
-using OrderData = Business.Features.Orders.Infrastructure.Data.Models.Order;
-using OrderDomain = Business.Features.Orders.Domain.Order;
 
 namespace Business.Features.Orders.Slices.PlaceOrder;
 

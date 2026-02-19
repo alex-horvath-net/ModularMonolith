@@ -1,5 +1,6 @@
 using Business.Features.Accounts.Domain;
 using Business.Features.Accounts.Infrastructure;
+using Business.Features.Accounts.Slices.Login.WorkSteps;
 using Business.Features.Accounts.Slices.Register.WorkSteps;
 
 namespace Business.Features.Accounts.Slices.Register;
@@ -51,7 +52,7 @@ internal sealed class UserStory {
 
     public sealed record UserStoryContext(UserStoryRequest Request, UserStoryResponse Response, CancellationToken Token) {
         public UserStoryRequest? NormalizedRequest { get; set; }
-        public Account? MathingAccount { get; internal set; }
+        public Account? MachingAccount { get; internal set; }
         public Account? Account { get; internal set; }
     }
 }

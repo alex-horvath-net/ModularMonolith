@@ -6,11 +6,13 @@ namespace Business.Features.Accounts.Slices.Login;
 
 internal sealed class UserStory {
     private readonly Validate validate;
+    private readonly Normalize normalize;
     private readonly Authenticate authenticate;
     private readonly Authorize authorize;
 
     internal UserStory(IAccountRepository repository, IHasher hasher) {
         validate = new Validate();
+        normalize = new Normalize();
         authenticate = new Authenticate(repository, hasher);
         authorize = new Authorize();
     }
@@ -19,6 +21,9 @@ internal sealed class UserStory {
         var context = new Context(request, new(), token);
 
         if (!await validate.Run(context))
+            return context.Response;
+
+        if (!normalize.Run(context))
             return context.Response;
 
         if (!await authenticate.Run(context))
@@ -32,6 +37,7 @@ internal sealed class UserStory {
 
     public sealed record Context(UserStoryRequest Request, UserStoryResponse Response, CancellationToken Token) {
         public string? Email { get; set; }
+        public string? NormalizedEmail { get; set; }
         public string? Password { get; set; }
         internal Account? Account { get; set; }
     }

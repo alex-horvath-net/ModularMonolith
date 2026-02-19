@@ -1,6 +1,4 @@
-﻿using Business.Features.Accounts.Slices.Login;
-
-namespace Business.Features.Accounts.Slices.Login.WorkSteps;
+﻿namespace Business.Features.Accounts.Slices.Login.WorkSteps;
 
 internal sealed class Validate() {
     public async Task<bool> Run(UserStory.Context context) {
@@ -20,7 +18,6 @@ internal sealed class Validate() {
             context.Response.ErrorMessage = UserStoryConstants.MissingPassword;
             return false;
         }
-
         context.Password = password;
 
         return true;

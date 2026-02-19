@@ -1,7 +1,8 @@
-﻿using Business.Experts.SecurityOfficer.Domain;
+﻿using Business.Features.Accounts.Domain;
 using Business.Features.Accounts.Infrastructure;
 
 namespace Business.Features.Accounts.Slices.Register.WorkSteps;
+
 internal class Create(IHasher hasher, IClock clock) {
     public bool Run(UserStory.UserStoryContext context) {
         var hash = hasher.Generate(context.NormalizedRequest!.Password);

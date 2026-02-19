@@ -1,12 +1,11 @@
 ﻿using Business.Features.Accounts.Infrastructure;
-using Business.Features.Accounts.Slices.Login;
 
 namespace Business.Features.Accounts.Slices.Login.WorkSteps;
 
 internal sealed class Authenticate(IAccountRepository repsository, IHasher hasher) {
     public async Task<bool> Run(UserStory.Context context) {
 
-        context.Account = await repsository.FindAccountByEmail(context.Email, context.Token);
+        context.Account = await repsository.FindAccountByEmail(context.NormalizedEmail!, context.Token);
 
         if (context.Account is null) {
             context.Response.ErrorMessage = UserStoryConstants.AccountNotFound;
@@ -18,7 +17,7 @@ internal sealed class Authenticate(IAccountRepository repsository, IHasher hashe
             return false;
         }
 
-        if (!hasher.Verify(context.Password, context.Account.PasswordHash)) {
+        if (!hasher.Verify(context.Password!, context.Account.PasswordHash)) {
             context.Response.ErrorMessage = UserStoryConstants.InvalidPassword;
             return false;
         }

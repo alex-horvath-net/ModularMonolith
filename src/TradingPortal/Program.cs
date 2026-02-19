@@ -21,7 +21,7 @@ builder.Services.AddScoped(sp => {
     };
 });
 
-builder.Services.AddSecurityOfficer(builder.Configuration);
+builder.Services.AddAccounts(builder.Configuration);
 
 
 //builder.Services.AddCommon(builder.Configuration, builder.Environment);

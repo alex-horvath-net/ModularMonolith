@@ -1,17 +1,13 @@
-﻿namespace Business.Features.Accounts.Slices.Login.WorkSteps;
+﻿using Common.Tasks;
+
+namespace Business.Features.Accounts.Slices.Login.WorkSteps;
 
 internal sealed class Authorize() {
     public static readonly string AccountNotFound = "Account not found";
-    public async Task<bool> Run(UserStory.Context context) {
-        if (context.Account is null) {
-            context.Response.ErrorMessage = AccountNotFound;
-            return false;
-        }
+    public Task<bool> Run(UserStory.Context context) {
 
-        context.Response.Roles = context.Account.Roles.ToList();
+        context.Response.Roles = context.Account!.Roles.ToList();
 
-        await Task.CompletedTask;
-
-        return true;
+        return true.ToTask();
     }
 }
