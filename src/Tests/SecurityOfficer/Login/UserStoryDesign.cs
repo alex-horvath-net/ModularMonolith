@@ -68,7 +68,9 @@ public class UserStoryTests {
         account = DefaultAccount();
         accountRepository = Substitute.For<IAccountRepository>();
         accountRepository.FindAccountByEmail(Arg.Any<string>(), Arg.Any<CancellationToken>()).Returns(account);
+
         hasher = Substitute.For<IHasher>();
+        hasher.Verify(Arg.Any<string>(), Arg.Any<string>()).Returns(true);
 
         return new(accountRepository, hasher);
     }
