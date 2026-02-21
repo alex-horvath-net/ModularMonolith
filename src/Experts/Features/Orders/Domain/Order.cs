@@ -34,14 +34,14 @@ public sealed class Order {
     public void AddLine(Guid productId, int quantity, decimal unitPrice) => _lines.Add(
         new OrderLine(productId, quantity, unitPrice));
 
-    public Modules.OrderExpert.Common.Infrastructure.Data.Models.Order ToDataModel() => new() {
+    public Infrastructure.Data.Models.Order ToDataModel() => new() {
         Id = Id,
         CustomerId = CustomerId,
         Lines = Lines.Select(ToInfraOrderLine).ToList()
     };
 
 
-    private Modules.OrderExpert.Common.Infrastructure.Data.Models.OrderLine ToInfraOrderLine(OrderLine domainOrderLine) => new() {
+    private Infrastructure.Data.Models.OrderLine ToInfraOrderLine(OrderLine domainOrderLine) => new() {
         ProductId = domainOrderLine.ProductId,
         UnitPrice = domainOrderLine.UnitPrice,
         Quantity = domainOrderLine.Quantity

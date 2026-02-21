@@ -5,8 +5,8 @@ public static class MonadExtensions {
     public static Task<T> Unit<T>(this T value) =>
         value.ToTask();
 
-    public static Task<TOutput> Bind<TInput, TOutput>(this Task<TInput> slowInputFactory, Func<TInput, Task<TOutput>> fastFactoryOfSlowOutputFactory) =>
-        slowInputFactory.Then(fastFactoryOfSlowOutputFactory);
+    public static Task<TOutput> Bind<TInput, TOutput>(this Task<TInput> noneBlockingInputQuery, Func<TInput, Task<TOutput>> blockingQueryOfNoneBlockingOutputQuery) =>
+        noneBlockingInputQuery.Map(blockingQueryOfNoneBlockingOutputQuery);
 
     public static Task<TOutput> SelectManyByUnitandBind<TInput, TMidle, TOutput>(
         this Task<TInput> slowInputFactory,
@@ -21,6 +21,17 @@ public static class MonadExtensions {
         Func<TInput, Task<TMidle>> fastFactoryOfSlowMidleFactory,
         Func<TInput, TMidle, TOutput> fastOutputFactory) {
         var input = await slowInputFactory;
+        var SlowMidleFactory = fastFactoryOfSlowMidleFactory(input);
+        var middle = await SlowMidleFactory;
+        var output = fastOutputFactory(input, middle);
+        return output;
+    }
+
+    public static async Task<TOutput> SelectMany2<TInput, TMidle, TOutput>(
+       this Task<TInput> noneBlockingInputQuery,
+       Func<TInput, Task<TMidle>> fastFactoryOfSlowMidleFactory,
+       Func<TInput, TMidle, TOutput> fastOutputFactory) {
+        var input = await noneBlockingInputQuery;
         var SlowMidleFactory = fastFactoryOfSlowMidleFactory(input);
         var middle = await SlowMidleFactory;
         var output = fastOutputFactory(input, middle);

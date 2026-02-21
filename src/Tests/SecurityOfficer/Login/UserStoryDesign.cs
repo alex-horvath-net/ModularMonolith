@@ -7,18 +7,16 @@ using Shouldly;
 namespace Tests.SecurityOfficer.Login;
 
 public class UserStoryTests {
-    private IAuthenticateStore authenticateStore = default!;
-    private IRandom random = default!;
+    private IAccountRepository accountRepository = default!;
+    private IHasher hasher = default!;
     private UserStoryRequest request = default!;
-    private CancellationToken token = default!;
+    private CancellationToken token;
     private Account account = default!;
+
 
     [Fact]
     public async Task Login_Should_Succeed_For_Registered_Account() {
-        Arrange();
-
-        var userStory = new UserStory(authenticateStore, random);
-        var response = await userStory.Run(request, token);
+        var response = await SUT().Run(request, token);
 
         response.ErrorMessage.ShouldBeNull();
         response.AuthenticationId.ShouldBe(account.Id);
@@ -28,9 +26,9 @@ public class UserStoryTests {
 
     [Fact]
     public async Task Login_Should_Fail_If_Request_Wrong_Beacause_AccountType() {
-        Arrange(WithRequestWithWrongAccountType);
+        SUT(WithRequestWithWrongAccountType);
 
-        var userStory = new UserStory(authenticateStore, random);
+        var userStory = new UserStory(accountRepository, hasher);
         var response = await userStory.Run(request, token);
 
         response.ErrorMessage.ShouldBe(UserStoryConstants.AccountTypeNotFound);
@@ -41,10 +39,7 @@ public class UserStoryTests {
 
     [Fact]
     public async Task Login_Should_Fail_If_Request_Wrong_Beacause_Password_Missing() {
-        Arrange(WithRequestWithoutPassword);
-
-        var userStory = new UserStory(authenticateStore, random);
-        var response = await userStory.Run(request, token);
+        var response = await SUT(ButRequestWithoutPassword).Run(request, token);
 
         response.ErrorMessage.ShouldBe(UserStoryConstants.MissingPassword);
         response.AuthenticationId.ShouldBeNull();
@@ -54,9 +49,9 @@ public class UserStoryTests {
 
     [Fact]
     public async Task Login_Should_Fail_If_Request_Wrong_Beacause_Email_Missing() {
-        Arrange(WithRequestWithotEmail);
+        SUT(WithRequestWithotEmail);
 
-        var userStory = new UserStory(authenticateStore, random);
+        var userStory = new UserStory(accountRepository, hasher);
         var response = await userStory.Run(request, token);
 
         response.ErrorMessage.ShouldBe(UserStoryConstants.MissingEmail);
@@ -66,15 +61,16 @@ public class UserStoryTests {
     }
 
 
-    private void Arrange(Func<UserStoryRequest>? requestFactory = null) {
+    private UserStory SUT(Func<UserStoryRequest>? requestFactory = null) {
         request = requestFactory == null ? DefaultRequest() : requestFactory();
         token = CancellationToken.None;
 
         account = DefaultAccount();
-        authenticateStore = Substitute.For<IAuthenticateStore>();
-        authenticateStore.FindByEmail(Arg.Any<string>(), Arg.Any<CancellationToken>()).Returns(account);
+        accountRepository = Substitute.For<IAccountRepository>();
+        accountRepository.FindAccountByEmail(Arg.Any<string>(), Arg.Any<CancellationToken>()).Returns(account);
+        hasher = Substitute.For<IHasher>();
 
-        random = Substitute.For<IRandom>();
+        return new(accountRepository, hasher);
     }
     private UserStoryRequest DefaultRequest() => new(
        VisitorId: Guid.Parse("10000000-0000-0000-0000-000000000001"),
@@ -90,7 +86,7 @@ public class UserStoryTests {
           ["Email"] = "alex.horvath.net@outlook.com",
           ["Password"] = "P@ssw0rd!"
       });
-    private UserStoryRequest WithRequestWithoutPassword() => new(
+    private UserStoryRequest ButRequestWithoutPassword() => new(
         VisitorId: Guid.Parse("10000000-0000-0000-0000-000000000001"),
         AccountType: AccountType.LocalAccount,
         Credentials: new Dictionary<string, string> {

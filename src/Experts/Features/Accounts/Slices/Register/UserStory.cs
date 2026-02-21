@@ -1,6 +1,5 @@
 using Business.Features.Accounts.Domain;
 using Business.Features.Accounts.Infrastructure;
-using Business.Features.Accounts.Slices.Login.WorkSteps;
 using Business.Features.Accounts.Slices.Register.WorkSteps;
 
 namespace Business.Features.Accounts.Slices.Register;

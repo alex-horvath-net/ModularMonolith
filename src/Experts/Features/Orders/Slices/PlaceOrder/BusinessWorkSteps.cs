@@ -1,5 +1,6 @@
 ﻿using Business.Domain;
 using Business.Events;
+using Business.Features.Orders.Domain;
 using Business.Infrastructure;
 using FluentValidation;
 
@@ -16,8 +17,8 @@ internal sealed class BusinessWorkSteps(
         return domainModel;
     }
 
-    public OrderDomain Create(PlaceOrderRequest request) {
-        var order = new OrderDomain(request.CustomerId);
+    public Order Create(PlaceOrderRequest request) {
+        var order = new Order(request.CustomerId);
 
         foreach (var line in request.Lines)
             order.AddLine(line.ProductId, line.Quantity, line.UnitPrice);
@@ -25,12 +26,12 @@ internal sealed class BusinessWorkSteps(
         return order;
     }
 
-    public Task Save(OrderDomain order, CancellationToken token) {
+    public Task Save(Order order, CancellationToken token) {
         var orderDataModel = order.ToDataModel();
         return store.Save(orderDataModel, token);
     }
 
-    public Task Publish(OrderDomain order, CancellationToken token) {
+    public Task Publish(Order order, CancellationToken token) {
 
         var orderPlacedBusinessEvent = new OrderPlaced(
             order.Id,
@@ -41,6 +42,6 @@ internal sealed class BusinessWorkSteps(
     }
 
     public interface IStoreInfrastructure {
-        Task Save(OrderData order, CancellationToken token);
+        Task Save(Orders.Infrastructure.Data.Models.Order order, CancellationToken token);
     }
 }

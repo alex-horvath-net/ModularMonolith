@@ -8,59 +8,50 @@ using Shouldly;
 namespace Tests.SecurityOfficer.Register;
 
 public class RegisterUserStoryTests {
-    private UserStory.IAccountStore store = default!;
-    private IRandom random = default!;
-    private UserStory.IClock clock = default!;
+    private IAccountRepository repository = default!;
+    private IHasher hasher = default!;
+    private IClock clock = default!;
     private UserStoryRequest request = default!;
-    private CancellationToken token = default!;
+    private CancellationToken token;
     private Account? createdAccount;
 
     [Fact]
     public async Task RegisterAsync_PersistsAccountWithNormalizedCredentials() {
-        Arrange();
-
-        var userStory = new UserStory(store, random, clock);
-        var response = await userStory.Register(request, token);
+        var response = await Arrange().Register(request, token);
 
         response.Email.ShouldBe(request.Email);
         response.Roles.ShouldBe(request.Roles.Except(["trader"]));
         createdAccount.ShouldNotBeNull();
-        createdAccount!.Email.ShouldBe(request.Email);
+        createdAccount.Email.ShouldBe(request.Email);
         createdAccount.UserName.ShouldBe(request.UserName);
         createdAccount.Roles.ShouldBe(request.Roles.Except(["trader"]));
         createdAccount.CreatedAtUtc.ShouldBe(clock.UtcNow);
     }
 
     [Fact]
-    public async Task RegisterAsync_WhenEmailAlreadyExists_Throws() {
-        Arrange(WithExistingAccount);
-
-        var userStory = new UserStory(store, random, clock);
-        await Should.ThrowAsync<InvalidOperationException>(() => userStory.Register(request, token));
-    }
+    public Task RegisterAsync_WhenEmailAlreadyExists_Throws() =>
+        Should.ThrowAsync<InvalidOperationException>(() => Arrange(WithExistingAccount).Register(request, token));
 
     [Fact]
-    public async Task RegisterAsync_WhenPasswordIsWeak_Throws() {
-        Arrange(() => new UserStoryRequest("user@example.com", "Generate", "weak", ["Trader"]));
+    public Task RegisterAsync_WhenPasswordIsWeak_Throws() =>
+        Should.ThrowAsync<InvalidOperationException>(() => Arrange(() => new UserStoryRequest("user@example.com", "Generate", "weak", ["Trader"])).Register(request, token));
 
-        var userStory = new UserStory(store, random, clock);
-        await Should.ThrowAsync<InvalidOperationException>(() => userStory.Register(request, token));
-    }
-
-    private void Arrange(Func<UserStoryRequest>? requestFactory = null) {
+    private UserStory Arrange(Func<UserStoryRequest>? requestFactory = null) {
         request = requestFactory == null ? DefaultRequest() : requestFactory();
         token = CancellationToken.None;
 
-        store = Substitute.For<UserStory.IAccountStore>();
-        store.FindByEmail(Arg.Any<string>(), Arg.Any<CancellationToken>())
+        repository = Substitute.For<IAccountRepository>();
+        repository.FindAccountByEmail(Arg.Any<string>(), Arg.Any<CancellationToken>())
             .Returns(Task.FromResult<Account?>(null));
-        store.CreateAsync(Arg.Do<Account>(account => createdAccount = account), Arg.Any<CancellationToken>())
+        repository.CreateAccount(Arg.Do<Account>(account => createdAccount = account), Arg.Any<CancellationToken>())
             .Returns(Task.CompletedTask);
 
-        random = Substitute.For<IRandom>();
+        hasher = Substitute.For<IHasher>();
 
-        clock = Substitute.For<UserStory.IClock>();
+        clock = Substitute.For<IClock>();
         clock.UtcNow.Returns(DateTime.Parse("2024-01-01T00:00:00Z", CultureInfo.InvariantCulture));
+
+        return new UserStory(repository, hasher, clock);
     }
 
     private UserStoryRequest DefaultRequest() => new(
@@ -70,8 +61,8 @@ public class RegisterUserStoryTests {
         Roles: ["Trader", "trader", "RiskManager"]);
 
     private UserStoryRequest WithExistingAccount() {
-        var existing = new Account(Guid.NewGuid(), "user@example.com", "Existing", "hash", new HashSet<string>(StringComparer.OrdinalIgnoreCase), false, clock.UtcNow);
-        store.FindByEmail(Arg.Any<string>(), Arg.Any<CancellationToken>()).Returns(existing);
+        var existingAccount = new Account(Guid.NewGuid(), "user@example.com", "Existing", "hash", new HashSet<string>(StringComparer.OrdinalIgnoreCase), false, clock.UtcNow);
+        repository.FindAccountByEmail(Arg.Any<string>(), Arg.Any<CancellationToken>()).Returns(existingAccount);
         return new UserStoryRequest("user@example.com", "Generate", "Sup3r$ecretPwd", ["Trader"]);
     }
 

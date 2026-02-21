@@ -15,8 +15,8 @@ namespace Business.Features.Accounts;
 
 public static class Extensions {
     public static IServiceCollection AddAccounts(this IServiceCollection services, IConfiguration configuration) {
-        services.AddLogion();
         services.AddRegistration();
+        services.AddLogion();
 
         services.AddDbContext<SecurityDbContext>(options => options.UseSqlServer(configuration.GetConnectionString("AppDB"))); // scoped
         services.AddSingleton<IAccountRepository, AccountRepository>();

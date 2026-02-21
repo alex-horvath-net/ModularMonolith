@@ -3,9 +3,9 @@
 
 @using System
 @using System.Collections.Generic
-@using RegisterClient = Business.Modules.SecurityOfficer.Register.UserStoryBlazorClient
+@using RegisterSlice = Business.Features.Accounts.Slices.Register
 
-@inject RegisterClient registerClient
+@inject RegisterSlice.IUserStoryBlazorClient registerClient
 
 <PageTitle>Register</PageTitle>
 
@@ -119,7 +119,7 @@
 </style>
 
 @code {
-    private RegisterClient.ClientRequest request = new();
+    private RegisterSlice.UserStoryBlazorClientRequest request = new();
     private readonly HashSet<string> selectedRoles = new(StringComparer.OrdinalIgnoreCase);
     private readonly string[] availableRoles = ["Trader", "RiskManager", "Compliance"];
     private string confirmPassword = string.Empty;
@@ -172,7 +172,7 @@
         {
             var response = await registerClient.Run(request);
             successMessage = $"Registration complete for {response.Email}.";
-            request = new RegisterClient.ClientRequest();
+            request = new RegisterSlice.UserStoryBlazorClientRequest();
             confirmPassword = string.Empty;
             selectedRoles.Clear();
         }

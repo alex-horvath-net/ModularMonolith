@@ -1,11 +1,11 @@
 @page "/access/login"
 @rendermode InteractiveServer
 
-@using LoginClient = Business.Modules.SecurityOfficer.Login.UserStoryBlazorClient
+@using LoginSlice = Business.Features.Accounts.Slices.Login
 @using TradingPortal.Components.Pages.Access
 
 @inject UserContext UserContext
-@inject LoginClient login
+@inject LoginSlice.IUserStoryBlazorClient login
 
 
 <PageTitle>Login</PageTitle>
@@ -141,12 +141,12 @@
 </style>
 
 @code {
-    private LoginClient.ClientResponse? response;
-    private LoginClient.ClientRequest request = null!;
+    private LoginSlice.UserStoryBlazorClientResponse? response;
+    private LoginSlice.UserStoryBlazorClientRequest request = null!;
     private bool CanLogin => !string.IsNullOrWhiteSpace(request.Email) && !string.IsNullOrWhiteSpace(request.Password);
 
     protected override void OnInitialized() {
-        request = new LoginClient.ClientRequest(UserContext.User);
+        request = new LoginSlice.UserStoryBlazorClientRequest(UserContext.User);
     }
 
     private async Task OnLoginClicked() {

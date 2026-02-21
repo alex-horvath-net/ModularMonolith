@@ -9,7 +9,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
 
-namespace Business.Modules.OrderExpert.Common.Infrastructure.Data.Migrations
+namespace Business.Features.Orders.Infrastructure.Data.Migrations
 {
     [DbContext(typeof(OrdersDbContext))]
     [Migration("20260112215909_InitialCreate")]
@@ -25,7 +25,7 @@ namespace Business.Modules.OrderExpert.Common.Infrastructure.Data.Migrations
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
 
-            modelBuilder.Entity("Business.Modules.OrderExpert.Common.Infrastructure.Data.Models.Order", b =>
+            modelBuilder.Entity("Business.Features.Orders.Infrastructure.Data.Models.Order", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -62,7 +62,7 @@ namespace Business.Modules.OrderExpert.Common.Infrastructure.Data.Migrations
                         });
                 });
 
-            modelBuilder.Entity("Business.Modules.OrderExpert.Common.Infrastructure.Data.Models.OrderLine", b =>
+            modelBuilder.Entity("Business.Features.Orders.Infrastructure.Data.Models.OrderLine", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -94,16 +94,16 @@ namespace Business.Modules.OrderExpert.Common.Infrastructure.Data.Migrations
                         });
                 });
 
-            modelBuilder.Entity("Business.Modules.OrderExpert.Shared.Infrastructure.Data.Models.OrderLine", b =>
+            modelBuilder.Entity("Business.Features.Orders.Infrastructure.Data.Models.OrderLine", b =>
                 {
-                    b.HasOne("Business.Modules.OrderExpert.Shared.Infrastructure.Data.Models.Order", null)
+                    b.HasOne("Business.Features.Orders.Infrastructure.Data.Models.Order", null)
                         .WithMany("Lines")
                         .HasForeignKey("OrderId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("Business.Modules.OrderExpert.Shared.Infrastructure.Data.Models.Order", b =>
+            modelBuilder.Entity("Business.Features.Orders.Infrastructure.Data.Models.Order", b =>
                 {
                     b.Navigation("Lines");
                 });
