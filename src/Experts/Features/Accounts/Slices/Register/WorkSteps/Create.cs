@@ -13,7 +13,7 @@ internal class Create(IHasher hasher, IClock clock) {
             Email: context.NormalizedRequest!.Email,
             UserName: context.NormalizedRequest.UserName,
             PasswordHash: hash,
-            Roles: context.Request.Roles.ToHashSet(),
+            Roles: context.NormalizedRequest.Roles.ToHashSet(StringComparer.OrdinalIgnoreCase),
             IsLocked: false,
             CreatedAtUtc: now);
 

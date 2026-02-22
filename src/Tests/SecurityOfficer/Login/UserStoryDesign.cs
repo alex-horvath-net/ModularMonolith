@@ -13,7 +13,6 @@ public class UserStoryTests {
     private CancellationToken token;
     private Account account = default!;
 
-
     [Fact]
     public async Task Login_Should_Succeed_For_Registered_Account() {
         var response = await SUT().Run(request, token);
@@ -26,10 +25,7 @@ public class UserStoryTests {
 
     [Fact]
     public async Task Login_Should_Fail_If_Request_Wrong_Beacause_AccountType() {
-        SUT(WithRequestWithWrongAccountType);
-
-        var userStory = new UserStory(accountRepository, hasher);
-        var response = await userStory.Run(request, token);
+        var response = await SUT(WithRequestWithWrongAccountType).Run(request, token);
 
         response.ErrorMessage.ShouldBe(UserStoryConstants.AccountTypeNotFound);
         response.AuthenticationId.ShouldBeNull();
@@ -49,17 +45,13 @@ public class UserStoryTests {
 
     [Fact]
     public async Task Login_Should_Fail_If_Request_Wrong_Beacause_Email_Missing() {
-        SUT(WithRequestWithotEmail);
-
-        var userStory = new UserStory(accountRepository, hasher);
-        var response = await userStory.Run(request, token);
+        var response = await SUT(WithRequestWithotEmail).Run(request, token);
 
         response.ErrorMessage.ShouldBe(UserStoryConstants.MissingEmail);
         response.AuthenticationId.ShouldBeNull();
         response.UserName.ShouldBeNull();
         response.Roles.ShouldBeEmpty();
     }
-
 
     private UserStory SUT(Func<UserStoryRequest>? requestFactory = null) {
         request = requestFactory == null ? DefaultRequest() : requestFactory();

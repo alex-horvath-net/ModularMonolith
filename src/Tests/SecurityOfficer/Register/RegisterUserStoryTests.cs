@@ -37,7 +37,6 @@ public class RegisterUserStoryTests {
         Should.ThrowAsync<InvalidOperationException>(() => Arrange(() => new UserStoryRequest("user@example.com", "Generate", "weak", ["Trader"])).Register(request, token));
 
     private UserStory Arrange(Func<UserStoryRequest>? requestFactory = null) {
-        request = requestFactory == null ? DefaultRequest() : requestFactory();
         token = CancellationToken.None;
 
         repository = Substitute.For<IAccountRepository>();
@@ -50,6 +49,17 @@ public class RegisterUserStoryTests {
 
         clock = Substitute.For<IClock>();
         clock.UtcNow.Returns(DateTime.Parse("2024-01-01T00:00:00Z", CultureInfo.InvariantCulture));
+
+        request = requestFactory == null ? DefaultRequest() : requestFactory();
+        request = request with {
+            Email = request.Email.Trim().ToLowerInvariant(),
+            UserName = request.UserName.Trim().ToLowerInvariant(),
+            Roles = request.Roles
+                .Where(role => !string.IsNullOrWhiteSpace(role))
+                .Select(role => role.Trim())
+                .Distinct(StringComparer.OrdinalIgnoreCase)
+                .ToArray()
+        };
 
         return new UserStory(repository, hasher, clock);
     }

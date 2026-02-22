@@ -25,23 +25,12 @@ internal sealed class UserStory {
     public async Task<UserStoryResponse> Register(UserStoryRequest request, CancellationToken token) {
         var context = new UserStoryContext(request, new(), token);
 
-        if (!validate.Run(context))
-            return context.Response;
-
-        if (!normalize.Run(context))
-            return context.Response;
-
-        if (await preventDuplication.Run(context))
-            return context.Response;
-
-        if (!create.Run(context))
-            return context.Response;
-
-        if (!await save.Run(context))
-            return context.Response;
-
-        if (!buildresponse.Run(context))
-            return context.Response;
+        validate.Run(context);
+        normalize.Run(context);
+        await preventDuplication.Run(context);
+        create.Run(context);
+        await save.Run(context);
+        buildresponse.Run(context);
 
         //Activate email
         //Activate MFA

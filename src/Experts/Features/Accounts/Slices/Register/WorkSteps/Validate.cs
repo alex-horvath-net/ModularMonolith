@@ -5,31 +5,27 @@ namespace Business.Features.Accounts.Slices.Register.WorkSteps;
 internal class Validate {
     private readonly CreatePasswordPolicy passwordPolicy = new();
     private readonly CreateRoleRolePolicy rolesPolicy = new();
+
     public bool Run(UserStory.UserStoryContext context) {
 
         if (context.Request is null) {
-            context.Response.ErrorMessage = UserStoryConstants.RequestCanNotBeNell;
-            return false;
+            throw new InvalidOperationException(UserStoryConstants.RequestCanNotBeNell);
         }
 
         if (string.IsNullOrWhiteSpace(context.Request.Email)) {
-            context.Response.ErrorMessage = UserStoryConstants.EmailIsRequired;
-            return false;
+            throw new InvalidOperationException(UserStoryConstants.EmailIsRequired);
         }
 
         if (!passwordPolicy.IsValid(context.Request.Password)) {
-            context.Response.ErrorMessage = UserStoryConstants.PasswordMutBeContain;
-            return false;
+            throw new InvalidOperationException(UserStoryConstants.PasswordMutBeContain);
         }
 
         if (string.IsNullOrWhiteSpace(context.Request.UserName)) {
-            context.Response.ErrorMessage = UserStoryConstants.UserNameIsRequired;
-            return false;
+            throw new InvalidOperationException(UserStoryConstants.UserNameIsRequired);
         }
 
         if (!rolesPolicy.IsValid(context.Request.Roles)) {
-            context.Response.ErrorMessage = UserStoryConstants.AtLeastOneRoleRequired;
-            return false;
+            throw new InvalidOperationException(UserStoryConstants.AtLeastOneRoleRequired);
         }
 
         return true;
@@ -62,15 +58,21 @@ internal class CreatePasswordPolicy {
 
 internal sealed class CreateRoleRolePolicy {
     private static readonly ImmutableHashSet<string> allowedRoles =
-        ["Trader", "RiskManager", "Compliance"];
+        ImmutableHashSet.Create(StringComparer.OrdinalIgnoreCase, "Trader", "RiskManager", "Compliance");
 
     public bool IsValid(IEnumerable<string> selectedRoles) {
         if (selectedRoles == null)
             return false;
 
-        if (selectedRoles.Any(role => !allowedRoles.Contains(role)))
+        var cleanedRoles = selectedRoles
+            .Where(role => !string.IsNullOrWhiteSpace(role))
+            .Select(role => role.Trim());
+
+        if (!cleanedRoles.Any())
             return false;
 
+        if (cleanedRoles.Any(role => !allowedRoles.Contains(role)))
+            return false;
 
         return true;
     }
