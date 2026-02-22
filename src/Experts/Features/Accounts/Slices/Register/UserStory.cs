@@ -11,7 +11,6 @@ internal sealed class UserStory {
     private readonly PreventDuplication preventDuplication;
     private readonly Create create;
     private readonly Save save;
-    private readonly BuildResponse buildresponse;
 
     internal UserStory(IAccountRepository repository, IHasher hasher, IClock clock) {
         validate = new Validate();
@@ -19,30 +18,35 @@ internal sealed class UserStory {
         preventDuplication = new PreventDuplication(repository);
         create = new Create(hasher, clock);
         save = new Save(repository);
-        buildresponse = new BuildResponse();
-
     }
 
     public async Task<UserStoryResponse> Register(UserStoryRequest request, CancellationToken token) {
-        var context = new UserStoryContext(request, new(), token);
+        var context = new UserStoryContext(request, token);
 
         validate.Run(context);
         normalize.Run(context);
         await preventDuplication.Run(context);
         create.Run(context);
         await save.Run(context);
-        buildresponse.Run(context);
 
         //Activate email
         //Activate MFA
 
-        return context.Response;
+        return context.ToResponse();
     }
 
-    public sealed record UserStoryContext(UserStoryRequest Request, UserStoryResponse Response, CancellationToken Token) {
+    public sealed record UserStoryContext(UserStoryRequest Request, CancellationToken Token) {
         public UserStoryRequest? NormalizedRequest { get; set; }
         public Account? MachingAccount { get; internal set; }
         public Account? Account { get; internal set; }
+        public UserStoryResponse? Response { get; internal set; }
+
+        internal UserStoryResponse ToResponse() => new(
+            ErrorMessage: null,
+            Account!.Id,
+            Account.Email,
+            Account.UserName,
+            Account.Roles);
     }
 }
 
@@ -52,14 +56,12 @@ public sealed record UserStoryRequest(
     string Password,
     IReadOnlyCollection<string> Roles);
 
-public sealed class UserStoryResponse {
-    public string? ErrorMessage { get; internal set; }
-    public Guid AccountId { get; internal set; }
-    public string? Email { get; internal set; }
-    public string? UserName { get; internal set; }
-    public IReadOnlyCollection<string>? Roles { get; internal set; }
-
-}
+public sealed record UserStoryResponse(
+    string? ErrorMessage,
+    Guid AccountId,
+    string? Email,
+    string? UserName,
+    IReadOnlyCollection<string> Roles);
 
 public static class UserStoryConstants {
     public const string RequestCanNotBeNell = "Request can not be null";
