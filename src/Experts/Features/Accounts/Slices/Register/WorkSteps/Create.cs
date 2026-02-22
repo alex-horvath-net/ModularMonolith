@@ -21,5 +21,3 @@ internal class Create(IHasher hasher, IClock clock) {
     }
 
 }
-
-

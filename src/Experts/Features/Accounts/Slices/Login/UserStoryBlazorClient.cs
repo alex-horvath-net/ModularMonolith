@@ -21,8 +21,6 @@ internal class UserStoryBlazorClient(UserStory userStory) : IUserStoryBlazorClie
             { "Email" , clientRequest.Email },
             { "Password" , clientRequest.Password }
         });
-
-
     private UserStoryBlazorClientResponse GetClientResponse(UserStoryResponse response) => new(
         response.ErrorMessage,
         response.AuthenticationId,

@@ -22,8 +22,6 @@ internal static class ApiAdminExtensions {
 
         });
 
-
-
         return services;
     }
     internal static IEndpointRouteBuilder MapApiAdmin(this WebApplication app) {

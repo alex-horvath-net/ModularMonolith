@@ -26,14 +26,11 @@ public static class CommonExtensions {
                                                 //services.AddFullHealthCheck();          // Health checks: basic self check; dependency checks can be added externally for DB/cache etc.
                                                 //services.AddAllowedIPsForHealthProbes(config); // IP allowlist filter for health probes
 
-
-
         // Validate critical secrets/config and fail fast in non-development
         // services.ValidateSecretsOnStart(config, env);
 
         return services;
     }
-
 
     public static IEndpointRouteBuilder MapCommon(this WebApplication app) {
 

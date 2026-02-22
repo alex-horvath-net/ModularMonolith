@@ -42,7 +42,6 @@ internal static class AuthenticationExtensions {
             .ValidateOnStart();
         services.AddSingleton<IValidateOptions<JwtOptions>, JwtOptionsValidator>();
 
-
         services
             .AddAuthorizationBuilder();
 

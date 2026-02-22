@@ -51,5 +51,3 @@ public sealed class AccountRepository(SecurityDbContext db) : IAccountRepository
     private static string MapToDomain(Models.Role role) =>
         role.Name;
 }
-
-

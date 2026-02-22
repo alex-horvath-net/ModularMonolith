@@ -23,7 +23,6 @@ builder.Services.AddScoped(sp => {
 
 builder.Services.AddAccounts(builder.Configuration);
 
-
 //builder.Services.AddCommon(builder.Configuration, builder.Environment);
 builder.Services.AddOrderBusinessExpert(builder.Configuration);
 builder.Services.AddBilling(builder.Configuration);
@@ -50,7 +49,6 @@ builder.Services.AddApiVersioning(o => o.ReportApiVersions = true)
                     o.GroupNameFormat = "'v'VVV";
                     o.SubstituteApiVersionInUrl = true;
                 });
-
 
 var app = builder.Build();
 
@@ -81,11 +79,11 @@ app.Run();
 static void SeedSecurityOfficerAccounts(WebApplication app) {
     using var scope = app.Services.CreateScope();
     var db = scope.ServiceProvider.GetRequiredService<SecurityDbContext>();
-    var register = scope.ServiceProvider.GetRequiredService<IUserStoryBlazorClient>();
+    var register = scope.ServiceProvider.GetRequiredService<IBlazorGateway>();
 
     db.Database.EnsureCreated();
 
-    var request = new UserStoryBlazorClientRequest() {
+    var request = new BlazorGatewayRequest() {
         Email = "aladar.horvath@outlook.com",
         UserName = "Aladar Horvath",
         Password = "Sup3r$ecretPwd!",

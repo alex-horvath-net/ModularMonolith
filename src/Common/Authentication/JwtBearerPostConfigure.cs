@@ -25,8 +25,6 @@ internal sealed class JwtBearerPostConfigure(IOptions<JwtOptions> jwtOptions, IJ
         options.MapInboundClaims = false;
         options.RequireHttpsMetadata = !_env.IsDevelopment();
 
-
-
         // Resolve signing key via DI-backed provider (may throw on misconfiguration)
         var key = _provider.GetValidationKey();
 
@@ -34,8 +32,6 @@ internal sealed class JwtBearerPostConfigure(IOptions<JwtOptions> jwtOptions, IJ
         if (_env.IsProduction() && key is SymmetricSecurityKey) {
             throw new InvalidOperationException("Symmetric signing keys must not be used in production. Configure an X.509 certificate or HSM-backed key for JWT signing.");
         }
-
-
 
         options.TokenValidationParameters = new TokenValidationParameters {
             ValidateIssuer = true,

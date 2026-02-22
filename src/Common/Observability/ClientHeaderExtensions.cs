@@ -9,7 +9,6 @@ internal static class ClientHeaderExtensions {
 
     internal static IServiceCollection AddClientHeadersInProxy(this IServiceCollection services) {
 
-
         services.Configure<ForwardedHeadersOptions>(options => {
             options.ForwardedHeaders = ForwardedHeaders.XForwardedFor | ForwardedHeaders.XForwardedProto; // IP and Protocol
             options.KnownNetworks.Clear(); // Explicit trust config handled at infrastructure level

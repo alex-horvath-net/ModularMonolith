@@ -1,5 +1,4 @@
 using System.Security.Cryptography;
-using Business.Infrastructure;
 
 namespace Business.Infrastructure.Hash;
 

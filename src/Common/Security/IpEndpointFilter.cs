@@ -11,7 +11,6 @@ public sealed class IpEndpointFilter : IEndpointFilter {
         if (ipv4List != null) {
             foreach (var ip_v4 in ipv4List) {
 
-
                 if (string.IsNullOrWhiteSpace(ip_v4))
                     continue;
 

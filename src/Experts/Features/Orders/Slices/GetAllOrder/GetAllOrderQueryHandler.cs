@@ -9,9 +9,6 @@ public sealed class GetAllOrderQueryHandler(OrdersDbContext db) {
         var infraOrders = await db.Orders.AsNoTracking().ToListAsync(token);
         var ordersDomain = infraOrders.Select(order => order.ToDomain()).ToList();
 
-
-
-
         return ordersDomain;
     }
 }

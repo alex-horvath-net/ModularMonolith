@@ -12,7 +12,6 @@ namespace Common.Security;
 
 public static class KerstelExtensions {
 
-
     // Extended hardened transport configuration with certificate & port binding
     public static ConfigureWebHostBuilder UseKestrel(this ConfigureWebHostBuilder webHost, IConfiguration config, IHostEnvironment env) {
         webHost.ConfigureKestrel(options => {

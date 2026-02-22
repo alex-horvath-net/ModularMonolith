@@ -6,8 +6,6 @@ public sealed class Order {
 
     private readonly List<OrderLine> _lines = [];
     public IReadOnlyCollection<OrderLine> Lines => _lines;
-
-
     public decimal Total => _lines.Sum(l => l.Quantity * l.UnitPrice);
 
     // Shadow auditing & concurrency handled via configuration.
@@ -39,7 +37,6 @@ public sealed class Order {
         CustomerId = CustomerId,
         Lines = Lines.Select(ToInfraOrderLine).ToList()
     };
-
 
     private Infrastructure.Data.Models.OrderLine ToInfraOrderLine(OrderLine domainOrderLine) => new() {
         ProductId = domainOrderLine.ProductId,

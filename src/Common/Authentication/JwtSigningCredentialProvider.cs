@@ -11,7 +11,6 @@ internal interface IJwtSigningCredentialProvider {
     SecurityKey GetValidationKey();
 }
 
-
 internal sealed class JwtSigningCredentialProvider : IJwtSigningCredentialProvider {
     private readonly IOptionsMonitor<JwtOptions> _optionsMonitor;
     private readonly IHostEnvironment _env;

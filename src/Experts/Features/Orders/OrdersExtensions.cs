@@ -26,7 +26,6 @@ public static class OrdersExtensions {
         services.AddPlaceOrderBusinessWorkFlow();
         services.AddShared();
 
-
         // Infrastructure
         services.AddDbContext<OrdersDbContext>((sp, options) => {
             var env = sp.GetRequiredService<IHostEnvironment>();

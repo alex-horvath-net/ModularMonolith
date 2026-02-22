@@ -10,7 +10,6 @@ namespace Common.Observability;
 public static class ObservabilityExtensions {
     public static IServiceCollection AddObservability(this IServiceCollection services, IConfiguration config, IHostEnvironment env) {
 
-
         // OpenTelemetry
         var resourceBuilder = ResourceBuilder.CreateDefault()
             .AddService(

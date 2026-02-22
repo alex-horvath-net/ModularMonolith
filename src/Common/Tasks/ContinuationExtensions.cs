@@ -28,7 +28,6 @@ public static class ContinuationExtensions {
         return output;
     }
 
-
     public static TInput Then<TInput>(this TInput input, Action blockingInputCommand) {
         blockingInputCommand();
         return input;

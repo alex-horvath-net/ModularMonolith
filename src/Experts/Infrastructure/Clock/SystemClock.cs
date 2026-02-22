@@ -1,5 +1,3 @@
-using Business.Infrastructure;
-
 namespace Business.Infrastructure.Clock;
 
 public class SystemClock : IClock {

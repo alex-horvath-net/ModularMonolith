@@ -13,13 +13,11 @@ namespace Tests.IntegrationTests;
 
 public class WebAppFactory : WebApplicationFactory<TradingApi.User>, IAsyncLifetime {
 
-
     private async Task<string?> GetAccessToken(HttpClient client) {
         var content = new CreateTokenCommand(
             JwtId: Guid.NewGuid(),
             Subject: "dev-user",
             IssuedAt: DateTime.UtcNow);
-
 
         var request = new HttpRequestMessage(HttpMethod.Post, "/v1/devtokens") {
             Content = JsonContent.Create(content)
@@ -28,7 +26,6 @@ public class WebAppFactory : WebApplicationFactory<TradingApi.User>, IAsyncLifet
         response.EnsureSuccessStatusCode();
         return await response.Content.ReadFromJsonAsync<string>();
     }
-
 
     public async Task<HttpResponseMessage> Get(string url, Action<HttpRequestMessage>? config = null) {
 
@@ -43,7 +40,6 @@ public class WebAppFactory : WebApplicationFactory<TradingApi.User>, IAsyncLifet
         return await client.SendAsync(request);
     }
 
-
     public async Task<HttpResponseMessage> Post<T>(string url, T content, Action<HttpRequestMessage>? config = null) {
 
         var client = CreateClient();
@@ -57,11 +53,9 @@ public class WebAppFactory : WebApplicationFactory<TradingApi.User>, IAsyncLifet
         return await client.SendAsync(request);
     }
 
-
     private IServiceScope scope = default!;
 
     public T GetRequiredService<T>() where T : notnull => scope.ServiceProvider.GetRequiredService<T>();
-
 
     protected override void ConfigureWebHost(IWebHostBuilder builder) {
         builder.UseSetting(WebHostDefaults.EnvironmentKey, "IntegrationTest");

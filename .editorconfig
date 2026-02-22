@@ -92,7 +92,7 @@ dotnet_code_quality_unused_parameters = all # unused params
 dotnet_remove_unnecessary_suppression_exclusions = none # no exclusions
 
 # New line preferences
-dotnet_style_allow_multiple_blank_lines_experimental = true # allow blank lines
+dotnet_style_allow_multiple_blank_lines_experimental = false # disallow multiple blank lines
 dotnet_style_allow_statement_immediately_after_block_experimental = true # stmt after block
 
 #### C# Coding Conventions ####

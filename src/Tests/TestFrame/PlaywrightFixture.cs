@@ -96,7 +96,6 @@ public class PlaywrightFixture : IAsyncLifetime {
             .ToHaveTextAsync(text, new LocatorAssertionsToHaveTextOptions { Timeout = timeoutMs });
     }
 
-
     internal async Task FillInput(string id, string text) {
         var input = page.Locator($"#{id}");
         await input.WaitForAsync(new LocatorWaitForOptions { State = WaitForSelectorState.Attached });
