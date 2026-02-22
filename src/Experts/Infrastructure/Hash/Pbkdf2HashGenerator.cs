@@ -1,6 +1,7 @@
 using System.Security.Cryptography;
+using Business.Infrastructure;
 
-namespace Business.Features.Accounts.Infrastructure.Hash;
+namespace Business.Infrastructure.Hash;
 
 internal sealed class Pbkdf2HashGenerator(IRandom random) : IHasher {
     private const int SaltSize = 16; // 128-bit salt

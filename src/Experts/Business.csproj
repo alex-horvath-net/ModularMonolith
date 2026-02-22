@@ -37,7 +37,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <None Include="Features\Accounts\Infrastructure\Hash\Pbkdf2HashGenerator.cs" />
+    <None Include="Infrastructure\Hash\Pbkdf2HashGenerator.cs" />
   </ItemGroup>
     
 

@@ -1,12 +1,13 @@
 ﻿using Business.Features.Accounts.Infrastructure;
-using Business.Features.Accounts.Infrastructure.Clock;
 using Business.Features.Accounts.Infrastructure.Data;
 using Business.Features.Accounts.Infrastructure.Data.Rrepositories;
-using Business.Features.Accounts.Infrastructure.GuidNumber;
-using Business.Features.Accounts.Infrastructure.Hash;
-using Business.Features.Accounts.Infrastructure.Random;
 using Business.Features.Accounts.Slices.Login;
 using Business.Features.Accounts.Slices.Register;
+using Business.Infrastructure;
+using Business.Infrastructure.Clock;
+using Business.Infrastructure.GuidNumber;
+using Business.Infrastructure.Hash;
+using Business.Infrastructure.Random;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
