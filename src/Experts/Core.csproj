@@ -7,18 +7,6 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Content Include="Features\Orders\Slices\GetAllOrder\Blazor\Components\OrderDetails.razor">
-      <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
-    </Content>
-    <Content Include="Features\Orders\Slices\GetAllOrder\Blazor\Components\OrdersList.razor">
-      <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
-    </Content>
-    <Content Include="Features\Orders\Slices\GetAllOrder\Blazor\_Imports.razor">
-      <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
-    </Content>
-  </ItemGroup>
-
-  <ItemGroup>
     <PackageReference Include="Asp.Versioning.Http" Version="8.1.0" />
     <PackageReference Include="BCrypt.Net-Next" Version="4.0.3" />
     <PackageReference Include="FluentValidation" Version="12.1.1" />
