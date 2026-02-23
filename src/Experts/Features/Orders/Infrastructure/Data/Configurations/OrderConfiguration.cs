@@ -1,8 +1,8 @@
-using Business.Features.Orders.Infrastructure.Data.Models;
+using Core.Features.Orders.Infrastructure.Data.Models;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
-namespace Business.Features.Orders.Infrastructure.Data.Configurations;
+namespace Core.Features.Orders.Infrastructure.Data.Configurations;
 
 public sealed class OrderConfiguration : IEntityTypeConfiguration<Order> {
     public void Configure(EntityTypeBuilder<Order> builder) {

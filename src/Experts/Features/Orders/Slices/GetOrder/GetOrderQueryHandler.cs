@@ -1,7 +1,7 @@
-using Business.Features.Orders.Domain;
-using Business.Features.Orders.Infrastructure.Data;
+using Core.Features.Orders.Domain;
+using Core.Features.Orders.Infrastructure.Data;
 
-namespace Business.Features.Orders.Slices.GetOrder;
+namespace Core.Features.Orders.Slices.GetOrder;
 
 public sealed class GetOrderQueryHandler(OrdersDbContext db) {
     public async Task<Order?> Handle(Guid id, CancellationToken token) {

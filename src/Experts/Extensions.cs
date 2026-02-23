@@ -1,7 +1,7 @@
-﻿using Business.Events;
+﻿using Core.Events;
 using Microsoft.Extensions.DependencyInjection;
 
-namespace Business;
+namespace Core;
 
 public static class Extensions {
     public static IServiceCollection AddShared(this IServiceCollection services) {

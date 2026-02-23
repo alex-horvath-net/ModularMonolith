@@ -5,7 +5,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Routing;
 using Microsoft.Extensions.Hosting;
 
-namespace Business.Features.Accounts.Slices.CreateToken;
+namespace Core.Features.Accounts.Slices.CreateToken;
 
 public static class CreateTokenEndPoint {
 

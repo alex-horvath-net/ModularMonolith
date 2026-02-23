@@ -1,7 +1,7 @@
-﻿using Business.Domain;
-using Business.Features.Orders.Domain;
+﻿using Core.Domain;
+using Core.Features.Orders.Domain;
 
-namespace Business.Features.Orders.Slices.PlaceOrder;
+namespace Core.Features.Orders.Slices.PlaceOrder;
 
 public class BusinessWorkFlow(BusinessWorkFlow.IBusinessWorkSteps workSteps) {
     public async Task<PlaceOrderResponse> Run(PlaceOrderRequest request, CancellationToken token) {

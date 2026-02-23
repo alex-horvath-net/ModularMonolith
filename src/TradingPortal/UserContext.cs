@@ -1,4 +1,4 @@
-﻿using Business.Features.Accounts.Domain;
+﻿using Core.Features.Accounts.Domain;
 
 namespace TradingPortal;
 

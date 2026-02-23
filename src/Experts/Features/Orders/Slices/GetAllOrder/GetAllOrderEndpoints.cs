@@ -1,12 +1,12 @@
 using Asp.Versioning;
-using Business.Features.Orders.Domain;
-using Business.Features.Orders.Slices.GetOrder;
+using Core.Features.Orders.Domain;
+using Core.Features.Orders.Slices.GetOrder;
 using Microsoft.AspNetCore.Builder; // MapGroup extension
 using Microsoft.AspNetCore.Http; // IResult, TypedResults
 using Microsoft.AspNetCore.Http.HttpResults; // OK
 using Microsoft.AspNetCore.Routing;
 
-namespace Business.Features.Orders.Slices.GetAllOrder;
+namespace Core.Features.Orders.Slices.GetAllOrder;
 
 public static class GetAllOrderEndpoints {
     public static IEndpointRouteBuilder MapOrdersEndpoints(this IEndpointRouteBuilder app) {

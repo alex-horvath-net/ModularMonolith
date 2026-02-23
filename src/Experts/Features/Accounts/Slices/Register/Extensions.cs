@@ -1,6 +1,6 @@
 using Microsoft.Extensions.DependencyInjection;
 
-namespace Business.Features.Accounts.Slices.Register;
+namespace Core.Features.Accounts.Slices.Register;
 
 public static class Extensions {
     public static IServiceCollection AddRegistration(this IServiceCollection services) {

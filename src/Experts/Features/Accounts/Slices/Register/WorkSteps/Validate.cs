@@ -1,6 +1,6 @@
 ﻿using System.Collections.Immutable;
 
-namespace Business.Features.Accounts.Slices.Register.WorkSteps;
+namespace Core.Features.Accounts.Slices.Register.WorkSteps;
 
 internal class Validate {
     private readonly CreatePasswordPolicy passwordPolicy = new();

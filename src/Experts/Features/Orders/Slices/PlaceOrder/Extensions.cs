@@ -1,7 +1,7 @@
 ﻿using FluentValidation;
 using Microsoft.Extensions.DependencyInjection;
 
-namespace Business.Features.Orders.Slices.PlaceOrder;
+namespace Core.Features.Orders.Slices.PlaceOrder;
 
 public static class Extensions {
     public static IServiceCollection AddPlaceOrderBusinessWorkFlow(this IServiceCollection services) {

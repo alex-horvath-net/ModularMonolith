@@ -1,8 +1,8 @@
-using Business.Features.Orders.Infrastructure.Data;
-using Business.Features.Orders.Infrastructure.Data.Seed;
-using Business.Features.Orders.Slices.GetAllOrder;
-using Business.Features.Orders.Slices.GetOrder;
-using Business.Features.Orders.Slices.PlaceOrder;
+using Core.Features.Orders.Infrastructure.Data;
+using Core.Features.Orders.Infrastructure.Data.Seed;
+using Core.Features.Orders.Slices.GetAllOrder;
+using Core.Features.Orders.Slices.GetOrder;
+using Core.Features.Orders.Slices.PlaceOrder;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Routing;
 using Microsoft.EntityFrameworkCore;
@@ -12,7 +12,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 
-namespace Business.Features.Orders;
+namespace Core.Features.Orders;
 
 public static class OrdersExtensions {
     public static IServiceCollection AddOrderBusinessExpert(this IServiceCollection services, IConfiguration configuration) {

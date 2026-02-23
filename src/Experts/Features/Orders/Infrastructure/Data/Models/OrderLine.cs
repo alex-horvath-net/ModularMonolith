@@ -1,4 +1,4 @@
-namespace Business.Features.Orders.Infrastructure.Data.Models;
+namespace Core.Features.Orders.Infrastructure.Data.Models;
 
 public sealed class OrderLine {
     public Guid Id { get; set; }

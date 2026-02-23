@@ -1,6 +1,6 @@
-﻿using Business.Features.Accounts.Domain;
+﻿using Core.Features.Accounts.Domain;
 
-namespace Business.Features.Accounts.Slices.Login;
+namespace Core.Features.Accounts.Slices.Login;
 
 public interface IUserStoryBlazorClient {
     Task<UserStoryBlazorClientResponse> Run(UserStoryBlazorClientRequest clientRequest);

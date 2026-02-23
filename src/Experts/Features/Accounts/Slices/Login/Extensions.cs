@@ -1,6 +1,6 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 
-namespace Business.Features.Accounts.Slices.Login;
+namespace Core.Features.Accounts.Slices.Login;
 
 public static class Extensions {
     public static IServiceCollection AddLogion(this IServiceCollection services) {

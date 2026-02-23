@@ -1,8 +1,8 @@
-using Business.Features.Billing.Infrastructure.Data;
-using Business.Features.Billing.Slices.GetInvoice.Contracts.DTOs;
+using Core.Features.Billing.Infrastructure.Data;
+using Core.Features.Billing.Slices.GetInvoice.Contracts.DTOs;
 using Microsoft.EntityFrameworkCore;
 
-namespace Business.Features.Billing.Slices.GetInvoice.QueryHandlers;
+namespace Core.Features.Billing.Slices.GetInvoice.QueryHandlers;
 
 public sealed class GetInvoiceQueryHandler(BillingDbContext db) {
     public async Task<InvoiceDto?> Handle(Guid id, CancellationToken token) {

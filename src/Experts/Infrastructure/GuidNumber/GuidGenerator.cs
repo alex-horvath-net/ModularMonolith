@@ -1,4 +1,4 @@
-﻿namespace Business.Infrastructure.GuidNumber;
+﻿namespace Core.Infrastructure.GuidNumber;
 
 internal class GuidGenerator : IGuid {
     public Guid Generate() => Guid.NewGuid();

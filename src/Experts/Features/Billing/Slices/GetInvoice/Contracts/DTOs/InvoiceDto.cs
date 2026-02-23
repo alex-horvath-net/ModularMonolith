@@ -1,4 +1,4 @@
-﻿namespace Business.Features.Billing.Slices.GetInvoice.Contracts.DTOs;
+﻿namespace Core.Features.Billing.Slices.GetInvoice.Contracts.DTOs;
 
 public sealed record InvoiceDto(
     Guid Id,

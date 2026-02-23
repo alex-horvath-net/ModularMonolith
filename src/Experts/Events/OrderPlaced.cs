@@ -1,4 +1,4 @@
-namespace Business.Events;
+namespace Core.Events;
 
 public sealed record OrderPlaced(
     Guid OrderId,

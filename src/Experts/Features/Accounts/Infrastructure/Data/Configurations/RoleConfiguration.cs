@@ -1,8 +1,8 @@
-using Business.Features.Accounts.Infrastructure.Data.Models;
+using Core.Features.Accounts.Infrastructure.Data.Models;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
-namespace Business.Features.Accounts.Infrastructure.Data.Configurations;
+namespace Core.Features.Accounts.Infrastructure.Data.Configurations;
 
 public sealed class RoleConfiguration : IEntityTypeConfiguration<Role> {
     public void Configure(EntityTypeBuilder<Role> builder) {

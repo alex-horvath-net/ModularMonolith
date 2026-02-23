@@ -1,10 +1,11 @@
-﻿using Business.Domain;
-using Business.Events;
-using Business.Features.Orders.Domain;
-using Business.Infrastructure;
+﻿
+using Core.Domain;
+using Core.Events;
+using Core.Features.Orders.Domain;
+using Core.Infrastructure;
 using FluentValidation;
 
-namespace Business.Features.Orders.Slices.PlaceOrder;
+namespace Core.Features.Orders.Slices.PlaceOrder;
 
 internal sealed class BusinessWorkSteps(
     IValidator<PlaceOrderRequest> validator,
@@ -42,6 +43,6 @@ internal sealed class BusinessWorkSteps(
     }
 
     public interface IStoreInfrastructure {
-        Task Save(Orders.Infrastructure.Data.Models.Order order, CancellationToken token);
+        Task Save(Order order, CancellationToken token);
     }
 }

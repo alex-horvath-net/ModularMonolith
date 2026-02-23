@@ -1,4 +1,4 @@
-namespace Business.Features.Orders;
+namespace Core.Features.Orders;
 
 public static class OrdersConstants {
     public const string Read = "Orders.Read";

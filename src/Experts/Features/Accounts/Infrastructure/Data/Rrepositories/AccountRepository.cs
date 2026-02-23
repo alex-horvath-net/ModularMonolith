@@ -1,7 +1,7 @@
 ﻿using Common.Tasks;
 using Microsoft.EntityFrameworkCore;
 
-namespace Business.Features.Accounts.Infrastructure.Data.Rrepositories;
+namespace Core.Features.Accounts.Infrastructure.Data.Rrepositories;
 
 public sealed class AccountRepository(SecurityDbContext db) : IAccountRepository {
     public async Task<Domain.Account?> FindAccountByEmail(string email, CancellationToken token) => await db.Accounts

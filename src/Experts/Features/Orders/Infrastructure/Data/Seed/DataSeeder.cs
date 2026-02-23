@@ -1,4 +1,4 @@
-﻿namespace Business.Features.Orders.Infrastructure.Data.Seed;
+﻿namespace Core.Features.Orders.Infrastructure.Data.Seed;
 
 public sealed class DataSeeder(OrdersDbContext db, DataProvider data) {
     public void Seed() => SeedOrders();

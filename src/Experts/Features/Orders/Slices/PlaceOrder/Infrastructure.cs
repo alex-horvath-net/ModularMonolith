@@ -1,8 +1,8 @@
-﻿using Business.Features.Orders.Infrastructure.Data;
-using Business.Features.Orders.Infrastructure.Data.Models;
+﻿using Core.Features.Orders.Infrastructure.Data;
+using Core.Features.Orders.Infrastructure.Data.Models;
 using FluentValidation;
 
-namespace Business.Features.Orders.Slices.PlaceOrder;
+namespace Core.Features.Orders.Slices.PlaceOrder;
 
 internal sealed class Infrastructure {
     internal sealed class Store(OrdersDbContext db) : BusinessWorkSteps.IStoreInfrastructure {

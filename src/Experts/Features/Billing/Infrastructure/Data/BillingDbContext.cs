@@ -1,8 +1,8 @@
-using Business.Features.Billing.Infrastructure.Data.Models;
-using Business.Features.Orders.Infrastructure.Data;
+using Core.Features.Billing.Infrastructure.Data.Models;
+using Core.Features.Orders.Infrastructure.Data;
 using Microsoft.EntityFrameworkCore;
 
-namespace Business.Features.Billing.Infrastructure.Data;
+namespace Core.Features.Billing.Infrastructure.Data;
 
 public sealed class BillingDbContext(DbContextOptions<BillingDbContext> options) : DbContext(options) {
     public DbSet<Invoice> Invoices => Set<Invoice>();

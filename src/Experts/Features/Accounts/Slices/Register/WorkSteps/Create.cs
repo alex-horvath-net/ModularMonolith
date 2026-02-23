@@ -1,7 +1,7 @@
-﻿using Business.Features.Accounts.Domain;
-using Business.Infrastructure;
+﻿using Core.Features.Accounts.Domain;
+using Core.Infrastructure;
 
-namespace Business.Features.Accounts.Slices.Register.WorkSteps;
+namespace Core.Features.Accounts.Slices.Register.WorkSteps;
 
 internal class Create(IHasher hasher, IClock clock) {
     public bool Run(UserStory.UserStoryContext context) {

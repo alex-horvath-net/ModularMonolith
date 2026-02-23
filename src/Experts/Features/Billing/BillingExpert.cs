@@ -1,4 +1,4 @@
-﻿namespace Business.Features.Billing;
+﻿namespace Core.Features.Billing;
 
 public class BillingExpert {
 }

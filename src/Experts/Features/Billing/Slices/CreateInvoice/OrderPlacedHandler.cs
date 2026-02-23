@@ -1,8 +1,8 @@
-using Business.Events;
-using Business.Features.Billing.Infrastructure.Data;
-using Business.Features.Billing.Infrastructure.Data.Models;
+using Core.Events;
+using Core.Features.Billing.Infrastructure.Data;
+using Core.Features.Billing.Infrastructure.Data.Models;
 
-namespace Business.Features.Billing.Slices.CreateInvoice;
+namespace Core.Features.Billing.Slices.CreateInvoice;
 
 public sealed class OrderPlacedHandler(BillingDbContext db) : IBusinessHandler<OrderPlaced> {
     public async Task Handle(OrderPlaced orderPlaced, CancellationToken token = default) {

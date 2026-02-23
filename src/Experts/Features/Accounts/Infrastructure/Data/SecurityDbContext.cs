@@ -1,6 +1,6 @@
 using Microsoft.EntityFrameworkCore;
 
-namespace Business.Features.Accounts.Infrastructure.Data;
+namespace Core.Features.Accounts.Infrastructure.Data;
 
 public sealed class SecurityDbContext(DbContextOptions<SecurityDbContext> options) : DbContext(options) {
     public DbSet<Models.Account> Accounts => Set<Models.Account>();

@@ -1,4 +1,4 @@
-﻿namespace Business.Features.Accounts.Domain;
+﻿namespace Core.Features.Accounts.Domain;
 
 public record Application(
     string Name,

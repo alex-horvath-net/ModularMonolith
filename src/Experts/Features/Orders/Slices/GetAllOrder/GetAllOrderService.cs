@@ -1,8 +1,8 @@
-using Business.Features.Orders.Domain;
-using Business.Features.Orders.Infrastructure.Data;
-using Business.Features.Orders.Services;
+using Core.Features.Orders.Domain;
+using Core.Features.Orders.Infrastructure.Data;
+using Core.Features.Orders.Services;
 
-namespace Business.Features.Orders.Slices.GetAllOrder;
+namespace Core.Features.Orders.Slices.GetAllOrder;
 
 internal sealed class GetAllOrderService(OrdersDbContext db) : IReadOrderService {
     public async Task<Order?> GetById(Guid id) {

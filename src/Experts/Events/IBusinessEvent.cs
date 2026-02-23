@@ -1,3 +1,3 @@
-﻿namespace Business.Events;
+﻿namespace Core.Events;
 
 public interface IBusinessEvent { }

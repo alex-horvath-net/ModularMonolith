@@ -1,7 +1,7 @@
-﻿using Business.Features.Accounts.Infrastructure;
-using Business.Infrastructure;
+﻿using Core.Features.Accounts.Infrastructure;
+using Core.Infrastructure;
 
-namespace Business.Features.Accounts.Slices.Login.WorkSteps;
+namespace Core.Features.Accounts.Slices.Login.WorkSteps;
 
 internal sealed class Authenticate(IAccountRepository repsository, IHasher hasher) {
     public async Task<bool> Run(UserStory.Context context) {

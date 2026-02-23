@@ -1,9 +1,9 @@
-using Business.Features.Accounts.Domain;
-using Business.Features.Accounts.Infrastructure;
-using Business.Features.Accounts.Slices.Register.WorkSteps;
-using Business.Infrastructure;
+using Core.Features.Accounts.Domain;
+using Core.Features.Accounts.Infrastructure;
+using Core.Features.Accounts.Slices.Register.WorkSteps;
+using Core.Infrastructure;
 
-namespace Business.Features.Accounts.Slices.Register;
+namespace Core.Features.Accounts.Slices.Register;
 
 internal sealed class UserStory {
     private readonly Validate validate;

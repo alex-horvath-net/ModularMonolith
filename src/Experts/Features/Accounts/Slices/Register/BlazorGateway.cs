@@ -1,6 +1,6 @@
 using Common.Tasks;
 
-namespace Business.Features.Accounts.Slices.Register;
+namespace Core.Features.Accounts.Slices.Register;
 
 public interface IBlazorGateway {
     Task<BlazorGatewayResponse> Run(BlazorGatewayRequest blazorRequest, CancellationToken token = default);

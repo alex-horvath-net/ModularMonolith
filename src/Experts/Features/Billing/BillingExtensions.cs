@@ -1,8 +1,8 @@
-using Business.Events;
-using Business.Features.Billing.Infrastructure.Data;
-using Business.Features.Billing.Slices.CreateInvoice;
-using Business.Features.Billing.Slices.GetInvoice.API;
-using Business.Features.Billing.Slices.GetInvoice.QueryHandlers;
+using Core.Events;
+using Core.Features.Billing.Infrastructure.Data;
+using Core.Features.Billing.Slices.CreateInvoice;
+using Core.Features.Billing.Slices.GetInvoice.API;
+using Core.Features.Billing.Slices.GetInvoice.QueryHandlers;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Routing;
 using Microsoft.EntityFrameworkCore;
@@ -12,7 +12,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 
-namespace Business.Features.Billing;
+namespace Core.Features.Billing;
 
 public static class BillingExtensions {
     public static IServiceCollection AddBilling(this IServiceCollection services, IConfiguration configuration) {

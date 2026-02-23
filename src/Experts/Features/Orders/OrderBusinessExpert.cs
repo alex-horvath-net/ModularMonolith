@@ -1,6 +1,6 @@
-﻿using Business.Features.Orders.Slices.PlaceOrder;
+﻿using Core.Features.Orders.Slices.PlaceOrder;
 
-namespace Business.Features.Orders;
+namespace Core.Features.Orders;
 
 internal sealed record OrderBusinessExpert(
     BusinessWorkFlow PlaceOrder);

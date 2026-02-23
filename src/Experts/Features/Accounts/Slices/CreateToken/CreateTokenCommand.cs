@@ -1,4 +1,4 @@
-namespace Business.Features.Accounts.Slices.CreateToken;
+namespace Core.Features.Accounts.Slices.CreateToken;
 
 public sealed record CreateTokenCommand(
     Guid JwtId,

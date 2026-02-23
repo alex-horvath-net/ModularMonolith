@@ -1,6 +1,6 @@
 ﻿using Common.Tasks;
 
-namespace Business.Features.Accounts.Slices.Register.WorkSteps;
+namespace Core.Features.Accounts.Slices.Register.WorkSteps;
 
 internal class Normalize {
     public bool Run(UserStory.UserStoryContext context) {

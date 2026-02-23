@@ -1,18 +1,18 @@
-﻿using Business.Features.Accounts.Infrastructure;
-using Business.Features.Accounts.Infrastructure.Data;
-using Business.Features.Accounts.Infrastructure.Data.Rrepositories;
-using Business.Features.Accounts.Slices.Login;
-using Business.Features.Accounts.Slices.Register;
-using Business.Infrastructure;
-using Business.Infrastructure.Clock;
-using Business.Infrastructure.GuidNumber;
-using Business.Infrastructure.Hash;
-using Business.Infrastructure.Random;
+﻿using Core.Features.Accounts.Infrastructure;
+using Core.Features.Accounts.Infrastructure.Data;
+using Core.Features.Accounts.Infrastructure.Data.Rrepositories;
+using Core.Features.Accounts.Slices.Login;
+using Core.Features.Accounts.Slices.Register;
+using Core.Infrastructure;
+using Core.Infrastructure.Clock;
+using Core.Infrastructure.GuidNumber;
+using Core.Infrastructure.Hash;
+using Core.Infrastructure.Random;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 
-namespace Business.Features.Accounts;
+namespace Core.Features.Accounts;
 
 public static class Extensions {
     public static IServiceCollection AddAccounts(this IServiceCollection services, IConfiguration configuration) {

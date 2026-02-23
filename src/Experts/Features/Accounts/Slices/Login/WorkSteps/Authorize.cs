@@ -1,6 +1,6 @@
 ﻿using Common.Tasks;
 
-namespace Business.Features.Accounts.Slices.Login.WorkSteps;
+namespace Core.Features.Accounts.Slices.Login.WorkSteps;
 
 internal sealed class Authorize() {
     public static readonly string AccountNotFound = "Account not found";

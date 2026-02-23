@@ -1,6 +1,6 @@
-﻿using Business.Features.Accounts.Domain;
+﻿using Core.Features.Accounts.Domain;
 
-namespace Business.Features.Accounts.Infrastructure;
+namespace Core.Features.Accounts.Infrastructure;
 
 public interface IAccountRepository {
     Task CreateAccount(Account account, CancellationToken token);

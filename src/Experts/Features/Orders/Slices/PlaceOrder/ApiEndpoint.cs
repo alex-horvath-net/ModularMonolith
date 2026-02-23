@@ -3,7 +3,7 @@ using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Routing;
 
-namespace Business.Features.Orders.Slices.PlaceOrder;
+namespace Core.Features.Orders.Slices.PlaceOrder;
 
 public static class ApiEndpoint {
     public static IEndpointRouteBuilder MapCreateOrderEndpoint(this IEndpointRouteBuilder app) {

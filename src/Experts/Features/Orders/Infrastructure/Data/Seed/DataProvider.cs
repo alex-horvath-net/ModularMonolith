@@ -1,6 +1,6 @@
-﻿using Business.Features.Orders.Infrastructure.Data.Models;
+﻿using Core.Features.Orders.Infrastructure.Data.Models;
 
-namespace Business.Features.Orders.Infrastructure.Data.Seed;
+namespace Core.Features.Orders.Infrastructure.Data.Seed;
 
 public sealed class DataProvider() {
     public IReadOnlyList<Order> GetSeedOrders() => [

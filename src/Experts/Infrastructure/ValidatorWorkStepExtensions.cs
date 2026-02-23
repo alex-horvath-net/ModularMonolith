@@ -1,7 +1,7 @@
-﻿using Business.Domain;
+﻿using Core.Domain;
 using FluentValidation.Results;
 
-namespace Business.Infrastructure;
+namespace Core.Infrastructure;
 
 public static class ValidatorWorkStepExtensions {
     public static Issue ToDomain(this ValidationFailure infra) => new(

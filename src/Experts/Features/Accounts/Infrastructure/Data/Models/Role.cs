@@ -1,4 +1,4 @@
-﻿namespace Business.Features.Accounts.Infrastructure.Data.Models;
+﻿namespace Core.Features.Accounts.Infrastructure.Data.Models;
 
 public class Role {
     public Guid Id { get; set; }

@@ -1,4 +1,4 @@
-﻿namespace Business.Features.Accounts.Slices.Login.WorkSteps;
+﻿namespace Core.Features.Accounts.Slices.Login.WorkSteps;
 
 internal sealed class Validate() {
     public async Task<bool> Run(UserStory.Context context) {

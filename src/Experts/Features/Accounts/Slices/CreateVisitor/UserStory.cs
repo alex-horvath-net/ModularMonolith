@@ -1,6 +1,6 @@
-﻿using Business.Features.Accounts.Domain;
+﻿using Core.Features.Accounts.Domain;
 
-namespace Business.Features.Accounts.Slices.CreateVisitor;
+namespace Core.Features.Accounts.Slices.CreateVisitor;
 
 public class UserStory {
     public async Task<Response> Run(Request request) {

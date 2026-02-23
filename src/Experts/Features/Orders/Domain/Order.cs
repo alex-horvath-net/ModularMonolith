@@ -1,4 +1,4 @@
-namespace Business.Features.Orders.Domain;
+namespace Core.Features.Orders.Domain;
 
 public sealed class Order {
     public Guid Id { get; private set; }

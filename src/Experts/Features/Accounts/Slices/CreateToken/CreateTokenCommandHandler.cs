@@ -6,7 +6,7 @@ using Common.Authentication;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 
-namespace Business.Features.Accounts.Slices.CreateToken;
+namespace Core.Features.Accounts.Slices.CreateToken;
 
 public sealed class CreateTokenCommandHandler(IOptions<JwtOptions> options) {
     public string Handle(CreateTokenCommand command) {

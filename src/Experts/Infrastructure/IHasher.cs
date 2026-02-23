@@ -1,4 +1,4 @@
-﻿namespace Business.Infrastructure;
+﻿namespace Core.Infrastructure;
 
 internal interface IHasher {
     string Generate(string text);

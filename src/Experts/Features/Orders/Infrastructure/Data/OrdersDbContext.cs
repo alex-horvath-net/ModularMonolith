@@ -1,7 +1,7 @@
-using Business.Features.Orders.Infrastructure.Data.Models;
+using Core.Features.Orders.Infrastructure.Data.Models;
 using Microsoft.EntityFrameworkCore;
 
-namespace Business.Features.Orders.Infrastructure.Data;
+namespace Core.Features.Orders.Infrastructure.Data;
 
 public sealed class OrdersDbContext(DbContextOptions<OrdersDbContext> options) : DbContext(options) {
     public DbSet<Order> Orders => Set<Order>();

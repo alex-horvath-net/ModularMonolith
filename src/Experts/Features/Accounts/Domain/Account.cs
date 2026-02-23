@@ -1,4 +1,4 @@
-﻿namespace Business.Features.Accounts.Domain;
+﻿namespace Core.Features.Accounts.Domain;
 
 /// <summary>
 /// Immutable representation of an authenticated identity that can own roles inside the trading portal.
