@@ -2,7 +2,7 @@
 
 namespace Features.Accounts.Slices.Register.WorkSteps;
 
-internal class Validate {
+internal sealed class Validate {
     private readonly CreatePasswordPolicy passwordPolicy = new();
     private readonly CreateRoleRolePolicy rolesPolicy = new();
 
@@ -32,7 +32,7 @@ internal class Validate {
     }
 }
 
-internal class CreatePasswordPolicy {
+internal sealed class CreatePasswordPolicy {
     public bool IsValid(string password) {
         if (string.IsNullOrWhiteSpace(password))
             return false;

@@ -1,7 +1,7 @@
-using Shouldly;
+using Features.Billing;
+using Features.Orders;
 using NetArchTest.Rules;
-using Core.Features.Billing;
-using Core.Features.Orders;
+using Shouldly;
 
 namespace Tests.Architecture;
 

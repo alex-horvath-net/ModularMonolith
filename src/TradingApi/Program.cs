@@ -1,7 +1,7 @@
 using Common;
-using Core.Features.Accounts.Slices.CreateToken;
-using Core.Features.Billing;
-using Core.Features.Orders;
+using Features.Accounts.Slices.CreateToken;
+using Features.Billing;
+using Features.Orders;
 
 var builder = WebApplication.CreateBuilder(args);
 

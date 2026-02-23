@@ -1,8 +1,6 @@
-﻿using Features.Accounts.Slices.Login;
+﻿namespace Features.Accounts.Slices.Login.WorkSteps;
 
-namespace Features.Accounts.Slices.Login.WorkSteps;
-
-internal class Normalize {
+internal sealed class Normalize {
     public bool Run(UserStory.Context context) {
         context.NormalizedEmail = context.Email!.Trim().ToLowerInvariant();
 

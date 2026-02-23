@@ -1,5 +1,4 @@
 using Core.Events;
-using Features.Billing;
 using Features.Billing.Infrastructure.Data;
 using Features.Billing.Slices.CreateInvoice;
 using Features.Billing.Slices.GetInvoice.API;

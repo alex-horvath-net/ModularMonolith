@@ -1,6 +1,5 @@
 ﻿using Core.Infrastructure;
 using Features.Accounts.Infrastructure;
-using Features.Accounts.Slices.Login;
 
 namespace Features.Accounts.Slices.Login.WorkSteps;
 

@@ -1,6 +1,4 @@
 ﻿using Common.Tasks;
-using Features.Accounts.Infrastructure;
-using Features.Accounts.Infrastructure.Data;
 using Microsoft.EntityFrameworkCore;
 
 namespace Features.Accounts.Infrastructure.Data.Rrepositories;

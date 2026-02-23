@@ -2,7 +2,6 @@
 using Core.Events;
 using Core.Infrastructure;
 using Features.Orders.Domain;
-using Features.Orders.Infrastructure.Data.Models;
 using FluentValidation;
 
 namespace Features.Orders.Slices.PlaceOrder;

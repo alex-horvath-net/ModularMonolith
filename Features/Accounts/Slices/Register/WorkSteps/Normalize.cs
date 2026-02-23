@@ -2,7 +2,7 @@
 
 namespace Features.Accounts.Slices.Register.WorkSteps;
 
-internal class Normalize {
+internal sealed class Normalize {
     public bool Run(UserStory.UserStoryContext context) {
         context.NormalizedRequest = context.Request with {
             Email = context.Request.Email.Trim().ToLowerInvariant(),

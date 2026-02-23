@@ -1,5 +1,4 @@
 using Asp.Versioning;
-using Features.Orders;
 using Features.Orders.Domain;
 using Features.Orders.Slices.GetOrder;
 using Microsoft.AspNetCore.Builder; // MapGroup extension

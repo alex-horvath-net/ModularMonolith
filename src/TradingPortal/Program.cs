@@ -1,10 +1,10 @@
-using Core.Features.Accounts;
-using Core.Features.Accounts.Infrastructure.Data;
-using Core.Features.Accounts.Slices.CreateToken;
-using Core.Features.Accounts.Slices.CreateVisitor;
-using Core.Features.Accounts.Slices.Register;
-using Core.Features.Billing;
-using Core.Features.Orders;
+using Features.Accounts;
+using Features.Accounts.Infrastructure.Data;
+using Features.Accounts.Slices.CreateToken;
+using Features.Accounts.Slices.CreateVisitor;
+using Features.Accounts.Slices.Register;
+using Features.Billing;
+using Features.Orders;
 using TradingPortal;
 using TradingPortal.Components;
 

@@ -1,4 +1,4 @@
-using Core.Features.Orders.Slices.GetAllOrder;
+using Core;
 using Features.Orders.Infrastructure.Data;
 using Features.Orders.Infrastructure.Data.Seed;
 using Features.Orders.Slices.GetAllOrder;
@@ -25,7 +25,7 @@ public static class OrdersExtensions {
         services.AddScoped<GetOrderQueryHandler>();
 
         services.AddPlaceOrderBusinessWorkFlow();
-        services.AddShared();
+        services.AddCore();
 
         // Infrastructure
         services.AddDbContext<OrdersDbContext>((sp, options) => {

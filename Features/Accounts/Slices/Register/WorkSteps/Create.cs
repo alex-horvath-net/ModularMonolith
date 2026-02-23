@@ -1,10 +1,9 @@
-﻿using Core.Features.Accounts.Domain;
-using Core.Infrastructure;
-using Features.Accounts.Slices.Register;
+﻿using Core.Infrastructure;
+using Features.Accounts.Domain;
 
 namespace Features.Accounts.Slices.Register.WorkSteps;
 
-internal class Create(IHasher hasher, IClock clock) {
+internal sealed class Create(IHasher hasher, IClock clock) {
     public bool Run(UserStory.UserStoryContext context) {
         var hash = hasher.Generate(context.NormalizedRequest!.Password);
         var now = clock.UtcNow;
