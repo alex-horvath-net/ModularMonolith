@@ -43,6 +43,6 @@ internal sealed class BusinessWorkSteps(
     }
 
     public interface IStoreInfrastructure {
-        Task Save(Order order, CancellationToken token);
+        Task Save(Orders.Infrastructure.Data.Models.Order order, CancellationToken token);
     }
 }
