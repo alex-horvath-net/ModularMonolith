@@ -6,8 +6,8 @@ namespace Features.Accounts.Infrastructure.Data.Configurations;
 
 public sealed class AccountConfiguration : IEntityTypeConfiguration<Account> {
     public void Configure(EntityTypeBuilder<Account> builder) {
-        builder.ToTable("Accounts", "security", tb => {
-            tb.HasComment("Security officer accounts");
+        builder.ToTable("Accounts", "accounts", tb => {
+            tb.HasComment("Local accounts");
             tb.HasCheckConstraint("CK_Accounts_Id_NotEmpty", "[Id] <> '00000000-0000-0000-0000-000000000000'");
         });
 
@@ -106,7 +106,7 @@ public sealed class AccountConfiguration : IEntityTypeConfiguration<Account> {
                                      .HasForeignKey("AccountId")
                                      .OnDelete(DeleteBehavior.Cascade),
                    join => {
-                       join.ToTable("AccountRoles", "security");
+                       join.ToTable("AccountRoles", "accounts");
                        join.HasKey("AccountId", "RoleId");
                        join.HasIndex("AccountId").HasDatabaseName("IX_AccountRoles_AccountId");
                        join.HasIndex("RoleId").HasDatabaseName("IX_AccountRoles_RoleId");

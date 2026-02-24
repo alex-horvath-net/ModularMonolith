@@ -1,4 +1,5 @@
-﻿using System.Diagnostics;
+﻿using System.Data.Common;
+using System.Diagnostics;
 using System.Text.RegularExpressions;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Playwright;
@@ -143,6 +144,13 @@ public class PlaywrightFixture : IAsyncLifetime {
     private void StartTradingPortal() {
         var solutionRoot = Path.GetFullPath(Path.Combine(AppContext.BaseDirectory, "..", "..", "..", ".."));
         var projectPath = Path.Combine(solutionRoot, "TradingPortal", "TradingPortal.csproj");
+        var portalConfig = new ConfigurationBuilder()
+            .SetBasePath(Path.Combine(solutionRoot, "TradingPortal"))
+            .AddJsonFile("appsettings.json", optional: true)
+            .AddEnvironmentVariables()
+            .Build();
+        var appDbConnectionString = portalConfig.GetConnectionString("AppDB");
+        var testConnectionString = BuildTestConnectionString(appDbConnectionString);
 
         var startInfo = new ProcessStartInfo {
             FileName = "dotnet",
@@ -152,8 +160,31 @@ public class PlaywrightFixture : IAsyncLifetime {
             RedirectStandardError = true,
             WorkingDirectory = solutionRoot
         };
+        if (!string.IsNullOrWhiteSpace(testConnectionString)) {
+            startInfo.Environment["ConnectionStrings__AppDB"] = testConnectionString;
+        }
 
         portalProcess = Process.Start(startInfo);
+    }
+
+    private static string? BuildTestConnectionString(string? connectionString) {
+        if (string.IsNullOrWhiteSpace(connectionString)) {
+            return null;
+        }
+
+        var builder = new DbConnectionStringBuilder {
+            ConnectionString = connectionString
+        };
+        var databaseName = $"AppDb_Test_{Guid.NewGuid():N}";
+        if (builder.ContainsKey("Database")) {
+            builder["Database"] = databaseName;
+        } else if (builder.ContainsKey("Initial Catalog")) {
+            builder["Initial Catalog"] = databaseName;
+        } else {
+            builder["Database"] = databaseName;
+        }
+
+        return builder.ConnectionString;
     }
 
     private async Task WaitForPortal(int timeoutMs = 20_000) {

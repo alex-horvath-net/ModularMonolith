@@ -7,6 +7,8 @@ using Features.Billing;
 using Features.Orders;
 using TradingPortal;
 using TradingPortal.Components;
+using Core;
+using Features.Accounts.Infrastructure;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -21,6 +23,7 @@ builder.Services.AddScoped(sp => {
     };
 });
 
+builder.Services.AddCore();
 builder.Services.AddAccounts(builder.Configuration);
 
 //builder.Services.AddCommon(builder.Configuration, builder.Environment);
@@ -90,7 +93,14 @@ static void SeedSecurityOfficerAccounts(WebApplication app) {
         Roles = { "Trader" }
     };
 
-    if (db.Accounts.Any(a => a.Email == request.Email)) {
+    var existingAccount = db.Accounts.FirstOrDefault(a => a.Email == request.Email);
+    if (existingAccount is not null) {
+        if (!string.Equals(existingAccount.UserName, request.UserName, StringComparison.Ordinal)) {
+            existingAccount.UserName = request.UserName;
+            existingAccount.UserNameNormalized = request.UserName.ToLowerInvariant();
+            db.SaveChanges();
+        }
+
         return;
     }
 

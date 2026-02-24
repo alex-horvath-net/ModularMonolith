@@ -54,7 +54,7 @@ public class RegisterUserStoryTests {
         request = requestFactory == null ? DefaultRequest() : requestFactory();
         request = request with {
             Email = request.Email.Trim().ToLowerInvariant(),
-            UserName = request.UserName.Trim().ToLowerInvariant(),
+            UserName = request.UserName.Trim(),
             Roles = request.Roles
                 .Where(role => !string.IsNullOrWhiteSpace(role))
                 .Select(role => role.Trim())

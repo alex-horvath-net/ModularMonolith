@@ -138,7 +138,23 @@
 
     private void ToggleRole(string role, object? value)
     {
-        var isChecked = value as bool? ?? false;
+        var isChecked = false;
+        if (value is bool booleanValue)
+        {
+            isChecked = booleanValue;
+        }
+        else if (value is string stringValue)
+        {
+            if (string.Equals(stringValue, "on", StringComparison.OrdinalIgnoreCase))
+            {
+                isChecked = true;
+            }
+            else if (bool.TryParse(stringValue, out var parsed))
+            {
+                isChecked = parsed;
+            }
+        }
+
         if (isChecked)
         {
             selectedRoles.Add(role);

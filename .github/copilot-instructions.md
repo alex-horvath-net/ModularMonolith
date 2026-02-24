@@ -1,4 +1,4 @@
-﻿You must follow the development model defined in:
+﻿<!--You must follow the development model defined in:
 
 /docs/development/INCREMENTAL-DEVELOPMENT.md
 
@@ -30,4 +30,4 @@ Do not implement code.
 No refactoring.
 - This business workstep is UI-visible.
 Add a Playwright test verifying the user sees the rejection message.
-Do not assert business state.
+Do not assert business state.-->

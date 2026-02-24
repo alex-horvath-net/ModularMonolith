@@ -1,4 +1,4 @@
-﻿# Incremental Development 
+﻿<!--# Incremental Development 
 
 This is the primary development instruction, <br>
 for building well architected solution for real business need <br>
@@ -262,3 +262,4 @@ Examples of UI-invisible business capabilities:
 UDD proves usability.  
 BDD proves correctness.  
 TDD proves implementation.
+-->

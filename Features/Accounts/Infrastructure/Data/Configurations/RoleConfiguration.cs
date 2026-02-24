@@ -6,8 +6,8 @@ namespace Features.Accounts.Infrastructure.Data.Configurations;
 
 public sealed class RoleConfiguration : IEntityTypeConfiguration<Role> {
     public void Configure(EntityTypeBuilder<Role> builder) {
-        builder.ToTable("Roles", "security", tb => {
-            tb.HasComment("Security officer roles");
+        builder.ToTable("Roles", "accounts", tb => {
+            tb.HasComment("Local roles");
             tb.HasCheckConstraint("CK_Roles_Id_NotEmpty", "[Id] <> '00000000-0000-0000-0000-000000000000'");
             tb.HasCheckConstraint("CK_Roles_Name_NotEmpty", "LEN([Name]) > 0");
         });

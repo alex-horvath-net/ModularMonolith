@@ -25,7 +25,6 @@ public static class OrdersExtensions {
         services.AddScoped<GetOrderQueryHandler>();
 
         services.AddPlaceOrderBusinessWorkFlow();
-        services.AddCore();
 
         // Infrastructure
         services.AddDbContext<OrdersDbContext>((sp, options) => {
