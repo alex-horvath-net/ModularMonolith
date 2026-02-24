@@ -50,20 +50,20 @@ internal sealed class UserStory {
     }
 }
 
-public sealed record UserStoryRequest(
+internal sealed record UserStoryRequest(
     string Email,
     string UserName,
     string Password,
     IReadOnlyCollection<string> Roles);
 
-public sealed record UserStoryResponse(
+internal sealed record UserStoryResponse(
     string? ErrorMessage,
     Guid AccountId,
     string? Email,
     string? UserName,
     IReadOnlyCollection<string> Roles);
 
-public static class UserStoryConstants {
+internal static class UserStoryConstants {
     public const string RequestCanNotBeNell = "Request can not be null";
     public const string EmailIsRequired = "Email is required";
     public const string PasswordMutBeContain = "Password must be at least 12 characters and contain upper, lower, digit, and symbol";

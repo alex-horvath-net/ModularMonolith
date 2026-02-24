@@ -3,9 +3,9 @@
 
 @using System
 @using System.Collections.Generic
-@using RegisterSlice = Features.Accounts.Slices.Register
+@using Features.Accounts.Slices.Register
 
-@inject RegisterSlice.IBlazorGateway registerClient
+@inject Blazor.IGateway register
 
 <PageTitle>Register</PageTitle>
 
@@ -119,7 +119,7 @@
 </style>
 
 @code {
-    private RegisterSlice.BlazorGatewayRequest request = new();
+    private Blazor.GatewayRequest request = new();
     private readonly HashSet<string> selectedRoles = new(StringComparer.OrdinalIgnoreCase);
     private readonly string[] availableRoles = ["Trader", "RiskManager", "Compliance"];
     private string confirmPassword = string.Empty;
@@ -170,9 +170,9 @@
         isSubmitting = true;
         try
         {
-            var response = await registerClient.Run(request);
+            var response = await register.Run(request);
             successMessage = $"Registration complete for {response.Email}.";
-            request = new RegisterSlice.BlazorGatewayRequest();
+            request = new Blazor.GatewayRequest();
             confirmPassword = string.Empty;
             selectedRoles.Clear();
         }

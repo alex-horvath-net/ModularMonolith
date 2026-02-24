@@ -2,43 +2,43 @@ using Common.Tasks;
 
 namespace Features.Accounts.Slices.Register;
 
-public interface IBlazorGateway {
-    Task<BlazorGatewayResponse> Run(BlazorGatewayRequest blazorRequest, CancellationToken token = default);
-}
+public class Blazor {
+    public interface IGateway {
+        Task<GatewayResponse> Run(GatewayRequest blazorRequest, CancellationToken token = default);
+    }
+    public sealed class GatewayRequest {
+        public string Email { get; set; } = string.Empty;
+        public string UserName { get; set; } = string.Empty;
+        public string Password { get; set; } = string.Empty;
+        public IList<string> Roles { get; } = [];
 
-internal sealed class BlazorGateway(UserStory userStory) : IBlazorGateway {
-    private readonly UserStory userStory = userStory ?? throw new ArgumentNullException(nameof(userStory));
+        public void ReplaceRoles(IEnumerable<string> roles) {
+            ArgumentNullException.ThrowIfNull(roles);
 
-    public Task<BlazorGatewayResponse> Run(BlazorGatewayRequest request, CancellationToken token = default) => userStory
-        .Register(request.Map(ToUserStoryRequest), token)
-        .Map(ToBlazorResponse);
+            Roles.Clear();
+            foreach (var role in roles)
+                if (!string.IsNullOrWhiteSpace(role))
+                    Roles.Add(role);
+        }
+    }
+    public sealed record GatewayResponse(Guid AccountId, string Email, IReadOnlyCollection<string> Roles);
 
-    private UserStoryRequest ToUserStoryRequest(BlazorGatewayRequest blazorRequest) => new(
-        blazorRequest.Email,
-        blazorRequest.UserName,
-        blazorRequest.Password,
-        blazorRequest.Roles.ToArray());
+    internal sealed class Gateway(UserStory userStory) : IGateway {
+        private readonly UserStory userStory = userStory ?? throw new ArgumentNullException(nameof(userStory));
 
-    private BlazorGatewayResponse ToBlazorResponse(UserStoryResponse response) => new(
-        response.AccountId,
-        response.Email,
-        response.Roles);
-}
+        public Task<GatewayResponse> Run(GatewayRequest request, CancellationToken token = default) => userStory
+            .Register(request.Map(ToUserStoryRequest), token)
+            .Map(ToGatewayResponse);
 
-public sealed class BlazorGatewayRequest {
-    public string Email { get; set; } = string.Empty;
-    public string UserName { get; set; } = string.Empty;
-    public string Password { get; set; } = string.Empty;
-    public IList<string> Roles { get; } = [];
+        private UserStoryRequest ToUserStoryRequest(GatewayRequest gatewayRequest) => new(
+            gatewayRequest.Email,
+            gatewayRequest.UserName,
+            gatewayRequest.Password,
+            gatewayRequest.Roles.ToArray());
 
-    public void ReplaceRoles(IEnumerable<string> roles) {
-        ArgumentNullException.ThrowIfNull(roles);
-
-        Roles.Clear();
-        foreach (var role in roles)
-            if (!string.IsNullOrWhiteSpace(role))
-                Roles.Add(role);
+        private GatewayResponse ToGatewayResponse(UserStoryResponse userStoryResponse) => new(
+            userStoryResponse.AccountId,
+            userStoryResponse.Email!,
+            userStoryResponse.Roles);
     }
 }
-
-public sealed record BlazorGatewayResponse(Guid AccountId, string Email, IReadOnlyCollection<string> Roles);

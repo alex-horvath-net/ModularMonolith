@@ -3,13 +3,13 @@
 namespace Features.Accounts.Slices.Login;
 
 public interface IBlazorGateway {
-    Task<BlazorGatewayResponse> Run(BlazorGatewayRequest clientRequest);
+    Task<BlazorGatewayResponse> Run(BlazorGatewayRequest clientRequest, CancellationToken token = default);
 }
 
 internal sealed class BlazorGateway(UserStory userStory) : IBlazorGateway {
-    public async Task<BlazorGatewayResponse> Run(BlazorGatewayRequest clientRequest) {
+    public async Task<BlazorGatewayResponse> Run(BlazorGatewayRequest clientRequest, CancellationToken token = default) {
         var userStoryRequest = GetUserStoryRequest(clientRequest);
-        var userStoryResponse = await userStory.Run(userStoryRequest, CancellationToken.None);
+        var userStoryResponse = await userStory.Run(userStoryRequest, token);
         var clientResponse = GetClientResponse(userStoryResponse);
         return clientResponse;
     }

@@ -79,11 +79,11 @@ app.Run();
 static void SeedSecurityOfficerAccounts(WebApplication app) {
     using var scope = app.Services.CreateScope();
     var db = scope.ServiceProvider.GetRequiredService<SecurityDbContext>();
-    var register = scope.ServiceProvider.GetRequiredService<IBlazorGateway>();
+    var register = scope.ServiceProvider.GetRequiredService<Blazor.IGateway>();
 
     db.Database.EnsureCreated();
 
-    var request = new BlazorGatewayRequest() {
+    var request = new Blazor.GatewayRequest() {
         Email = "aladar.horvath@outlook.com",
         UserName = "Aladar Horvath",
         Password = "Sup3r$ecretPwd!",

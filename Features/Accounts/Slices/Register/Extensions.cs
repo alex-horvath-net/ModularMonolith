@@ -1,3 +1,4 @@
+using Features.Accounts.Slices.Login;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace Features.Accounts.Slices.Register;
