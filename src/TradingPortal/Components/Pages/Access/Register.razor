@@ -3,9 +3,9 @@
 
 @using System
 @using System.Collections.Generic
-@using Features.Accounts.Slices.Register
+@using Features.Accounts.Slices.Register.Triggers.Blazor
 
-@inject Blazor.IGateway register
+@inject IRegister register
 
 <PageTitle>Register</PageTitle>
 
@@ -86,8 +86,7 @@
             <div class="card shadow-sm border-0 h-100">
                 <div class="card-header bg-dark text-white fw-semibold">Role Eligibility</div>
                 <div class="card-body d-flex flex-column gap-3">
-                    @foreach (var role in availableRoles)
-                    {
+                    @foreach (var role in availableRoles) {
                         <div class="form-check">
                             <input class="form-check-input"
                                    type="checkbox"
@@ -119,7 +118,7 @@
 </style>
 
 @code {
-    private Blazor.GatewayRequest request = new();
+    private RegisterRequest request = new();
     private readonly HashSet<string> selectedRoles = new(StringComparer.OrdinalIgnoreCase);
     private readonly string[] availableRoles = ["Trader", "RiskManager", "Compliance"];
     private string confirmPassword = string.Empty;
@@ -136,68 +135,50 @@
 
     private bool IsRoleSelected(string role) => selectedRoles.Contains(role);
 
-    private void ToggleRole(string role, object? value)
-    {
+    private void ToggleRole(string role, object? value) {
         var isChecked = false;
-        if (value is bool booleanValue)
-        {
+        if (value is bool booleanValue) {
             isChecked = booleanValue;
-        }
-        else if (value is string stringValue)
-        {
-            if (string.Equals(stringValue, "on", StringComparison.OrdinalIgnoreCase))
-            {
+        } else if (value is string stringValue) {
+            if (string.Equals(stringValue, "on", StringComparison.OrdinalIgnoreCase)) {
                 isChecked = true;
-            }
-            else if (bool.TryParse(stringValue, out var parsed))
-            {
+            } else if (bool.TryParse(stringValue, out var parsed)) {
                 isChecked = parsed;
             }
         }
 
-        if (isChecked)
-        {
+        if (isChecked) {
             selectedRoles.Add(role);
-        }
-        else
-        {
+        } else {
             selectedRoles.Remove(role);
         }
     }
 
-    private async Task OnRegisterClicked()
-    {
+    private async Task OnRegisterClicked() {
         errorMessage = null;
         successMessage = null;
 
-        if (!string.Equals(request.Password, confirmPassword, StringComparison.Ordinal))
-        {
+        if (!string.Equals(request.Password, confirmPassword, StringComparison.Ordinal)) {
             errorMessage = "Passwords do not match.";
             return;
         }
 
-        if (selectedRoles.Count == 0)
-        {
+        if (selectedRoles.Count == 0) {
             errorMessage = "Select at least one role.";
             return;
         }
 
         request.ReplaceRoles(selectedRoles);
-        isSubmitting = true;
-        try
-        {
+        try {
+            isSubmitting = true;
             var response = await register.Run(request);
             successMessage = $"Registration complete for {response.Email}.";
-            request = new Blazor.GatewayRequest();
+            request = new RegisterRequest();
             confirmPassword = string.Empty;
             selectedRoles.Clear();
-        }
-        catch (Exception ex) when (ex is InvalidOperationException or ArgumentException)
-        {
+        } catch (Exception ex) when (ex is InvalidOperationException or ArgumentException) {
             errorMessage = ex.Message;
-        }
-        finally
-        {
+        } finally {
             isSubmitting = false;
         }
     }

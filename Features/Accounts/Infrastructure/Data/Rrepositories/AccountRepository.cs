@@ -5,6 +5,7 @@ namespace Features.Accounts.Infrastructure.Data.Rrepositories;
 
 public sealed class AccountRepository(SecurityDbContext db) : IAccountRepository {
     public async Task<Domain.Account?> FindAccountByEmail(string email, CancellationToken token) => await db.Accounts
+        .Include(account => account.Roles)
         .AsNoTracking()
         .Then(token.ThrowIfCancellationRequested)
         .FirstOrDefaultAsync(account => account.EmailNormalized == email, token)
@@ -14,33 +15,17 @@ public sealed class AccountRepository(SecurityDbContext db) : IAccountRepository
     public async Task CreateAccount(Domain.Account account, CancellationToken token) {
         ArgumentNullException.ThrowIfNull(account);
 
-        var data = ToData(account);
-        if (data.Roles.Count > 0) {
-            var normalizedNames = data.Roles
-                .Select(role => role.NormalizedName)
-                .ToArray();
+        var accountData = account.Map(ToData);
+        var dbRoles = await db.Roles.ToListAsync(token);
 
-            var existingRoles = await db.Roles
-                .Where(role => normalizedNames.Contains(role.NormalizedName))
-                .ToListAsync(token);
+        accountData.Roles = (
+            from role in accountData.Roles
+            join dbRole in dbRoles on role.NormalizedName equals dbRole.NormalizedName into roleJoin
+            from dbRole in roleJoin.DefaultIfEmpty()
+            select dbRole ?? role
+        ).ToHashSet();
 
-            var existingRolesByName = existingRoles
-                .ToDictionary(role => role.NormalizedName, StringComparer.OrdinalIgnoreCase);
-
-            var resolvedRoles = new HashSet<Models.Role>();
-            foreach (var role in data.Roles) {
-                var key = role.NormalizedName;
-                if (existingRolesByName.TryGetValue(key, out var existingRole)) {
-                    resolvedRoles.Add(existingRole);
-                } else {
-                    resolvedRoles.Add(role);
-                }
-            }
-
-            data.Roles = resolvedRoles;
-        }
-
-        db.Accounts.Add(data);
+        db.Accounts.Add(accountData);
         await db.SaveChangesAsync(token);
         token.ThrowIfCancellationRequested();
     }
@@ -53,7 +38,7 @@ public sealed class AccountRepository(SecurityDbContext db) : IAccountRepository
         UserNameNormalized = domain.UserName.ToLowerInvariant(),
         PasswordHash = domain.PasswordHash,
         PasswordChangedAtUtc = domain.CreatedAtUtc,
-        Roles = domain.Roles.Select(MapToData).ToHashSet(),
+        Roles = domain.Roles.Select(ToData).ToHashSet(),
         IsLocked = domain.IsLocked,
         FailedAccessCount = 0,
         CreatedAtUtc = domain.CreatedAtUtc,
@@ -61,7 +46,7 @@ public sealed class AccountRepository(SecurityDbContext db) : IAccountRepository
         IsDeleted = false
     };
 
-    private static Models.Role MapToData(string role) => new() {
+    private static Models.Role ToData(string role) => new() {
         Name = role,
         NormalizedName = role.ToLowerInvariant()
     };

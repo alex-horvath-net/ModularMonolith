@@ -1,4 +1,3 @@
-using Core;
 using Features.Orders.Infrastructure.Data;
 using Features.Orders.Infrastructure.Data.Seed;
 using Features.Orders.Slices.GetAllOrder;

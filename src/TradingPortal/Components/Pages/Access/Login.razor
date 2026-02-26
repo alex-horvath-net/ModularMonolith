@@ -1,11 +1,11 @@
 @page "/access/login"
 @rendermode InteractiveServer
 
-@using LoginSlice = Features.Accounts.Slices.Login
+@using Features.Accounts.Slices.Login.Blazor
 @using TradingPortal.Components.Pages.Access
 
 @inject UserContext UserContext
-@inject LoginSlice.IBlazorGateway login
+@inject ILogin login
 
 
 <PageTitle>Login</PageTitle>
@@ -90,7 +90,7 @@
                                class="form-control form-control-lg"
                                placeholder="institution@bank.com"
                                type="text"
-                               @bind-value="request.Email"
+                               @bind-value="loginRequest.Email"
                                @bind-value:event="oninput"
                                autocomplete="username" />
                         <small class="text-muted">Use your issued trading identity. Case sensitive.</small>
@@ -101,7 +101,7 @@
                                class="form-control form-control-lg"
                                placeholder="••••••••"
                                type="password"
-                               @bind-value="request.Password"
+                               @bind-value="loginRequest.Password"
                                @bind-value:event="oninput"
                                autocomplete="current-password" />
                         <small class="text-muted">Multi-factor verification enforced downstream.</small>
@@ -116,11 +116,11 @@
                 <div class="card-body d-flex flex-column gap-3">
                     <div class="alert alert-info mb-0 d-flex flex-column gap-1">
                         <span class="text-muted">Toggle result</span>
-                        <div id="UserName2" class="h4 mb-0">@response?.UserName</div>
+                        <div id="UserName2" class="h4 mb-0">@loginResponse?.UserName</div>
                     </div>
                     <div class="d-flex align-items-center gap-2 text-muted">
-                        <span class="status-dot @(response?.UserName is not null ? "bg-success" : "bg-secondary")"></span>
-                        <small>@(response?.UserName is not null ? "Ready to redirect to secured workspace." : "Awaiting credential validation.")</small>
+                        <span class="status-dot @(loginResponse?.UserName is not null ? "bg-success" : "bg-secondary")"></span>
+                        <small>@(loginResponse?.UserName is not null ? "Ready to redirect to secured workspace." : "Awaiting credential validation.")</small>
                     </div>
                 </div>
             </div>
@@ -141,16 +141,19 @@
 </style>
 
 @code {
-    private LoginSlice.BlazorGatewayResponse? response;
-    private LoginSlice.BlazorGatewayRequest request = null!;
-    private bool CanLogin => !string.IsNullOrWhiteSpace(request.Email) && !string.IsNullOrWhiteSpace(request.Password);
+    private LoginRequest loginRequest = null!;
+    private LoginResponse? loginResponse;
+    
+    private bool CanLogin => 
+        !string.IsNullOrWhiteSpace(loginRequest.Email) && 
+        !string.IsNullOrWhiteSpace(loginRequest.Password);
 
     protected override void OnInitialized() {
-        request = new LoginSlice.BlazorGatewayRequest(UserContext.User);
+        loginRequest = new LoginRequest(UserContext.User);
     }
 
     private async Task OnLoginClicked() {
-        response = await login.Run(request);
+        loginResponse = await login.Run(loginRequest);
     }
 }
 

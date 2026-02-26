@@ -4,7 +4,7 @@ using Features.Accounts.Domain;
 namespace Features.Accounts.Slices.Register.WorkSteps;
 
 internal sealed class Create(IHasher hasher, IClock clock) {
-    public bool Run(UserStory.UserStoryContext context) {
+    public bool Run(UserStory.Context context) {
         var hash = hasher.Generate(context.NormalizedRequest!.Password);
         var now = clock.UtcNow;
 

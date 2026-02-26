@@ -1,14 +1,14 @@
+using Common.Tasks;
+using Core;
 using Features.Accounts;
 using Features.Accounts.Infrastructure.Data;
 using Features.Accounts.Slices.CreateToken;
 using Features.Accounts.Slices.CreateVisitor;
-using Features.Accounts.Slices.Register;
+using Features.Accounts.Slices.Register.Triggers.Blazor;
 using Features.Billing;
 using Features.Orders;
 using TradingPortal;
 using TradingPortal.Components;
-using Core;
-using Features.Accounts.Infrastructure;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -16,7 +16,7 @@ builder.Services.AddScoped<UserStory>();
 builder.Services.AddScoped(sp => {
     var userStory = sp.GetRequiredService<UserStory>();
     var request = new UserStory.Request("TradingPortal", "1.0", Guid.Parse("10000000-0000-0000-0000-000000000001"));
-    var response = userStory.Run(request).GetAwaiter().GetResult();
+    var response = userStory.Run(request).ToSynch();
 
     return new UserContext {
         User = response.ApplicationUser
@@ -82,11 +82,11 @@ app.Run();
 static void SeedSecurityOfficerAccounts(WebApplication app) {
     using var scope = app.Services.CreateScope();
     var db = scope.ServiceProvider.GetRequiredService<SecurityDbContext>();
-    var register = scope.ServiceProvider.GetRequiredService<Blazor.IGateway>();
+    var register = scope.ServiceProvider.GetRequiredService<IRegister>();
 
     db.Database.EnsureCreated();
 
-    var request = new Blazor.GatewayRequest() {
+    var request = new RegisterRequest() {
         Email = "aladar.horvath@outlook.com",
         UserName = "Aladar Horvath",
         Password = "Sup3r$ecretPwd!",

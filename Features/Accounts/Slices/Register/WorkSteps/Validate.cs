@@ -1,4 +1,5 @@
 ﻿using System.Collections.Immutable;
+using Features.Accounts.Slices.Register.UserStory;
 
 namespace Features.Accounts.Slices.Register.WorkSteps;
 
@@ -6,26 +7,26 @@ internal sealed class Validate {
     private readonly CreatePasswordPolicy passwordPolicy = new();
     private readonly CreateRoleRolePolicy rolesPolicy = new();
 
-    public bool Run(UserStory.UserStoryContext context) {
+    public bool Run(Context context) {
 
         if (context.Request is null) {
-            throw new InvalidOperationException(UserStoryConstants.RequestCanNotBeNell);
+            throw new InvalidOperationException(Constants.RequestCanNotBeNell);
         }
 
         if (string.IsNullOrWhiteSpace(context.Request.Email)) {
-            throw new InvalidOperationException(UserStoryConstants.EmailIsRequired);
+            throw new InvalidOperationException(Constants.EmailIsRequired);
         }
 
         if (!passwordPolicy.IsValid(context.Request.Password)) {
-            throw new InvalidOperationException(UserStoryConstants.PasswordMutBeContain);
+            throw new InvalidOperationException(Constants.PasswordMutBeContain);
         }
 
         if (string.IsNullOrWhiteSpace(context.Request.UserName)) {
-            throw new InvalidOperationException(UserStoryConstants.UserNameIsRequired);
+            throw new InvalidOperationException(Constants.UserNameIsRequired);
         }
 
         if (!rolesPolicy.IsValid(context.Request.Roles)) {
-            throw new InvalidOperationException(UserStoryConstants.AtLeastOneRoleRequired);
+            throw new InvalidOperationException(Constants.AtLeastOneRoleRequired);
         }
 
         return true;

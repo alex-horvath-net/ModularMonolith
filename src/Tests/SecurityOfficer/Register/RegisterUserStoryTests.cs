@@ -2,7 +2,7 @@ using System.Globalization;
 using Core.Infrastructure;
 using Features.Accounts.Domain;
 using Features.Accounts.Infrastructure;
-using Features.Accounts.Slices.Register;
+using Features.Accounts.Slices.Register.UserStory;
 using NSubstitute;
 using Shouldly;
 
@@ -12,7 +12,7 @@ public class RegisterUserStoryTests {
     private IAccountRepository repository = default!;
     private IHasher hasher = default!;
     private IClock clock = default!;
-    private UserStoryRequest request = default!;
+    private Request request = default!;
     private CancellationToken token;
     private Account? createdAccount;
 
@@ -35,9 +35,9 @@ public class RegisterUserStoryTests {
 
     [Fact]
     public Task RegisterAsync_WhenPasswordIsWeak_Throws() =>
-        Should.ThrowAsync<InvalidOperationException>(() => Arrange(() => new UserStoryRequest("user@example.com", "Generate", "weak", ["Trader"])).Register(request, token));
+        Should.ThrowAsync<InvalidOperationException>(() => Arrange(() => new Request("user@example.com", "Generate", "weak", ["Trader"])).Register(request, token));
 
-    private UserStory Arrange(Func<UserStoryRequest>? requestFactory = null) {
+    private UserStory Arrange(Func<Request>? requestFactory = null) {
         token = CancellationToken.None;
 
         repository = Substitute.For<IAccountRepository>();
@@ -65,16 +65,16 @@ public class RegisterUserStoryTests {
         return new UserStory(repository, hasher, clock);
     }
 
-    private UserStoryRequest DefaultRequest() => new(
+    private Request DefaultRequest() => new(
         Email: "Trader@Bank.Com ",
         UserName: "  Jane Trader ",
         Password: "Sup3r$ecretPwd",
         Roles: ["Trader", "trader", "RiskManager"]);
 
-    private UserStoryRequest WithExistingAccount() {
+    private Request WithExistingAccount() {
         var existingAccount = new Account(Guid.NewGuid(), "user@example.com", "Existing", "hash", new HashSet<string>(StringComparer.OrdinalIgnoreCase), false, clock.UtcNow);
         repository.FindAccountByEmail(Arg.Any<string>(), Arg.Any<CancellationToken>()).Returns(existingAccount);
-        return new UserStoryRequest("user@example.com", "Generate", "Sup3r$ecretPwd", ["Trader"]);
+        return new Request("user@example.com", "Generate", "Sup3r$ecretPwd", ["Trader"]);
     }
 
 }

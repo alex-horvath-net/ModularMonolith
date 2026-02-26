@@ -1,7 +1,8 @@
 ﻿namespace Common.Tasks;
 
 public static class CovertExtensions {
-
+    public static TOutput ToSynch<TOutput>(this Task<TOutput> blockingOutputQuery) =>
+        blockingOutputQuery.GetAwaiter().GetResult();
     public static Task<TOutput> ToTask<TOutput>(this TOutput output) =>
         Task.FromResult(output);
 
