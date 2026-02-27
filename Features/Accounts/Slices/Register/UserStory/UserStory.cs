@@ -5,21 +5,7 @@ using Features.Accounts.Slices.Register.WorkSteps;
 namespace Features.Accounts.Slices.Register.UserStory;
 
 internal sealed class UserStory {
-    private readonly Validate validate;
-    private readonly Normalize normalize;
-    private readonly PreventDuplication preventDuplication;
-    private readonly Create create;
-    private readonly Save save;
-
-    internal UserStory(IAccountRepository repository, IHasher hasher, IClock clock) {
-        validate = new Validate();
-        normalize = new Normalize();
-        preventDuplication = new PreventDuplication(repository);
-        create = new Create(hasher, clock);
-        save = new Save(repository);
-    }
-
-    public async Task<Response> Register(Request request, CancellationToken token) {
+    internal async Task<Response> Register(Request request, CancellationToken token) {
         var context = new Context(request, token);
 
         validate.Run(context);
@@ -34,4 +20,17 @@ internal sealed class UserStory {
         return context.ToResponse();
     }
 
+    internal UserStory(IAccountRepository repository, IHasher hasher, IClock clock) {
+        validate = new Validate();
+        normalize = new Normalize();
+        preventDuplication = new PreventDuplication(repository);
+        create = new Create(hasher, clock);
+        save = new Save(repository);
+    }
+
+    private readonly Validate validate;
+    private readonly Normalize normalize;
+    private readonly PreventDuplication preventDuplication;
+    private readonly Create create;
+    private readonly Save save;
 }

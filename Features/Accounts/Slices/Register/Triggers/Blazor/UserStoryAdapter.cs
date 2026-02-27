@@ -4,18 +4,19 @@ namespace Features.Accounts.Slices.Register.Triggers.Blazor;
 
 internal sealed class UserStoryAdapter(UserStory.UserStory userStory) : IRegister {
 
-    public Task<RegisterResponse> Run(RegisterRequest request, CancellationToken token = default) => userStory
-        .Register(request.Map(ToUserStoryRequest), token)
-        .Map(ToGatewayResponse);
+    public Task<RegisterResponse> Run(RegisterRequest blazorRequest, CancellationToken token = default) => userStory
+        .Register(blazorRequest.Map(ToUserStoryRequest), token)
+        .Map(ToBlazorResponse);
 
-    private Request ToUserStoryRequest(RegisterRequest gatewayRequest) => new(
-        gatewayRequest.Email,
-        gatewayRequest.UserName,
-        gatewayRequest.Password,
-        gatewayRequest.Roles.ToArray());
+    private Request ToUserStoryRequest(RegisterRequest blazorRequest) => new(
+        Email: blazorRequest.Email,
+        UserName: blazorRequest.UserName,
+        Password: blazorRequest.Password,
+        Roles: blazorRequest.Roles.ToArray());
 
-    private RegisterResponse ToGatewayResponse(Response userStoryResponse) => new(
-        userStoryResponse.AccountId,
-        userStoryResponse.Email!,
-        userStoryResponse.Roles);
+    private RegisterResponse ToBlazorResponse(Response userStoryResponse) => new(
+        AccountId: userStoryResponse.AccountId,
+        Email: userStoryResponse.Email!,
+        Roles: userStoryResponse.Roles,
+        ErrorMessage: userStoryResponse.ErrorMessage);
 }
