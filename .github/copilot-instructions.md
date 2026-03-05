@@ -1,4 +1,8 @@
-﻿<!--You must follow the development model defined in:
+﻿You must follow 
+docs/development/LEAD-DEVELOPMENT.md 
+for all AI‑assisted changes.
+
+<!--You must follow the development model defined in:
 
 /docs/development/INCREMENTAL-DEVELOPMENT.md
 
@@ -10,7 +14,7 @@ Rules:
 - Never change business rules during TDD
 - If a request violates the model, explain and refuse
 
-
+Development guidance is strict black-and-white with no optional steps.
 
 Example GitHub Copilot Chat propmts:
 - Based on our AI-Driven Development model,
