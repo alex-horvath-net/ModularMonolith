@@ -1,4 +1,4 @@
-﻿using Common.Tasks;
+﻿using Core.Domain.Tasks;
 
 namespace Features.Accounts.Slices.Login.Blazor;
 

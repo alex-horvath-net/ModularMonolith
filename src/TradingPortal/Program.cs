@@ -1,5 +1,5 @@
-using Common.Tasks;
 using Core;
+using Core.Domain.Tasks;
 using Features.Accounts;
 using Features.Accounts.Infrastructure.Data;
 using Features.Accounts.Slices.CreateToken;
@@ -23,7 +23,7 @@ builder.Services.AddScoped(sp => {
     };
 });
 
-builder.Services.AddCore();
+builder.Services.AddCore(builder.Configuration, builder.Environment);
 builder.Services.AddAccounts(builder.Configuration);
 
 //builder.Services.AddCommon(builder.Configuration, builder.Environment);

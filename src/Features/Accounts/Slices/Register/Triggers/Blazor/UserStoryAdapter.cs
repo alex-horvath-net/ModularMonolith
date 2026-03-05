@@ -1,4 +1,4 @@
-using Common.Tasks;
+using Core.Domain.Tasks;
 using Features.Accounts.Slices.Register.UserStory;
 namespace Features.Accounts.Slices.Register.Triggers.Blazor;
 

@@ -1,4 +1,4 @@
-﻿using Common.Tasks;
+﻿using Core.Domain.Tasks;
 using Microsoft.EntityFrameworkCore;
 
 namespace Features.Accounts.Infrastructure.Data.Rrepositories;

@@ -7,8 +7,8 @@ namespace Tests.Architecture;
 
 public class ModuleBoundariesTests {
     [Fact]
-    public void Common_Must_Not_Depend_On_Modules() {
-        var result = Types.InAssembly(typeof(Common.CommonExtensions).Assembly)
+    public void Core_Must_Not_Depend_On_Modules() {
+        var result = Types.InAssembly(typeof(Core.Extensions).Assembly)
             .Should().NotHaveDependencyOnAny("Business.Modules.Orders", "Business.Modules.Billing")
             .GetResult();
 

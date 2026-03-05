@@ -1,6 +1,4 @@
-﻿using Common.Tasks;
-
-namespace Features.Accounts.Slices.Register.WorkSteps;
+﻿namespace Features.Accounts.Slices.Register.WorkSteps;
 
 internal sealed class Normalize {
     public bool Run(UserStory.Context context) {

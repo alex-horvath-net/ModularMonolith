@@ -1,4 +1,4 @@
-using Common;
+using Core;
 using Features.Accounts.Slices.CreateToken;
 using Features.Billing;
 using Features.Orders;
@@ -11,14 +11,14 @@ var builder = WebApplication.CreateBuilder(args);
 //builder.WebHost.UseKestrel(builder.Configuration, builder.Environment); //// Use consolidated Common Kestrel hardening overload
 //builder.Host.UseLogger();  // Structured logging configuration
 
-builder.Services.AddCommon(builder.Configuration, builder.Environment);
+builder.Services.AddCore(builder.Configuration, builder.Environment);
 builder.Services.AddOrderBusinessExpert(builder.Configuration);
 builder.Services.AddBilling(builder.Configuration);
 builder.Services.AddScoped<CreateTokenCommandHandler>();
 
 var app = builder.Build();
 
-app.MapCommon();
+app.MapCore();
 app.MapDevToken();
 app.MapOrders();
 app.MapBilling();
