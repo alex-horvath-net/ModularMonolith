@@ -5,6 +5,11 @@
 	to build a solution that will help them achieve that goal in the most efficient way possible. 
 	The development process is divided into several steps, which are described below:
 
+	Session start protocol:
+	- Command: `dev start`
+	- Required first action: read this file.
+	- Required log action: append `dev started - dd.MM.yyyy hh:mm:ss` to `docs/log.md`.
+
 
 - Identify the application and the application user.</br> 
   Document it in {VisionName}.md.
