@@ -24,16 +24,19 @@
     - `Start`
     - `Business workflow`
     - `End`
-  - `Story Points`
+  - `Estimated Work`
+  - `Actual Work`
+  - `Remaining Work`
   - `Frequency`
   - `Importance`
   - `Urgency`
   - `Impact`
   - `Certainty`
   - `Stable`
+- Note: Each fields, even Required fields like 'Wished business process' can be initially captured at a high level and refined later as details become known.
 
 ### 4-Step Scales
-- `Story Points`
+- `Work`
   - `1` 2 hours
   - `2` 6 hours
   - `3` 2 days
