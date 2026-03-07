@@ -9,7 +9,7 @@ Keep all repository documentation consistent, easy to scan, and predictable.
 - Use only lowercase letters (`a-z`), numbers (`0-9`), and `-`.
 - Examples:
   - `lead-development-guidence.md`
-  - `userstories.md`
+  - `user-stories.md`
   - `documentation-style.md`
 
 ## Heading Style

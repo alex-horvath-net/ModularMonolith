@@ -3,6 +3,11 @@
 ## User Story Survey Protocol
 - When guiding a user story survey, always ask and capture all required fields below.
 
+## Survey Logging Protocol
+- Record every collected survey information in `docs/log.md`.
+- Log each field/value as soon as the value is provided.
+- Keep appending, do not overwrite existing `docs/log.md` content.
+
 ### Required Fields
 - `Title`
 - `Status`
@@ -74,8 +79,3 @@
   - `2` Evolving
   - `3` Stable
   - `4` Never change
-
-## Survey Logging Protocol
-- Record every collected survey information in `docs/log.md`.
-- Log each field/value as soon as the value is provided.
-- Keep appending, do not overwrite existing `docs/log.md` content.

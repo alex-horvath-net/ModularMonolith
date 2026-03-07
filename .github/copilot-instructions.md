@@ -1,9 +1,11 @@
 ﻿# Copilot Instructions
 
 ## General Guidelines
-- You must always apply repository-level instructions and referenced documents, but only re-send them when necessary (e.g., to refresh memory or when changed).
+- You must always apply repository-level instructions and referenced documents,</br> 
+  but only re-send them when necessary (e.g., to refresh memory or when changed).
 - You must follow documentation formatting and naming rules defined in: `#file:'docs/documentation-style.md'`.
-- You must always follow the development model defined in: `#file:'docs/lead-development-guidence.md'`. Read this file only once per Visual Studio session, not on every message.
+- You must always follow the development model defined in: `#file:'docs/lead-development-guidence.md'`.</br>
+  Read this file only once per Visual Studio session, not on every message.
 - Development guidance is strict black-and-white with no optional steps.
 
 ## Command Protocol
