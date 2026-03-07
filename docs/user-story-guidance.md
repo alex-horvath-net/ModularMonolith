@@ -5,6 +5,7 @@
 - No userstory should claim technical implementation details, such as "add a button" or "create an API endpoint". Instead, focus on the business need and outcome.
 - Each user story must be recorded in a structured format in `docs\user-stories.md` defined below.
 - No development phase can be started without a fully captured and accepted user story.
+- If I ask reverse engineer a user story from an existing application feature, you should follow the same structure and fields as for a new user story, but you can use the existing feature as a reference for the business workflow and achieved business outcome.
 
 `docs\user-stories.md` should have the following structure:
 
