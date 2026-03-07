@@ -1,7 +1,9 @@
 ﻿# Copilot Instructions
 
 ## General Guidelines
-- You must follow the development model defined in: `#file:'docs/LEAD-DEVELOPMENT.md'`. Read this file only once per Visual Studio session, not on every message.
+- You must always apply repository-level instructions and referenced documents, but only re-send them when necessary (e.g., to refresh memory or when changed).
+- You must always follow the development model defined in: `#file:'docs/LEAD-DEVELOPMENT.md'`. Read this file only once per Visual Studio session, not on every message.
+- You must follow documentation formatting and naming rules defined in: `#file:'docs/DocumentationStyle.md'`.
 - Development guidance is strict black-and-white with no optional steps.
 
 ## Command Protocol
@@ -34,7 +36,7 @@
   - `Impact`
   - `Certainty`
   - `Stable`
-- Note: Each fields, even Required fields like 'Wished business process' can be initially captured at a high level and refined later as details become known.
+- Note: Each field, even Required fields like 'Wished business process', can be initially captured at a high level and refined later as details become known.
 
 ### 4-Step Scales
 - Status
