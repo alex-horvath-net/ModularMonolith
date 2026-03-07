@@ -25,10 +25,11 @@ EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "AI", "AI", "{4CB9259C-2F0C-4978-975E-7B04FAEE8E09}"
 	ProjectSection(SolutionItems) = preProject
 		.github\copilot-instructions.md = .github\copilot-instructions.md
+		docs\documentation-style.md = docs\documentation-style.md
 		docs\incremental-development-guidence.md = docs\incremental-development-guidence.md
 		docs\log.md = docs\log.md
 		docs\lead-development-guidence.md = docs\lead-development-guidence.md
-		docs\UserStories.md = docs\UserStories.md
+		docs\userstories.md = docs\userstories.md
 	EndProjectSection
 EndProject
 Global

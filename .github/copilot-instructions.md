@@ -2,12 +2,12 @@
 
 ## General Guidelines
 - You must always apply repository-level instructions and referenced documents, but only re-send them when necessary (e.g., to refresh memory or when changed).
-- You must always follow the development model defined in: `#file:'docs/LEAD-DEVELOPMENT.md'`. Read this file only once per Visual Studio session, not on every message.
-- You must follow documentation formatting and naming rules defined in: `#file:'docs/DocumentationStyle.md'`.
+- You must follow documentation formatting and naming rules defined in: `#file:'docs/documentation-style.md'`.
+- You must always follow the development model defined in: `#file:'docs/lead-development-guidence.md'`. Read this file only once per Visual Studio session, not on every message.
 - Development guidance is strict black-and-white with no optional steps.
 
 ## Command Protocol
-- When user says `dev start`, clear content of `#file:'docs/LEAD-DEVELOPMENT.md'` first, then append exactly in this format: `dev started - dd.MM.yyyy hh:mm:ss`.
+- When user says `dev start`, clear content of `#file:'docs/log.md'` first, then append exactly in this format: `dev started - dd.MM.yyyy hh:mm:ss`.
 - When user says `dev end`, append to `#file:'docs/log.md'` exactly in this format: `dev ended - dd.MM.yyyy hh:mm:ss`.
 
 ## User Story Survey Protocol

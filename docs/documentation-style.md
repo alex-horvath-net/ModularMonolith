@@ -4,12 +4,13 @@
 Keep all repository documentation consistent, easy to scan, and predictable.
 
 ## File Naming
-- Use `PascalCase` for document file names in `docs/`.
+- Use lowercase `kebab-case` for document file names in `docs/`.
 - Use `.md` extension.
+- Use only lowercase letters (`a-z`), numbers (`0-9`), and `-`.
 - Examples:
-  - `LEAD-DEVELOPMENT.md`
-  - `UserStories.md`
-  - `DocumentationStyle.md`
+  - `lead-development-guidence.md`
+  - `userstories.md`
+  - `documentation-style.md`
 
 ## Heading Style
 - Use `Title Case` for headings.
