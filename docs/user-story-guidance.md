@@ -22,10 +22,6 @@
 - `Acceptance criteria`
 
 ### Optional Fields
-- `Current business process`
-  - `Start`
-  - `Business workflow`
-  - `End`
 - `Original Estimated Work`
 - `Remaining Work`
 - `Applied Work`
@@ -38,44 +34,44 @@
 
 - Note: Each field, even required fields like `Wished business process`, can be initially captured at a high level and refined later as details become known.
 
-## 4-Step Scales
+## Scales
 - `Status`
-  - `1` Forming
-  - `2` Accepted
-  - `3` In Progress
-  - `4` Done
+  - `Forming`
+  - `Accepted`
+  - `In Progress`
+  - `Done`
 - `Work`
-  - `1` 2 hours
-  - `2` 6 hours
-  - `3` 2 days
-  - `4` 5 days
+  - `2 hours`
+  - `6 hours`
+  - `16 hours`
+  - `32 hours`
 - `Frequency`
-  - `1` Rarely
-  - `2` Occasionally
-  - `3` Often
-  - `4` Very often
-- `Importance` (MoSCoW-aligned)
-  - `1` Won't have (this cycle)
-  - `2` Could have (nice to have)
-  - `3` Should have
-  - `4` Must have
+  - `Rarely`
+  - `Occasionally`
+  - `Often`
+  - `Very often`
+- `Importance`
+  - `Won't have`
+  - `Could have`
+  - `Should have`
+  - `Must have`
 - `Urgency`
-  - `1` No rush
-  - `2` Soon
-  - `3` Urgent
-  - `4` Immediate
+  - `No rush`
+  - `Soon`
+  - `Urgent`
+  - `Immediate`
 - `Impact`
-  - `1` Minor
-  - `2` Moderate
-  - `3` Major
-  - `4` Business Critical
+  - `Minor`
+  - `Moderate`
+  - `Major`
+  - `Business Critical`
 - `Certainty`
-  - `1` Guess
-  - `2` Low confidence
-  - `3` High confidence
-  - `4` Confirmed
+  - `Guess`
+  - `Low confidence`
+  - `High confidence`
+  - `Confirmed`
 - `Stable`
-  - `1` Forming
-  - `2` Evolving
-  - `3` Stable
-  - `4` Never change
+  - `Forming`
+  - `Evolving`
+  - `Stable`
+  - `Never change`
