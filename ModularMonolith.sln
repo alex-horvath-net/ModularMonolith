@@ -28,6 +28,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "AI", "AI", "{4CB9259C-2F0C-
 		docs\INCREMENTAL-DEVELOPMENT.md = docs\INCREMENTAL-DEVELOPMENT.md
 		docs\LEAD-DEVELOPMENT.md = docs\LEAD-DEVELOPMENT.md
 		docs\log.md = docs\log.md
+		docs\UserStories.md = docs\UserStories.md
 	EndProjectSection
 EndProject
 Global

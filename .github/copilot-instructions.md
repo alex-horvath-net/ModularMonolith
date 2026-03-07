@@ -11,9 +11,10 @@
 ## User Story Survey Protocol
 - When guiding a user story survey, always ask and capture all required fields below.
 - Required fields:
+  - `Title`
+  - `Status`
   - `Application`
   - `Role`
-  - `Title`
   - `Wished business process`
     - `Start`
     - `Business workflow`
@@ -36,6 +37,14 @@
 - Note: Each fields, even Required fields like 'Wished business process' can be initially captured at a high level and refined later as details become known.
 
 ### 4-Step Scales
+- Status
+  - `1` Plan
+  - `2` Defined
+  - `3` In Progress
+  - `4` PR
+  - `5` Dev
+  - `6` Test
+  - `7` Prod
 - `Work`
   - `1` 2 hours
   - `2` 6 hours
