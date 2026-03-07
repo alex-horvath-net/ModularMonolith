@@ -1,6 +1,7 @@
 # User Story Guidance
 
 ## User Story Survey Protocol
+- Each user story must be captured in a structured format, following the required and optional fields defined below.
 - When guiding a user story survey, always ask and capture all required fields below.
 
 ## Survey Logging Protocol
@@ -12,13 +13,12 @@
 - `Title`
 - `Status`
 - `Application`
-- `Role`
-- `Wished business process`
-  - `Business Issue`: Describe the missing business capability of the user.
-  - `User Arrangment`: get the user to application section, where they can perform the wished user action
-  - `User Action`: get the user trigger the business workflow via visiting a page, submit a form, etc
-  - `Business workflow`: sequence of none-technical business work steps, which are performed behind-the-scenes and delivers value to the user
-  - `Achieved Business Outcome`: the actually achived business capability
+- `Application User`
+- `Business Issue`: Describe the missing business capability for the application user.
+- `Business Setup`: Describe the simplest existing user action sequence that brings the user to the step just before the action to be changed or added.
+- `User Action`: Describe how the application user triggers the business workflow (for example, by opening a page or submitting a form).
+- `Business workflow`: Describe the sequence of non-technical business work steps performed behind the scenes to deliver value.
+- `Achieved Business Outcome`: Describe the business capability that is actually achieved.
 - `Acceptance criteria`
 
 ### Optional Fields
