@@ -9,14 +9,19 @@
 `docs\user-stories.md` should have the following structure:
 
 
+# User Stories
+
 ## Index
 | ID | Title | Status | Application | Role | Updated |
 |---|---|---|---|---|---|
-|   |   |   |   |   | |
-Id should be a 3-digit autoincrement number, for example: `001`.
-Title should be link to the user story section, for example: `[US-001](#US-001-Title)`.
+|   |   |   |   |   |   |
 
-## US-<ID>-<Title>
+- Id should be a 3-digit autoincrement number, for example: `001`.
+- Title should be link to the user story section, for example: `[US-001](#US-001-Title)`.
+
+---
+
+## US-ID-Title
 
 ### Required Fields
 - `Title`
