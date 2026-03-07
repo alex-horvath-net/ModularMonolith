@@ -1,13 +1,22 @@
 # User Story Guidance
 
 ## User Story Survey Protocol
-- Each user story must be captured in a structured format, following the required and optional fields defined below.
-- When guiding a user story survey, always ask and capture all required fields below.
+- Each user story capture only a single user action and its related business workflow, not multiple user actions or workflows.
+- No userstory should claim technical implementation details, such as "add a button" or "create an API endpoint". Instead, focus on the business need and outcome.
+- Each user story must be recorded in a structured format in `docs\user-stories.md` defined below.
+- No development phase can be started without a fully captured and accepted user story.
 
-## Survey Logging Protocol
-- Record every collected survey information in `docs/log.md`.
-- Log each field/value as soon as the value is provided.
-- Keep appending, do not overwrite existing `docs/log.md` content.
+`docs\user-stories.md` should have the following structure:
+
+
+## Index
+| ID | Title | Status | Application | Role | Updated |
+|---|---|---|---|---|---|
+|   |   |   |   |   | |
+Id should be a 3-digit autoincrement number, for example: `001`.
+Title should be link to the user story section, for example: `[US-001](#US-001-Title)`.
+
+## US-<ID>-<Title>
 
 ### Required Fields
 - `Title`
@@ -17,8 +26,10 @@
 - `Business Issue`: Describe the missing business capability for the application user.
 - `Business Setup`: Describe the simplest existing user action sequence that brings the user to the step just before the action to be changed or added.
 - `User Action`: Describe how the application user triggers the business workflow (for example, by opening a page or submitting a form).
-- `Business workflow`: Describe the sequence of non-technical business work steps performed behind the scenes to deliver value.
-- `Achieved Business Outcome`: Describe the business capability that is actually achieved.
+- `Business workflow`: Suggested the sequenced orchestration of non-technical business work steps, which address the business issue. 
+   It should be described with hierarchical bullet points or mermaid sequence diagram or mermaid flowchart.
+- `Achieved Business Outcome`: Describe the business capability that is actually achieved. 
+   This might be different from the originally wished business outcome, so further user stories may be needed to achieve it.
 - `Acceptance criteria`
 
 ### Optional Fields
