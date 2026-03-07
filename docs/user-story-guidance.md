@@ -18,7 +18,8 @@
 |   |   |   |   |   |   |
 
 - Id should be a 3-digit autoincrement number, for example: `001`.
-- Title should be link to the user story section, for example: `[US-001](#US-001-Title)`.
+- Title should be link to the user story section, for example: `[Title](#US-001-Title)`.
+- Updated format is dd.MM.yyyy hh:mm:ss, for example: `07.03.2026 14:30:00`.
 
 ---
 
