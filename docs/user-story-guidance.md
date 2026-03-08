@@ -1,22 +1,27 @@
 # User Story Guidance
 
 ## Goal
-Capture user stories in a format that is unambiguous, testable, and directly usable for BDD, TDD, E2E UI tests, acceptance tests, and unit tests.
+Capture `UserStory` records that are unambiguous, business-focused, and directly testable.
 
 ## User Story Survey Protocol
-- Each user story must capture exactly one user action and one related business workflow.
-- User stories must stay business-focused and must not prescribe implementation details.
-- Every user story must be recorded in `docs\user-stories.md` using the required structure.
-- Development cannot start until the story is fully captured and has `Status: Accepted`.
-- Reverse-engineered stories must use the same structure and quality gates as new stories.
+- Capture exactly one user action and one related business workflow per `UserStory`.
+- Keep `UserStory` content business-level only.
+- Do not include implementation details.
+- Record every `UserStory` in `docs\user-stories.md` using this guidance.
+- Do not start development until the story is complete and `Status` is `Accepted`.
+- Use the same rules for reverse-engineered and new stories.
 
 ## Quality Gates (Mandatory)
-A story is valid only if all gates pass:
+A `UserStory` is valid only if all gates pass:
 - Single action: one trigger from one application user.
-- Business clarity: clear business issue and achieved business outcome.
-- Testability: every acceptance criterion is objective and verifiable.
-- Traceability: each criterion has a stable `AC-<storyId>-NN` identifier.
-- Coverage mapping: each story includes explicit mapping to BDD, acceptance, E2E UI, and unit-level tests.
+- Business clarity: clear business issue and clear targeted business outcome.
+- Workflow decomposition: each business workflow step is represented by `AcceptanceCriteria`.
+- Testability: each `AcceptanceCriteria` is objective and pass/fail verifiable.
+- Traceability: each `AcceptanceCriteria` uses a stable ID: `AcceptanceCriteria-<storyId>-NN`.
+- Mapping consistency:
+  - each business `AcceptanceCriteria` maps 1:1 to one `BDD` scenario,
+  - each UI Visibility `AcceptanceCriteria` maps to `E2E UI` tests,
+  - do not create a separate `Acceptance Tests` layer when `BDD` already verifies business acceptance.
 
 `docs\user-stories.md` must use the structure below:
 
@@ -28,12 +33,12 @@ A story is valid only if all gates pass:
 |   |   |   |   |   |   |
 
 - ID must be 3-digit autoincrement format, for example: `001`.
-- Title must link to the story section, for example: `[Title](#US-001-Title)`.
+- Title must link to the story section, for example: `[Title](#UserStory-001-Title)`.
 - Updated format is `dd.MM.yyyy hh:mm:ss`, for example: `07.03.2026 14:30:00`.
 
 ---
 
-## US-ID-Title
+## UserStory-ID-Title
 
 ### Required Fields
 - `Title`
@@ -41,18 +46,22 @@ A story is valid only if all gates pass:
 - `Application`
 - `Application User`
 - `Business Issue`: Missing business capability for the application user.
+- `Aimed Business Outcome`: Aimed Business capability by this story.
 - `Business Setup`: Simplest existing interaction sequence that reaches the step just before the new/changed action.
 - `User Action`: How the user triggers the workflow.
-- `Business workflow`: Sequenced non-technical work steps that resolve the business issue (hierarchical bullets or mermaid).
-- `Achieved Business Outcome`: Capability actually achieved by this story.
-- `Acceptance criteria`: Must use explicit, testable rules.
+- `Business workflow`: Sequenced non-technical, business work steps that resolve the business issue (hierarchical bullets or mermaid).
+- `AcceptanceCriteria`: Must use explicit, testable rules.
 
-### Acceptance Criteria Format (Mandatory)
+### AcceptanceCriteria Format (Mandatory)
 - Use numbered criteria with stable IDs.
 - Preferred format:
-  - `AC-001-01`: Given `<context>`, When `<action>`, Then `<observable outcome>`.
-  - `AC-001-02`: Given ...
+  - `AcceptanceCriteria-001-01`: Given `<context>`, When `<action>`, Then `<observable outcome>`.
+  - `AcceptanceCriteria-001-02`: Given ...
 - Criteria must be measurable and binary (pass/fail).
+- Each criterion must represent exactly one business workflow step.
+- Criteria types:
+  - `Business AcceptanceCriteria` (mandatory)
+  - `UI Visibility AcceptanceCriteria` (optional)
 
 ### Optional Fields
 - `Original Estimated Work`
@@ -68,21 +77,30 @@ A story is valid only if all gates pass:
 ### Test Mapping (Mandatory)
 Each story must include this section:
 - `BDD Scenarios`
-  - Map each `AC` to one BDD scenario ID (`BDD-001-01`, ...)
-- `Acceptance Tests`
-  - Map each `AC` to one acceptance test case ID (`AT-001-01`, ...)
+  - Map each business `AcceptanceCriteria` to exactly one BDD scenario ID (`BDD-001-01`, ...).
 - `E2E UI Tests`
-  - List only UI-visible outcomes with IDs (`E2E-001-01`, ...)
-- `Unit Test Targets`
-  - List business rules/components to verify in isolation (`UT-001-01`, ...)
-- `TDD Plan`
-  - Define smallest implementation slices in expected RED-GREEN sequence
+  - Map each UI visibility `AcceptanceCriteria` to one or more E2E UI test IDs (`E2E-001-01`, ...).
+
+- Mapping rule:
+  - Business workflow step: `Business AcceptanceCriteria` -> `BDD`
+  - UI-visible workflow step: `UI Visibility AcceptanceCriteria` -> `E2E UI`
+
+- Clarification: Do not add a separate `Acceptance Tests` layer when `BDD` already validates business acceptance criteria.
+
+### Out of Scope for UserStory Documentation (Mandatory)
+- Internal unit decomposition
+- Unit-test targets and unit-test case design
+- TDD RED-GREEN slice planning
+- Technical implementation steps (for example, API shape, class decomposition, button/control details)
+
+These belong to implementation-focused guidance, not `docs\user-stories.md`.
 
 ### Definition of Ready (Mandatory)
 Story is `Accepted` only when:
 - all required fields are filled,
-- all acceptance criteria are testable,
-- test mapping section is complete,
+- all `AcceptanceCriteria` are testable,
+- every business criterion has 1:1 `BDD` mapping,
+- every UI visibility criterion has `E2E UI` mapping,
 - no implementation detail is required to understand business intent.
 
 ## Scales
