@@ -1,27 +1,28 @@
 # User Story Guidance
 
 ## Goal
-Capture `UserStory` records that are unambiguous, business-focused, and directly testable.
+Define `UserStory` records in a clear, business-focused, and implementation-agnostic way.
+
+This document standardizes:
+- business workflow orchestration,
+- decomposition of workflow steps into `AcceptanceCriteria`,
+- separation of `Business AcceptanceCriteria` and `UI Visibility AcceptanceCriteria`.
 
 ## User Story Survey Protocol
-- Capture exactly one user action and one related business workflow per `UserStory`.
+- Each `UserStory` must capture exactly one user action and one related business workflow.
 - Keep `UserStory` content business-level only.
-- Do not include implementation details.
+- Do not include technical implementation details.
 - Record every `UserStory` in `docs\user-stories.md` using this guidance.
-- Do not start development until the story is complete and `Status` is `Accepted`.
+- Development cannot start until the story is complete and `Status` is `Accepted`.
 - Use the same rules for reverse-engineered and new stories.
 
 ## Quality Gates (Mandatory)
 A `UserStory` is valid only if all gates pass:
 - Single action: one trigger from one application user.
-- Business clarity: clear business issue and clear targeted business outcome.
-- Workflow decomposition: each business workflow step is represented by `AcceptanceCriteria`.
-- Testability: each `AcceptanceCriteria` is objective and pass/fail verifiable.
-- Traceability: each `AcceptanceCriteria` uses a stable ID: `AcceptanceCriteria-<storyId>-NN`.
-- Mapping consistency:
-  - each business `AcceptanceCriteria` maps 1:1 to one `BDD` scenario,
-  - each UI Visibility `AcceptanceCriteria` maps to `E2E UI` tests,
-  - do not create a separate `Acceptance Tests` layer when `BDD` already verifies business acceptance.
+- Business clarity: clear business issue and clear aimed business outcome.
+- Workflow orchestration clarity: business workflow is described as ordered business work steps.
+- Decomposition completeness: each business workflow step is decomposed into acceptance criteria.
+- Traceability: each criterion uses stable ID format `AcceptanceCriteria-<storyId>-NN`.
 
 `docs\user-stories.md` must use the structure below:
 
@@ -46,22 +47,32 @@ A `UserStory` is valid only if all gates pass:
 - `Application`
 - `Application User`
 - `Business Issue`: Missing business capability for the application user.
-- `Aimed Business Outcome`: Aimed Business capability by this story.
-- `Business Setup`: Simplest existing interaction sequence that reaches the step just before the new/changed action.
-- `User Action`: How the user triggers the workflow.
-- `Business workflow`: Sequenced non-technical, business work steps that resolve the business issue (hierarchical bullets or mermaid).
-- `AcceptanceCriteria`: Must use explicit, testable rules.
+- `Aimed Business Outcome`: Intended business capability to be achieved by this `UserStory`.
+- `Business Setup`: Existing user interaction sequence that brings the user to the step immediately before the new or changed action.
+- `User Action`: Concrete action performed by the application user that triggers the workflow.
+- `Business workflow`: Ordered, non-technical business work steps that address the business issue.
+- `AcceptanceCriteria`: Explicit, objective, and verifiable criteria.
 
-### AcceptanceCriteria Format (Mandatory)
-- Use numbered criteria with stable IDs.
-- Preferred format:
-  - `AcceptanceCriteria-001-01`: Given `<context>`, When `<action>`, Then `<observable outcome>`.
-  - `AcceptanceCriteria-001-02`: Given ...
-- Criteria must be measurable and binary (pass/fail).
-- Each criterion must represent exactly one business workflow step.
-- Criteria types:
-  - `Business AcceptanceCriteria` (mandatory)
-  - `UI Visibility AcceptanceCriteria` (optional)
+### Business Workflow Orchestration Rules (Mandatory)
+- Describe the workflow as ordered business steps (`Step 1`, `Step 2`, ...). Use both hierarchical bullet points and mermaid flowchart.
+- Keep steps non-technical and value-oriented.
+- Each step must describe business intent and expected state transition.
+- Prefer hierarchical bullets when sub-steps are needed.
+
+### AcceptanceCriteria Decomposition Rules (Mandatory)
+- Every business workflow step must be decomposed into one or more `AcceptanceCriteria`.
+- Each `AcceptanceCriteria` must represent exactly one specific validation point.
+- Use stable IDs:
+  - `AcceptanceCriteria-001-01`
+  - `AcceptanceCriteria-001-02`
+
+- Criteria categories:
+  - `Business AcceptanceCriteria` (mandatory): validates business behavior or business outcome.
+  - `UI Visibility AcceptanceCriteria` (optional): validates what the user must be able to see or confirm in UI.
+
+- Preferred criterion format:
+  - `AcceptanceCriteria-001-01` (`Business`): Given `<business context>`, When `<user action or business event>`, Then `<business outcome>`.
+  - `AcceptanceCriteria-001-02` (`UI Visibility`): Given `<state>`, When `<user reaches UI state>`, Then `<visible outcome>`.
 
 ### Optional Fields
 - `Original Estimated Work`
@@ -74,34 +85,26 @@ A `UserStory` is valid only if all gates pass:
 - `Certainty`
 - `Stable`
 
-### Test Mapping (Mandatory)
-Each story must include this section:
-- `BDD Scenarios`
-  - Map each business `AcceptanceCriteria` to exactly one BDD scenario ID (`BDD-001-01`, ...).
-- `E2E UI Tests`
-  - Map each UI visibility `AcceptanceCriteria` to one or more E2E UI test IDs (`E2E-001-01`, ...).
-
-- Mapping rule:
-  - Business workflow step: `Business AcceptanceCriteria` -> `BDD`
-  - UI-visible workflow step: `UI Visibility AcceptanceCriteria` -> `E2E UI`
-
-- Clarification: Do not add a separate `Acceptance Tests` layer when `BDD` already validates business acceptance criteria.
-
 ### Out of Scope for UserStory Documentation (Mandatory)
-- Internal unit decomposition
-- Unit-test targets and unit-test case design
-- TDD RED-GREEN slice planning
-- Technical implementation steps (for example, API shape, class decomposition, button/control details)
-
-These belong to implementation-focused guidance, not `docs\user-stories.md`.
+- API/class/component design
+- internal decomposition and technical architecture
+- test implementation details
+- TDD/BDD execution planning
 
 ### Definition of Ready (Mandatory)
 Story is `Accepted` only when:
 - all required fields are filled,
-- all `AcceptanceCriteria` are testable,
-- every business criterion has 1:1 `BDD` mapping,
-- every UI visibility criterion has `E2E UI` mapping,
-- no implementation detail is required to understand business intent.
+- business workflow is clearly orchestrated as ordered business work steps,
+- each workflow step has decomposed `AcceptanceCriteria`,
+- both `Business AcceptanceCriteria` and `UI Visibility AcceptanceCriteria` are captured where applicable,
+- no implementation detail is needed to understand business intent.
+
+## Practical Writing Rules
+- Use short, concrete sentences.
+- Prefer domain words over technical words.
+- Avoid ambiguous terms such as "handle", "process", "manage" without context.
+- Keep one idea per bullet.
+- If information is unknown, write `TBD` and continue.
 
 ## Scales
 - `Status`
