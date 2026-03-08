@@ -1,16 +1,24 @@
 # User Story Guidance
 
+## Goal
+Capture user stories in a format that is unambiguous, testable, and directly usable for BDD, TDD, E2E UI tests, acceptance tests, and unit tests.
+
 ## User Story Survey Protocol
-- Each user story capture only a single user action and its related business workflow,</br> 
-  not multiple user actions or workflows.
-- No userstory should claim technical implementation details, such as "add a button" or "create an API endpoint".</br> 
-  Instead, focus on the business need and outcome.
-- Each user story must be recorded in a structured format in `docs\user-stories.md` defined below.
-- Development phase can not be started without a fully captured and accepted user story.
-- If I ask reverse engineer a user story from an existing application feature, you should follow the same structure and fields as for a new user story, but you can use the existing feature as a reference for the business workflow and achieved business outcome.
+- Each user story must capture exactly one user action and one related business workflow.
+- User stories must stay business-focused and must not prescribe implementation details.
+- Every user story must be recorded in `docs\user-stories.md` using the required structure.
+- Development cannot start until the story is fully captured and has `Status: Accepted`.
+- Reverse-engineered stories must use the same structure and quality gates as new stories.
 
-`docs\user-stories.md` should have the following structure:
+## Quality Gates (Mandatory)
+A story is valid only if all gates pass:
+- Single action: one trigger from one application user.
+- Business clarity: clear business issue and achieved business outcome.
+- Testability: every acceptance criterion is objective and verifiable.
+- Traceability: each criterion has a stable `AC-<storyId>-NN` identifier.
+- Coverage mapping: each story includes explicit mapping to BDD, acceptance, E2E UI, and unit-level tests.
 
+`docs\user-stories.md` must use the structure below:
 
 # User Stories
 
@@ -19,9 +27,9 @@
 |---|---|---|---|---|---|
 |   |   |   |   |   |   |
 
-- Id should be a 3-digit autoincrement number, for example: `001`.
-- Title should be link to the user story section, for example: `[Title](#US-001-Title)`.
-- Updated format is dd.MM.yyyy hh:mm:ss, for example: `07.03.2026 14:30:00`.
+- ID must be 3-digit autoincrement format, for example: `001`.
+- Title must link to the story section, for example: `[Title](#US-001-Title)`.
+- Updated format is `dd.MM.yyyy hh:mm:ss`, for example: `07.03.2026 14:30:00`.
 
 ---
 
@@ -32,14 +40,19 @@
 - `Status`
 - `Application`
 - `Application User`
-- `Business Issue`: Describe the missing business capability for the application user.
-- `Business Setup`: Describe the simplest existing user action sequence that brings the user to the step just before the action to be changed or added.
-- `User Action`: Describe how the application user triggers the business workflow (for example, by opening a page or submitting a form).
-- `Business workflow`: Suggested the sequenced orchestration of non-technical business work steps, which address the business issue. 
-   It should be described with hierarchical bullet points or mermaid sequence diagram or mermaid flowchart.
-- `Achieved Business Outcome`: Describe the business capability that is actually achieved. 
-   This might be different from the originally wished business outcome, so further user stories may be needed to achieve it.
-- `Acceptance criteria`
+- `Business Issue`: Missing business capability for the application user.
+- `Business Setup`: Simplest existing interaction sequence that reaches the step just before the new/changed action.
+- `User Action`: How the user triggers the workflow.
+- `Business workflow`: Sequenced non-technical work steps that resolve the business issue (hierarchical bullets or mermaid).
+- `Achieved Business Outcome`: Capability actually achieved by this story.
+- `Acceptance criteria`: Must use explicit, testable rules.
+
+### Acceptance Criteria Format (Mandatory)
+- Use numbered criteria with stable IDs.
+- Preferred format:
+  - `AC-001-01`: Given `<context>`, When `<action>`, Then `<observable outcome>`.
+  - `AC-001-02`: Given ...
+- Criteria must be measurable and binary (pass/fail).
 
 ### Optional Fields
 - `Original Estimated Work`
@@ -52,7 +65,25 @@
 - `Certainty`
 - `Stable`
 
-- Note: Each field, even required fields like `Wished business process`, can be initially captured at a high level and refined later as details become known.
+### Test Mapping (Mandatory)
+Each story must include this section:
+- `BDD Scenarios`
+  - Map each `AC` to one BDD scenario ID (`BDD-001-01`, ...)
+- `Acceptance Tests`
+  - Map each `AC` to one acceptance test case ID (`AT-001-01`, ...)
+- `E2E UI Tests`
+  - List only UI-visible outcomes with IDs (`E2E-001-01`, ...)
+- `Unit Test Targets`
+  - List business rules/components to verify in isolation (`UT-001-01`, ...)
+- `TDD Plan`
+  - Define smallest implementation slices in expected RED-GREEN sequence
+
+### Definition of Ready (Mandatory)
+Story is `Accepted` only when:
+- all required fields are filled,
+- all acceptance criteria are testable,
+- test mapping section is complete,
+- no implementation detail is required to understand business intent.
 
 ## Scales
 - `Status`

@@ -11,4 +11,6 @@
 
 ## User Story Survey Guidance
 - When guiding a user story survey, follow: `#file:'docs/user-story-guidance.md'`.
-- Always apply all required fields, optional fields, scales, and logging rules from that document.
+- Always apply all required fields, optional fields, scales, quality gates, acceptance-criteria format, and test-mapping rules from that document.
+- Never mark a story ready for development unless it reaches `Status: Accepted` and includes complete test mapping for BDD, acceptance, E2E UI, and unit tests.
+- If required story fields or test mappings are missing, stop and ask for the missing business information before proposing implementation work.
