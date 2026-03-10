@@ -20,19 +20,20 @@
 - `User Action`: The user submits registration data (`Email`, `UserName`, `Password`, `Roles`) in the registration flow.
 - `Business workflow`:
   - Validate the submitted registration data.
+    - [x] Registration is rejected when `Email` is missing.
+    - [x] Registration is rejected when `UserName` is missing.
+    - [x] Registration is rejected when `Password` does not meet policy.
+    - [x] Registration is rejected when `Role` is missing.
   - Normalize identity details to a consistent format.
   - Check whether an account with the same email already exists.
+    - [ ] Registration is rejected when the email already exists.
   - Create a new account profile with the selected business role.
+    - [ ] A successful registration returns the new account identity and assigned roles.
   - Save the new account for future sign-in.
-- `Achieved Business Outcome`: A new local account is created for the user and can be used in later authentication flows.
-- `Acceptance criteria`:
-  - [x] Registration is rejected when `Email` is missing.
-  - [x] Registration is rejected when `UserName` is missing.
-  - [x] Registration is rejected when `Password` does not meet policy.
-  - [ ] Registration is rejected when no valid role is selected.
-  - [ ] Registration is rejected when the email already exists.
-  - [ ] Registration succeeds when all required fields are valid.
-  - [ ] A successful registration returns the new account identity and assigned roles.
+    - [ ] Account is persisted to a durable store
+  - Rturn [ ]
+    - [ ] Registration succeeds when all required fields are valid.  
+- `Achieved Business Outcome`: Application User can gain store its account, which later can be used for authentication and authorization.
 
 ### Optional Fields
 - `Original Estimated Work`: `6 hours`

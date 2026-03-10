@@ -1,6 +1,7 @@
 # User Story Guidance
 
 ## Goal
+This document provides detailed instructions on how to record `UserStory` in a clear, business-focused, and implementation-agnostic way, which enables effective communication between business and development, ensures shared understanding of business needs and expected outcomes, and provides a solid foundation for incremental development and testing. 
 Define `UserStory` records in a clear, business-focused, and implementation-agnostic way.
 
 This document standardizes:
@@ -42,16 +43,21 @@ A `UserStory` is valid only if all gates pass:
 ## UserStory-ID-Title
 
 ### Required Fields
-- `Title`
-- `Status`
+- `Title`: Very short business intention. 
+- `Status` 
 - `Application`
 - `Application User`
-- `Business Issue`: Missing business capability for the application user.
-- `Aimed Business Outcome`: Intended business capability to be achieved by this `UserStory`.
-- `Business Setup`: Existing user interaction sequence that brings the user to the step immediately before the new or changed action.
-- `User Action`: Concrete action performed by the application user that triggers the workflow.
-- `Business workflow`: Ordered, non-technical business work steps that address the business issue.
-- `AcceptanceCriteria`: Explicit, objective, and verifiable criteria.
+- `Business Issue`: Missing business capability of the application user.
+- `Business Location`: Access point of the wished business capability.
+- `User Action`: Trigger of the wished business capability.
+- `Business Workflow`: Business solution for the business issue in form of business workstep sequence.
+- `Business Workstep`: A single business move to get closer to the ultimate business solution. 
+- - `AcceptanceCriteria`: Each work step has to satisfy 5 layers of Proof
+    - has the work step 
+    - was the business work step executed?
+    - was the business work step executed at the right moment?
+    - has the business work step achieved the expected business outcome?
+    - has the business work step presented coorecly on the application?
 
 ### Business Workflow Orchestration Rules (Mandatory)
 - Describe the workflow as ordered business steps (`Step 1`, `Step 2`, ...). Use both hierarchical bullet points and mermaid flowchart.

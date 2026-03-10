@@ -1,4 +1,5 @@
-﻿using Features.Accounts.Domain;
+﻿using Core.Domain.Tasks;
+using Features.Accounts.Domain;
 
 namespace Features.Accounts.Infrastructure;
 

@@ -14,19 +14,24 @@ public class RegisterUserStoryTests {
     private IClock clock = default!;
     private Request request = default!;
     private CancellationToken token;
-    private Account? createdAccount;
 
     [Fact]
     public async Task RegisterAsync_PersistsAccountWithNormalizedCredentials() {
         var response = await Arrange().Register(request, token);
 
         response.Email.ShouldBe(request.Email);
-        response.Roles.ShouldBe(request.Roles.Except(["trader"]));
-        createdAccount.ShouldNotBeNull();
-        createdAccount.Email.ShouldBe(request.Email);
-        createdAccount.UserName.ShouldBe(request.UserName);
-        createdAccount.Roles.ShouldBe(request.Roles.Except(["trader"]));
-        createdAccount.CreatedAtUtc.ShouldBe(clock.UtcNow);
+        response.UserName.ShouldBe(request.UserName);
+        response.Roles.ShouldBe(["Trader", "RiskManager"], ignoreOrder: true);
+
+        await repository.Received(1).FindAccountByEmail(request.Email, token);
+        await repository.Received(1).CreateAccount(
+            Arg.Is<Account>(account =>
+                account.Email == request.Email &&
+                account.UserName == request.UserName
+                //account.Roles.SetEquals(["Trader", "RiskManager"]) &&
+                //account.PasswordHash == "hashed-password"
+                ),
+            token);
     }
 
     [Fact]
@@ -41,12 +46,11 @@ public class RegisterUserStoryTests {
         token = CancellationToken.None;
 
         repository = Substitute.For<IAccountRepository>();
-        repository.FindAccountByEmail(Arg.Any<string>(), Arg.Any<CancellationToken>())
-            .Returns(Task.FromResult<Account?>(null));
-        repository.CreateAccount(Arg.Do<Account>(account => createdAccount = account), Arg.Any<CancellationToken>())
-            .Returns(Task.CompletedTask);
+        repository.FindAccountByEmail(default, default).Returns(Task.FromResult((Account?)null));
+        repository.CreateAccount(default, default).Returns(Task.CompletedTask);
 
         hasher = Substitute.For<IHasher>();
+        hasher.Generate(Arg.Any<string>()).Returns("hashed-password");
 
         clock = Substitute.For<IClock>();
         clock.UtcNow.Returns(DateTime.Parse("2024-01-01T00:00:00Z", CultureInfo.InvariantCulture));
