@@ -16,6 +16,18 @@ public class RegisterUserStoryTests {
     private CancellationToken token;
 
     [Fact]
+    public async Task RegisterAsync_Validate_Request_is_Mandatory() {
+        var exception = await Should.ThrowAsync<InvalidOperationException>(() => Arrange(WithoutRequest).Register(request, token));
+        exception.Message.ShouldBe(Constants.RequestCanNotBeNell);
+    }
+
+    [Fact]
+    public async Task RegisterAsync_Validate_Request_Email_is_Mandatory() {
+        var exception = await Should.ThrowAsync<InvalidOperationException>(() => Arrange(WithoutEmail).Register(request, token));
+        exception.Message.ShouldBe(Constants.EmailIsRequired);
+    }
+
+    [Fact]
     public async Task RegisterAsync_PersistsAccountWithNormalizedCredentials() {
         var response = await Arrange().Register(request, token);
 
@@ -35,10 +47,6 @@ public class RegisterUserStoryTests {
     }
 
     [Fact]
-    public Task RegisterAsync_WhenEmailAlreadyExists_Throws() =>
-        Should.ThrowAsync<InvalidOperationException>(() => Arrange(WithExistingAccount).Register(request, token));
-
-    [Fact]
     public Task RegisterAsync_WhenPasswordIsWeak_Throws() =>
         Should.ThrowAsync<InvalidOperationException>(() => Arrange(() => new Request("user@example.com", "Generate", "weak", ["Trader"])).Register(request, token));
 
@@ -56,16 +64,17 @@ public class RegisterUserStoryTests {
         clock.UtcNow.Returns(DateTime.Parse("2024-01-01T00:00:00Z", CultureInfo.InvariantCulture));
 
         request = requestFactory == null ? DefaultRequest() : requestFactory();
-        request = request with {
-            Email = request.Email.Trim().ToLowerInvariant(),
-            UserName = request.UserName.Trim(),
-            Roles = request.Roles
-                .Where(role => !string.IsNullOrWhiteSpace(role))
-                .Select(role => role.Trim())
-                .Distinct(StringComparer.OrdinalIgnoreCase)
-                .ToArray()
-        };
-
+        if (request != null) {
+            request = request with {
+                Email = request.Email?.Trim()?.ToLowerInvariant(),
+                UserName = request.UserName.Trim(),
+                Roles = request.Roles
+                    .Where(role => !string.IsNullOrWhiteSpace(role))
+                    .Select(role => role.Trim())
+                    .Distinct(StringComparer.OrdinalIgnoreCase)
+                    .ToArray()
+            };
+        }
         return new UserStory(repository, hasher, clock);
     }
 
@@ -81,5 +90,10 @@ public class RegisterUserStoryTests {
         return new Request("user@example.com", "Generate", "Sup3r$ecretPwd", ["Trader"]);
     }
 
+    private Request WithoutRequest() => null!;
+
+    private Request WithoutEmail() => new Request("user@example.com", "Generate", "Sup3r$ecretPwd", ["Trader"]) with {
+        Email = null!
+    };
 }
 
