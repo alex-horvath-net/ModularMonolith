@@ -137,7 +137,6 @@ public class PlaywrightFixture : IAsyncLifetime {
         if (browser is not null) {
             await browser.CloseAsync();
         }
-
         playwright?.Dispose();
     }
 
