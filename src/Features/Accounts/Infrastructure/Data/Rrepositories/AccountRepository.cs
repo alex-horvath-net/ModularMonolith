@@ -12,20 +12,20 @@ public sealed class AccountRepository(SecurityDbContext db) : IAccountRepository
         .Then(token.ThrowIfCancellationRequested)
         .Map(ToDomain);
 
-    public async Task CreateAccount(Domain.Account accountDM, CancellationToken token) {
-        ArgumentNullException.ThrowIfNull(accountDM);
+    public async Task CreateAccount(Domain.Account account, CancellationToken token) {
+        ArgumentNullException.ThrowIfNull(account);
 
-        var account = accountDM.Map(ToData);
+        var accountData = account.Map(ToData);
         var dbRoles = await db.Roles.ToListAsync(token);
 
-        account.Roles = (
-            from role in account.Roles
+        accountData.Roles = (
+            from role in accountData.Roles
             join dbRole in dbRoles on role.NormalizedName equals dbRole.NormalizedName into roleJoin
             from dbRole in roleJoin.DefaultIfEmpty()
             select dbRole ?? role
         ).ToHashSet();
 
-        db.Accounts.Add(account);
+        db.Accounts.Add(accountData);
         await db.SaveChangesAsync(token);
         token.ThrowIfCancellationRequested();
     }

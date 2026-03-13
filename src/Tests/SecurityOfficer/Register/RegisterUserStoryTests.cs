@@ -84,11 +84,11 @@ public class RegisterUserStoryTests {
         Password: "Sup3r$ecretPwd",
         Roles: ["Trader", "trader", "RiskManager"]);
 
-    private Request WithExistingAccount() {
-        var existingAccount = new Account(Guid.NewGuid(), "user@example.com", "Existing", "hash", new HashSet<string>(StringComparer.OrdinalIgnoreCase), false, clock.UtcNow);
-        repository.FindAccountByEmail(Arg.Any<string>(), Arg.Any<CancellationToken>()).Returns(existingAccount);
-        return new Request("user@example.com", "Generate", "Sup3r$ecretPwd", ["Trader"]);
-    }
+    //private Request WithExistingAccount() {
+    //    var existingAccount = new Account(Guid.NewGuid(), "user@example.com", "Existing", "hash", new HashSet<string>(StringComparer.OrdinalIgnoreCase), false, clock.UtcNow);
+    //    repository.FindAccountByEmail(Arg.Any<string>(), Arg.Any<CancellationToken>()).Returns(existingAccount);
+    //    return new Request("user@example.com", "Generate", "Sup3r$ecretPwd", ["Trader"]);
+    //}
 
     private Request WithoutRequest() => null!;
 

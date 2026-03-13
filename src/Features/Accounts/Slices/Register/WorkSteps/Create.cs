@@ -1,5 +1,4 @@
 ﻿using Core.Infrastructure;
-using Features.Accounts.Domain;
 
 namespace Features.Accounts.Slices.Register.WorkSteps;
 
