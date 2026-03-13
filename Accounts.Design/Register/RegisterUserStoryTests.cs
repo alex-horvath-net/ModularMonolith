@@ -3,8 +3,6 @@ using Accounts.Core.Domain;
 using Accounts.Core.Infrastructure;
 using Accounts.Register.UserStory;
 using Core.Infrastructure;
-using NSubstitute;
-using Shouldly;
 
 namespace Accounts.Design.Register;
 

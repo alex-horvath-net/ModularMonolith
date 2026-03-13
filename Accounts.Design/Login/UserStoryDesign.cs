@@ -2,8 +2,6 @@
 using Accounts.Core.Infrastructure;
 using Accounts.Login;
 using Core.Infrastructure;
-using NSubstitute;
-using Shouldly;
 
 namespace Accounts.Design.Login;
 
