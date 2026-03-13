@@ -1,7 +1,7 @@
-using Billing.Infrastructure.Data;
-using Billing.Slices.CreateInvoice;
-using Billing.Slices.GetInvoice.API;
-using Billing.Slices.GetInvoice.QueryHandlers;
+using Billing.Core.Infrastructure.Data;
+using Billing.CreateInvoice;
+using Billing.GetInvoice.API;
+using Billing.GetInvoice.QueryHandlers;
 using Core.Events;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Routing;

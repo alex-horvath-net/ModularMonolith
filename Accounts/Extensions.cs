@@ -1,6 +1,6 @@
-﻿using Accounts.Infrastructure;
-using Accounts.Slices.Login;
-using Accounts.Slices.Register;
+﻿using Accounts.Core.Infrastructure;
+using Accounts.Login;
+using Accounts.Register;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 

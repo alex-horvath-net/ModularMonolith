@@ -1,4 +1,4 @@
-﻿using Orders.Slices.PlaceOrder;
+﻿using Orders.PlaceOrder;
 
 namespace Orders;
 

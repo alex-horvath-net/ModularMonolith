@@ -1,5 +1,5 @@
 ﻿namespace Core.Infrastructure;
 
-internal interface IGuid {
+public interface IGuid {
     Guid Generate();
 }

@@ -7,25 +7,27 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Content Include="Slices\GetAllOrder\Blazor\Components\OrderDetails.razor">
+    <Content Include="GetAllOrder\Blazor\Components\OrderDetails.razor">
       <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
     </Content>
-    <Content Include="Slices\GetAllOrder\Blazor\Components\OrdersList.razor">
+    <Content Include="GetAllOrder\Blazor\Components\OrdersList.razor">
       <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
     </Content>
-    <Content Include="Slices\GetAllOrder\Blazor\_Imports.razor">
+    <Content Include="GetAllOrder\Blazor\_Imports.razor">
       <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
     </Content>
   </ItemGroup>
 
-  <ItemGroup>
-    <ProjectReference Include="..\Core\Core.csproj" />
-  </ItemGroup>
 
   <ItemGroup>
     <InternalsVisibleTo Include="Tests" />
     <InternalsVisibleTo Include="DynamicProxyGenAssembly2" />
 
+  </ItemGroup>
+
+
+  <ItemGroup>
+    <ProjectReference Include="..\src\Core\Core.csproj" />
   </ItemGroup>
 
 </Project>

@@ -7,11 +7,11 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
-using Orders.Infrastructure.Data;
-using Orders.Infrastructure.Data.Seed;
-using Orders.Slices.GetAllOrder;
-using Orders.Slices.GetOrder;
-using Orders.Slices.PlaceOrder;
+using Orders.Core.Infrastructure.Data;
+using Orders.Core.Infrastructure.Data.Seed;
+using Orders.GetAllOrder;
+using Orders.GetOrder;
+using Orders.PlaceOrder;
 
 namespace Orders;
 

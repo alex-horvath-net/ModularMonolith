@@ -1,6 +1,6 @@
 ﻿using System.Net.Http.Headers;
 using System.Net.Http.Json;
-using Billing.Infrastructure.Data;
+using Billing.Core.Infrastructure.Data;
 using Features.Accounts.Slices.CreateToken;
 using Features.Orders.Infrastructure.Data;
 using Microsoft.AspNetCore.Hosting;

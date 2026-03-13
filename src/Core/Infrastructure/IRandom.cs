@@ -1,5 +1,5 @@
 ﻿namespace Core.Infrastructure;
 
-internal interface IRandom {
+public interface IRandom {
     void Generate(Span<byte> data);
 }

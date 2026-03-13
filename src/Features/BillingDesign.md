@@ -1,4 +1,4 @@
-# Billing Module Design – Implementation?ready Specification
+ Billing Module Design – Implementation?ready Specification
 
 This document specifies the Billing module with explicit Problem/Solution/Service registration/Middleware mapping/Config keys/Verification sections to guide implementation and tests.
 

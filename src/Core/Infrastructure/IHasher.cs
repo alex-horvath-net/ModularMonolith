@@ -1,6 +1,6 @@
 ﻿namespace Core.Infrastructure;
 
-internal interface IHasher {
+public interface IHasher {
     string Generate(string text);
     bool Verify(string text, string hash);
 }
