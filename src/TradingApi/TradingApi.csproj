@@ -33,7 +33,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Features\Features.csproj" />
+    <ProjectReference Include="..\Features\Billing.csproj" />
   </ItemGroup>
 
 </Project>

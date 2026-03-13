@@ -1,7 +1,7 @@
 ﻿using System.Net.Http.Headers;
 using System.Net.Http.Json;
+using Billing.Infrastructure.Data;
 using Features.Accounts.Slices.CreateToken;
-using Features.Billing.Infrastructure.Data;
 using Features.Orders.Infrastructure.Data;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc.Testing;

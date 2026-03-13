@@ -18,7 +18,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TradingPortal", "src\Tradin
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TradingApi", "src\TradingApi\TradingApi.csproj", "{ED109620-7F10-59DE-C7D7-87BFFE625614}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Features", "src\Features\Features.csproj", "{0ABBBEF1-B535-7757-E71F-F277A30F3B58}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Billing", "src\Features\Billing.csproj", "{0ABBBEF1-B535-7757-E71F-F277A30F3B58}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Core", "src\Core\Core.csproj", "{4114E4DC-A6BD-9F5D-EC82-1C3B16F50727}"
 EndProject
@@ -27,10 +27,14 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "AI", "AI", "{4CB9259C-2F0C-
 		.github\copilot-instructions.md = .github\copilot-instructions.md
 		docs\documentation-style.md = docs\documentation-style.md
 		docs\incremental-development-guidence.md = docs\incremental-development-guidence.md
-		docs\log.md = docs\log.md
 		docs\lead-development-guidence.md = docs\lead-development-guidence.md
+		docs\log.md = docs\log.md
 		docs\user-stories.md = docs\user-stories.md
 	EndProjectSection
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Accounts", "Accounts\Accounts.csproj", "{7A0E88A4-CF3E-4D9F-9EDD-B09FF284D303}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Orders", "Orders\Orders.csproj", "{A10988AC-0AAC-43D3-8CB6-5A46DF800DA6}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -114,6 +118,30 @@ Global
 		{4114E4DC-A6BD-9F5D-EC82-1C3B16F50727}.Release|x64.Build.0 = Release|Any CPU
 		{4114E4DC-A6BD-9F5D-EC82-1C3B16F50727}.Release|x86.ActiveCfg = Release|Any CPU
 		{4114E4DC-A6BD-9F5D-EC82-1C3B16F50727}.Release|x86.Build.0 = Release|Any CPU
+		{7A0E88A4-CF3E-4D9F-9EDD-B09FF284D303}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7A0E88A4-CF3E-4D9F-9EDD-B09FF284D303}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7A0E88A4-CF3E-4D9F-9EDD-B09FF284D303}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{7A0E88A4-CF3E-4D9F-9EDD-B09FF284D303}.Debug|x64.Build.0 = Debug|Any CPU
+		{7A0E88A4-CF3E-4D9F-9EDD-B09FF284D303}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{7A0E88A4-CF3E-4D9F-9EDD-B09FF284D303}.Debug|x86.Build.0 = Debug|Any CPU
+		{7A0E88A4-CF3E-4D9F-9EDD-B09FF284D303}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7A0E88A4-CF3E-4D9F-9EDD-B09FF284D303}.Release|Any CPU.Build.0 = Release|Any CPU
+		{7A0E88A4-CF3E-4D9F-9EDD-B09FF284D303}.Release|x64.ActiveCfg = Release|Any CPU
+		{7A0E88A4-CF3E-4D9F-9EDD-B09FF284D303}.Release|x64.Build.0 = Release|Any CPU
+		{7A0E88A4-CF3E-4D9F-9EDD-B09FF284D303}.Release|x86.ActiveCfg = Release|Any CPU
+		{7A0E88A4-CF3E-4D9F-9EDD-B09FF284D303}.Release|x86.Build.0 = Release|Any CPU
+		{A10988AC-0AAC-43D3-8CB6-5A46DF800DA6}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A10988AC-0AAC-43D3-8CB6-5A46DF800DA6}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A10988AC-0AAC-43D3-8CB6-5A46DF800DA6}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{A10988AC-0AAC-43D3-8CB6-5A46DF800DA6}.Debug|x64.Build.0 = Debug|Any CPU
+		{A10988AC-0AAC-43D3-8CB6-5A46DF800DA6}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{A10988AC-0AAC-43D3-8CB6-5A46DF800DA6}.Debug|x86.Build.0 = Debug|Any CPU
+		{A10988AC-0AAC-43D3-8CB6-5A46DF800DA6}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A10988AC-0AAC-43D3-8CB6-5A46DF800DA6}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A10988AC-0AAC-43D3-8CB6-5A46DF800DA6}.Release|x64.ActiveCfg = Release|Any CPU
+		{A10988AC-0AAC-43D3-8CB6-5A46DF800DA6}.Release|x64.Build.0 = Release|Any CPU
+		{A10988AC-0AAC-43D3-8CB6-5A46DF800DA6}.Release|x86.ActiveCfg = Release|Any CPU
+		{A10988AC-0AAC-43D3-8CB6-5A46DF800DA6}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

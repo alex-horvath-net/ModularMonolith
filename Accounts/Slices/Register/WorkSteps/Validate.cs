@@ -1,0 +1,81 @@
+﻿using System.Collections.Immutable;
+using Accounts.Slices.Register.UserStory;
+
+namespace Accounts.Slices.Register.WorkSteps;
+
+internal sealed class Validate {
+    private readonly CreatePasswordPolicy passwordPolicy = new();
+    private readonly CreateRoleRolePolicy rolesPolicy = new();
+
+    public bool Run(Context context) {
+
+        if (context.Request is null) {
+            throw new InvalidOperationException(Constants.RequestCanNotBeNell);
+        }
+
+        if (string.IsNullOrWhiteSpace(context.Request.Email)) {
+            throw new InvalidOperationException(Constants.EmailIsRequired);
+        }
+
+        if (!passwordPolicy.IsValid(context.Request.Password)) {
+            throw new InvalidOperationException(Constants.PasswordMutBeContain);
+        }
+
+        if (string.IsNullOrWhiteSpace(context.Request.UserName)) {
+            throw new InvalidOperationException(Constants.UserNameIsRequired);
+        }
+
+        if (!rolesPolicy.IsValid(context.Request.Roles)) {
+            throw new InvalidOperationException(Constants.AtLeastOneRoleRequired);
+        }
+
+        return true;
+    }
+}
+
+internal sealed class CreatePasswordPolicy {
+    public bool IsValid(string password) {
+        if (string.IsNullOrWhiteSpace(password))
+            return false;
+
+        if (password.Length < 12)
+            return false;
+
+        if (!password.Any(char.IsUpper))
+            return false;
+
+        if (!password.Any(char.IsLower))
+            return false;
+
+        if (!password.Any(char.IsDigit))
+            return false;
+
+        if (!password.Any(char.IsLetterOrDigit))
+            return false;
+
+        return true;
+    }
+}
+
+internal sealed class CreateRoleRolePolicy {
+    private static readonly ImmutableHashSet<string> allowedRoles =
+        ImmutableHashSet.Create(StringComparer.OrdinalIgnoreCase, "Trader", "RiskManager", "Compliance");
+
+    public bool IsValid(IEnumerable<string> selectedRoles) {
+        if (selectedRoles == null)
+            return false;
+
+        var cleanedRoles = selectedRoles
+            .Where(role => !string.IsNullOrWhiteSpace(role))
+            .Select(role => role.Trim());
+
+        if (!cleanedRoles.Any())
+            return false;
+
+        if (cleanedRoles.Any(role => !allowedRoles.Contains(role)))
+            return false;
+
+        return true;
+    }
+}
+

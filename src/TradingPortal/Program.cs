@@ -1,3 +1,4 @@
+using Billing;
 using Core;
 using Core.Domain.Tasks;
 using Features.Accounts;
@@ -5,7 +6,6 @@ using Features.Accounts.Infrastructure.Data;
 using Features.Accounts.Slices.CreateToken;
 using Features.Accounts.Slices.CreateVisitor;
 using Features.Accounts.Slices.Register.Triggers.Blazor;
-using Features.Billing;
 using Features.Orders;
 using TradingPortal;
 using TradingPortal.Components;

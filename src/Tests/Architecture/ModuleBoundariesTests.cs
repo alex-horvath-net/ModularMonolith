@@ -1,4 +1,4 @@
-using Features.Billing;
+using Billing;
 using Features.Orders;
 using NetArchTest.Rules;
 using Shouldly;
