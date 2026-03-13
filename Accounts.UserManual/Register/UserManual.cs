@@ -1,6 +1,4 @@
-using Tests.TestFrame;
-
-namespace Tests.SecurityOfficer.Register;
+namespace Accounts.UserManual.Register;
 
 [Collection(UserManualICollectionFixture.Name)]
 public class UserManual(PlaywrightFixture trader) {

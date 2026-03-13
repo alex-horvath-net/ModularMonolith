@@ -6,7 +6,7 @@ using Core.Infrastructure;
 using NSubstitute;
 using Shouldly;
 
-namespace Tests.SecurityOfficer.Register;
+namespace Accounts.Design.Register;
 
 public class RegisterUserStoryTests {
     private IAccountRepository repository = default!;

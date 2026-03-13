@@ -5,7 +5,7 @@ using Core.Infrastructure;
 using NSubstitute;
 using Shouldly;
 
-namespace Tests.SecurityOfficer.Login;
+namespace Accounts.Design.Login;
 
 public class UserStoryTests {
     private IAccountRepository accountRepository = default!;
