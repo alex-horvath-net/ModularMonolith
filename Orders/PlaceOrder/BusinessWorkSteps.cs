@@ -3,7 +3,6 @@ using Core.Events;
 using Core.Infrastructure;
 using FluentValidation;
 using Orders.Core.Domain;
-using Orders.Core.Infrastructure.Data.Models;
 
 namespace Orders.PlaceOrder;
 
@@ -43,6 +42,6 @@ internal sealed class BusinessWorkSteps(
     }
 
     public interface IStoreInfrastructure {
-        Task Save(Infrastructure.Data.Models.Order order, CancellationToken token);
+        Task Save(Core.Infrastructure.Data.Models.Order order, CancellationToken token);
     }
 }

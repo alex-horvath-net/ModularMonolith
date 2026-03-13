@@ -21,7 +21,7 @@ internal sealed class UserStory {
     public async Task<UserStoryResponse> Run(UserStoryRequest request, CancellationToken token) {
         var context = new Context(request, new(), token);
 
-        if (!await validate.Run(context))
+        if (!validate.Run(context))
             return context.Response;
 
         if (!normalize.Run(context))

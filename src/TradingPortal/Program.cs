@@ -1,21 +1,19 @@
+using Accounts;
+using Accounts.Core.Infrastructure.Data;
+using Accounts.CreateToken;
+using Accounts.Register.Triggers.Blazor;
 using Billing;
 using Core;
 using Core.Domain.Tasks;
-using Features.Accounts;
-using Features.Accounts.Infrastructure.Data;
-using Features.Accounts.Slices.CreateToken;
-using Features.Accounts.Slices.CreateVisitor;
-using Features.Accounts.Slices.Register.Triggers.Blazor;
-using Features.Orders;
+using Orders;
 using TradingPortal;
 using TradingPortal.Components;
 
 var builder = WebApplication.CreateBuilder(args);
 
-builder.Services.AddScoped<UserStory>();
 builder.Services.AddScoped(sp => {
-    var userStory = sp.GetRequiredService<UserStory>();
-    var request = new UserStory.Request("TradingPortal", "1.0", Guid.Parse("10000000-0000-0000-0000-000000000001"));
+    var userStory = sp.GetRequiredService<Accounts.CreateVisitor.UserStory>();
+    var request = new Accounts.CreateVisitor.UserStory.Request("TradingPortal", "1.0", Guid.Parse("10000000-0000-0000-0000-000000000001"));
     var response = userStory.Run(request).ToSynch();
 
     return new UserContext {

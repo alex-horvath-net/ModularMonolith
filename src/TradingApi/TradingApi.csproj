@@ -33,6 +33,8 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\..\Accounts\Accounts.csproj" />
+    <ProjectReference Include="..\..\Orders\Orders.csproj" />
     <ProjectReference Include="..\Features\Billing.csproj" />
   </ItemGroup>
 

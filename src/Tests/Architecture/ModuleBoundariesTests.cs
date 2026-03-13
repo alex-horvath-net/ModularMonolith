@@ -1,6 +1,6 @@
 using Billing;
-using Features.Orders;
 using NetArchTest.Rules;
+using Orders;
 using Shouldly;
 
 namespace Tests.Architecture;

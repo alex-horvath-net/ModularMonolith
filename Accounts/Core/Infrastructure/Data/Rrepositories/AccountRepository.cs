@@ -1,14 +1,11 @@
-﻿using Accounts.Core.Domain;
-using Accounts.Core.Infrastructure;
-using Accounts.Core.Infrastructure.Data;
-using Accounts.Core.Infrastructure.Data.Models;
+﻿using Accounts.Core.Infrastructure.Data.Models;
 using Core.Domain.Tasks;
 using Microsoft.EntityFrameworkCore;
 
 namespace Accounts.Core.Infrastructure.Data.Rrepositories;
 
 public sealed class AccountRepository(SecurityDbContext db) : IAccountRepository {
-    public async Task<Account?> FindAccountByEmail(string email, CancellationToken token) => await db.Accounts
+    public async Task<Domain.Account?> FindAccountByEmail(string email, CancellationToken token) => await db.Accounts
         .Include(account => account.Roles)
         .AsNoTracking()
         .Then(token.ThrowIfCancellationRequested)
@@ -16,7 +13,7 @@ public sealed class AccountRepository(SecurityDbContext db) : IAccountRepository
         .Then(token.ThrowIfCancellationRequested)
         .Map(ToDomain);
 
-    public async Task CreateAccount(Account account, CancellationToken token) {
+    public async Task CreateAccount(Domain.Account account, CancellationToken token) {
         ArgumentNullException.ThrowIfNull(account);
 
         var accountData = account.Map(ToData);
@@ -34,7 +31,7 @@ public sealed class AccountRepository(SecurityDbContext db) : IAccountRepository
         token.ThrowIfCancellationRequested();
     }
 
-    private static Models.Account ToData(Account domain) => new() {
+    private static Account ToData(Domain.Account domain) => new() {
         Id = domain.Id,
         Email = domain.Email,
         EmailNormalized = domain.Email.ToLowerInvariant(),
@@ -50,12 +47,12 @@ public sealed class AccountRepository(SecurityDbContext db) : IAccountRepository
         IsDeleted = false
     };
 
-    private static Models.Role ToData(string role) => new() {
+    private static Role ToData(string role) => new() {
         Name = role,
         NormalizedName = role.ToLowerInvariant()
     };
 
-    private static Account? ToDomain(Models.Account? account) =>
+    private static Domain.Account? ToDomain(Account? account) =>
         account is null ? null : new(
             account.Id,
             account.Email,
@@ -65,6 +62,6 @@ public sealed class AccountRepository(SecurityDbContext db) : IAccountRepository
             account.IsLocked,
             account.CreatedAtUtc);
 
-    private static string MapToDomain(Models.Role role) =>
+    private static string MapToDomain(Role role) =>
         role.Name;
 }

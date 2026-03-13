@@ -1,7 +1,6 @@
 ﻿using Accounts.Core.Infrastructure;
-using Accounts.Features.Login.Blazor;
 using Accounts.Login.Blazor;
-using Accounts.Slices.Login.Blazor;
+using Core.Infrastructure;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace Accounts.Login;

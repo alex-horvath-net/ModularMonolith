@@ -1,8 +1,8 @@
 using System.Globalization;
+using Accounts.Core.Domain;
+using Accounts.Core.Infrastructure;
+using Accounts.Register.UserStory;
 using Core.Infrastructure;
-using Features.Accounts.Domain;
-using Features.Accounts.Infrastructure;
-using Features.Accounts.Slices.Register.UserStory;
 using NSubstitute;
 using Shouldly;
 

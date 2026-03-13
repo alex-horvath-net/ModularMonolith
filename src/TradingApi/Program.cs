@@ -1,7 +1,7 @@
+using Accounts.CreateToken;
 using Billing;
 using Core;
-using Features.Accounts.Slices.CreateToken;
-using Features.Orders;
+using Orders;
 
 var builder = WebApplication.CreateBuilder(args);
 

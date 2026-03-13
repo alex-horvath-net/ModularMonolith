@@ -1,5 +1,4 @@
 using Accounts.Core.Infrastructure;
-using Accounts.Features.Register.Triggers.Blazor;
 using Accounts.Register.Triggers.Blazor;
 using Core.Infrastructure;
 using Microsoft.Extensions.DependencyInjection;

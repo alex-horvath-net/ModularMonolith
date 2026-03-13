@@ -1,4 +1,3 @@
-using Features.Orders.Slices.PlaceOrder;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Routing;
 using Microsoft.EntityFrameworkCore;

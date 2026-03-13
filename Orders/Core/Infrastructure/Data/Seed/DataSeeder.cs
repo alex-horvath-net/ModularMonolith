@@ -1,6 +1,4 @@
-﻿using Orders.Core.Infrastructure.Data;
-
-namespace Orders.Core.Infrastructure.Data.Seed;
+﻿namespace Orders.Core.Infrastructure.Data.Seed;
 
 public sealed class DataSeeder(OrdersDbContext db, DataProvider data) {
     public void Seed() => SeedOrders();

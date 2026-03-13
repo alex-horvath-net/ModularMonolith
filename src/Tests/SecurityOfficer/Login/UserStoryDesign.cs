@@ -1,7 +1,7 @@
-﻿using Core.Infrastructure;
-using Features.Accounts.Domain;
-using Features.Accounts.Infrastructure;
-using Features.Accounts.Slices.Login;
+﻿using Accounts.Core.Domain;
+using Accounts.Core.Infrastructure;
+using Accounts.Login;
+using Core.Infrastructure;
 using NSubstitute;
 using Shouldly;
 
