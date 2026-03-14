@@ -24,5 +24,3 @@ app.MapOrders();
 app.MapBilling();
 
 app.Run();
-
-public partial class Program { }

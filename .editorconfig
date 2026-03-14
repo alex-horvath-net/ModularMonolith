@@ -303,3 +303,5 @@ dotnet_diagnostic.CA1305.severity = error # specify culture
 
 dotnet_diagnostic.CA1310.severity = error # StringComparison
 
+dotnet_diagnostic.CA2254.severity = none # allow string format  
+

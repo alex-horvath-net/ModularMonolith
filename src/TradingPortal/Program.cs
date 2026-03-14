@@ -105,8 +105,6 @@ static void SeedSecurityOfficerAccounts(WebApplication app) {
     register.Run(request, CancellationToken.None).GetAwaiter().GetResult();
 }
 
-public partial class Program { }
-
 //// Bootstrap configuration: load secrets from Key Vault or user-secrets before any service registration
 //builder.Configuration.AddSecretsFromStore(builder.Environment);
 

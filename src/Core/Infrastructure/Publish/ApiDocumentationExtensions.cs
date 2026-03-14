@@ -3,7 +3,7 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Routing;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using Microsoft.OpenApi.Models;
+using Microsoft.OpenApi;
 
 namespace Core.Infrastructure.Publish;
 
@@ -14,8 +14,9 @@ internal static class ApiDocumentationExtensions {
         services.AddOpenApi("document", options => {
 
             // Add JWT Bearer security scheme so Swagger UI shows the Authorize button
-            options.AddDocumentTransformer((document, ctx, ct) => {
+            options.AddDocumentTransformer((document, context, cancelationToken) => {
                 document.Components ??= new();
+                document.Components.SecuritySchemes ??= new Dictionary<string, IOpenApiSecurityScheme>();
                 document.Components.SecuritySchemes["Bearer"] = new OpenApiSecurityScheme {
                     Name = "Authorization",
                     Type = SecuritySchemeType.Http,
@@ -32,13 +33,8 @@ internal static class ApiDocumentationExtensions {
                 operation.Security ??= [];
                 operation.Security.Add(new OpenApiSecurityRequirement {
                     [
-                        new OpenApiSecurityScheme {
-                            Reference = new OpenApiReference {
-                                Type = ReferenceType.SecurityScheme,
-                                Id = "Bearer"
-                            }
-                        }
-                    ] = Array.Empty<string>()
+                        new OpenApiSecuritySchemeReference("Bearer", null, null)
+                    ] = []
                 });
                 return Task.CompletedTask;
             });

@@ -14,7 +14,9 @@ public class PlaywrightFixture : IAsyncLifetime {
             .AddEnvironmentVariables()
             .Build();
 
-        return configuration.GetValue<bool>("Playwright:Skip");
+        return bool.TryParse(configuration["Playwright:Skip"], out var skip) && skip;
+
+        //return configuration.GetValue<bool>("Playwright:Skip");
     });
 
     private Process? portalProcess;

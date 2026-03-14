@@ -1,6 +1,5 @@
 ﻿using System.Security.Cryptography;
 using System.Security.Cryptography.X509Certificates;
-using Microsoft.Extensions.Logging;
 
 namespace Core.Infrastructure.Authentication;
 
@@ -41,7 +40,7 @@ internal sealed class CertificateResolver(ILogger<CertificateResolver> logger) :
                     _logger.LogWarning("Certificate found by thumbprint {Thumbprint} rejected: {Reason}", cert.Thumbprint, reason);
                 }
             } catch (Exception ex) {
-                _logger.LogDebug(ex, "Certificate lookup by thumbprint failed.");
+                _logger.LogWarning(ex, "Certificate lookup by thumbprint failed.");
             }
         }
 
@@ -62,7 +61,7 @@ internal sealed class CertificateResolver(ILogger<CertificateResolver> logger) :
                     _logger.LogWarning("Certificate found by subject {Subject} rejected: {Reason}", cert.Subject, reason);
                 }
             } catch (Exception ex) {
-                _logger.LogDebug(ex, "Certificate lookup by subject failed.");
+                _logger.LogWarning(ex, "Certificate lookup by subject failed.");
             }
         }
 
@@ -80,7 +79,7 @@ internal sealed class CertificateResolver(ILogger<CertificateResolver> logger) :
                     _logger.LogWarning("Certificate loaded from PFX {Path} rejected: {Reason}", options.CertificatePath, reason);
                 }
             } catch (Exception ex) {
-                _logger.LogDebug(ex, "Loading certificate from PFX path failed.");
+                _logger.LogWarning(ex, "Loading certificate from PFX path failed.");
             }
         }
 
@@ -176,7 +175,7 @@ internal sealed class CertificateResolver(ILogger<CertificateResolver> logger) :
                     }
                 } catch (Exception ex) {
                     // Network or unexpected errors while checking revocation — be conservative and reject, but only expose debug details
-                    _logger.LogDebug(ex, "Unexpected error while building certificate chain for {Thumbprint}", cert.Thumbprint);
+                    _logger.LogWarning(ex, "Unexpected error while building certificate chain for {Thumbprint}", cert.Thumbprint);
                     reason = "Unexpected error while validating certificate chain";
                     _logger.LogWarning("Certificate {Thumbprint} rejected due to chain validation error", cert.Thumbprint);
                     return false;
@@ -186,7 +185,7 @@ internal sealed class CertificateResolver(ILogger<CertificateResolver> logger) :
             return true;
         } catch (Exception ex) {
             // Be conservative: reject on unexpected inspection errors but surface debug logs
-            _logger.LogDebug(ex, "Unexpected error while validating certificate {Thumbprint}", cert?.Thumbprint);
+            _logger.LogWarning(ex, "Unexpected error while validating certificate {Thumbprint}", cert?.Thumbprint);
             reason = "Unexpected error while validating certificate";
             return false;
         }
