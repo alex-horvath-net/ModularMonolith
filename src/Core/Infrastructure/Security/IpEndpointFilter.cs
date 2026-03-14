@@ -8,7 +8,7 @@ public sealed class IpEndpointFilter : IEndpointFilter {
     private readonly HashSet<string> _allowed;
 
     public IpEndpointFilter(IEnumerable<string>? ipv4List) {
-        _allowed = [with(StringComparer.OrdinalIgnoreCase)];
+        _allowed = new(StringComparer.OrdinalIgnoreCase);
 
         if (ipv4List != null) {
             foreach (var ip_v4 in ipv4List) {
