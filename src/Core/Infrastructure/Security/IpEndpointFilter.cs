@@ -5,9 +5,11 @@ using Microsoft.AspNetCore.Http;
 namespace Core.Infrastructure.Security;
 // AllowedIpHealthFilter acts as an endpoint filter enforcing an IP allowlist for health endpoints.
 public sealed class IpEndpointFilter : IEndpointFilter {
-    private readonly HashSet<string> _allowed = [with(StringComparer.OrdinalIgnoreCase)];
+    private readonly HashSet<string> _allowed;
 
     public IpEndpointFilter(IEnumerable<string>? ipv4List) {
+        _allowed = [with(StringComparer.OrdinalIgnoreCase)];
+
         if (ipv4List != null) {
             foreach (var ip_v4 in ipv4List) {
 
