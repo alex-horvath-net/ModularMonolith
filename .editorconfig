@@ -273,7 +273,7 @@ dotnet_diagnostic.CA1859.severity = none # allow abstract
 
 dotnet_diagnostic.IDE0300.severity = error # simplify collection
 
-dotnet_diagnostic.IDE0028.severity = error # simplify init
+dotnet_diagnostic.IDE0028.severity = none # simplify init
 
 dotnet_diagnostic.IDE0305.severity = none # allow init
 
