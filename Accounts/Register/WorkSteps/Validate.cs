@@ -7,7 +7,7 @@ internal sealed class Validate {
     private readonly CreatePasswordPolicy passwordPolicy = new();
     private readonly CreateRoleRolePolicy rolesPolicy = new();
 
-    public bool Run(Context context) {
+    public void Run(Context context) {
 
         if (context.Request is null) {
             throw new InvalidOperationException(Constants.RequestCanNotBeNell);
@@ -28,8 +28,6 @@ internal sealed class Validate {
         if (!rolesPolicy.IsValid(context.Request.Roles)) {
             throw new InvalidOperationException(Constants.AtLeastOneRoleRequired);
         }
-
-        return true;
     }
 }
 
@@ -50,7 +48,7 @@ internal sealed class CreatePasswordPolicy {
         if (!password.Any(char.IsDigit))
             return false;
 
-        if (!password.Any(char.IsLetterOrDigit))
+        if (!password.Any(character => !char.IsLetterOrDigit(character)))
             return false;
 
         return true;
@@ -67,7 +65,7 @@ internal sealed class CreateRoleRolePolicy {
 
         var cleanedRoles = selectedRoles
             .Where(role => !string.IsNullOrWhiteSpace(role))
-            .Select(role => role.Trim());
+            .Select(role => role.Trim().ToLowerInvariant());
 
         if (!cleanedRoles.Any())
             return false;

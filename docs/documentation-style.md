@@ -60,3 +60,9 @@ Use canonical terms consistently:
 ## Change Discipline
 - Update related docs together when terminology or scales change.
 - Keep examples aligned with the canonical survey field set.
+
+## Icons
+- Use consistent icons for visual cues 
+- :white_square_button: :white_check_mark: :hourglass: :heavy_check_mark: :heavy_multiplication_x: :heavy_exclamation_mark: 
+- :arrow_left: :arrow_right: :arrow_up: :arrow_down: :arrows_counterclockwise: :arrows_clockwise: :left_right_arrow: :arrow_up_down:
+

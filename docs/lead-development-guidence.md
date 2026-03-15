@@ -2,7 +2,7 @@
 	which is based on the vision of the application user and the business strategy to achieve the business goal. 
 	It is a linear process, which starts with the vision and ends with the implementation of the solution.
 	The main idea is to focus on the ultimate goal of the application user and 
-	to build a solution that will help them achieve that goal in the most efficient way possible. 
+	to build a solu0tion that will help them achieve that goal in the most efficient way possible. 
 	The development process is divided into several steps, which are described below:
 
 	Session start protocol:
