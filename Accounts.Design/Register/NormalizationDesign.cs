@@ -1,39 +1,27 @@
+using Accounts.Register.UserStory;
+
 namespace Accounts.Design.Register;
 
-public class NormalizationDesign : Fixtrure {
+public class NormalizationDesign : FeatureDSL {
+    internal override UserStory Unit() => new(AccountantRepository, Hasher, Clock);
+    internal override Task<Response> Call(UserStory userStory) => userStory.Register(Request, Token);
+    internal override string WorkStep() => "Normalization";
 
     [Fact]
-    public async Task Email_Should_Be_Normalized() {
-        var result = await WhenEmailIsNotNormalized().SUT();
-        result.Email.ShouldBe("test-trader@bank.com");
-    }
+    public Task Email_Should_Be_Normalized() =>
+        Given.EmailIsNotNormalized().
+        When.Register().
+        Then.ShouldSucceedWith(result => result.Email.ShouldBe("test-trader@bank.com"));
 
     [Fact]
-    public async Task UserName_Should_Be_Normalized() {
-        var result = await WhenUserNameIsNormalized().SUT();
-        result.UserName.ShouldBe("Test-Trader");
-    }
+    public Task UserName_Should_Be_Normalized() =>
+        Given.UserNameIsNotNormalized().
+        When.Register().
+        Then.ShouldSucceedWith(result => result.UserName.ShouldBe("Test-Trader"));
 
     [Fact]
-    public async Task Roles_Should_Be_Normalized() {
-        var result = await WhenRolesAreNotNormalized().SUT();
-        result.Roles.ShouldBe(["Trader"]);
-    }
-
-    protected NormalizationDesign WhenEmailIsNotNormalized() {
-        var request = RequestFactory();
-        RequestFactory = () => request with { Email = " Test-Trader@Bank.Com  " };
-        return this;
-    }
-
-    protected NormalizationDesign WhenUserNameIsNormalized() {
-        var request = RequestFactory();
-        RequestFactory = () => request with { UserName = " Test-Trader " };
-        return this;
-    }
-    protected NormalizationDesign WhenRolesAreNotNormalized() {
-        var request = RequestFactory();
-        RequestFactory = () => request with { Roles = [null, "", " ", "Trader", " TradeR "] };
-        return this;
-    }
+    public Task Roles_Should_Be_Normalized() =>
+        Given.RolesAreNotNormalized().
+        When.Register().
+        Then.ShouldSucceedWith(result => result.Roles.ShouldBe(["Trader"]));
 }

@@ -1,44 +1,41 @@
-using Accounts.Core.Domain;
-using Accounts.Core.Infrastructure;
 using Accounts.Register.UserStory;
 
 namespace Accounts.Design.Register;
 
-public class DuplicationDesign : Fixtrure {
+public class DuplicationDesign : FeatureDSL {
+    internal override UserStory Unit() => new(AccountantRepository, Hasher, Clock);
+    internal override Task<Response> Call(UserStory userStory) => userStory.Register(Request, Token);
+    internal override string WorkStep() => "Duplication";
 
     [Fact]
-    public async Task Account_With_Same_Email_Should_Be_Not_Allowed() {
-        var exception = WhenAccountAlreadyExistsWithSimilarEmail().SUT.ShouldThrow<InvalidOperationException>();
-
-        exception.Message.ShouldBe(Constants.AccountAlreadyExists);
-        await AccountantRepository.Received(1).FindAccountByEmail("test-trader@bank.com", Token);
-        await AccountantRepository.DidNotReceive().CreateAccount(Arg.Any<Account>(), Arg.Any<CancellationToken>());
-    }
+    public Task Account_With_Same_Email_Should_Be_Not_Allowed() =>
+        Given.AccountAlreadyExistsWithSimilarEmail().
+        When.Register().
+        Then.ShouldFailWith(Constants.AccountAlreadyExists, dsl =>
+            dsl.AccountRepository.Received(1).FindAccountByEmail("test-trader@bank.com", dsl.CurrentToken));
 
     [Fact]
-    public async Task Account_With_New_Email_Should_Be_Allowed() {
-        SUT.ShouldNotThrow();
+    public Task Account_With_New_Email_Should_Be_Allowed() =>
+        When.Register().
+        Then.ShouldSucceedWith((dsl, _) => {
+            dsl.AccountRepository.Received(1).FindAccountByEmail("test-trader@bank.com", dsl.CurrentToken);
+            dsl.AccountRepository.Received(1).CreateAccount(Arg.Any<Accounts.Core.Domain.Account>(), Arg.Any<CancellationToken>());
+        });
 
-        await AccountantRepository.Received().CreateAccount(Arg.Any<Account>(), Arg.Any<CancellationToken>());
-    }
+    [Fact]
+    public Task RegisterAsync_PersistsAccountWithNormalizedCredentials() =>
+        When.Register().
+        Then.ShouldSucceedWith((dsl, result) => {
+            result.Email.ShouldBe("test-trader@bank.com");
+            result.UserName.ShouldBe(dsl.CurrentRequest.UserName);
+            result.Roles.ShouldBe(["Trader", "RiskManager"], ignoreOrder: true);
 
-    protected DuplicationDesign WhenAccountAlreadyExistsWithSimilarEmail() {
-        var existingAccount = new Account(
-            Guid.NewGuid(),
-            EmailFactory(),
-            UserNameFactory(),
-            PasswordFactory(),
-            RolesFactory().ToHashSet(),
-            IsLocked: false,
-            CreatedAtUtc: DateTime.Parse("2024-01-01T00:00:00Z", System.Globalization.CultureInfo.InvariantCulture));
-
-        var mock = AccountRepositoryFactory();
-        mock.FindAccountByEmail(Arg.Any<string>(), Arg.Any<CancellationToken>())
-            .Returns(existingAccount);
-
-        AccountRepositoryFactory = () => mock;
-
-        return this;
-    }
+            dsl.AccountRepository.Received(1).FindAccountByEmail("test-trader@bank.com", dsl.CurrentToken);
+            dsl.AccountRepository.Received(1).CreateAccount(
+                Arg.Is<Accounts.Core.Domain.Account>(account =>
+                    account.Email == "test-trader@bank.com" &&
+                    account.UserName == dsl.CurrentRequest.UserName),
+                dsl.CurrentToken);
+        });
 
 }

@@ -18,7 +18,7 @@ internal sealed class Validate {
         }
 
         if (!passwordPolicy.IsValid(context.Request.Password)) {
-            throw new InvalidOperationException(Constants.PasswordMutBeContain);
+            throw new InvalidOperationException(Constants.PasswordMustBeContain);
         }
 
         if (string.IsNullOrWhiteSpace(context.Request.UserName)) {
@@ -63,14 +63,7 @@ internal sealed class CreateRoleRolePolicy {
         if (selectedRoles == null)
             return false;
 
-        var cleanedRoles = selectedRoles
-            .Where(role => !string.IsNullOrWhiteSpace(role))
-            .Select(role => role.Trim().ToLowerInvariant());
-
-        if (!cleanedRoles.Any())
-            return false;
-
-        if (cleanedRoles.Any(role => !allowedRoles.Contains(role)))
+        if (selectedRoles.Any(role => !allowedRoles.Contains(role)))
             return false;
 
         return true;

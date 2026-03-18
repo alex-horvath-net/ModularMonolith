@@ -3,17 +3,22 @@
 namespace Accounts.Register.WorkSteps;
 
 internal sealed class Normalize {
-    public bool Run(Context context) {
-        context.NormalizedRequest = context.Request with {
-            Email = context.Request.Email.Trim().ToLowerInvariant(),
-            UserName = context.Request.UserName.Trim(),
-            Roles = context.Request.Roles
-                .Where(role => !string.IsNullOrWhiteSpace(role))
-                .Select(role => role.Trim())
-                .Distinct(StringComparer.OrdinalIgnoreCase)
-                .ToArray()
-        };
+    public void Run(Context context) => context.NormalizedRequest = context.Request with {
+        Email = NormalizeEmai(context),
+        UserName = NormalizeUserName(context),
+        Roles = NormalizeRoles(context),
+    };
 
-        return true;
-    }
+    private string NormalizeEmai(Context context) => context.Request.Email
+        .Trim()
+        .ToLowerInvariant();
+
+    private string NormalizeUserName(Context context) => context.Request.UserName
+        .Trim();
+
+    private string[] NormalizeRoles(Context context) => context.Request.Roles
+        .Where(role => !string.IsNullOrWhiteSpace(role))
+        .Select(role => role.Trim())
+        .Distinct(StringComparer.OrdinalIgnoreCase)
+        .ToArray();
 }
