@@ -1,6 +1,6 @@
 namespace Accounts.Register.UserStory;
 
-internal sealed record Response(
+public sealed record Response(
     string? ErrorMessage,
     Guid AccountId,
     string? Email,

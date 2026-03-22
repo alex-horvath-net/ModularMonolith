@@ -6,10 +6,10 @@ using Core.Infrastructure;
 namespace Accounts.Design;
 
 public abstract class ModuleDSL {
-    protected IAccountRepository AccountantRepository { get; set; } = null!;
-    protected IHasher Hasher { get; set; } = null!;
-    protected IClock Clock { get; set; } = null!;
-    protected CancellationToken Token { get; set; }
+    internal IAccountRepository AccountRepository { get; set; } = null!;
+    internal IHasher Hasher { get; set; } = null!;
+    internal IClock Clock { get; set; } = null!;
+    internal CancellationToken Token { get; set; }
 
     internal Func<CancellationToken> TokenFactory { get; set; } = () => CancellationToken.None;
     internal Func<IAccountRepository> AccountRepositoryFactory { get; set; } = () => {
@@ -33,24 +33,9 @@ public abstract class ModuleDSL {
     internal Func<string> EmailFactory { get; set; } = () => "Test-Trader@Bank.com";
     internal Func<IReadOnlyCollection<string>> RolesFactory { get; set; } = () => ["Trader", "RiskManager"];
 
-    protected abstract void Build();
-
-    protected abstract Task<object> ExecuteUnit();
-
     internal T Set<T>(Action<T> change) where T : ModuleDSL {
         var clone = (T)MemberwiseClone();
         change(clone);
         return clone;
     }
-
-    internal async Task<object> ExecuteAsync() {
-        Build();
-        return await ExecuteUnit();
-    }
-
-    internal Task<TException> ShouldThrowAsync<TException>() where TException : Exception =>
-        Assert.ThrowsAsync<TException>(ExecuteAsync);
-
-    internal Task ShouldNotThrowAsync() =>
-        ExecuteAsync();
 }

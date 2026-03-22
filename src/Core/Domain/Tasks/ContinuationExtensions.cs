@@ -28,22 +28,22 @@ public static class ContinuationExtensions {
         return output;
     }
 
-    public static TInput Then<TInput>(this TInput input, Action blockingInputCommand) {
-        blockingInputCommand();
+    public static TInput Then<TInput>(this TInput input, Action command) {
+        command();
         return input;
     }
-    public static TInput Then<TInput>(this TInput input, Action<TInput> blockingInputCommand) {
-        blockingInputCommand(input);
+    public static TInput Then<TInput>(this TInput input, Action<TInput> command) {
+        command(input);
         return input;
     }
-    public static async Task<TInput> Then<TInput>(this TInput input, Func<Task> bockingQueryOfNoneBlockingCommand) {
-        var noneBlockingCommand = bockingQueryOfNoneBlockingCommand();
+    public static async Task<TInput> Then<TInput>(this TInput input, Func<Task> queryOfNoneBlockingCommand) {
+        var noneBlockingCommand = queryOfNoneBlockingCommand();
         await noneBlockingCommand;
         return input;
     }
-    public static async Task Then(this Task noneBlockingCommand, Action blockingCommand) {
+    public static async Task Then(this Task noneBlockingCommand, Action command) {
         await noneBlockingCommand;
-        blockingCommand();
+        command();
     }
     public static async Task Then(this Task noneBlockingCommand, Func<Task> bockingQueryOfNoneBlockingCommand) {
         await noneBlockingCommand;

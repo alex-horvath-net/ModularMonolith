@@ -1,27 +1,21 @@
-using Accounts.Register.UserStory;
-
 namespace Accounts.Design.Register;
 
 public class NormalizationDesign : FeatureDSL {
-    internal override UserStory Unit() => new(AccountantRepository, Hasher, Clock);
-    internal override Task<Response> Call(UserStory userStory) => userStory.Register(Request, Token);
-    internal override string WorkStep() => "Normalization";
+    [Fact]
+    public async Task Email_Should_Be_Normalized() => await
+        Given(EmailIsNotNormalized).
+        When(Run).
+        Then(() => Response.Email.ShouldBe("test-trader@bank.com"));
 
     [Fact]
-    public Task Email_Should_Be_Normalized() =>
-        Given.EmailIsNotNormalized().
-        When.Register().
-        Then.ShouldSucceedWith(result => result.Email.ShouldBe("test-trader@bank.com"));
+    public async Task UserName_Should_Be_Normalized() => await
+        Given(UserNameIsNotNormalized).
+        When(Run).
+        Then(() => Response.UserName.ShouldBe("Test-Trader"));
 
     [Fact]
-    public Task UserName_Should_Be_Normalized() =>
-        Given.UserNameIsNotNormalized().
-        When.Register().
-        Then.ShouldSucceedWith(result => result.UserName.ShouldBe("Test-Trader"));
-
-    [Fact]
-    public Task Roles_Should_Be_Normalized() =>
-        Given.RolesAreNotNormalized().
-        When.Register().
-        Then.ShouldSucceedWith(result => result.Roles.ShouldBe(["Trader"]));
+    public async Task Roles_Should_Be_Normalized() => await
+        Given(RolesAreNotNormalized).
+        When(Run).
+        Then(() => Response.Roles.ShouldBe(["Trader"]));
 }
