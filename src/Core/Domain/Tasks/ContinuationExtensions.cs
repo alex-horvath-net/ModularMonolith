@@ -50,6 +50,7 @@ public static class ContinuationExtensions {
         var nextNoneBlockingCommand = bockingQueryOfNoneBlockingCommand();
         await nextNoneBlockingCommand;
     }
+
     public static async Task Then<TInput>(this Task<TInput> noneBockingInputQuery, Action<TInput> blockingInputCommand) {
         var input = await noneBockingInputQuery;
         blockingInputCommand(input);

@@ -38,8 +38,11 @@ public abstract class FeatureDSL : ModuleDSL {
             Roles: RolesFactory());
     }
 
-    internal Task<TException> ShouldThrowAsync<TException>() where TException : Exception =>
-       Assert.ThrowsAsync<TException>(Run);
+    internal Task<TException> ShouldThrowAsync<TException>() where TException : Exception {
+        var x = () => Task.CompletedTask;
+        Run.ShouldThrowAsync<Exception>();
+        return Assert.ThrowsAsync<TException>(Run);
+    }
 
     internal Task ShouldNotThrowAsync() =>
         Run();
@@ -120,8 +123,6 @@ public abstract class FeatureDSL : ModuleDSL {
 
     // Then ***********************************************************************
     //public void Then(Func<Task> action) => action();
-
-    public Task ShouldFailWithRequestCanNotBeNell() => ShouldFailWith(Constants.RequestCanNotBeNell);
 
     public async Task ShouldFailWith(string message) {
         var ex = await ShouldThrowAsync<InvalidOperationException>();
