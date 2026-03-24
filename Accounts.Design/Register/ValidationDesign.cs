@@ -5,67 +5,67 @@ namespace Accounts.Design.Register;
 public class ValidationDesign : FeatureDSL {
     [Fact]
     public async Task Request_Should_Be_Presented() => await
-        Given(RequestIsMissing).
+        Given(DefaultSettings, But, RequestIsMissing).
         When(Run).
-        Then(() => ShouldFailWith(Constants.RequestCanNotBeNell));
+        Then(() => ShouldThrow<InvalidOperationException>(Constants.RequestCanNotBeNull));
 
     [Fact]
     public async Task Email_Should_Be_Presented() => await
-        Given(EmailIsMissing).
+        Given(DefaultSettings, But, EmailIsMissing).
         When(Run).
-        Then(() => ShouldFailWith(Constants.EmailIsRequired));
+        Then(() => ShouldThrow<InvalidOperationException>(Constants.EmailIsRequired));
 
     [Fact]
     public async Task Password_Should_Be_Presented() => await
-        Given(PasswordIsMissing).
+        Given(DefaultSettings, But, PasswordIsMissing).
         When(Run).
-        Then(() => ShouldFailWith(Constants.PasswordMustBeContain));
+        Then(() => ShouldThrow<InvalidOperationException>(Constants.PasswordMustBeContain));
 
     [Fact]
     public async Task Password_Should_Be_Long() => await
-        Given(() => PasswordIsShorterThan(12)).
+        Given(DefaultSettings, But, () => PasswordIsShorterThan(12)).
         When(Run).
-        Then(() => ShouldFailWith(Constants.PasswordMustBeContain));
+        Then(() => ShouldThrow<InvalidOperationException>(Constants.PasswordMustBeContain));
 
     [Fact]
     public async Task Password_Should_Have_LowerCase() => await
-        Given(PasswordHasNoLowerCase).
+        Given(DefaultSettings, But, PasswordHasNoLowerCase).
         When(Run).
-        Then(() => ShouldFailWith(Constants.PasswordMustBeContain));
+        Then(() => ShouldThrow<InvalidOperationException>(Constants.PasswordMustBeContain));
 
     [Fact]
     public async Task Password_Should_Have_UpperCase() => await
-        Given(PasswordHasNoUpperCase).
+        Given(DefaultSettings, But, PasswordHasNoUpperCase).
         When(Run).
-        Then(() => ShouldFailWith(Constants.PasswordMustBeContain));
+        Then(() => ShouldThrow<InvalidOperationException>(Constants.PasswordMustBeContain));
 
     [Fact]
     public async Task Password_Should_Have_Digit() => await
-        Given(PasswordHasNoDigit).
+        Given(DefaultSettings, But, PasswordHasNoDigit).
         When(Run).
-        Then(() => ShouldFailWith(Constants.PasswordMustBeContain));
+        Then(() => ShouldThrow<InvalidOperationException>(Constants.PasswordMustBeContain));
 
     [Fact]
     public async Task Password_Should_Have_SpecialCharacter() => await
-        Given(PasswordHasNoSpecialCharacter).
+        Given(DefaultSettings, But, PasswordHasNoSpecialCharacter).
         When(Run).
-        Then(() => ShouldFailWith(Constants.PasswordMustBeContain));
+        Then(() => ShouldThrow<InvalidOperationException>(Constants.PasswordMustBeContain));
 
     [Fact]
     public async Task UserName_Should_Be_Presented() => await
-        Given(UserNameIsMissing).
+        Given(DefaultSettings, But, UserNameIsMissing).
         When(Run).
-        Then(() => ShouldFailWith(Constants.UserNameIsRequired));
+        Then(() => ShouldThrow<InvalidOperationException>(Constants.UserNameIsRequired));
 
     [Fact]
     public async Task Roles_Should_Be_Presented() => await
-        Given(RolesIsMissing).
+        Given(DefaultSettings, But, RolesIsMissing).
         When(Run).
-        Then(() => ShouldFailWith(Constants.AtLeastOneRoleRequired));
+        Then(() => ShouldThrow<InvalidOperationException>(Constants.AtLeastOneRoleRequired));
 
     [Fact]
     public async Task Roles_Should_Be_Registered() => await
-        Given(RolesContainUnregistered).
+        Given(DefaultSettings, But, RolesContainUnregistered).
         When(Run).
-        Then(() => ShouldFailWith(Constants.AtLeastOneRoleRequired));
+        Then(() => ShouldThrow<InvalidOperationException>(Constants.AtLeastOneRoleRequired));
 }

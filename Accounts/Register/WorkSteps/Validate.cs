@@ -10,7 +10,7 @@ internal sealed class Validate {
     public void Run(Context context) {
 
         if (context.Request is null) {
-            throw new InvalidOperationException(Constants.RequestCanNotBeNell);
+            throw new InvalidOperationException(Constants.RequestCanNotBeNull);
         }
 
         if (string.IsNullOrWhiteSpace(context.Request.Email)) {

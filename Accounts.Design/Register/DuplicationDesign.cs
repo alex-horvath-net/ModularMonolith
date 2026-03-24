@@ -7,7 +7,7 @@ public class DuplicationDesign : FeatureDSL {
     public async Task Account_With_Same_Email_Should_Be_Not_Allowed() => await
         Given(AccountAlreadyExistsWithSimilarEmail).
         When(Run).
-        Then(() => ShouldFailWith(Constants.AccountAlreadyExists)).
+        Then(() => ShouldThrow<InvalidOperationException>(Constants.AccountAlreadyExists)).
         Then(() => AccountRepository.Received(1).FindAccountByEmail("test-trader@bank.com", Token));
 
     [Fact]
@@ -21,13 +21,14 @@ public class DuplicationDesign : FeatureDSL {
     public async Task RegisterAsync_PersistsAccountWithNormalizedCredentials() => await
         Given(DefaultSettings).
         When(Run).
-        Then(() => {
+        Then(async () => {
+            await SUT.ShouldNotThrowAsync();
             Response.Email.ShouldBe("test-trader@bank.com");
             Response.UserName.ShouldBe(Request.UserName);
             Response.Roles.ShouldBe(["Trader", "RiskManager"], ignoreOrder: true);
 
-            AccountRepository.Received(1).FindAccountByEmail("test-trader@bank.com", Token);
-            AccountRepository.Received(1).CreateAccount(
+            AccountRepository?.Received(1).FindAccountByEmail("test-trader@bank.com", Token);
+            AccountRepository?.Received(1).CreateAccount(
                 Arg.Is<Core.Domain.Account>(account => account.Email == "test-trader@bank.com" && account.UserName == Request.UserName),
                 Token);
         });
