@@ -6,29 +6,33 @@ namespace Accounts.Design.Register;
 
 public abstract class FeatureDSL : ModuleDSL {
     protected FeatureDSL() {
-        DefaultSettings();
+        requestFactory = () => new Request(
+            Email: emailFactory(),
+            UserName: userNameFactory(),
+            Password: passwordFactory(),
+            Roles: rolesFactory());
     }
 
     internal async Task Run() {
-        UserStory = new UserStory(AccountRepository, Hasher, Clock);
-        Response = await UserStory.Register(Request, Token);
+        userStory = new UserStory(accountRepository, hasher, clock);
+        response = await userStory.Register(request, token);
     }
 
     private void GenerateDependencies() {
-        Request = RequestFactory!();
-        Token = TokenFactory!();
+        request = requestFactory!();
+        token = tokenFactory!();
 
-        AccountRepository = AccountRepositoryFactory!();
-        Hasher = HasherFactory!();
-        Clock = ClockFactory!();
+        accountRepository = accountRepositoryFactory!();
+        hasher = hasherFactory!();
+        clock = clockFactory!();
     }
 
     internal Func<Task> SUT { get; set; } = null!;
-    internal UserStory UserStory { get; set; } = null!;
-    internal Request Request { get; set; } = null!;
-    internal Response Response { get; set; } = null!;
+    internal UserStory userStory = null!;
+    internal Request request = null!;
+    internal Response response = null!;
 
-    internal Func<Request> RequestFactory { get; set; } = null!;
+    internal Func<Request> requestFactory = null!;
 
     // Given ***********************************************************************
     public void But() { }
@@ -39,70 +43,64 @@ public abstract class FeatureDSL : ModuleDSL {
         return this;
     }
 
-    public void DefaultSettings() => RequestIsDefault();
+    public void DefaultSettings() { }
 
-    public void RequestIsDefault() => RequestFactory = () => new Request(
-        Email: EmailFactory(),
-        UserName: UserNameFactory(),
-        Password: PasswordFactory(),
-        Roles: RolesFactory());
+    public void RequestIsMissing() => requestFactory = () => null!;
 
-    public void RequestIsMissing() => RequestFactory = () => null!;
+    public void EmailIsMissing() => emailFactory = () => null!;
 
-    public void EmailIsMissing() => EmailFactory = () => null!;
+    public void EmailIsNotNormalized() => emailFactory = () => " Test-Trader@Bank.Com  ";
 
-    public void EmailIsNotNormalized() => EmailFactory = () => " Test-Trader@Bank.Com  ";
-
-    public void PasswordIsMissing() => PasswordFactory = () => null!;
+    public void PasswordIsMissing() => passwordFactory = () => null!;
     public void PasswordIsShorterThan(int trashold) {
-        var createPassword = PasswordFactory;
-        PasswordFactory = () => createPassword()[..(trashold - 1)];
+        var createPassword = passwordFactory;
+        passwordFactory = () => createPassword()[..(trashold - 1)];
     }
 
     public void PasswordHasNoUpperCase() {
-        var createPassword = PasswordFactory;
-        PasswordFactory = () => createPassword().ToLowerInvariant();
+        var createPassword = passwordFactory;
+        passwordFactory = () => createPassword().ToLowerInvariant();
     }
 
     public void PasswordHasNoLowerCase() {
-        var createPassword = PasswordFactory;
-        PasswordFactory = () => createPassword().ToUpperInvariant();
+        var createPassword = passwordFactory;
+        passwordFactory = () => createPassword().ToUpperInvariant();
     }
 
     public void PasswordHasNoDigit() {
-        var createPassword = PasswordFactory;
-        PasswordFactory = () => new string(createPassword().Where(c => !char.IsDigit(c)).ToArray());
+        var createPassword = passwordFactory;
+        passwordFactory = () => new string(createPassword().Where(c => !char.IsDigit(c)).ToArray());
     }
 
     public void PasswordHasNoSpecialCharacter() {
-        var createPassword = PasswordFactory;
-        PasswordFactory = () => new string(createPassword().Where(char.IsLetterOrDigit).ToArray());
+        var createPassword = passwordFactory;
+        passwordFactory = () => new string(createPassword().Where(char.IsLetterOrDigit).ToArray());
     }
 
-    public void UserNameIsMissing() => UserNameFactory = () => null!;
+    public void UserNameIsMissing() => userNameFactory = () => null!;
 
-    public void UserNameIsNotNormalized() => UserNameFactory = () => " Test-Trader ";
+    public void UserNameIsNotNormalized() => userNameFactory = () => " Test-Trader ";
 
-    public void RolesIsMissing() => RolesFactory = () => null!;
+    public void RolesIsMissing() => rolesFactory = () => null!;
 
-    public void RolesAreNotNormailized() => RolesFactory = () => [null!, "", " "];
-    public void RolesAreNotNormalized() => RolesFactory = () => ["Trader", "trader"];
+    public void RolesAreNotNormailized() => rolesFactory = () => [null!, "", " "];
+    public void RolesAreNotNormalized() => rolesFactory = () => ["Trader", "trader"];
 
-    public void RolesContainUnregistered() => RolesFactory = () => ["Trader", "UnRegisteredRole"];
+    public void RolesContainUnregistered() => rolesFactory = () => ["Trader", "UnRegisteredRole"];
 
     public void AccountAlreadyExistsWithSimilarEmail() {
         var existingAccount = new Account(
             Guid.NewGuid(),
-            EmailFactory(),
-            UserNameFactory(),
-            PasswordFactory(),
-            RolesFactory().ToHashSet(StringComparer.OrdinalIgnoreCase),
+            emailFactory(),
+            userNameFactory(),
+            passwordFactory(),
+            rolesFactory().ToHashSet(StringComparer.OrdinalIgnoreCase),
             IsLocked: false,
             CreatedAtUtc: DateTime.Parse("2024-01-01T00:00:00Z", CultureInfo.InvariantCulture));
 
-        var mock = AccountRepositoryFactory!();
+        var mock = accountRepositoryFactory!();
         mock.FindAccountByEmail(Arg.Any<string>(), Arg.Any<CancellationToken>()).Returns(existingAccount);
-        AccountRepositoryFactory = () => mock;
+        accountRepositoryFactory = () => mock;
     }
 
     // When ***********************************************************************
