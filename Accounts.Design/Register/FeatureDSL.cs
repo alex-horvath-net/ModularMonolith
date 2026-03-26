@@ -5,6 +5,10 @@ using Accounts.Register.UserStory;
 namespace Accounts.Design.Register;
 
 public abstract class FeatureDSL : ModuleDSL {
+    protected FeatureDSL() {
+        DefaultSettings();
+    }
+
     internal async Task Run() {
         UserStory = new UserStory(AccountRepository, Hasher, Clock);
         Response = await UserStory.Register(Request, Token);
@@ -35,15 +39,7 @@ public abstract class FeatureDSL : ModuleDSL {
         return this;
     }
 
-    public void DefaultSettings() {
-
-        TokenIsDefault();
-        AccountRepositoryIsDefault();
-        HasherFactoryIsDefault();
-        ClockFactoryIsDefault();
-
-        RequestIsDefault();
-    }
+    public void DefaultSettings() => RequestIsDefault();
 
     public void RequestIsDefault() => RequestFactory = () => new Request(
         Email: EmailFactory(),
@@ -58,14 +54,30 @@ public abstract class FeatureDSL : ModuleDSL {
     public void EmailIsNotNormalized() => EmailFactory = () => " Test-Trader@Bank.Com  ";
 
     public void PasswordIsMissing() => PasswordFactory = () => null!;
-    public void PasswordIsShorterThan(int trashold) => PasswordFactory = () => PasswordFactory()[..(trashold - 1)];
+    public void PasswordIsShorterThan(int trashold) {
+        var createPassword = PasswordFactory;
+        PasswordFactory = () => createPassword()[..(trashold - 1)];
+    }
 
-    public void PasswordHasNoUpperCase() => PasswordFactory = () => PasswordFactory().ToLowerInvariant();
+    public void PasswordHasNoUpperCase() {
+        var createPassword = PasswordFactory;
+        PasswordFactory = () => createPassword().ToLowerInvariant();
+    }
 
-    public void PasswordHasNoLowerCase() => PasswordFactory = () => PasswordFactory().ToUpperInvariant();
+    public void PasswordHasNoLowerCase() {
+        var createPassword = PasswordFactory;
+        PasswordFactory = () => createPassword().ToUpperInvariant();
+    }
 
-    public void PasswordHasNoDigit() => PasswordFactory = () => new string(PasswordFactory().Where(c => !char.IsDigit(c)).ToArray());
-    public void PasswordHasNoSpecialCharacter() => PasswordFactory = () => new string(PasswordFactory().Where(c => char.IsLetterOrDigit(c)).ToArray());
+    public void PasswordHasNoDigit() {
+        var createPassword = PasswordFactory;
+        PasswordFactory = () => new string(createPassword().Where(c => !char.IsDigit(c)).ToArray());
+    }
+
+    public void PasswordHasNoSpecialCharacter() {
+        var createPassword = PasswordFactory;
+        PasswordFactory = () => new string(createPassword().Where(char.IsLetterOrDigit).ToArray());
+    }
 
     public void UserNameIsMissing() => UserNameFactory = () => null!;
 
@@ -74,7 +86,7 @@ public abstract class FeatureDSL : ModuleDSL {
     public void RolesIsMissing() => RolesFactory = () => null!;
 
     public void RolesAreNotNormailized() => RolesFactory = () => [null!, "", " "];
-    public void RolesAreNotNormalized() => RolesFactory = () => [null!, "", " ", "Trader", " TradeR "];
+    public void RolesAreNotNormalized() => RolesFactory = () => ["Trader", "trader"];
 
     public void RolesContainUnregistered() => RolesFactory = () => ["Trader", "UnRegisteredRole"];
 

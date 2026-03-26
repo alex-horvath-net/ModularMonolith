@@ -5,7 +5,7 @@ namespace Accounts.Design.Register;
 public class DuplicationDesign : FeatureDSL {
     [Fact]
     public async Task Account_With_Same_Email_Should_Be_Not_Allowed() => await
-        Given(AccountAlreadyExistsWithSimilarEmail).
+        Given(DefaultSettings, But, AccountAlreadyExistsWithSimilarEmail).
         When(Run).
         Then(() => ShouldThrow<InvalidOperationException>(Constants.AccountAlreadyExists)).
         Then(() => AccountRepository.Received(1).FindAccountByEmail("test-trader@bank.com", Token));
@@ -14,6 +14,7 @@ public class DuplicationDesign : FeatureDSL {
     public async Task Account_With_New_Email_Should_Be_Allowed() => await
         Given(DefaultSettings).
         When(Run).
+        Then(() => SUT.ShouldNotThrowAsync()).
         Then(() => AccountRepository.Received(1).FindAccountByEmail("test-trader@bank.com", Token)).
         Then(() => AccountRepository.Received(1).CreateAccount(Arg.Any<Core.Domain.Account>(), Arg.Any<CancellationToken>()));
 
