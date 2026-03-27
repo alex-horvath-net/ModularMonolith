@@ -4,118 +4,93 @@ using Accounts.Register.UserStory;
 
 namespace Accounts.Design.Register;
 
-public abstract class FeatureDSL : ModuleDSL {
-    protected FeatureDSL() {
-        requestFactory = () => new Request(
-            Email: emailFactory(),
-            UserName: userNameFactory(),
-            Password: passwordFactory(),
-            Roles: rolesFactory());
+public abstract class FeatureDSL : ModuleDSL<FeatureDSL> {
+
+    protected override void DefaultSettings() {
+        base.DefaultSettings();
+
+        RequestFactory = () => new Request(
+            Email: EmailFactory(),
+            UserName: UserNameFactory(),
+            Password: PasswordFactory(),
+            Roles: RolesFactory());
     }
 
-    internal async Task Run() {
-        userStory = new UserStory(accountRepository, hasher, clock);
-        response = await userStory.Register(request, token);
+    protected async Task Run() {
+        UserStory = new UserStory(AccountRepository, Hasher, Clock);
+        Response = await UserStory.Register(Request, Token);
     }
 
-    private void GenerateDependencies() {
-        request = requestFactory!();
-        token = tokenFactory!();
+    protected override void GenerateDependencies() {
+        Request = RequestFactory();
+        Token = TokenFactory();
 
-        accountRepository = accountRepositoryFactory!();
-        hasher = hasherFactory!();
-        clock = clockFactory!();
+        AccountRepository = AccountRepositoryFactory();
+        Hasher = HasherFactory();
+        Clock = ClockFactory();
     }
 
-    internal Func<Task> SUT { get; set; } = null!;
-    internal UserStory userStory = null!;
-    internal Request request = null!;
-    internal Response response = null!;
+    private protected UserStory UserStory { get; set; } = null!;
+    private protected Request Request { get; set; } = null!;
+    private protected Response Response { get; set; } = null!;
 
-    internal Func<Request> requestFactory = null!;
+    private protected Func<Request> RequestFactory { get; set; } = null!;
 
-    // Given ***********************************************************************
-    public void But() { }
-    public void And() { }
-    public FeatureDSL Given(params Action[] settings) {
-        foreach (var setting in settings)
-            setting();
-        return this;
+    protected void RequestIsMissing() => RequestFactory = () => null!;
+
+    protected void EmailIsMissing() => EmailFactory = () => null!;
+
+    protected void EmailIsNotNormalized() => EmailFactory = () => " Test-Trader@Bank.Com  ";
+
+    protected void PasswordIsMissing() => PasswordFactory = () => null!;
+    protected void PasswordIsShorterThan(int trashold) {
+        var createPassword = PasswordFactory;
+        PasswordFactory = () => createPassword()[..(trashold - 1)];
     }
 
-    public void DefaultSettings() { }
-
-    public void RequestIsMissing() => requestFactory = () => null!;
-
-    public void EmailIsMissing() => emailFactory = () => null!;
-
-    public void EmailIsNotNormalized() => emailFactory = () => " Test-Trader@Bank.Com  ";
-
-    public void PasswordIsMissing() => passwordFactory = () => null!;
-    public void PasswordIsShorterThan(int trashold) {
-        var createPassword = passwordFactory;
-        passwordFactory = () => createPassword()[..(trashold - 1)];
+    protected void PasswordHasNoUpperCase() {
+        var createPassword = PasswordFactory;
+        PasswordFactory = () => createPassword().ToLowerInvariant();
     }
 
-    public void PasswordHasNoUpperCase() {
-        var createPassword = passwordFactory;
-        passwordFactory = () => createPassword().ToLowerInvariant();
+    protected void PasswordHasNoLowerCase() {
+        var createPassword = PasswordFactory;
+        PasswordFactory = () => createPassword().ToUpperInvariant();
     }
 
-    public void PasswordHasNoLowerCase() {
-        var createPassword = passwordFactory;
-        passwordFactory = () => createPassword().ToUpperInvariant();
+    protected void PasswordHasNoDigit() {
+        var createPassword = PasswordFactory;
+        PasswordFactory = () => new string(createPassword().Where(c => !char.IsDigit(c)).ToArray());
     }
 
-    public void PasswordHasNoDigit() {
-        var createPassword = passwordFactory;
-        passwordFactory = () => new string(createPassword().Where(c => !char.IsDigit(c)).ToArray());
+    protected void PasswordHasNoSpecialCharacter() {
+        var createPassword = PasswordFactory;
+        PasswordFactory = () => new string(createPassword().Where(char.IsLetterOrDigit).ToArray());
     }
 
-    public void PasswordHasNoSpecialCharacter() {
-        var createPassword = passwordFactory;
-        passwordFactory = () => new string(createPassword().Where(char.IsLetterOrDigit).ToArray());
-    }
+    protected void UserNameIsMissing() => UserNameFactory = () => null!;
 
-    public void UserNameIsMissing() => userNameFactory = () => null!;
+    protected void UserNameIsNotNormalized() => UserNameFactory = () => " Test-Trader ";
 
-    public void UserNameIsNotNormalized() => userNameFactory = () => " Test-Trader ";
+    protected void RolesIsMissing() => RolesFactory = () => null!;
 
-    public void RolesIsMissing() => rolesFactory = () => null!;
+    protected void RolesAreNotNormailized() => RolesFactory = () => [null!, "", " "];
+    protected void RolesAreNotNormalized() => RolesFactory = () => ["Trader", "trader"];
 
-    public void RolesAreNotNormailized() => rolesFactory = () => [null!, "", " "];
-    public void RolesAreNotNormalized() => rolesFactory = () => ["Trader", "trader"];
+    protected void RolesContainUnregistered() => RolesFactory = () => ["Trader", "UnRegisteredRole"];
 
-    public void RolesContainUnregistered() => rolesFactory = () => ["Trader", "UnRegisteredRole"];
-
-    public void AccountAlreadyExistsWithSimilarEmail() {
+    protected void AccountAlreadyExistsWithSimilarEmail() {
         var existingAccount = new Account(
             Guid.NewGuid(),
-            emailFactory(),
-            userNameFactory(),
-            passwordFactory(),
-            rolesFactory().ToHashSet(StringComparer.OrdinalIgnoreCase),
+            EmailFactory(),
+            UserNameFactory(),
+            PasswordFactory(),
+            RolesFactory().ToHashSet(StringComparer.OrdinalIgnoreCase),
             IsLocked: false,
             CreatedAtUtc: DateTime.Parse("2024-01-01T00:00:00Z", CultureInfo.InvariantCulture));
 
-        var mock = accountRepositoryFactory!();
+        var mock = AccountRepositoryFactory();
         mock.FindAccountByEmail(Arg.Any<string>(), Arg.Any<CancellationToken>()).Returns(existingAccount);
-        accountRepositoryFactory = () => mock;
-    }
-
-    // When ***********************************************************************
-    public FeatureDSL When(Func<Task> sut) {
-        GenerateDependencies();
-        SUT = sut;
-        return this;
-    }
-
-    // Then ***********************************************************************
-    //public void Then(Func<Task> action) => action();
-
-    public async Task ShouldThrow<TException>(string? message = null) where TException : Exception {
-        var ex = await SUT.ShouldThrowAsync<TException>();
-        if (message is not null)
-            ex.Message.ShouldBe(message);
+        AccountRepositoryFactory = () => mock;
     }
 }

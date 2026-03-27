@@ -2,7 +2,7 @@ using Accounts.Register.UserStory;
 
 namespace Accounts.Design.Register;
 
-public class ValidationDesign : FeatureDSL {
+public sealed class ValidationDesign : FeatureDSL {
     [Fact]
     public async Task Request_Should_Be_Presented() => await
         Given(DefaultSettings, But, RequestIsMissing).

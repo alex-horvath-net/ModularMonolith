@@ -5,50 +5,76 @@ using Core.Infrastructure;
 
 namespace Accounts.Design;
 
-public abstract class ModuleDSL {
+public abstract class ModuleDSL<TFeatureDSL> where TFeatureDSL : ModuleDSL<TFeatureDSL> {
+    protected virtual void DefaultSettings() {
+        TokenFactory = () => CancellationToken.None;
 
-    protected ModuleDSL() {
-        tokenFactory = () => CancellationToken.None;
-
-        accountRepositoryFactory = () => {
+        AccountRepositoryFactory = () => {
             var mock = Substitute.For<IAccountRepository>();
             mock.FindAccountByEmail(default!, default).Returns(Task.FromResult((Account?)null));
             mock.CreateAccount(default!, default).Returns(Task.CompletedTask);
             return mock;
         };
 
-        hasherFactory = () => {
+        HasherFactory = () => {
             var mock = Substitute.For<IHasher>();
             mock.Generate(Arg.Any<string>()).Returns("hashed-password");
             return mock;
         };
 
-        clockFactory = () => {
+        ClockFactory = () => {
             var mock = Substitute.For<IClock>();
             mock.UtcNow.Returns(DateTime.Parse("2024-01-01T00:00:00Z", CultureInfo.InvariantCulture));
             return mock;
         };
 
-        userNameFactory = () => "Test-Trader";
+        UserNameFactory = () => "Test-Trader";
 
-        passwordFactory = () => "Ab!456789012";
+        PasswordFactory = () => "Ab!456789012";
 
-        emailFactory = () => "Test-Trader@Bank.com";
+        EmailFactory = () => "Test-Trader@Bank.com";
 
-        rolesFactory = () => ["Trader", "RiskManager"];
+        RolesFactory = () => ["Trader", "RiskManager"];
     }
 
-    internal IAccountRepository accountRepository = null!;
-    internal IHasher hasher = null!;
-    internal IClock clock = null!;
-    internal CancellationToken token;
+    protected IAccountRepository AccountRepository { get; set; } = null!;
+    protected IHasher Hasher { get; set; } = null!;
+    protected IClock Clock { get; set; } = null!;
+    protected CancellationToken Token { get; set; }
 
-    internal Func<CancellationToken>? tokenFactory;
-    internal Func<IAccountRepository>? accountRepositoryFactory;
-    internal Func<IHasher>? hasherFactory;
-    internal Func<IClock>? clockFactory;
-    internal Func<string> userNameFactory;
-    internal Func<string> passwordFactory;
-    internal Func<string> emailFactory;
-    internal Func<IReadOnlyCollection<string>> rolesFactory;
+    protected Func<CancellationToken> TokenFactory { get; set; } = null!;
+    protected Func<IAccountRepository> AccountRepositoryFactory { get; set; } = null!;
+    protected Func<IHasher> HasherFactory { get; set; } = null!;
+    protected Func<IClock> ClockFactory { get; set; } = null!;
+    protected Func<string> UserNameFactory { get; set; } = null!;
+    protected Func<string> PasswordFactory { get; set; } = null!;
+    protected Func<string> EmailFactory { get; set; } = null!;
+    protected Func<IReadOnlyCollection<string>> RolesFactory { get; set; } = null!;
+
+    protected Func<Task> SUT { get; set; } = null!;
+
+    protected void But() { }
+
+    protected void And() { }
+
+    protected TFeatureDSL Given(params Action[] settings) {
+        foreach (var setting in settings)
+            setting();
+
+        return (TFeatureDSL)this;
+    }
+
+    internal TFeatureDSL When(Func<Task> sut) {
+        GenerateDependencies();
+        SUT = sut;
+        return (TFeatureDSL)this;
+    }
+
+    protected async Task ShouldThrow<TException>(string? message = null) where TException : Exception {
+        var ex = await SUT.ShouldThrowAsync<TException>();
+        if (message is not null)
+            ex.Message.ShouldBe(message);
+    }
+
+    protected abstract void GenerateDependencies();
 }
