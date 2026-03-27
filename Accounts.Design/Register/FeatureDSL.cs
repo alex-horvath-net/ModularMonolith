@@ -90,7 +90,7 @@ public abstract class FeatureDSL : ModuleDSL<FeatureDSL> {
             CreatedAtUtc: DateTime.Parse("2024-01-01T00:00:00Z", CultureInfo.InvariantCulture));
 
         var mock = AccountRepositoryFactory();
-        mock.FindAccountByEmail(Arg.Any<string>(), Arg.Any<CancellationToken>()).Returns(existingAccount);
+        mock.FindAccountByEmail(default!, default).Returns(existingAccount);
         AccountRepositoryFactory = () => mock;
     }
 }
