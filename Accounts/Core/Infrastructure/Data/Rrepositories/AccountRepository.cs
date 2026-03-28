@@ -8,9 +8,9 @@ public sealed class AccountRepository(SecurityDbContext db) : IAccountRepository
     public async Task<Domain.Account?> FindAccountByEmail(string email, CancellationToken token) => await db.Accounts
         .Include(account => account.Roles)
         .AsNoTracking()
-        .Then(token.ThrowIfCancellationRequested)
+        .Next(token.ThrowIfCancellationRequested)
         .FirstOrDefaultAsync(account => account.EmailNormalized == email, token)
-        .Then(token.ThrowIfCancellationRequested)
+        .Next(token.ThrowIfCancellationRequested)
         .Map(ToDomain);
 
     public async Task CreateAccount(Domain.Account account, CancellationToken token) {

@@ -30,7 +30,6 @@
     <Using Include="Xunit" />
     <Using Include="NSubstitute" />
     <Using Include="Shouldly" />
-    <Using Include="Core.Domain.Tasks"/>
   </ItemGroup>
 
 </Project>

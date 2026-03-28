@@ -52,29 +52,55 @@ public abstract class ModuleDSL<TFeatureDSL> where TFeatureDSL : ModuleDSL<TFeat
     protected Func<IReadOnlyCollection<string>> RolesFactory { get; set; } = null!;
 
     protected Func<Task> SUT { get; set; } = null!;
+    protected Task SUTTask { get; set; } = null!;
 
     protected void But() { }
 
     protected void And() { }
 
-    protected TFeatureDSL Given(params Action[] settings) {
-        foreach (var setting in settings)
-            setting();
+    protected TFeatureDSL Given(params Action[] dependecyFactories) {
+        foreach (var dependecyFactory in dependecyFactories)
+            dependecyFactory();
 
         return (TFeatureDSL)this;
     }
 
     internal TFeatureDSL When(Func<Task> sut) {
         GenerateDependencies();
+
         SUT = sut;
         return (TFeatureDSL)this;
     }
 
-    protected async Task ShouldThrow<TException>(string? message = null) where TException : Exception {
+    internal async Task<TFeatureDSL> Then(Func<Task> assert) {
+        SUTTask ??= SUT();
+        await SUTTask;
+
+        await assert();
+        return (TFeatureDSL)this;
+    }
+
+    internal async Task<TFeatureDSL> Then(Action assert) {
+        SUTTask ??= SUT();
+        await SUTTask;
+
+        assert();
+        return (TFeatureDSL)this;
+    }
+
+    internal async Task ShouldThrow<TException>(string? message = null) where TException : Exception {
         var ex = await SUT.ShouldThrowAsync<TException>();
         if (message is not null)
             ex.Message.ShouldBe(message);
     }
+
+    internal Task ShouldNotThrowException() =>
+        SUT.ShouldNotThrowAsync();
+
+    //internal async Task<TFeatureDSL> ThenShouldNotThrowException() {
+    //    await SUT.ShouldNotThrowAsync();
+    //    return (TFeatureDSL)this;
+    //}
 
     protected abstract void GenerateDependencies();
 }

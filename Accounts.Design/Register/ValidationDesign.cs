@@ -19,7 +19,7 @@ public sealed class ValidationDesign : FeatureDSL {
     public async Task Password_Should_Be_Presented() => await
         Given(DefaultSettings, But, PasswordIsMissing).
         When(Run).
-        Then(async () => await ShouldThrow<InvalidOperationException>(Constants.PasswordMustBeContain));
+        Then(() => ShouldThrow<InvalidOperationException>(Constants.PasswordMustBeContain));
 
     [Fact]
     public async Task Password_Should_Be_Long() => await
