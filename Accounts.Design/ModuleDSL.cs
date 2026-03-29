@@ -41,6 +41,7 @@ public abstract class ModuleDSL<TFeatureDSL> where TFeatureDSL : ModuleDSL<TFeat
     protected IHasher Hasher { get; set; } = null!;
     protected IClock Clock { get; set; } = null!;
     protected CancellationToken Token { get; set; }
+    protected Exception? Exception { get; set; }
 
     protected Func<CancellationToken> TokenFactory { get; set; } = null!;
     protected Func<IAccountRepository> AccountRepositoryFactory { get; set; } = null!;
@@ -50,9 +51,6 @@ public abstract class ModuleDSL<TFeatureDSL> where TFeatureDSL : ModuleDSL<TFeat
     protected Func<string> PasswordFactory { get; set; } = null!;
     protected Func<string> EmailFactory { get; set; } = null!;
     protected Func<IReadOnlyCollection<string>> RolesFactory { get; set; } = null!;
-
-    protected Func<Task> SUT { get; set; } = null!;
-    protected Task SUTTask { get; set; } = null!;
 
     protected void But() { }
 
@@ -65,42 +63,26 @@ public abstract class ModuleDSL<TFeatureDSL> where TFeatureDSL : ModuleDSL<TFeat
         return (TFeatureDSL)this;
     }
 
-    internal TFeatureDSL When(Func<Task> sut) {
+    internal async Task<TFeatureDSL> When(Func<Task> sut) {
         GenerateDependencies();
 
-        SUT = sut;
+        try {
+            await sut();
+        } catch (Exception exception) {
+            Exception = exception;
+        }
+
         return (TFeatureDSL)this;
     }
 
-    internal async Task<TFeatureDSL> Then(Func<Task> assert) {
-        SUTTask ??= SUT();
-        await SUTTask;
-
-        await assert();
-        return (TFeatureDSL)this;
+    internal void ShouldThrow<TException>(string? message = null) where TException : Exception {
+        Exception.ShouldNotBeNull();
+        var typedException = Exception.ShouldBeOfType<TException>();
+        typedException.Message.ShouldBe(message);
     }
 
-    internal async Task<TFeatureDSL> Then(Action assert) {
-        SUTTask ??= SUT();
-        await SUTTask;
-
-        assert();
-        return (TFeatureDSL)this;
-    }
-
-    internal async Task ShouldThrow<TException>(string? message = null) where TException : Exception {
-        var ex = await SUT.ShouldThrowAsync<TException>();
-        if (message is not null)
-            ex.Message.ShouldBe(message);
-    }
-
-    internal Task ShouldNotThrowException() =>
-        SUT.ShouldNotThrowAsync();
-
-    //internal async Task<TFeatureDSL> ThenShouldNotThrowException() {
-    //    await SUT.ShouldNotThrowAsync();
-    //    return (TFeatureDSL)this;
-    //}
+    internal void ShouldNotThrowException() =>
+         Exception.ShouldBeNull();
 
     protected abstract void GenerateDependencies();
 }

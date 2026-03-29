@@ -5,6 +5,14 @@ using Accounts.Register.UserStory;
 namespace Accounts.Design.Register;
 
 public abstract class FeatureDSL : ModuleDSL<FeatureDSL> {
+    protected async Task Run() {
+        UserStory = new UserStory(AccountRepository, Hasher, Clock);
+        Response = await UserStory.Register(Request, Token);
+    }
+
+    private protected UserStory UserStory { get; set; } = null!;
+    private protected Request Request { get; set; } = null!;
+    private protected Response Response { get; set; } = null!;
 
     protected override void DefaultSettings() {
         base.DefaultSettings();
@@ -16,11 +24,6 @@ public abstract class FeatureDSL : ModuleDSL<FeatureDSL> {
             Roles: RolesFactory());
     }
 
-    protected async Task Run() {
-        UserStory = new UserStory(AccountRepository, Hasher, Clock);
-        Response = await UserStory.Register(Request, Token);
-    }
-
     protected override void GenerateDependencies() {
         Request = RequestFactory();
         Token = TokenFactory();
@@ -29,10 +32,6 @@ public abstract class FeatureDSL : ModuleDSL<FeatureDSL> {
         Hasher = HasherFactory();
         Clock = ClockFactory();
     }
-
-    private protected UserStory UserStory { get; set; } = null!;
-    private protected Request Request { get; set; } = null!;
-    private protected Response Response { get; set; } = null!;
 
     private protected Func<Request> RequestFactory { get; set; } = null!;
 
