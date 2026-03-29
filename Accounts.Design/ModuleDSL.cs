@@ -18,7 +18,7 @@ public abstract class ModuleDSL<TFeatureDSL> where TFeatureDSL : ModuleDSL<TFeat
 
         HasherFactory = () => {
             var mock = Substitute.For<IHasher>();
-            mock.Generate(default!).Returns("hashed-password");
+            mock.Generate(Arg.Any<string>()).Returns("hashed-password");
             return mock;
         };
 
