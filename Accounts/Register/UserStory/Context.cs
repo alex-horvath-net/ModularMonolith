@@ -6,7 +6,6 @@ internal sealed record Context(Request Request, CancellationToken Token) {
     public Request? NormalizedRequest { get; set; }
     public Account? MachingAccount { get; set; }
     public Account? Account { get; set; }
-    public Response? Response { get; set; }
 
     internal Response ToResponse() => new(
         ErrorMessage: null,
