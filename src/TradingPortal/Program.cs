@@ -158,7 +158,7 @@ static void SeedSecurityOfficerAccounts(WebApplication app) {
 //IAsyncPolicy<HttpResponseMessage> retryPolicy = HttpPolicyExtensions
 //    .HandleTransientHttpError()
 //    .OrResult(r => r.StatusCode == HttpStatusCode.TooManyRequests)
-//    .WaitAndRetryAsync(3, attempt => TimeSpan.FromMilliseconds(200 * Math.Pow(2, attempt)) + TimeSpan.FromMilliseconds(Random.Shared.Next(0, 50)));
+//    .WaitAndRetryAsync(3, attempt => TimeSpan.FromMilliseconds(200 * Math.Pow(2, attempt)) + TimeSpan.FromMilliseconds(Random.Shared.Then(0, 50)));
 
 //IAsyncPolicy<HttpResponseMessage> circuitBreakerPolicy = HttpPolicyExtensions
 //    .HandleTransientHttpError()

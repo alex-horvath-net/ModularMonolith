@@ -28,34 +28,34 @@ public static class ContinuationExtensions {
         return output;
     }
 
-    public static TInput Next<TInput>(this TInput input, Action command) {
+    public static TInput Then<TInput>(this TInput input, Action command) {
         command();
         return input;
     }
-    public static TInput Next<TInput>(this TInput input, Action<TInput> command) {
+    public static TInput Then<TInput>(this TInput input, Action<TInput> command) {
         command(input);
         return input;
     }
-    public static async Task<TInput> Next<TInput>(this TInput input, Func<Task> queryOfNoneBlockingCommand) {
+    public static async Task<TInput> Then<TInput>(this TInput input, Func<Task> queryOfNoneBlockingCommand) {
         var noneBlockingCommand = queryOfNoneBlockingCommand();
         await noneBlockingCommand;
         return input;
     }
-    public static async Task Next(this Task noneBlockingCommand, Action command) {
+    public static async Task Then(this Task noneBlockingCommand, Action command) {
         await noneBlockingCommand;
         command();
     }
-    public static async Task Next(this Task noneBlockingCommand, Func<Task> bockingQueryOfNoneBlockingCommand) {
+    public static async Task Then(this Task noneBlockingCommand, Func<Task> bockingQueryOfNoneBlockingCommand) {
         await noneBlockingCommand;
         var nextNoneBlockingCommand = bockingQueryOfNoneBlockingCommand();
         await nextNoneBlockingCommand;
     }
 
-    public static async Task Next<TInput>(this Task<TInput> noneBockingInputQuery, Action<TInput> blockingInputCommand) {
+    public static async Task Then<TInput>(this Task<TInput> noneBockingInputQuery, Action<TInput> blockingInputCommand) {
         var input = await noneBockingInputQuery;
         blockingInputCommand(input);
     }
-    public static async Task Next<TInput>(this Task<TInput> noneBockingInputQuery, Func<TInput, Task> bockingQueryOfNoneBlockingCommand) {
+    public static async Task Then<TInput>(this Task<TInput> noneBockingInputQuery, Func<TInput, Task> bockingQueryOfNoneBlockingCommand) {
         var input = await noneBockingInputQuery;
         var noneBlockingCommand = bockingQueryOfNoneBlockingCommand(input);
         await noneBlockingCommand;
