@@ -1,4 +1,3 @@
-using Accounts.Core.Domain;
 using Accounts.Register.UserStory;
 using Core.Domain.Tasks;
 
@@ -6,28 +5,26 @@ namespace Accounts.Design.Register;
 
 public sealed class DuplicationDesign : FeatureDSL {
     [Fact]
-    public Task Account_With_New_Email_Should_Be_Allowed() =>
+    public Task Client_Can_Register_When_No_Similar_Identity_Exists() =>
         Given(DefaultSettings).
         When(Run).
-        Then(ShouldNotThrowException).
-        Then(() => AccountRepository.Received(1).FindAccountByEmail("test-trader@bank.com", Token)).
-        Then(() => AccountRepository.Received(1).CreateAccount(Arg.Any<Account>(), Arg.Any<CancellationToken>()));
+        Then(RegistrationShouldBeAccepted).
+        Then(ExistingIdentityShouldBeChecked).
+        Then(NewIdentityShouldBeStored);
 
     [Fact]
-    public Task Account_With_Same_Email_Should_Be_Not_Allowed() =>
+    public Task Client_Can_Not_Register_Twice_With_The_Same_Email() =>
         Given(DefaultSettings, But, AccountAlreadyExistsWithSimilarEmail).
         When(Run).
-        Then(() => ShouldThrow<InvalidOperationException>(Constants.AccountAlreadyExists)).
-        Then(() => AccountRepository.Received(1).FindAccountByEmail("test-trader@bank.com", Token));
+        Then(() => ClientShouldBeTold(Constants.AccountAlreadyExists)).
+        Then(ExistingIdentityShouldBeChecked);
 
     [Fact]
-    public Task RegisterAsync_PersistsAccountWithNormalizedCredentials() =>
+    public Task Client_Should_Receive_A_New_Stored_Identity_When_Registration_Is_Allowed() =>
         Given(DefaultSettings).
         When(Run).
-        Then(ShouldNotThrowException).
-        Then(() => Response.Email.ShouldBe("test-trader@bank.com")).
-        Then(() => Response.UserName.ShouldBe(Request.UserName)).
-        Then(() => Response.Roles.ShouldBe(["Trader", "RiskManager"], ignoreOrder: true)).
-        Then(() => AccountRepository.Received(1).FindAccountByEmail("test-trader@bank.com", Token)).
-        Then(() => AccountRepository.Received(1).CreateAccount(Arg.Is<Account>(x => x.Email == "test-trader@bank.com" && x.UserName == Request.UserName), Token));
+        Then(RegistrationShouldBeAccepted).
+        Then(ClientShouldReceiveRegisteredIdentity).
+        Then(ExistingIdentityShouldBeChecked).
+        Then(NewIdentityShouldBeStored);
 }

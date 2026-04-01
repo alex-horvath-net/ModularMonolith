@@ -5,74 +5,74 @@ namespace Accounts.Design.Register;
 
 public sealed class ValidationDesign : FeatureDSL {
     [Fact]
-    public Task Request_Which_Is_Valid_Should_Be_Accepted() =>
+    public Task Client_Can_Start_Registration_With_A_Valid_Request() =>
         Given(DefaultSettings).
         When(Run).
-        Then(ShouldNotThrowException);
+        Then(RegistrationShouldBeAccepted);
 
     [Fact]
-    public async Task Request_Should_Be_Presented() => await
+    public Task Client_Must_Provide_A_Request() =>
         Given(DefaultSettings, But, RequestIsMissing).
         When(Run).
-        Then(() => ShouldThrow<InvalidOperationException>(Constants.RequestCanNotBeNull));
+        Then(() => ClientShouldBeTold(Constants.RequestCanNotBeNull));
 
     [Fact]
-    public async Task Email_Should_Be_Presented() => await
+    public Task Client_Must_Provide_An_Email() =>
         Given(DefaultSettings, But, EmailIsMissing).
         When(Run).
-        Then(() => ShouldThrow<InvalidOperationException>(Constants.EmailIsRequired));
+        Then(() => ClientShouldBeTold(Constants.EmailIsRequired));
 
     [Fact]
-    public async Task Password_Should_Be_Presented() => await
+    public Task Client_Must_Provide_A_Password() =>
         Given(DefaultSettings, But, PasswordIsMissing).
         When(Run).
-        Then(() => ShouldThrow<InvalidOperationException>(Constants.PasswordMustBeContain));
+        Then(() => ClientShouldBeTold(Constants.PasswordMustBeContain));
 
     [Fact]
-    public async Task Password_Should_Be_Long() => await
+    public Task Client_Must_Provide_A_Long_Enough_Password() =>
         Given(DefaultSettings, But, () => PasswordIsShorterThan(12)).
         When(Run).
-        Then(() => ShouldThrow<InvalidOperationException>(Constants.PasswordMustBeContain));
+        Then(() => ClientShouldBeTold(Constants.PasswordMustBeContain));
 
     [Fact]
-    public async Task Password_Should_Have_LowerCase() => await
+    public Task Client_Must_Provide_A_Password_With_Lowercase() =>
         Given(DefaultSettings, But, PasswordHasNoLowerCase).
         When(Run).
-        Then(() => ShouldThrow<InvalidOperationException>(Constants.PasswordMustBeContain));
+        Then(() => ClientShouldBeTold(Constants.PasswordMustBeContain));
 
     [Fact]
-    public async Task Password_Should_Have_UpperCase() => await
+    public Task Client_Must_Provide_A_Password_With_Uppercase() =>
         Given(DefaultSettings, But, PasswordHasNoUpperCase).
         When(Run).
-        Then(() => ShouldThrow<InvalidOperationException>(Constants.PasswordMustBeContain));
+        Then(() => ClientShouldBeTold(Constants.PasswordMustBeContain));
 
     [Fact]
-    public async Task Password_Should_Have_Digit() => await
+    public Task Client_Must_Provide_A_Password_With_A_Digit() =>
         Given(DefaultSettings, But, PasswordHasNoDigit).
         When(Run).
-        Then(() => ShouldThrow<InvalidOperationException>(Constants.PasswordMustBeContain));
+        Then(() => ClientShouldBeTold(Constants.PasswordMustBeContain));
 
     [Fact]
-    public Task Password_Should_Have_SpecialCharacter() =>
+    public Task Client_Must_Provide_A_Password_With_A_Symbol() =>
         Given(DefaultSettings, But, PasswordHasNoSpecialCharacter).
         When(Run).
-        Then(() => ShouldThrow<InvalidOperationException>(Constants.PasswordMustBeContain));
+        Then(() => ClientShouldBeTold(Constants.PasswordMustBeContain));
 
     [Fact]
-    public Task UserName_Should_Be_Presented() =>
+    public Task Client_Must_Provide_A_UserName() =>
         Given(DefaultSettings, But, UserNameIsMissing).
         When(Run).
-        Then(() => ShouldThrow<InvalidOperationException>(Constants.UserNameIsRequired));
+        Then(() => ClientShouldBeTold(Constants.UserNameIsRequired));
 
     [Fact]
-    public Task Roles_Should_Be_Presented() =>
+    public Task Client_Must_Provide_At_Least_One_Role() =>
         Given(DefaultSettings, But, RolesIsMissing).
         When(Run).
-        Then(() => ShouldThrow<InvalidOperationException>(Constants.AtLeastOneRoleRequired));
+        Then(() => ClientShouldBeTold(Constants.AtLeastOneRoleRequired));
 
     [Fact]
-    public Task Roles_Should_Be_Registered() =>
+    public Task Client_Must_Provide_Only_Registered_Roles() =>
         Given(DefaultSettings, But, RolesContainUnregistered).
         When(Run).
-        Then(() => ShouldThrow<InvalidOperationException>(Constants.AtLeastOneRoleRequired));
+        Then(() => ClientShouldBeTold(Constants.AtLeastOneRoleRequired));
 }

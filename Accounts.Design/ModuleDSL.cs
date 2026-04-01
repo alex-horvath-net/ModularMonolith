@@ -6,6 +6,12 @@ using Core.Infrastructure;
 namespace Accounts.Design;
 
 public abstract class ModuleDSL<TFeatureDSL> where TFeatureDSL : ModuleDSL<TFeatureDSL> {
+    protected IAccountRepository accountRepository = null!;
+    protected IHasher hasher = null!;
+    protected IClock clock = null!;
+    protected CancellationToken token;
+    protected Exception? exception;
+
     protected virtual void DefaultSettings() {
         TokenFactory = () => CancellationToken.None;
 
@@ -37,12 +43,6 @@ public abstract class ModuleDSL<TFeatureDSL> where TFeatureDSL : ModuleDSL<TFeat
         RolesFactory = () => ["Trader", "RiskManager"];
     }
 
-    protected IAccountRepository AccountRepository { get; set; } = null!;
-    protected IHasher Hasher { get; set; } = null!;
-    protected IClock Clock { get; set; } = null!;
-    protected CancellationToken Token { get; set; }
-    protected Exception? Exception { get; set; }
-
     protected Func<CancellationToken> TokenFactory { get; set; } = null!;
     protected Func<IAccountRepository> AccountRepositoryFactory { get; set; } = null!;
     protected Func<IHasher> HasherFactory { get; set; } = null!;
@@ -69,20 +69,22 @@ public abstract class ModuleDSL<TFeatureDSL> where TFeatureDSL : ModuleDSL<TFeat
         try {
             await sut();
         } catch (Exception exception) {
-            Exception = exception;
+            this.exception = exception;
         }
 
         return (TFeatureDSL)this;
     }
 
     internal void ShouldThrow<TException>(string? message = null) where TException : Exception {
-        Exception.ShouldNotBeNull();
-        var typedException = Exception.ShouldBeOfType<TException>();
+        exception.ShouldNotBeNull();
+        var typedException = exception.ShouldBeOfType<TException>();
         typedException.Message.ShouldBe(message);
     }
 
+    internal void ShouldThrowException() => exception.ShouldNotBeNull();
+
     internal void ShouldNotThrowException() =>
-         Exception.ShouldBeNull();
+         exception.ShouldBeNull();
 
     protected abstract void GenerateDependencies();
 }

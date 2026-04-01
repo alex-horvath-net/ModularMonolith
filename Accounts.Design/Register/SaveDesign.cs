@@ -1,20 +1,19 @@
-using Accounts.Core.Domain;
 using Core.Domain.Tasks;
 
 namespace Accounts.Design.Register;
 
 public sealed class SaveDesign : FeatureDSL {
     [Fact]
-    public Task Created_Account_Should_Be_Saved() =>
+    public Task New_Identity_Should_Be_Stored_For_Future_Work() =>
         Given(DefaultSettings).
         When(Run).
-        Then(ShouldNotThrowException).
-        Then(() => AccountRepository.Received(1).CreateAccount(Arg.Any<Account>(), Token));
+        Then(RegistrationShouldBeAccepted).
+        Then(NewIdentityShouldBeStored);
 
     [Fact]
-    public Task Created_Account_Should_Be_Saved_With_Provided_Token() =>
-        Given(DefaultSettings).
+    public Task Client_Should_Remain_In_Control_While_Registration_Is_Stored() =>
+        Given(DefaultSettings, But, ClientProvidesWorkflowControl).
         When(Run).
-        Then(ShouldNotThrowException).
-        Then(() => AccountRepository.Received(1).CreateAccount(Arg.Any<Account>(), Token));
+        Then(RegistrationShouldBeAccepted).
+        Then(ClientShouldRemainInControlWhileRegistrationIsStored);
 }

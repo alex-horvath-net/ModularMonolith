@@ -5,20 +5,20 @@ namespace Accounts.Design.Register;
 
 public sealed class NormalizationDesign : FeatureDSL {
     [Fact]
-    public Task Email_Should_Be_Normalized() =>
+    public Task Client_Should_Receive_A_Normalized_Email() =>
         Given(DefaultSettings, But, EmailIsNotNormalized).
         When(Run).
-        Then(() => Response.Email.ShouldBe("test-trader@bank.com"));
+        Then(() => ClientShouldSeeEmail("test-trader@bank.com"));
 
     [Fact]
-    public Task UserName_Should_Be_Normalized() =>
+    public Task Client_Should_Receive_A_Normalized_UserName() =>
         Given(DefaultSettings, But, UserNameIsNotNormalized).
         When(Run).
-        Then(() => Response.UserName.ShouldBe("Test-Trader"));
+        Then(() => ClientShouldSeeUserName("Test-Trader"));
 
     [Fact]
-    public Task Roles_Should_Be_Normalized() =>
+    public Task Client_Should_Receive_Normalized_Roles() =>
         Given(DefaultSettings, But, RolesAreNotNormalized).
         When(Run).
-        Then(() => Response.Roles.ShouldBe(["Trader"]));
+        Then(() => ClientShouldSeeRoles("Trader"));
 }

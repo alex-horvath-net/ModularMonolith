@@ -305,3 +305,6 @@ dotnet_diagnostic.CA1310.severity = error # StringComparison
 
 dotnet_diagnostic.CA2254.severity = none # allow string format  
 
+
+# Default severity for analyzer diagnostics with category 'Design'
+dotnet_analyzer_diagnostic.category-Design.severity = none
