@@ -10,3 +10,7 @@
 - Separate Business AcceptanceCriteria and UI Visibility AcceptanceCriteria within the user story documentation.
 - If required story fields or mappings are missing, stop and ask for missing business information before proposing implementation work.
 - Testing guidance will be moved to a separate future instruction file.
+
+## Testing Structure
+- Each test class must have a dedicated same-file `(TestClassName)DSL` class that inherits from `FeatureDSL`.
+- `FeatureDSL` should inherit from `ModuleDSL` and remain the shared base for all test classes.

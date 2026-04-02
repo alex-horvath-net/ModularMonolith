@@ -3,7 +3,7 @@ using Core.Domain.Tasks;
 
 namespace Accounts.Design.Register;
 
-public sealed class NormalizationDesign : FeatureDSL {
+public sealed class NormalizationDesign : NormalizationDesignDSL {
     [Fact]
     public Task Client_Should_Receive_A_Normalized_Email() =>
         Given(DefaultSettings, But, EmailIsNotNormalized).
@@ -21,4 +21,7 @@ public sealed class NormalizationDesign : FeatureDSL {
         Given(DefaultSettings, But, RolesAreNotNormalized).
         When(Run).
         Then(() => ClientShouldSeeRoles("Trader"));
+}
+
+public class NormalizationDesignDSL : FeatureDSL {
 }

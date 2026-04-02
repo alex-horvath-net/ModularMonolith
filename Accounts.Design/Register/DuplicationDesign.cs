@@ -1,9 +1,10 @@
+using Accounts.Core.Domain;
 using Accounts.Register.UserStory;
 using Core.Domain.Tasks;
 
 namespace Accounts.Design.Register;
 
-public sealed class DuplicationDesign : FeatureDSL {
+public sealed class DuplicationDesign : DuplicationDesignDSL {
     [Fact]
     public Task Client_Can_Register_When_No_Similar_Identity_Exists() =>
         Given(DefaultSettings).
@@ -27,4 +28,12 @@ public sealed class DuplicationDesign : FeatureDSL {
         Then(ClientShouldReceiveRegisteredIdentity).
         Then(ExistingIdentityShouldBeChecked).
         Then(NewIdentityShouldBeStored);
+}
+
+public class DuplicationDesignDSL : FeatureDSL {
+    protected void ExistingIdentityShouldBeChecked() =>
+        accountRepository.Received(1).FindAccountByEmail("test-trader@bank.com", token);
+
+    protected void NewIdentityShouldBeStored() =>
+        accountRepository.Received(1).CreateAccount(Arg.Any<Account>(), token);
 }

@@ -5,13 +5,24 @@ using Core.Infrastructure;
 namespace Accounts.Register.UserStory;
 
 internal sealed class UserStory {
-    internal async Task<Response> Register(Request request, CancellationToken token) {
-        var context = new Context(request, token);
+    internal IReadOnlyList<RegistrationWorkStep> ExecutedWorkSteps => context?.ExecutedWorkSteps ?? [];
 
+    internal async Task<Response> Register(Request request, CancellationToken token) {
+        context = new Context(request, token);
+
+        context.ExecutedWorkSteps.Add(RegistrationWorkStep.Validation);
         validate.Run(context);
+
+        context.ExecutedWorkSteps.Add(RegistrationWorkStep.Normalization);
         normalize.Run(context);
+
+        context.ExecutedWorkSteps.Add(RegistrationWorkStep.PreventDuplication);
         await preventDuplication.Run(context);
+
+        context.ExecutedWorkSteps.Add(RegistrationWorkStep.CreateIdentity);
         create.Run(context);
+
+        context.ExecutedWorkSteps.Add(RegistrationWorkStep.SaveIdentity);
         await save.Run(context);
 
         //Activate email
@@ -33,4 +44,5 @@ internal sealed class UserStory {
     private readonly PreventDuplication preventDuplication;
     private readonly Create create;
     private readonly Save save;
+    private Context? context;
 }

@@ -3,7 +3,7 @@ using Core.Domain.Tasks;
 
 namespace Accounts.Design.Register;
 
-public sealed class ValidationDesign : FeatureDSL {
+public sealed class ValidationDesign : ValidationDesignDSL {
     [Fact]
     public Task Client_Can_Start_Registration_With_A_Valid_Request() =>
         Given(DefaultSettings).
@@ -75,4 +75,7 @@ public sealed class ValidationDesign : FeatureDSL {
         Given(DefaultSettings, But, RolesContainUnregistered).
         When(Run).
         Then(() => ClientShouldBeTold(Constants.AtLeastOneRoleRequired));
+}
+
+public class ValidationDesignDSL : FeatureDSL {
 }
