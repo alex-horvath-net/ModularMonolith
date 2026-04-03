@@ -2,7 +2,7 @@ using Accounts.Core.Domain;
 
 namespace Accounts.Register.UserStory;
 
-internal enum RegistrationWorkStep {
+public enum RegistrationWorkStep {
     Validation,
     Normalization,
     PreventDuplication,
@@ -14,7 +14,7 @@ internal sealed record Context(Request Request, CancellationToken Token) {
     public Request? NormalizedRequest { get; set; }
     public Account? MachingAccount { get; set; }
     public Account? Account { get; set; }
-    public List<RegistrationWorkStep> ExecutedWorkSteps { get; } = [];
+    public List<RegistrationWorkStep> ExecutedBusinessWorkSteps { get; } = [];
 
     internal Response ToResponse() => new(
         ErrorMessage: null,

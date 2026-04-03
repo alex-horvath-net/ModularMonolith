@@ -5,6 +5,7 @@ namespace Accounts.Register.WorkSteps;
 
 internal sealed class Save(IAccountRepository repsoitory) {
     public async Task<bool> Run(Context context) {
+        context.ExecutedBusinessWorkSteps.Add(RegistrationWorkStep.SaveIdentity);
         await repsoitory.CreateAccount(context.Account!, context.Token);
         return true;
     }

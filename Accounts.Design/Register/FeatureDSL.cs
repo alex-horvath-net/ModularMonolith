@@ -6,17 +6,20 @@ namespace Accounts.Design.Register;
 
 public abstract class FeatureDSL : ModuleDSL<FeatureDSL> {
     private UserStory userStory = null!;
-    private Request request = null!;
+    private Request CurrentRequestForRun { get; set; } = null!;
     private Response response = null!;
-    private IReadOnlyList<RegistrationWorkStep> executedBusinessWorkSteps = [];
+    private IReadOnlyList<RegistrationWorkStep> RecordedBusinessWorkSteps { get; set; } = [];
 
     protected async Task Run() {
         userStory = new UserStory(accountRepository, hasher, clock);
 
         try {
-            response = await userStory.Register(request, token);
-        } finally {
-            executedBusinessWorkSteps = userStory.ExecutedWorkSteps;
+            var product = await userStory.Register(CurrentRequestForRun, token);
+            response = product.Response;
+            RecordedBusinessWorkSteps = product.ExecutedBusinessWorkSteps;
+        } catch (InvalidOperationException exception) {
+            RecordedBusinessWorkSteps = Product<Response>.FromException(exception).ExecutedBusinessWorkSteps;
+            throw;
         }
     }
     protected override void DefaultSettings() {
@@ -30,7 +33,7 @@ public abstract class FeatureDSL : ModuleDSL<FeatureDSL> {
     }
 
     protected override void GenerateDependencies() {
-        request = RequestFactory();
+        CurrentRequestForRun = RequestFactory();
         token = TokenFactory();
 
         accountRepository = AccountRepositoryFactory();
@@ -62,14 +65,14 @@ public abstract class FeatureDSL : ModuleDSL<FeatureDSL> {
     protected void ProductOwnerShouldSeeRoles(params string[] roles) =>
         response.Roles.ShouldBe(roles, ignoreOrder: true);
 
-    private protected Request CurrentRequest => request;
-    private protected IReadOnlyList<RegistrationWorkStep> ExecutedBusinessWorkSteps => executedBusinessWorkSteps;
+    private protected Request CurrentRequest => CurrentRequestForRun;
+    private protected IReadOnlyList<RegistrationWorkStep> ExecutedBusinessWorkSteps => RecordedBusinessWorkSteps;
 
     private protected Func<Request> RequestFactory { get; set; } = null!;
 
     protected void RequestIsMissing() => RequestFactory = () => null!;
 
-    protected void RequestHasAnyIssue() => EmailIsMissing();
+    protected void RequestHasSomeIssue() => EmailIsMissing();
     protected void EmailIsMissing() => EmailFactory = () => null!;
 
     protected void EmailIsNotNormalized() => EmailFactory = () => " Test-Trader@Bank.Com  ";

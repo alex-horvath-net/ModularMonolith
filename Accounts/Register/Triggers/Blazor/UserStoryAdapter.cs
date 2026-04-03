@@ -6,7 +6,7 @@ internal sealed class UserStoryAdapter(UserStory.UserStory userStory) : IRegiste
 
     public Task<RegisterResponse> Run(RegisterRequest blazorRequest, CancellationToken token = default) => userStory
         .Register(blazorRequest.Map(ToUserStoryRequest), token)
-        .Map(ToBlazorResponse);
+        .Map(product => ToBlazorResponse(product.Response));
 
     private Request ToUserStoryRequest(RegisterRequest blazorRequest) => new(
         Email: blazorRequest.Email,

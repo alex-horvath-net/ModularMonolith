@@ -13,7 +13,7 @@ public sealed class BusinessWorkflowDemo : BusinessWorkflowDemoDSL {
 
     [Fact]
     public Task The_Register_User_Story_BusinessWorkflow_Should_Stop_Before_Later_BusinessWorkSteps_When_The_Request_Is_Invalid() =>
-        Given(DefaultSettings, But, RequestHasAnyIssue).
+        Given(DefaultSettings, But, RequestHasSomeIssue).
         When(Run).
         Then(ProductOwnerShouldBeTold).
         Then(BusinessWorkflowShouldStopAfterValidation);

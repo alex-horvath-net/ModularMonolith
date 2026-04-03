@@ -8,6 +8,7 @@ internal sealed class Validate {
     private readonly CreateRoleRolePolicy rolesPolicy = new();
 
     public void Run(Context context) {
+        context.ExecutedBusinessWorkSteps.Add(RegistrationWorkStep.Validation);
 
         if (context.Request is null) {
             throw new InvalidOperationException(Constants.RequestCanNotBeNull);
