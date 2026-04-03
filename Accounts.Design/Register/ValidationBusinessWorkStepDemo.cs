@@ -1,0 +1,81 @@
+using Accounts.Register.UserStory;
+using Core.Domain.Tasks;
+
+namespace Accounts.Design.Register;
+
+public sealed class ValidationBusinessWorkStepDemo : ValidationBusinessWorkStepDemoDSL {
+    [Fact]
+    public Task ProductOwner_Can_Start_The_Register_User_Story_With_A_Valid_Request() =>
+        Given(DefaultSettings).
+        When(Run).
+        Then(RegisterUserStoryShouldBeAccepted);
+
+    [Fact]
+    public Task ProductOwner_Must_Provide_A_Request_To_Start_The_Register_User_Story() =>
+        Given(DefaultSettings, But, RequestIsMissing).
+        When(Run).
+        Then(() => ProductOwnerShouldBeTold(Constants.RequestCanNotBeNull));
+
+    [Fact]
+    public Task ProductOwner_Must_Provide_An_Email_To_Start_The_Register_User_Story() =>
+        Given(DefaultSettings, But, EmailIsMissing).
+        When(Run).
+        Then(() => ProductOwnerShouldBeTold(Constants.EmailIsRequired));
+
+    [Fact]
+    public Task ProductOwner_Must_Provide_A_Password_To_Start_The_Register_User_Story() =>
+        Given(DefaultSettings, But, PasswordIsMissing).
+        When(Run).
+        Then(() => ProductOwnerShouldBeTold(Constants.PasswordMustBeContain));
+
+    [Fact]
+    public Task ProductOwner_Must_Provide_A_Long_Enough_Password_To_Start_The_Register_User_Story() =>
+        Given(DefaultSettings, But, () => PasswordIsShorterThan(12)).
+        When(Run).
+        Then(() => ProductOwnerShouldBeTold(Constants.PasswordMustBeContain));
+
+    [Fact]
+    public Task ProductOwner_Must_Provide_A_Password_With_Lowercase_To_Start_The_Register_User_Story() =>
+        Given(DefaultSettings, But, PasswordHasNoLowerCase).
+        When(Run).
+        Then(() => ProductOwnerShouldBeTold(Constants.PasswordMustBeContain));
+
+    [Fact]
+    public Task ProductOwner_Must_Provide_A_Password_With_Uppercase_To_Start_The_Register_User_Story() =>
+        Given(DefaultSettings, But, PasswordHasNoUpperCase).
+        When(Run).
+        Then(() => ProductOwnerShouldBeTold(Constants.PasswordMustBeContain));
+
+    [Fact]
+    public Task ProductOwner_Must_Provide_A_Password_With_A_Digit_To_Start_The_Register_User_Story() =>
+        Given(DefaultSettings, But, PasswordHasNoDigit).
+        When(Run).
+        Then(() => ProductOwnerShouldBeTold(Constants.PasswordMustBeContain));
+
+    [Fact]
+    public Task ProductOwner_Must_Provide_A_Password_With_A_Symbol_To_Start_The_Register_User_Story() =>
+        Given(DefaultSettings, But, PasswordHasNoSpecialCharacter).
+        When(Run).
+        Then(() => ProductOwnerShouldBeTold(Constants.PasswordMustBeContain));
+
+    [Fact]
+    public Task ProductOwner_Must_Provide_A_UserName_To_Start_The_Register_User_Story() =>
+        Given(DefaultSettings, But, UserNameIsMissing).
+        When(Run).
+        Then(() => ProductOwnerShouldBeTold(Constants.UserNameIsRequired));
+
+    [Fact]
+    public Task ProductOwner_Must_Provide_At_Least_One_Role_To_Start_The_Register_User_Story() =>
+        Given(DefaultSettings, But, RolesIsMissing).
+        When(Run).
+        Then(() => ProductOwnerShouldBeTold(Constants.AtLeastOneRoleRequired));
+
+    [Fact]
+    public Task ProductOwner_Must_Provide_Only_Registered_Roles_To_Start_The_Register_User_Story() =>
+        Given(DefaultSettings, But, RolesContainUnregistered).
+        When(Run).
+        Then(() => ProductOwnerShouldBeTold(Constants.AtLeastOneRoleRequired));
+}
+
+public class ValidationBusinessWorkStepDemoDSL : FeatureDSL {
+}

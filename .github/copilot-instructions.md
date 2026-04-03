@@ -14,3 +14,4 @@
 ## Testing Structure
 - Each test class must have a dedicated same-file `(TestClassName)DSL` class that inherits from `FeatureDSL`.
 - `FeatureDSL` should inherit from `ModuleDSL` and remain the shared base for all test classes.
+- Omit redundant `Register` prefixes from test class names when the enclosing folder/namespace already provides that context.

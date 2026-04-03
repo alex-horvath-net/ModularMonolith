@@ -8,7 +8,7 @@ public abstract class FeatureDSL : ModuleDSL<FeatureDSL> {
     private UserStory userStory = null!;
     private Request request = null!;
     private Response response = null!;
-    private IReadOnlyList<RegistrationWorkStep> executedWorkSteps = [];
+    private IReadOnlyList<RegistrationWorkStep> executedBusinessWorkSteps = [];
 
     protected async Task Run() {
         userStory = new UserStory(accountRepository, hasher, clock);
@@ -16,7 +16,7 @@ public abstract class FeatureDSL : ModuleDSL<FeatureDSL> {
         try {
             response = await userStory.Register(request, token);
         } finally {
-            executedWorkSteps = userStory.ExecutedWorkSteps;
+            executedBusinessWorkSteps = userStory.ExecutedWorkSteps;
         }
     }
     protected override void DefaultSettings() {
@@ -37,33 +37,33 @@ public abstract class FeatureDSL : ModuleDSL<FeatureDSL> {
         hasher = HasherFactory();
         clock = ClockFactory();
     }
-    protected void RegistrationShouldBeAccepted() =>
+    protected void RegisterUserStoryShouldBeAccepted() =>
         ShouldNotThrowException();
 
-    protected void ClientShouldBeTold() =>
+    protected void ProductOwnerShouldBeTold() =>
         ShouldThrowException();
 
-    protected void ClientShouldBeTold(string message) =>
+    protected void ProductOwnerShouldBeTold(string message) =>
         ShouldThrow<InvalidOperationException>(message);
 
-    protected void ClientShouldReceiveRegisteredIdentity() {
+    protected void ProductOwnerShouldReceiveAUsableIdentity() {
         response.AccountId.ShouldNotBe(Guid.Empty);
         response.Email.ShouldBe("test-trader@bank.com");
         response.UserName.ShouldBe("Test-Trader");
         response.Roles.ShouldBe(["Trader", "RiskManager"], ignoreOrder: true);
     }
 
-    protected void ClientShouldSeeEmail(string email) =>
+    protected void ProductOwnerShouldSeeEmail(string email) =>
         response.Email.ShouldBe(email);
 
-    protected void ClientShouldSeeUserName(string userName) =>
+    protected void ProductOwnerShouldSeeUserName(string userName) =>
         response.UserName.ShouldBe(userName);
 
-    protected void ClientShouldSeeRoles(params string[] roles) =>
+    protected void ProductOwnerShouldSeeRoles(params string[] roles) =>
         response.Roles.ShouldBe(roles, ignoreOrder: true);
 
     private protected Request CurrentRequest => request;
-    private protected IReadOnlyList<RegistrationWorkStep> ExecutedWorkSteps => executedWorkSteps;
+    private protected IReadOnlyList<RegistrationWorkStep> ExecutedBusinessWorkSteps => executedBusinessWorkSteps;
 
     private protected Func<Request> RequestFactory { get; set; } = null!;
 
@@ -111,7 +111,7 @@ public abstract class FeatureDSL : ModuleDSL<FeatureDSL> {
 
     protected void RolesContainUnregistered() => RolesFactory = () => ["Trader", "UnRegisteredRole"];
 
-    protected void ClientProvidesWorkflowControl() =>
+    protected void ProductOwnerProvidesBusinessWorkflowControl() =>
         TokenFactory = () => new CancellationToken(canceled: true);
 
     protected void AccountAlreadyExistsWithSimilarEmail() {

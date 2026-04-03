@@ -4,29 +4,29 @@ using Core.Domain.Tasks;
 
 namespace Accounts.Design.Register;
 
-public sealed class CreateDesign : CreateDesignDSL {
+public sealed class CreateIdentityBusinessWorkStepDemo : CreateIdentityBusinessWorkStepDemoDSL {
     [Fact]
-    public Task New_Identity_Should_Protect_Client_Credentials() =>
+    public Task The_CreateIdentity_BusinessWorkStep_Should_Protect_ProductOwner_Credentials() =>
         Given(DefaultSettings).
         When(Run).
-        Then(RegistrationShouldBeAccepted).
-        Then(NewIdentityShouldProtectCredentials);
+        Then(RegisterUserStoryShouldBeAccepted).
+        Then(CreateIdentityBusinessWorkStepShouldProtectProductOwnerCredentials);
 
     [Fact]
-    public Task New_Identity_Should_Be_Built_From_Normalized_Client_Data() =>
+    public Task The_CreateIdentity_BusinessWorkStep_Should_Build_A_New_Identity_From_Normalized_ProductOwner_Data() =>
         Given(DefaultSettings, But, EmailIsNotNormalized, UserNameIsNotNormalized, RolesAreNotNormalized).
         When(Run).
-        Then(RegistrationShouldBeAccepted).
-        Then(NewIdentityShouldBeBuiltFromNormalizedClientData);
+        Then(RegisterUserStoryShouldBeAccepted).
+        Then(CreateIdentityBusinessWorkStepShouldBuildANewIdentityFromNormalizedProductOwnerData);
 }
 
-public class CreateDesignDSL : FeatureDSL {
-    protected void NewIdentityShouldProtectCredentials() {
+public class CreateIdentityBusinessWorkStepDemoDSL : FeatureDSL {
+    protected void CreateIdentityBusinessWorkStepShouldProtectProductOwnerCredentials() {
         hasher.Received(1).Generate(CurrentRequest.Password);
         accountRepository.Received(1).CreateAccount(Arg.Is<Account>(account => account.PasswordHash == "hashed-password"), token);
     }
 
-    protected void NewIdentityShouldBeBuiltFromNormalizedClientData() =>
+    protected void CreateIdentityBusinessWorkStepShouldBuildANewIdentityFromNormalizedProductOwnerData() =>
         accountRepository.Received(1).CreateAccount(Arg.Is<Account>(account =>
             account.Id != Guid.Empty &&
             account.Email == "test-trader@bank.com" &&
