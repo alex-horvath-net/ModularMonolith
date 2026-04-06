@@ -9,13 +9,13 @@ internal sealed class UserStory {
         var context = new Context(request, token);
 
         try {
-            validate.Run(context);
+            await validate.Run(context);
 
-            normalize.Run(context);
+            await normalize.Run(context);
 
             await preventDuplication.Run(context);
 
-            create.Run(context);
+            await create.Run(context);
 
             await save.Run(context);
 

@@ -4,10 +4,7 @@ using Accounts.Register.UserStory;
 namespace Accounts.Register.WorkSteps;
 
 internal sealed class Validate {
-    private readonly CreatePasswordPolicy passwordPolicy = new();
-    private readonly CreateRoleRolePolicy rolesPolicy = new();
-
-    public void Run(Context context) {
+    public Task Run(Context context) {
         context.ExecutedBusinessWorkSteps.Add(RegistrationWorkStep.Validation);
 
         if (context.Request is null) {
@@ -29,45 +26,50 @@ internal sealed class Validate {
         if (!rolesPolicy.IsValid(context.Request.Roles)) {
             throw new InvalidOperationException(Constants.AtLeastOneRoleRequired);
         }
+
+        return Task.CompletedTask;
     }
-}
 
-internal sealed class CreatePasswordPolicy {
-    public bool IsValid(string password) {
-        if (string.IsNullOrWhiteSpace(password))
-            return false;
+    private readonly CreatePasswordPolicy passwordPolicy = new();
+    private readonly CreateRoleRolePolicy rolesPolicy = new();
 
-        if (password.Length < 12)
-            return false;
+    private sealed class CreatePasswordPolicy {
+        public bool IsValid(string password) {
+            if (string.IsNullOrWhiteSpace(password))
+                return false;
 
-        if (!password.Any(char.IsUpper))
-            return false;
+            if (password.Length < 12)
+                return false;
 
-        if (!password.Any(char.IsLower))
-            return false;
+            if (!password.Any(char.IsUpper))
+                return false;
 
-        if (!password.Any(char.IsDigit))
-            return false;
+            if (!password.Any(char.IsLower))
+                return false;
 
-        if (!password.Any(character => !char.IsLetterOrDigit(character)))
-            return false;
+            if (!password.Any(char.IsDigit))
+                return false;
 
-        return true;
+            if (!password.Any(character => !char.IsLetterOrDigit(character)))
+                return false;
+
+            return true;
+        }
     }
-}
 
-internal sealed class CreateRoleRolePolicy {
-    private static readonly ImmutableHashSet<string> allowedRoles =
-        ImmutableHashSet.Create(StringComparer.OrdinalIgnoreCase, "Trader", "RiskManager", "Compliance");
+    private sealed class CreateRoleRolePolicy {
+        private static readonly ImmutableHashSet<string> allowedRoles =
+            ImmutableHashSet.Create(StringComparer.OrdinalIgnoreCase, "Trader", "RiskManager", "Compliance");
 
-    public bool IsValid(IEnumerable<string> selectedRoles) {
-        if (selectedRoles == null)
-            return false;
+        public bool IsValid(IEnumerable<string> selectedRoles) {
+            if (selectedRoles == null)
+                return false;
 
-        if (selectedRoles.Any(role => !allowedRoles.Contains(role)))
-            return false;
+            if (selectedRoles.Any(role => !allowedRoles.Contains(role)))
+                return false;
 
-        return true;
+            return true;
+        }
     }
 }
 

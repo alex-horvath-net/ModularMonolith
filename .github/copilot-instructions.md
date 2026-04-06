@@ -20,3 +20,4 @@
 - For Register demos, place workstep-specific DSL/helper methods directly in the `{WorkStepName}Demo` class, and let each demo class inherit from `FeatureDSL`.
 - `FeatureDSL` should inherit from `ModuleDSL` and remain the shared base for all test classes.
 - Omit redundant `Register` prefixes from test class names when the enclosing folder/namespace already provides that context.
+- Refer to test classes as `Demo`, treating them as demonstrations of what the Product Owner receives from the Product increment.

@@ -4,7 +4,7 @@ using Core.Infrastructure;
 namespace Accounts.Register.WorkSteps;
 
 internal sealed class Create(IHasher hasher, IClock clock) {
-    public bool Run(Context context) {
+    public Task Run(Context context) {
         context.ExecutedBusinessWorkSteps.Add(RegistrationWorkStep.CreateIdentity);
 
         context.Account = new(
@@ -16,7 +16,7 @@ internal sealed class Create(IHasher hasher, IClock clock) {
             IsLocked: false,
             CreatedAtUtc: clock.UtcNow);
 
-        return true;
+        return Task.CompletedTask;
     }
 
 }

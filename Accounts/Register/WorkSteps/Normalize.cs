@@ -3,13 +3,16 @@
 namespace Accounts.Register.WorkSteps;
 
 internal sealed class Normalize {
-    public void Run(Context context) {
+    public Task Run(Context context) {
         context.ExecutedBusinessWorkSteps.Add(RegistrationWorkStep.Normalization);
+
         context.NormalizedRequest = context.Request with {
             Email = NormalizeEmai(context),
             UserName = NormalizeUserName(context),
             Roles = NormalizeRoles(context),
         };
+
+        return Task.CompletedTask;
     }
 
     private string NormalizeEmai(Context context) => context.Request.Email
