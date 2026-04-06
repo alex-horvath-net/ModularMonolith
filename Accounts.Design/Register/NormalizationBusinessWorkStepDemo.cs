@@ -2,7 +2,7 @@ using Core.Domain.Tasks;
 
 namespace Accounts.Design.Register;
 
-public sealed class NormalizationBusinessWorkStepDemo : NormalizationBusinessWorkStepDemoDSL {
+public sealed class NormalizationBusinessWorkStepDemo : FeatureDSL {
     [Fact]
     public Task ProductOwner_Should_Receive_A_Normalized_Email_From_The_Product() =>
         Given(DefaultSettings, But, EmailIsNotNormalized).
@@ -20,7 +20,4 @@ public sealed class NormalizationBusinessWorkStepDemo : NormalizationBusinessWor
         Given(DefaultSettings, But, RolesAreNotNormalized).
         When(Run).
         Then(() => ProductOwnerShouldSeeRoles("Trader"));
-}
-
-public class NormalizationBusinessWorkStepDemoDSL : FeatureDSL {
 }

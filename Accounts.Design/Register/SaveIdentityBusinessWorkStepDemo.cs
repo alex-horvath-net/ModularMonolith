@@ -3,7 +3,7 @@ using Core.Domain.Tasks;
 
 namespace Accounts.Design.Register;
 
-public sealed class SaveIdentityBusinessWorkStepDemo : SaveIdentityBusinessWorkStepDemoDSL {
+public sealed class SaveIdentityBusinessWorkStepDemo : FeatureDSL {
     [Fact]
     public Task The_SaveIdentity_BusinessWorkStep_Should_Store_The_New_Identity_For_Future_Work() =>
         Given(DefaultSettings).
@@ -17,13 +17,11 @@ public sealed class SaveIdentityBusinessWorkStepDemo : SaveIdentityBusinessWorkS
         When(Run).
         Then(RegisterUserStoryShouldBeAccepted).
         Then(ProductOwnerShouldRemainInControlWhileTheProductStoresTheNewIdentity);
-}
 
-public class SaveIdentityBusinessWorkStepDemoDSL : FeatureDSL {
-    protected void SaveIdentityBusinessWorkStepShouldStoreTheNewIdentity() =>
+    private void SaveIdentityBusinessWorkStepShouldStoreTheNewIdentity() =>
         accountRepository.Received(1).CreateAccount(Arg.Any<Account>(), token);
 
-    protected void ProductOwnerShouldRemainInControlWhileTheProductStoresTheNewIdentity() {
+    private void ProductOwnerShouldRemainInControlWhileTheProductStoresTheNewIdentity() {
         token.ShouldNotBe(CancellationToken.None);
         token.IsCancellationRequested.ShouldBeTrue();
         accountRepository.Received(1).CreateAccount(Arg.Any<Account>(), token);

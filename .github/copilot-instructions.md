@@ -4,6 +4,7 @@
 - Follow repository-level instruction documents and their references.
 - Follow documentation formatting and naming rules in: `#file:'docs/documentation-style.md'`.
 - Follow the development model in: `#file:'docs/lead-development-guidence.md'`.
+- Provide responses in English.
 
 ## User Story Survey Guidance
 - For user story survey work, use: `#file:'docs/user-story-guidance.md'` as the single source of truth, focusing on UserStory structure and business orchestration logic.
@@ -15,6 +16,7 @@
 - Name the internal user-story execution result as `Product<Response>` instead of `RegisterExecution` when carrying a Product Owner-facing response plus internal workflow metadata.
 
 ## Testing Structure
-- Each test class must have a dedicated same-file `(TestClassName)DSL` class that inherits from `FeatureDSL`.
+- Each test class must have a dedicated same-file `(TestClassName)DSL` class that inherits from `FeatureDSL`, except for Register demos.
+- For Register demos, place workstep-specific DSL/helper methods directly in the `{WorkStepName}Demo` class, and let each demo class inherit from `FeatureDSL`.
 - `FeatureDSL` should inherit from `ModuleDSL` and remain the shared base for all test classes.
 - Omit redundant `Register` prefixes from test class names when the enclosing folder/namespace already provides that context.

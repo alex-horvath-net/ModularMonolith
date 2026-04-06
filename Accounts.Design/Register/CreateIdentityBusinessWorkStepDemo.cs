@@ -4,7 +4,7 @@ using Core.Domain.Tasks;
 
 namespace Accounts.Design.Register;
 
-public sealed class CreateIdentityBusinessWorkStepDemo : CreateIdentityBusinessWorkStepDemoDSL {
+public sealed class CreateIdentityBusinessWorkStepDemo : FeatureDSL {
     [Fact]
     public Task The_CreateIdentity_BusinessWorkStep_Should_Protect_ProductOwner_Credentials() =>
         Given(DefaultSettings).
@@ -18,15 +18,13 @@ public sealed class CreateIdentityBusinessWorkStepDemo : CreateIdentityBusinessW
         When(Run).
         Then(RegisterUserStoryShouldBeAccepted).
         Then(CreateIdentityBusinessWorkStepShouldBuildANewIdentityFromNormalizedProductOwnerData);
-}
 
-public class CreateIdentityBusinessWorkStepDemoDSL : FeatureDSL {
-    protected void CreateIdentityBusinessWorkStepShouldProtectProductOwnerCredentials() {
-        hasher.Received(1).Generate(CurrentRequest.Password);
+    private void CreateIdentityBusinessWorkStepShouldProtectProductOwnerCredentials() {
+        hasher.Received(1).Generate(Arg.Is<string>(password => password == "Ab!456789012"));
         accountRepository.Received(1).CreateAccount(Arg.Is<Account>(account => account.PasswordHash == "hashed-password"), token);
     }
 
-    protected void CreateIdentityBusinessWorkStepShouldBuildANewIdentityFromNormalizedProductOwnerData() =>
+    private void CreateIdentityBusinessWorkStepShouldBuildANewIdentityFromNormalizedProductOwnerData() =>
         accountRepository.Received(1).CreateAccount(Arg.Is<Account>(account =>
             account.Id != Guid.Empty &&
             account.Email == "test-trader@bank.com" &&

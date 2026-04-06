@@ -4,7 +4,7 @@ using Core.Domain.Tasks;
 
 namespace Accounts.Design.Register;
 
-public sealed class PreventDuplicationBusinessWorkStepDemo : PreventDuplicationBusinessWorkStepDemoDSL {
+public sealed class PreventDuplicationBusinessWorkStepDemo : FeatureDSL {
     [Fact]
     public Task ProductOwner_Can_Start_The_Register_User_Story_When_No_Similar_Identity_Exists() =>
         Given(DefaultSettings).
@@ -28,12 +28,10 @@ public sealed class PreventDuplicationBusinessWorkStepDemo : PreventDuplicationB
         Then(ProductOwnerShouldReceiveAUsableIdentity).
         Then(PreventDuplicationBusinessWorkStepShouldCheckExistingIdentity).
         Then(SaveIdentityBusinessWorkStepShouldStoreTheNewIdentity);
-}
 
-public class PreventDuplicationBusinessWorkStepDemoDSL : FeatureDSL {
-    protected void PreventDuplicationBusinessWorkStepShouldCheckExistingIdentity() =>
+    private void PreventDuplicationBusinessWorkStepShouldCheckExistingIdentity() =>
         accountRepository.Received(1).FindAccountByEmail("test-trader@bank.com", token);
 
-    protected void SaveIdentityBusinessWorkStepShouldStoreTheNewIdentity() =>
+    private void SaveIdentityBusinessWorkStepShouldStoreTheNewIdentity() =>
         accountRepository.Received(1).CreateAccount(Arg.Any<Account>(), token);
 }

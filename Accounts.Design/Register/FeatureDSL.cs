@@ -6,19 +6,19 @@ namespace Accounts.Design.Register;
 
 public abstract class FeatureDSL : ModuleDSL<FeatureDSL> {
     private UserStory userStory = null!;
-    private Request CurrentRequestForRun { get; set; } = null!;
+    private Request request = null!;
     private Response response = null!;
-    private IReadOnlyList<RegistrationWorkStep> RecordedBusinessWorkSteps { get; set; } = [];
+    protected IReadOnlyList<RegistrationWorkStep> workSteps = [];
 
     protected async Task Run() {
         userStory = new UserStory(accountRepository, hasher, clock);
 
         try {
-            var product = await userStory.Register(CurrentRequestForRun, token);
+            var product = await userStory.Register(request, token);
             response = product.Response;
-            RecordedBusinessWorkSteps = product.ExecutedBusinessWorkSteps;
+            workSteps = product.ExecutedBusinessWorkSteps;
         } catch (InvalidOperationException exception) {
-            RecordedBusinessWorkSteps = Product<Response>.FromException(exception).ExecutedBusinessWorkSteps;
+            workSteps = Product<Response>.FromException(exception).ExecutedBusinessWorkSteps;
             throw;
         }
     }
@@ -33,7 +33,7 @@ public abstract class FeatureDSL : ModuleDSL<FeatureDSL> {
     }
 
     protected override void GenerateDependencies() {
-        CurrentRequestForRun = RequestFactory();
+        request = RequestFactory();
         token = TokenFactory();
 
         accountRepository = AccountRepositoryFactory();
@@ -64,9 +64,6 @@ public abstract class FeatureDSL : ModuleDSL<FeatureDSL> {
 
     protected void ProductOwnerShouldSeeRoles(params string[] roles) =>
         response.Roles.ShouldBe(roles, ignoreOrder: true);
-
-    private protected Request CurrentRequest => CurrentRequestForRun;
-    private protected IReadOnlyList<RegistrationWorkStep> ExecutedBusinessWorkSteps => RecordedBusinessWorkSteps;
 
     private protected Func<Request> RequestFactory { get; set; } = null!;
 

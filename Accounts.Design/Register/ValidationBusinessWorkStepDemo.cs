@@ -3,7 +3,7 @@ using Core.Domain.Tasks;
 
 namespace Accounts.Design.Register;
 
-public sealed class ValidationBusinessWorkStepDemo : ValidationBusinessWorkStepDemoDSL {
+public sealed class ValidationBusinessWorkStepDemo : FeatureDSL {
     [Fact]
     public Task ProductOwner_Can_Start_The_Register_User_Story_With_A_Valid_Request() =>
         Given(DefaultSettings).
@@ -75,7 +75,4 @@ public sealed class ValidationBusinessWorkStepDemo : ValidationBusinessWorkStepD
         Given(DefaultSettings, But, RolesContainUnregistered).
         When(Run).
         Then(() => ProductOwnerShouldBeTold(Constants.AtLeastOneRoleRequired));
-}
-
-public class ValidationBusinessWorkStepDemoDSL : FeatureDSL {
 }
