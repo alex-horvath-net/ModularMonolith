@@ -9,6 +9,7 @@ internal sealed class UserStoryAdapter(UserStory.UserStory userStory) : IRegiste
         .Map(product => ToBlazorResponse(product.Response));
 
     private Request ToUserStoryRequest(RegisterRequest blazorRequest) => new(
+        CorrelationId: Guid.NewGuid(),
         Email: blazorRequest.Email,
         UserName: blazorRequest.UserName,
         Password: blazorRequest.Password,

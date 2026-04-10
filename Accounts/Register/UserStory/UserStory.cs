@@ -4,23 +4,30 @@ using Core.Infrastructure;
 
 namespace Accounts.Register.UserStory;
 
-internal sealed class UserStory {
-    internal async Task<Product<Response>> Register(Request request, CancellationToken token) {
+internal sealed class UserStory(
+    IAccountRepository repository,
+    IHasher hasher,
+    IClock clock,
+    ILogger<UserStory> logger) {
+
+    private readonly Validate validate = new(clock, logger);
+    private readonly Normalize normalize = new(clock, logger);
+    private readonly PreventDuplication preventDuplication = new(repository, clock, logger);
+    private readonly Create create = new(hasher, clock, logger);
+    private readonly Save save = new(repository, clock, logger);
+
+    internal async Task<Product<Response>> Register(
+        Request request,
+        CancellationToken token) {
+
         var context = new Context(request, token);
 
         try {
-            await validate.Run(context);
-
-            await normalize.Run(context);
-
-            await preventDuplication.Run(context);
-
-            await create.Run(context);
-
-            await save.Run(context);
-
-            //Activate email
-            //Activate MFA
+            await validate.Execute(context);
+            await normalize.Execute(context);
+            await preventDuplication.Execute(context);
+            await create.Execute(context);
+            await save.Execute(context);
 
             return Product<Response>.FromContext(context, context.ToResponse());
         } catch (InvalidOperationException exception) {
@@ -28,18 +35,4 @@ internal sealed class UserStory {
             throw;
         }
     }
-
-    internal UserStory(IAccountRepository repository, IHasher hasher, IClock clock) {
-        validate = new Validate();
-        normalize = new Normalize();
-        preventDuplication = new PreventDuplication(repository);
-        create = new Create(hasher, clock);
-        save = new Save(repository);
-    }
-
-    private readonly Validate validate;
-    private readonly Normalize normalize;
-    private readonly PreventDuplication preventDuplication;
-    private readonly Create create;
-    private readonly Save save;
 }

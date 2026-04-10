@@ -1,8 +1,12 @@
 ﻿using Accounts.Register.UserStory;
+using Core.Domain;
+using Core.Infrastructure;
 
 namespace Accounts.Register.WorkSteps;
 
-internal sealed class Normalize {
+internal sealed class Normalize(
+    IClock clock,
+    ILogger<Normalize> logger) : WorkStep<Context>(clock, logger) {
     public Task Run(Context context) {
         context.ExecutedBusinessWorkSteps.Add(RegistrationWorkStep.Normalization);
 

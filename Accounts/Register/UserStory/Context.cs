@@ -1,4 +1,5 @@
 using Accounts.Core.Domain;
+using Core.Domain;
 
 namespace Accounts.Register.UserStory;
 
@@ -10,7 +11,7 @@ public enum RegistrationWorkStep {
     SaveIdentity,
 }
 
-internal sealed record Context(Request Request, CancellationToken Token) {
+internal sealed record Context(Request Request, CancellationToken Token) : ContextBase(Request.CorrelationId) {
     public Request? NormalizedRequest { get; set; }
     public Account? MachingAccount { get; set; }
     public Account? Account { get; set; }

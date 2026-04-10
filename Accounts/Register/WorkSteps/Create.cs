@@ -1,10 +1,14 @@
 ﻿using Accounts.Register.UserStory;
+using Core.Domain;
 using Core.Infrastructure;
 
 namespace Accounts.Register.WorkSteps;
 
-internal sealed class Create(IHasher hasher, IClock clock) {
-    public Task Run(Context context) {
+internal sealed class Create(
+    IHasher hasher,
+    IClock clock,
+    ILogger<Create> logger) : WorkStep<Context>(clock, logger) {
+    public override Task Run(Context context) {
         context.ExecutedBusinessWorkSteps.Add(RegistrationWorkStep.CreateIdentity);
 
         context.Account = new(
