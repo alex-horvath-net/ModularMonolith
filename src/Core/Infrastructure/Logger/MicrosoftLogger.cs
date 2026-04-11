@@ -2,8 +2,9 @@
 
 namespace Core.Infrastructure.Logger;
 
-internal class MicrosoftLogger<T>(Microsoft.Extensions.Logging.ILogger<T> logger) : ILogger<T> {
+internal class MicrosoftLogger<T>(ILoggerFactory loggerFactory) : ILogger<T> {
 
+    private readonly Microsoft.Extensions.Logging.ILogger<T> logger = loggerFactory.CreateLogger<T>();
     public void LogDebug(string? messageTemplate, params object?[] args) {
         if (logger.IsEnabled(LogLevel.Debug))
             logger.LogDebug(messageTemplate, args);
@@ -25,7 +26,7 @@ internal class MicrosoftLogger<T>(Microsoft.Extensions.Logging.ILogger<T> logger
     }
 
     public void LogError(string? messageTemplate, params object?[] args) {
-        if (logger.IsEnabled(LogLevel.Warning))
+        if (logger.IsEnabled(LogLevel.Error))
             logger.LogError(messageTemplate, args);
     }
 
@@ -33,5 +34,7 @@ internal class MicrosoftLogger<T>(Microsoft.Extensions.Logging.ILogger<T> logger
         if (logger.IsEnabled(LogLevel.Error))
             logger.LogError(exception, messageTemplate, args);
     }
-}
 
+    public ILogger<K> CloneAs<K>() =>
+        new MicrosoftLogger<K>(loggerFactory);
+}

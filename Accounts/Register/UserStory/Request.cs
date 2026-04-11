@@ -5,4 +5,4 @@ internal sealed record Request(
     string Email,
     string UserName,
     string Password,
-    IReadOnlyCollection<string> Roles);
+    IReadOnlyCollection<string> Roles) : RequestBase(CorrelationId);

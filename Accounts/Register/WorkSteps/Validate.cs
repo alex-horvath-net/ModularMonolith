@@ -1,10 +1,14 @@
 ﻿using System.Collections.Immutable;
 using Accounts.Register.UserStory;
 using Core.Domain;
+using Core.Infrastructure;
 
 namespace Accounts.Register.WorkSteps;
 
-internal sealed class Validate : WorkStep<Context> {
+internal sealed class Validate(
+    IClock clock,
+    IGuid guid,
+    ILogger<Validate> logger) : WorkStep<Context>(clock, guid, logger) {
     protected override Task Run(Context context) {
         context.ExecutedBusinessWorkSteps.Add(RegistrationWorkStep.Validation);
 

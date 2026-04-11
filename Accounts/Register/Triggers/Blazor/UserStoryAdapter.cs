@@ -4,9 +4,16 @@ namespace Accounts.Register.Triggers.Blazor;
 
 internal sealed class UserStoryAdapter(UserStory.UserStory userStory) : IRegister {
 
-    public Task<RegisterResponse> Run(RegisterRequest blazorRequest, CancellationToken token = default) => userStory
-        .Register(blazorRequest.Map(ToUserStoryRequest), token)
-        .Map(product => ToBlazorResponse(product.Response));
+    public async Task<RegisterResponse> Run(RegisterRequest blazorRequest, CancellationToken token = default) {
+        var request = blazorRequest.Map(ToUserStoryRequest);
+        var context = new Context(request, token);
+
+        await userStory.Execute(context);
+
+        var response = context.ToResponse();
+        var blazorResponse = ToBlazorResponse(response);
+        return blazorResponse;
+    }
 
     private Request ToUserStoryRequest(RegisterRequest blazorRequest) => new(
         CorrelationId: Guid.NewGuid(),

@@ -1,24 +1,27 @@
 using System.Globalization;
 using Accounts.Core.Domain;
 using Accounts.Register.UserStory;
+using Core.Infrastructure;
 
 namespace Accounts.Design.Register;
 
 public abstract class FeatureDSL : ModuleDSL<FeatureDSL> {
     private UserStory userStory = null!;
+    private IGuid guid = null!;
     private Request request = null!;
     private Response response = null!;
     protected IReadOnlyList<RegistrationWorkStep> workSteps = [];
 
     protected async Task Run() {
-        userStory = new UserStory(accountRepository, hasher, clock);
+        userStory = new UserStory(accountRepository, hasher, clock, guid, Substitute.For<ILogger<UserStory>>());
+        var context = new Context(request, token);
 
         try {
-            var product = await userStory.Register(request, token);
-            response = product.Response;
-            workSteps = product.ExecutedBusinessWorkSteps;
-        } catch (InvalidOperationException exception) {
-            workSteps = Product<Response>.FromException(exception).ExecutedBusinessWorkSteps;
+            await userStory.Execute(context);
+            response = context.ToResponse();
+            workSteps = [.. context.ExecutedBusinessWorkSteps];
+        } catch (InvalidOperationException) {
+            workSteps = [.. context.ExecutedBusinessWorkSteps];
             throw;
         }
     }
@@ -26,6 +29,7 @@ public abstract class FeatureDSL : ModuleDSL<FeatureDSL> {
         base.DefaultSettings();
 
         RequestFactory = () => new Request(
+            CorrelationId: Guid.NewGuid(),
             Email: EmailFactory(),
             UserName: UserNameFactory(),
             Password: PasswordFactory(),
@@ -39,6 +43,8 @@ public abstract class FeatureDSL : ModuleDSL<FeatureDSL> {
         accountRepository = AccountRepositoryFactory();
         hasher = HasherFactory();
         clock = ClockFactory();
+        guid = Substitute.For<IGuid>();
+        guid.Generate().Returns(Guid.Parse("11111111-1111-1111-1111-111111111111"));
     }
     protected void RegisterUserStoryShouldBeAccepted() =>
         ShouldNotThrowException();

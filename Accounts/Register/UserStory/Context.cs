@@ -11,7 +11,15 @@ public enum RegistrationWorkStep {
     SaveIdentity,
 }
 
-internal sealed record Context(Request Request, CancellationToken Token) : ContextBase(Request.CorrelationId) {
+internal sealed record Context : ContextBase {
+    public Context(Request? request, CancellationToken token) {
+        Request = request;
+        Token = token;
+        CorellationId = request?.CorrelationId ?? Guid.Empty;
+    }
+
+    public Request? Request { get; }
+    public CancellationToken Token { get; }
     public Request? NormalizedRequest { get; set; }
     public Account? MachingAccount { get; set; }
     public Account? Account { get; set; }
