@@ -3,25 +3,25 @@ using Core.Infrastructure;
 namespace Core.Domain;
 
 public abstract class WorkStep<TContext>(IClock clock, IGuid guidGenerator, ILogger<WorkStep<TContext>> logger) where TContext : ContextBase {
-    private const string MessageTemplate = "WorkStep {WorkStep} is {Status} at {Time}. CorellationId is {CorellationId}.";
+    private const string MessageTemplate = "WorkStep {WorkStep} is {Status} at {Time}. CorellationId is {CorellationId}. RequestId is {RequestId}.";
 
     public async Task Execute(TContext context) {
-        var workStepName = GetType().Name;
         try {
             context.CorellationId ??= guidGenerator.Generate();
-            context.WorkSteps.Add(workStepName);
+            context.RequestId ??= guidGenerator.Generate();
+            context.WorkSteps.Add(GetType().Name);
 
-            logger.LogInformation(MessageTemplate, workStepName, "Started", clock.UtcNow, context.CorellationId);
+            logger.LogInformation(MessageTemplate, context.WorkSteps.Last(), "Started", clock.UtcNow, context.CorellationId, context.RequestId);
 
             await Run(context);
 
-            logger.LogInformation(MessageTemplate, workStepName, "Completed", clock.UtcNow, context.CorellationId);
+            logger.LogInformation(MessageTemplate, context.WorkSteps.Last(), "Completed", clock.UtcNow, context.CorellationId, context.RequestId);
 
         } catch (OperationCanceledException oce) {
-            logger.LogWarning(oce, MessageTemplate, workStepName, "Canceled", clock.UtcNow, context.CorellationId);
+            logger.LogWarning(oce, MessageTemplate, context.WorkSteps.Last(), "Canceled", clock.UtcNow, context.CorellationId, context.RequestId);
             context.Exception = oce;
         } catch (Exception ex) {
-            logger.LogError(ex, MessageTemplate, workStepName, "Failed", clock.UtcNow, context.CorellationId);
+            logger.LogError(ex, MessageTemplate, context.WorkSteps.Last(), "Failed", clock.UtcNow, context.CorellationId, context.RequestId);
             context.Exception = ex;
             throw;
         }

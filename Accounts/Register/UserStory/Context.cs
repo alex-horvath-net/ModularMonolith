@@ -16,6 +16,7 @@ internal sealed record Context : ContextBase {
         Request = request;
         Token = token;
         CorellationId = request?.CorrelationId ?? Guid.Empty;
+        RequestId = request?.RequestId;
     }
 
     public Request? Request { get; }

@@ -35,6 +35,5 @@ internal class MicrosoftLogger<T>(ILoggerFactory loggerFactory) : ILogger<T> {
             logger.LogError(exception, messageTemplate, args);
     }
 
-    public ILogger<K> CloneAs<K>() =>
-        new MicrosoftLogger<K>(loggerFactory);
+    public ILogger<K> As<K>() => new MicrosoftLogger<K>(loggerFactory);
 }

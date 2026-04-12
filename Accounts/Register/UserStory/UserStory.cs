@@ -1,5 +1,4 @@
 using Accounts.Core.Infrastructure;
-using Accounts.Register.WorkSteps;
 using Core.Domain;
 using Core.Infrastructure;
 
@@ -10,7 +9,7 @@ internal sealed class UserStory(
     IHasher hasher,
     IClock clock,
     IGuid guid,
-    ILogger<UserStory> logger) : WorkStep<Context>(clock, guid, logger.CloneAs<WorkStep<Context>>()) {
+    ILogger<UserStory> logger) : WorkStep<Context>(clock, guid, logger) {
 
     protected override async Task Run(Context context) {
         await validate.Execute(context);
@@ -20,9 +19,9 @@ internal sealed class UserStory(
         await save.Execute(context);
     }
 
-    private readonly Validate validate = new(clock, guid, logger.CloneAs<Validate>());
-    private readonly Normalize normalize = new(clock, guid, logger.CloneAs<Normalize>());
-    private readonly PreventDuplication preventDuplication = new(repository, clock, guid, logger.CloneAs<PreventDuplication>());
-    private readonly Create create = new(hasher, clock, guid, logger.CloneAs<Create>());
-    private readonly Save save = new(repository, clock, guid, logger.CloneAs<Save>());
+    private readonly Validate validate = new(clock, guid, logger);
+    private readonly Normalize normalize = new(clock, guid, logger);
+    private readonly PreventDuplication preventDuplication = new(repository, clock, guid, logger);
+    private readonly Create create = new(hasher, clock, guid, logger);
+    private readonly Save save = new(repository, clock, guid, logger);
 }

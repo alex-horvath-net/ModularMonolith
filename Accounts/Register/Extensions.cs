@@ -14,7 +14,7 @@ public static class Extensions {
             sp.GetRequiredService<IGuid>(),
             sp.GetRequiredService<ILogger<UserStory.UserStory>>()));
 
-        services.AddScoped<IRegister>(sp => new UserStoryAdapter(
+        services.AddScoped<IRegister>(sp => new UserStoryAdapterForBlazor(
             sp.GetRequiredService<UserStory.UserStory>()));
 
         return services;

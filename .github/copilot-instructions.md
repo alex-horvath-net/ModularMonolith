@@ -21,3 +21,7 @@
 - `FeatureDSL` should inherit from `ModuleDSL` and remain the shared base for all test classes.
 - Omit redundant `Register` prefixes from test class names when the enclosing folder/namespace already provides that context.
 - Refer to test classes as `Demo`, treating them as demonstrations of what the Product Owner receives from the Product increment.
+
+## UI Correlation ID Management
+- Assign the correlation ID at the earliest point and exactly once for the lifetime of the page/request object, instead of regenerating it later.
+- Ensure that the `CorrelationId` is a business-unique identifier generated no later than submit time, with different submitted requests never sharing the same correlation ID.

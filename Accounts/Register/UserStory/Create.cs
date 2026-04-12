@@ -1,14 +1,13 @@
-﻿using Accounts.Register.UserStory;
-using Core.Domain;
+﻿using Core.Domain;
 using Core.Infrastructure;
 
-namespace Accounts.Register.WorkSteps;
+namespace Accounts.Register.UserStory;
 
 internal sealed class Create(
     IHasher hasher,
     IClock clock,
     IGuid guid,
-    ILogger<Create> logger) : WorkStep<Context>(clock, guid, logger) {
+    ILogger<UserStory> logger) : WorkStep<Context>(clock, guid, logger) {
     protected override Task Run(Context context) {
         context.ExecutedBusinessWorkSteps.Add(RegistrationWorkStep.CreateIdentity);
 

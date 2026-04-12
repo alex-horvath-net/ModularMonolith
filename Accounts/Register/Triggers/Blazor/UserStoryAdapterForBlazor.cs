@@ -2,7 +2,7 @@ using Accounts.Register.UserStory;
 using Core.Domain.Tasks;
 namespace Accounts.Register.Triggers.Blazor;
 
-internal sealed class UserStoryAdapter(UserStory.UserStory userStory) : IRegister {
+internal sealed class UserStoryAdapterForBlazor(UserStory.UserStory userStory) : IRegister {
 
     public async Task<RegisterResponse> Run(RegisterRequest blazorRequest, CancellationToken token = default) {
         var request = blazorRequest.Map(ToUserStoryRequest);
@@ -16,11 +16,12 @@ internal sealed class UserStoryAdapter(UserStory.UserStory userStory) : IRegiste
     }
 
     private Request ToUserStoryRequest(RegisterRequest blazorRequest) => new(
-        CorrelationId: Guid.NewGuid(),
         Email: blazorRequest.Email,
         UserName: blazorRequest.UserName,
         Password: blazorRequest.Password,
-        Roles: blazorRequest.Roles.ToArray());
+        Roles: blazorRequest.Roles.ToArray(),
+        CorrelationId: blazorRequest.CorrelationId,
+        RequestId: blazorRequest.RunId!.Value);
 
     private RegisterResponse ToBlazorResponse(Response userStoryResponse) => new(
         AccountId: userStoryResponse.AccountId,

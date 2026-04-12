@@ -29,22 +29,23 @@ public abstract class FeatureDSL : ModuleDSL<FeatureDSL> {
         base.DefaultSettings();
 
         RequestFactory = () => new Request(
-            CorrelationId: Guid.NewGuid(),
             Email: EmailFactory(),
             UserName: UserNameFactory(),
             Password: PasswordFactory(),
-            Roles: RolesFactory());
+            Roles: RolesFactory(),
+            CorrelationId: guid.Generate(),
+            RequestId: guid.Generate());
     }
 
     protected override void GenerateDependencies() {
+        guid = Substitute.For<IGuid>();
+        guid.Generate().Returns(Guid.Parse("11111111-1111-1111-1111-111111111111"));
         request = RequestFactory();
         token = TokenFactory();
 
         accountRepository = AccountRepositoryFactory();
         hasher = HasherFactory();
         clock = ClockFactory();
-        guid = Substitute.For<IGuid>();
-        guid.Generate().Returns(Guid.Parse("11111111-1111-1111-1111-111111111111"));
     }
     protected void RegisterUserStoryShouldBeAccepted() =>
         ShouldNotThrowException();
