@@ -6,15 +6,11 @@
     <Nullable>enable</Nullable>
   </PropertyGroup>
 
-
-
   <ItemGroup>
     <InternalsVisibleTo Include="Tests" />
     <InternalsVisibleTo Include="Accounts.Design" />
     <InternalsVisibleTo Include="DynamicProxyGenAssembly2" />
   </ItemGroup>
-
-
 
   <ItemGroup>
     <ProjectReference Include="..\src\Core\Core.csproj" />
