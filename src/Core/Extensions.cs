@@ -18,9 +18,9 @@ namespace Core;
 public static class Extensions {
     public static IServiceCollection AddCore(this IServiceCollection services, IConfiguration config, IHostEnvironment env) {
         services.AddScoped<IBusinessEventPublisher, InProcessBusinessEventPublisher>();
-        services.AddSingleton<IRandom, RandomGenerator>();
+        services.AddSingleton<IRandomNumberGenerator, RandomNumberGenerator>();
         services.AddSingleton<IHasher, Pbkdf2HashGenerator>();
-        services.AddSingleton<IGuid, GuidGenerator>();
+        services.AddSingleton<IGuidGenerator, GuidGenerator>();
         services.AddSingleton<IClock, SystemClock>();
         services.AddSingleton(typeof(ILogger<>), typeof(MicrosoftLogger<>));
 

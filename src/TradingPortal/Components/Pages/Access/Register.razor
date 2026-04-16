@@ -7,7 +7,7 @@
 @using Core.Infrastructure
 
 @inject IRegister register
-@inject IGuid guid
+@inject IGuidGenerator guid
 @inject IClock clock
 
 <PageTitle>Register</PageTitle>
@@ -130,7 +130,7 @@
     private bool isSubmitting;
 
     protected override void OnInitialized() => request =  new() {
-        CorrelationId = guid.Generate(),
+        CorrelationId = guid.New(),
         RunId = null,
         RunTime = null,
         Email = string.Empty,
@@ -166,7 +166,7 @@
     private async Task OnRegisterClicked() {
         try {
             request.RunTime = clock.UtcNow;
-            request.RunId = guid.Generate();
+            request.RunId = guid.New();
             errorMessage =  SenityCheck();
             if (errorMessage != null) return;
             

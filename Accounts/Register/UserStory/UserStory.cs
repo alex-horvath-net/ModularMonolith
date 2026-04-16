@@ -8,7 +8,7 @@ internal sealed class UserStory(
     IAccountRepository repository,
     IHasher hasher,
     IClock clock,
-    IGuid guid,
+    IGuidGenerator guid,
     ILogger<UserStory> logger) : WorkStep<Context>(clock, guid, logger) {
 
     protected override async Task Run(Context context) {

@@ -6,14 +6,14 @@ namespace Accounts.Design.Register;
 public sealed class WorkflowDemo : FeatureDSL {
     [Fact]
     public Task ProductOwner_Should_Receive_A_Usable_Identity_When_The_Register_User_Story_Succeeds() =>
-        Given(DefaultSettings).
+        Given(ProdLikeDependencies).
         When(Run).
         Then(RegisterUserStoryShouldBeAccepted).
         Then(ProductOwnerShouldReceiveAUsableIdentity);
 
     [Fact]
     public Task The_Register_User_Story_BusinessWorkflow_Should_Stop_Before_Later_BusinessWorkSteps_When_The_Request_Is_Invalid() =>
-        Given(DefaultSettings, But, RequestHasSomeIssue).
+        Given(ProdLikeDependencies, But, RequestHasSomeIssue).
         When(Run).
         Then(ProductOwnerShouldBeTold).
         Then(() => workSteps.ShouldBe([
@@ -21,7 +21,7 @@ public sealed class WorkflowDemo : FeatureDSL {
 
     [Fact]
     public Task The_Register_User_Story_BusinessWorkflow_Should_Stop_Before_Later_BusinessWorkSteps_When_A_Similar_Identity_Already_Exists() =>
-        Given(DefaultSettings, But, AccountAlreadyExistsWithSimilarEmail).
+        Given(ProdLikeDependencies, But, AccountAlreadyExistsWithSimilarEmail).
         When(Run).
         Then(() => ProductOwnerShouldBeTold(Constants.AccountAlreadyExists)).
         Then(() => workSteps.ShouldBe([
@@ -31,7 +31,7 @@ public sealed class WorkflowDemo : FeatureDSL {
 
     [Fact]
     public Task The_Register_User_Story_Should_Follow_The_Promised_BusinessWorkflow() =>
-        Given(DefaultSettings, But, EmailIsNotNormalized).
+        Given(ProdLikeDependencies, But, EmailIsNotNormalized).
         When(Run).
         Then(RegisterUserStoryShouldBeAccepted).
         Then(() => workSteps.ShouldBe([

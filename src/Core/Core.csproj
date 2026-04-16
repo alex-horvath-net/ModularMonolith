@@ -37,6 +37,7 @@
 
   <ItemGroup>
     <None Include="Infrastructure\Hash\Pbkdf2HashGenerator.cs" />
+    <None Include="Infrastructure\IGuid.Generator.cs" />
   </ItemGroup>
     
 

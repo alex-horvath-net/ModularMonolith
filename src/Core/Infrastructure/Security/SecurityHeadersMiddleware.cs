@@ -17,7 +17,7 @@ public static class SecurityHeadersMiddleware {
            Prod: enforce strict CSP by removing unsafe-inline, requiring nonce, and enabling HSTS */
         var isDev = app.Environment.IsDevelopment();
 
-        // Generate per-request nonce for CSP
+        // New per-request nonce for CSP
         var nonceBytes = RandomNumberGenerator.GetBytes(16);
         var nonce = Convert.ToBase64String(nonceBytes);
         context.Items["csp-nonce"] = nonce;

@@ -7,7 +7,7 @@ namespace Accounts.Register.UserStory;
 internal sealed class PreventDuplication(
     IAccountRepository repository,
     IClock clock,
-    IGuid guid,
+    IGuidGenerator guid,
     ILogger<UserStory> logger) : WorkStep<Context>(clock, guid, logger) {
     protected override async Task Run(Context context) {
         context.ExecutedBusinessWorkSteps.Add(RegistrationWorkStep.PreventDuplication);

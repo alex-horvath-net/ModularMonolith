@@ -9,11 +9,19 @@ public abstract class ModuleDSL<TFeatureDSL> where TFeatureDSL : ModuleDSL<TFeat
     protected IAccountRepository accountRepository = null!;
     protected IHasher hasher = null!;
     protected IClock clock = null!;
+    protected IGuidGenerator guidGenerator = null!;
     protected CancellationToken token;
+    protected CancellationTokenSource tokenSource = new();
     protected Exception? exception;
 
-    protected virtual void DefaultSettings() {
+    protected virtual void ProdLikeDependencies() {
         TokenFactory = () => CancellationToken.None;
+
+        GuidFactory = () => {
+            var mock = Substitute.For<IGuidGenerator>();
+            mock.New().Returns(Guid.Parse("11111111-1111-1111-1111-111111111111"));
+            return mock;
+        };
 
         AccountRepositoryFactory = () => {
             var mock = Substitute.For<IAccountRepository>();
@@ -43,6 +51,16 @@ public abstract class ModuleDSL<TFeatureDSL> where TFeatureDSL : ModuleDSL<TFeat
         RolesFactory = () => ["Trader", "RiskManager"];
     }
 
+    protected virtual void GenerateDependencies() {
+        hasher = HasherFactory();
+        clock = ClockFactory();
+        guidGenerator = GuidFactory();
+        accountRepository = AccountRepositoryFactory();
+
+        token = TokenFactory();
+    }
+
+    protected Func<IGuidGenerator> GuidFactory { get; set; } = null!;
     protected Func<CancellationToken> TokenFactory { get; set; } = null!;
     protected Func<IAccountRepository> AccountRepositoryFactory { get; set; } = null!;
     protected Func<IHasher> HasherFactory { get; set; } = null!;
@@ -86,5 +104,4 @@ public abstract class ModuleDSL<TFeatureDSL> where TFeatureDSL : ModuleDSL<TFeat
     internal void ShouldNotThrowException() =>
          exception.ShouldBeNull();
 
-    protected abstract void GenerateDependencies();
 }

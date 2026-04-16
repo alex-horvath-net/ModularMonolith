@@ -7,45 +7,39 @@ namespace Accounts.Design.Register;
 
 public abstract class FeatureDSL : ModuleDSL<FeatureDSL> {
     private UserStory userStory = null!;
-    private IGuid guid = null!;
     private Request request = null!;
     private Response response = null!;
     protected IReadOnlyList<RegistrationWorkStep> workSteps = [];
 
     protected async Task Run() {
-        userStory = new UserStory(accountRepository, hasher, clock, guid, Substitute.For<ILogger<UserStory>>());
+        userStory = new UserStory(accountRepository, hasher, clock, guidGenerator, Substitute.For<ILogger<UserStory>>());
         var context = new Context(request, token);
 
         try {
             await userStory.Execute(context);
-            response = context.ToResponse();
-            workSteps = [.. context.ExecutedBusinessWorkSteps];
-        } catch (InvalidOperationException) {
+        } catch {
             workSteps = [.. context.ExecutedBusinessWorkSteps];
             throw;
         }
+        response = context.ToResponse();
+        workSteps = [.. context.ExecutedBusinessWorkSteps];
     }
-    protected override void DefaultSettings() {
-        base.DefaultSettings();
+    protected override void ProdLikeDependencies() {
+        base.ProdLikeDependencies();
 
         RequestFactory = () => new Request(
             Email: EmailFactory(),
             UserName: UserNameFactory(),
             Password: PasswordFactory(),
             Roles: RolesFactory(),
-            CorrelationId: guid.Generate(),
-            RequestId: guid.Generate());
+            CorrelationId: guidGenerator.New(),
+            RequestId: guidGenerator.New());
     }
 
     protected override void GenerateDependencies() {
-        guid = Substitute.For<IGuid>();
-        guid.Generate().Returns(Guid.Parse("11111111-1111-1111-1111-111111111111"));
-        request = RequestFactory();
-        token = TokenFactory();
+        base.GenerateDependencies();
 
-        accountRepository = AccountRepositoryFactory();
-        hasher = HasherFactory();
-        clock = ClockFactory();
+        request = RequestFactory();
     }
     protected void RegisterUserStoryShouldBeAccepted() =>
         ShouldNotThrowException();

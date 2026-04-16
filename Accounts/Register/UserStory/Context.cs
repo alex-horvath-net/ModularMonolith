@@ -19,12 +19,12 @@ internal sealed record Context : ContextBase {
         RequestId = request?.RequestId;
     }
 
-    public Request? Request { get; }
-    public CancellationToken Token { get; }
-    public Request? NormalizedRequest { get; set; }
-    public Account? MachingAccount { get; set; }
-    public Account? Account { get; set; }
-    public List<RegistrationWorkStep> ExecutedBusinessWorkSteps { get; } = [];
+    internal Request? Request { get; }
+    internal CancellationToken Token { get; }
+    internal Request? NormalizedRequest { get; set; }
+    internal Account? MachingAccount { get; set; }
+    internal Account? Account { get; set; }
+    internal List<RegistrationWorkStep> ExecutedBusinessWorkSteps { get; } = [];
 
     internal Response ToResponse() => new(
         ErrorMessage: null,

@@ -1,5 +1,5 @@
 ﻿namespace Core.Infrastructure.GuidNumber;
 
-internal class GuidGenerator : IGuid {
-    public Guid Generate() => Guid.NewGuid();
+internal class GuidGenerator : IGuidGenerator {
+    public Guid New() => Guid.NewGuid();
 }

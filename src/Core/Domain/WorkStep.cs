@@ -2,13 +2,13 @@ using Core.Infrastructure;
 
 namespace Core.Domain;
 
-public abstract class WorkStep<TContext>(IClock clock, IGuid guidGenerator, ILogger<WorkStep<TContext>> logger) where TContext : ContextBase {
+public abstract class WorkStep<TContext>(IClock clock, IGuidGenerator guidGenerator, ILogger<WorkStep<TContext>> logger) where TContext : ContextBase {
     private const string MessageTemplate = "WorkStep {WorkStep} is {Status} at {Time}. CorellationId is {CorellationId}. RequestId is {RequestId}.";
 
     public async Task Execute(TContext context) {
         try {
-            context.CorellationId ??= guidGenerator.Generate();
-            context.RequestId ??= guidGenerator.Generate();
+            context.CorellationId ??= guidGenerator.New();
+            context.RequestId ??= guidGenerator.New();
             context.WorkSteps.Add(GetType().Name);
 
             logger.LogInformation(MessageTemplate, context.WorkSteps.Last(), "Started", clock.UtcNow, context.CorellationId, context.RequestId);

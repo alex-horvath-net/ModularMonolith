@@ -2,7 +2,7 @@ using System.Security.Cryptography;
 
 namespace Core.Infrastructure.Hash;
 
-internal sealed class Pbkdf2HashGenerator(IRandom random) : IHasher {
+internal sealed class Pbkdf2HashGenerator(IRandomNumberGenerator random) : IHasher {
     private const int SaltSize = 16; // 128-bit salt
     private const int HashSize = 32; // 256-bit hash
     private const int Iterations = 300_000;
@@ -11,7 +11,7 @@ internal sealed class Pbkdf2HashGenerator(IRandom random) : IHasher {
         ArgumentException.ThrowIfNullOrWhiteSpace(text);
 
         Span<byte> salt = stackalloc byte[SaltSize];
-        random.Generate(salt);
+        random.New(salt);
 
         var hashKey = Rfc2898DeriveBytes.Pbkdf2(
             password: text,

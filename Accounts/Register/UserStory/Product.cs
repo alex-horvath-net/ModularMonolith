@@ -1,8 +1,8 @@
 namespace Accounts.Register.UserStory;
 
-public sealed class Product<TResult> {
-    public TResult Response { get; init; } = default!;
-    public IReadOnlyList<RegistrationWorkStep> ExecutedBusinessWorkSteps { get; init; } = [];
+internal sealed class Product<TResult> {
+    internal TResult Response { get; init; } = default!;
+    internal IReadOnlyList<RegistrationWorkStep> ExecutedBusinessWorkSteps { get; init; } = [];
 
     private static readonly string executedBusinessWorkStepsKey = $"{typeof(Product<TResult>).FullName}.{nameof(ExecutedBusinessWorkSteps)}";
 

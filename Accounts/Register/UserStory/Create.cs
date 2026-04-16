@@ -6,7 +6,7 @@ namespace Accounts.Register.UserStory;
 internal sealed class Create(
     IHasher hasher,
     IClock clock,
-    IGuid guid,
+    IGuidGenerator guid,
     ILogger<UserStory> logger) : WorkStep<Context>(clock, guid, logger) {
     protected override Task Run(Context context) {
         context.ExecutedBusinessWorkSteps.Add(RegistrationWorkStep.CreateIdentity);
