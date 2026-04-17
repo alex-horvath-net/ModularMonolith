@@ -40,6 +40,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Accounts.Design", "Accounts
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Accounts.UserManual", "Accounts.UserManual\Accounts.UserManual.csproj", "{D1E57E16-EB06-459B-9986-F6B9882984BC}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Accounts", "Accounts", "{B54E44A2-9DBC-4245-ABF7-4406EA70092D}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -176,6 +178,9 @@ Global
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
 		{4CB9259C-2F0C-4978-975E-7B04FAEE8E09} = {8EC462FD-D22E-90A8-E5CE-7E832BA40C5D}
+		{7A0E88A4-CF3E-4D9F-9EDD-B09FF284D303} = {B54E44A2-9DBC-4245-ABF7-4406EA70092D}
+		{4852ABEE-3738-40F5-96AB-2E15374B4A3D} = {B54E44A2-9DBC-4245-ABF7-4406EA70092D}
+		{D1E57E16-EB06-459B-9986-F6B9882984BC} = {B54E44A2-9DBC-4245-ABF7-4406EA70092D}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {9F153098-1BFD-4764-842C-EF44352D968A}

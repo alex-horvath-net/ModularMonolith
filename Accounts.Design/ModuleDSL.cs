@@ -15,8 +15,39 @@ public abstract class ModuleDSL<TFeatureDSL> where TFeatureDSL : ModuleDSL<TFeat
     protected Exception? exception;
 
     protected virtual void ProdLikeDependencies() {
-        TokenFactory = () => CancellationToken.None;
+        TokenFactory = () => tokenSource.Token;
 
+        GuidFactory = () => new Core.Infrastructure.GuidNumber.GuidGenerator();
+
+        AccountRepositoryFactory = () => {
+            var mock = Substitute.For<IAccountRepository>();
+            mock.FindAccountByEmail(default!, default).Returns(Task.FromResult((Account?)null));
+            mock.CreateAccount(default!, default).Returns(Task.CompletedTask);
+            return mock;
+        };
+
+        HasherFactory = () => {
+            var mock = Substitute.For<IHasher>();
+            mock.Generate(Arg.Any<string>()).Returns("hashed-password");
+            return mock;
+        };
+
+        ClockFactory = () => {
+            var mock = Substitute.For<IClock>();
+            mock.UtcNow.Returns(DateTime.Parse("2024-01-01T00:00:00Z", CultureInfo.InvariantCulture));
+            return mock;
+        };
+
+        UserNameFactory = () => "Test-Trader";
+
+        PasswordFactory = () => "Ab!456789012";
+
+        EmailFactory = () => "Test-Trader@Bank.com";
+
+        RolesFactory = () => ["Trader", "RiskManager"];
+    }
+
+    protected virtual void FastDeterministicDependencies() {
         GuidFactory = () => {
             var mock = Substitute.For<IGuidGenerator>();
             mock.New().Returns(Guid.Parse("11111111-1111-1111-1111-111111111111"));
