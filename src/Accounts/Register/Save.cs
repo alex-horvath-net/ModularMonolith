@@ -2,7 +2,7 @@
 using Core.Domain;
 using Core.Infrastructure;
 
-namespace Accounts.Register.UserStory;
+namespace Accounts.Register;
 
 internal sealed class Save(
     IAccountRepository repsoitory,

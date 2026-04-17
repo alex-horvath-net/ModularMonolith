@@ -1,5 +1,5 @@
 using Accounts.Core.Domain;
-using Accounts.Register.UserStory;
+using Accounts.Register;
 using Core.Domain.Tasks;
 
 namespace Accounts.Design.Register;

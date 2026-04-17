@@ -1,6 +1,6 @@
-namespace Accounts.Register.Triggers.Blazor;
+namespace Accounts.Register.BlazorTrigger;
 
-public sealed class RegisterRequest {
+public sealed class RegisterBlazorRequest {
     public DateTime? RunTime { get; set; }
     public Guid? RunId { get; set; }
     public Guid CorrelationId { get; set; }

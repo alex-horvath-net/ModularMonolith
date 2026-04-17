@@ -1,4 +1,4 @@
-namespace Accounts.Register.UserStory;
+namespace Accounts.Register;
 
 public sealed record Response(
     string? ErrorMessage,

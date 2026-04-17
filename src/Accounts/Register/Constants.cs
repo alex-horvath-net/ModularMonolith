@@ -1,4 +1,4 @@
-namespace Accounts.Register.UserStory;
+namespace Accounts.Register;
 
 internal static class Constants {
     public const string RequestCanNotBeNull = "Request can not be null";

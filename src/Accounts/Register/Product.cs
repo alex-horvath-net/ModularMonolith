@@ -1,4 +1,4 @@
-namespace Accounts.Register.UserStory;
+namespace Accounts.Register;
 
 internal sealed class Product<TResult> {
     internal TResult Response { get; init; } = default!;

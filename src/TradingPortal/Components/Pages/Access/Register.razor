@@ -3,10 +3,10 @@
 
 @using System
 @using System.Collections.Generic
-@using Accounts.Register.Triggers.Blazor
+@using Accounts.Register.BlazorTrigger
 @using Core.Infrastructure
 
-@inject IRegister register
+@inject IRegisterAdapter register
 @inject IGuidGenerator guid
 @inject IClock clock
 
@@ -122,8 +122,8 @@
 
 @code {
     private readonly string[] availableRoles = ["Trader", "RiskManager", "Compliance"];
-    private RegisterRequest request = null!;
-    private RegisterResponse response = null!;
+    private RegisterBlazorRequest request = null!;
+    private RegisterBlazorResponse response = null!;
     private string? confirmPassword;
     private string? successMessage;
     private string? errorMessage;
@@ -182,7 +182,6 @@
             isSubmitting = false;
         }
     }
-
 
     private string? SenityCheck() => 
         isSubmitting ? "Registration is in progress." :

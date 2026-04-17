@@ -1,6 +1,6 @@
 using System.Globalization;
 using Accounts.Core.Domain;
-using Accounts.Register.UserStory;
+using Accounts.Register;
 using Core.Infrastructure;
 
 namespace Accounts.Design.Register;

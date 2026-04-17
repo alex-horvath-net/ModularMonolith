@@ -2,7 +2,7 @@ using Accounts.Core.Infrastructure;
 using Core.Domain;
 using Core.Infrastructure;
 
-namespace Accounts.Register.UserStory;
+namespace Accounts.Register;
 
 internal sealed class UserStory(
     IAccountRepository repository,

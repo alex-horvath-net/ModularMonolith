@@ -1,7 +1,7 @@
 using Accounts.Core.Domain;
 using Core.Domain;
 
-namespace Accounts.Register.UserStory;
+namespace Accounts.Register;
 
 public enum RegistrationWorkStep {
     Validation,

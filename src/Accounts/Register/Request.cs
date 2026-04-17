@@ -1,4 +1,4 @@
-namespace Accounts.Register.UserStory;
+namespace Accounts.Register;
 
 internal sealed record Request(
     string Email,

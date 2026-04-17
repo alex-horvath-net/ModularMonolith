@@ -1,7 +1,7 @@
 using Accounts;
 using Accounts.Core.Infrastructure.Data;
 using Accounts.CreateToken;
-using Accounts.Register.Triggers.Blazor;
+using Accounts.Register.BlazorTrigger;
 using Billing;
 using Core;
 using Core.Domain.Tasks;
@@ -80,11 +80,11 @@ app.Run();
 static void SeedSecurityOfficerAccounts(WebApplication app) {
     using var scope = app.Services.CreateScope();
     var db = scope.ServiceProvider.GetRequiredService<SecurityDbContext>();
-    var register = scope.ServiceProvider.GetRequiredService<IRegister>();
+    var register = scope.ServiceProvider.GetRequiredService<IRegisterAdapter>();
 
     db.Database.EnsureCreated();
 
-    var request = new RegisterRequest() {
+    var request = new RegisterBlazorRequest() {
         Email = "aladar.horvath@outlook.com",
         UserName = "Aladar Horvath",
         Password = "Sup3r$ecretPwd!",

@@ -1,6 +1,6 @@
-namespace Accounts.Register.Triggers.Blazor;
+namespace Accounts.Register.BlazorTrigger;
 
-public sealed record RegisterResponse(
+public sealed record RegisterBlazorResponse(
     Guid AccountId,
     string Email,
     IReadOnlyCollection<string> Roles,
