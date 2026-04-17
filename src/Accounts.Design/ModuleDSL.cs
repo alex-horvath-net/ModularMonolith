@@ -2,6 +2,7 @@
 using Accounts.Core.Domain;
 using Accounts.Core.Infrastructure;
 using Core.Infrastructure;
+using Core.Infrastructure.GuidNumber;
 
 namespace Accounts.Design;
 
@@ -17,7 +18,7 @@ public abstract class ModuleDSL<TFeatureDSL> where TFeatureDSL : ModuleDSL<TFeat
     protected virtual void ProdLikeDependencies() {
         TokenFactory = () => tokenSource.Token;
 
-        GuidFactory = () => new Core.Infrastructure.GuidNumber.GuidGenerator();
+        GuidFactory = () => new GuidGenerator();
 
         AccountRepositoryFactory = () => {
             var mock = Substitute.For<IAccountRepository>();

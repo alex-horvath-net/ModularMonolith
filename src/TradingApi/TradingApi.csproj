@@ -33,9 +33,10 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\Accounts\Accounts.csproj" />
-    <ProjectReference Include="..\..\Orders\Orders.csproj" />
+    <ProjectReference Include="..\Accounts\Accounts.csproj" />
+    <ProjectReference Include="..\Core\Core.csproj" />
     <ProjectReference Include="..\Features\Billing.csproj" />
+    <ProjectReference Include="..\Orders\Orders.csproj" />
   </ItemGroup>
 
 </Project>

@@ -24,7 +24,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\Accounts\Accounts.csproj" />
-    <ProjectReference Include="..\src\Core\Core.csproj" />
+    <ProjectReference Include="..\Core\Core.csproj" />
   </ItemGroup>
 
 
