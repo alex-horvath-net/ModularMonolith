@@ -5,7 +5,7 @@ using Core.Infrastructure;
 
 namespace Accounts.Design.Register;
 
-public abstract class FeatureDSL : ModuleDSL<FeatureDSL> {
+public abstract class DSL : ModuleDSL<DSL> {
     private UserStory userStory = null!;
     private Request request = null!;
     private Response response = null!;
@@ -17,12 +17,11 @@ public abstract class FeatureDSL : ModuleDSL<FeatureDSL> {
 
         try {
             await userStory.Execute(context);
-        } catch {
-            workSteps = [.. context.ExecutedBusinessWorkSteps];
-            throw;
+        } catch (Exception ex) {
+            exception = ex;
         }
         response = context.ToResponse();
-        workSteps = [.. context.ExecutedBusinessWorkSteps];
+        workSteps = context.ExecutedBusinessWorkSteps;
     }
     protected override void ProdLikeDependencies() {
         base.ProdLikeDependencies();

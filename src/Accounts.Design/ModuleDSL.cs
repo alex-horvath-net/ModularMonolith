@@ -116,11 +116,7 @@ public abstract class ModuleDSL<TFeatureDSL> where TFeatureDSL : ModuleDSL<TFeat
     internal async Task<TFeatureDSL> When(Func<Task> sut) {
         GenerateDependencies();
 
-        try {
-            await sut();
-        } catch (Exception exception) {
-            this.exception = exception;
-        }
+        await sut();
 
         return (TFeatureDSL)this;
     }

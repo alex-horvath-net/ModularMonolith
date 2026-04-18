@@ -3,7 +3,7 @@ using Core.Domain.Tasks;
 
 namespace Accounts.Design.Register;
 
-public sealed class ValidationBusinessWorkStepDemo : FeatureDSL {
+public sealed class ValidationBusinessWorkStepDemo : DSL {
     [Fact]
     public Task ProductOwner_Can_Start_The_Register_User_Story_With_A_Valid_Request() =>
         Given(ProdLikeDependencies).

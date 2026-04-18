@@ -3,7 +3,7 @@ using Core.Domain.Tasks;
 
 namespace Accounts.Design.Register;
 
-public sealed class WorkflowDemo : FeatureDSL {
+public sealed class WorkflowDemo : DSL {
     [Fact]
     public Task ProductOwner_Should_Receive_A_Usable_Identity_When_The_Register_User_Story_Succeeds() =>
         Given(ProdLikeDependencies).
