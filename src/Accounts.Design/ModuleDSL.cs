@@ -3,9 +3,6 @@ using Accounts.Core.Domain;
 using Accounts.Core.Infrastructure;
 using Core.Infrastructure;
 using Core.Infrastructure.GuidNumber;
-using Core.Infrastructure.Log;
-using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.Logging;
 
 namespace Accounts.Design;
 
@@ -20,8 +17,6 @@ public abstract class ModuleDSL<TFeatureDSL> where TFeatureDSL : ModuleDSL<TFeat
     protected Exception? exception;
 
     protected virtual void ProdLike() {
-        LoggerProvider.Factory = CreateProdLikeLoggerFactory();
-
         TokenFactory = () => tokenSource.Token;
 
         GuidFactory = () => new GuidGenerator();
@@ -140,39 +135,5 @@ public abstract class ModuleDSL<TFeatureDSL> where TFeatureDSL : ModuleDSL<TFeat
 
     internal void ShouldNotThrowException() =>
          exception.ShouldBeNull();
-
-    private static ILoggerFactory CreateProdLikeLoggerFactory() {
-        var configuration = new ConfigurationBuilder()
-            .AddJsonFile(FindProdLikeAppSettingsPath(), optional: false)
-            .Build();
-
-        return LoggerFactory.Create(builder => {
-            builder.SetMinimumLevel(ParseLogLevel(configuration["Logging:LogLevel:Default"]));
-            builder.AddFilter("Microsoft", ParseLogLevel(configuration["Logging:LogLevel:Microsoft"]));
-        });
-    }
-
-    private static LogLevel ParseLogLevel(string? value) =>
-        Enum.TryParse<LogLevel>(value, ignoreCase: true, out var logLevel)
-            ? logLevel
-            : LogLevel.Information;
-
-    private static string FindProdLikeAppSettingsPath() {
-        var directory = new DirectoryInfo(AppContext.BaseDirectory);
-
-        while (directory is not null) {
-            var tradingPortalAppSettings = Path.Combine(directory.FullName, "src", "TradingPortal", "appsettings.json");
-            if (File.Exists(tradingPortalAppSettings))
-                return tradingPortalAppSettings;
-
-            var tradingApiAppSettings = Path.Combine(directory.FullName, "src", "TradingApi", "appsettings.json");
-            if (File.Exists(tradingApiAppSettings))
-                return tradingApiAppSettings;
-
-            directory = directory.Parent;
-        }
-
-        throw new InvalidOperationException("Could not locate production appsettings.json for logger configuration.");
-    }
 
 }
