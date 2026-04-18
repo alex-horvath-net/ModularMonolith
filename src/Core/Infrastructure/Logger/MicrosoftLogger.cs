@@ -37,3 +37,7 @@ internal class MicrosoftLogger<T>(ILoggerFactory loggerFactory) : ILogger<T> {
 
     public ILogger<K> As<K>() => new MicrosoftLogger<K>(loggerFactory);
 }
+
+public static class LoggerFactory {
+    public static ILogger<T> Create<T>() => default;
+}

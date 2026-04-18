@@ -5,8 +5,7 @@ namespace Accounts.Register;
 
 internal sealed class Normalize(
     IClock clock,
-    IGuidGenerator guid,
-    ILogger<UserStory> logger) : WorkStep<Context>(clock, guid, logger) {
+    IGuidGenerator guid) : WorkStep<Context>(clock, guid) {
     protected override Task Run(Context context) {
         context.ExecutedBusinessWorkSteps.Add(RegistrationWorkStep.Normalization);
 

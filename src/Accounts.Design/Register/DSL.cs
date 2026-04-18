@@ -1,7 +1,6 @@
 using System.Globalization;
 using Accounts.Core.Domain;
 using Accounts.Register;
-using Core.Infrastructure;
 
 namespace Accounts.Design.Register;
 
@@ -9,22 +8,24 @@ public abstract class DSL : ModuleDSL<DSL> {
     private UserStory userStory = null!;
     private Request request = null!;
     private Response response = null!;
+
     protected IReadOnlyList<RegistrationWorkStep> workSteps = [];
 
     protected async Task Run() {
-        userStory = new UserStory(accountRepository, hasher, clock, guidGenerator, Substitute.For<ILogger<UserStory>>());
+        userStory = new UserStory(accountRepository, hasher, clock, guidGenerator);
         var context = new Context(request, token);
 
         try {
             await userStory.Execute(context);
+            response = context.ToResponse();
         } catch (Exception ex) {
             exception = ex;
+        } finally {
+            workSteps = context.ExecutedBusinessWorkSteps;
         }
-        response = context.ToResponse();
-        workSteps = context.ExecutedBusinessWorkSteps;
     }
-    protected override void ProdLikeDependencies() {
-        base.ProdLikeDependencies();
+    protected override void ProdLike() {
+        base.ProdLike();
 
         RequestFactory = () => new Request(
             Email: EmailFactory(),

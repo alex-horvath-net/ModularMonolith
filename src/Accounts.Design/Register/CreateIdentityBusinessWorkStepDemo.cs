@@ -7,14 +7,14 @@ namespace Accounts.Design.Register;
 public sealed class CreateIdentityBusinessWorkStepDemo : DSL {
     [Fact]
     public Task The_CreateIdentity_BusinessWorkStep_Should_Protect_ProductOwner_Credentials() =>
-        Given(ProdLikeDependencies).
+        Given(ProdLike).
         When(Run).
         Then(RegisterUserStoryShouldBeAccepted).
         Then(CreateIdentityBusinessWorkStepShouldProtectProductOwnerCredentials);
 
     [Fact]
     public Task The_CreateIdentity_BusinessWorkStep_Should_Build_A_New_Identity_From_Normalized_ProductOwner_Data() =>
-        Given(ProdLikeDependencies, But, EmailIsNotNormalized, UserNameIsNotNormalized, RolesAreNotNormalized).
+        Given(ProdLike, But, EmailIsNotNormalized, UserNameIsNotNormalized, RolesAreNotNormalized).
         When(Run).
         Then(RegisterUserStoryShouldBeAccepted).
         Then(CreateIdentityBusinessWorkStepShouldBuildANewIdentityFromNormalizedProductOwnerData);

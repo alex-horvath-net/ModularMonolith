@@ -1,8 +1,14 @@
 using Core.Infrastructure;
+using Core.Infrastructure.Logger;
 
 namespace Core.Domain;
 
-public abstract class WorkStep<TContext>(IClock clock, IGuidGenerator guidGenerator, ILogger<WorkStep<TContext>> logger) where TContext : ContextBase {
+public abstract class WorkStep<TContext>(
+    IClock clock,
+    IGuidGenerator guidGenerator) where TContext : ContextBase {
+
+    private readonly ILogger<WorkStep<TContext>> logger = LoggerFactory.Create<WorkStep<TContext>>();
+
     private const string MessageTemplate = "WorkStep {WorkStep} is {Status} at {Time}. CorellationId is {CorellationId}. RequestId is {RequestId}.";
 
     public async Task Execute(TContext context) {

@@ -6,14 +6,14 @@ namespace Accounts.Design.Register;
 public sealed class SaveIdentityBusinessWorkStepDemo : DSL {
     [Fact]
     public Task The_SaveIdentity_BusinessWorkStep_Should_Store_The_New_Identity_For_Future_Work() =>
-        Given(ProdLikeDependencies).
+        Given(ProdLike).
         When(Run).
         Then(RegisterUserStoryShouldBeAccepted).
         Then(SaveIdentityBusinessWorkStepShouldStoreTheNewIdentity);
 
     [Fact]
     public Task ProductOwner_Should_Remain_In_Control_While_The_Product_Stores_The_New_Identity() =>
-        Given(ProdLikeDependencies, But, ProductOwnerProvidesBusinessWorkflowControl).
+        Given(ProdLike, But, ProductOwnerProvidesBusinessWorkflowControl).
         When(Run).
         Then(RegisterUserStoryShouldBeAccepted).
         Then(ProductOwnerShouldRemainInControlWhileTheProductStoresTheNewIdentity);

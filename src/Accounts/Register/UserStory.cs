@@ -8,8 +8,7 @@ internal sealed class UserStory(
     IAccountRepository repository,
     IHasher hasher,
     IClock clock,
-    IGuidGenerator guid,
-    ILogger<UserStory> logger) : WorkStep<Context>(clock, guid, logger) {
+    IGuidGenerator guid) : WorkStep<Context>(clock, guid) {
 
     protected override async Task Run(Context context) {
         await validate.Execute(context);
@@ -19,9 +18,9 @@ internal sealed class UserStory(
         await save.Execute(context);
     }
 
-    private readonly Validate validate = new(clock, guid, logger);
-    private readonly Normalize normalize = new(clock, guid, logger);
-    private readonly PreventDuplication preventDuplication = new(repository, clock, guid, logger);
-    private readonly Create create = new(hasher, clock, guid, logger);
-    private readonly Save save = new(repository, clock, guid, logger);
+    private readonly Validate validate = new(clock, guid);
+    private readonly Normalize normalize = new(clock, guid);
+    private readonly PreventDuplication preventDuplication = new(repository, clock, guid);
+    private readonly Create create = new(hasher, clock, guid);
+    private readonly Save save = new(repository, clock, guid);
 }

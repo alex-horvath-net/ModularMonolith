@@ -7,7 +7,7 @@ namespace Accounts.Design.Register;
 public sealed class PreventDuplicationBusinessWorkStepDemo : DSL {
     [Fact]
     public Task ProductOwner_Can_Start_The_Register_User_Story_When_No_Similar_Identity_Exists() =>
-        Given(ProdLikeDependencies).
+        Given(ProdLike).
         When(Run).
         Then(RegisterUserStoryShouldBeAccepted).
         Then(PreventDuplicationBusinessWorkStepShouldCheckExistingIdentity).
@@ -15,14 +15,14 @@ public sealed class PreventDuplicationBusinessWorkStepDemo : DSL {
 
     [Fact]
     public Task ProductOwner_Can_Not_Start_The_Register_User_Story_Twice_With_The_Same_Email() =>
-        Given(ProdLikeDependencies, But, AccountAlreadyExistsWithSimilarEmail).
+        Given(A, ProdLike, But, FastAndDeterministicDependencies, With, AccountAlreadyExistsWithSimilarEmail).
         When(Run).
         Then(() => ProductOwnerShouldBeTold(Constants.AccountAlreadyExists)).
         Then(PreventDuplicationBusinessWorkStepShouldCheckExistingIdentity);
 
     [Fact]
     public Task ProductOwner_Should_Receive_A_New_Stored_Identity_When_The_Register_User_Story_Is_Allowed() =>
-        Given(ProdLikeDependencies).
+        Given(ProdLike).
         When(Run).
         Then(RegisterUserStoryShouldBeAccepted).
         Then(ProductOwnerShouldReceiveAUsableIdentity).

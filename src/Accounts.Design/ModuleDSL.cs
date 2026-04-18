@@ -9,13 +9,14 @@ namespace Accounts.Design;
 public abstract class ModuleDSL<TFeatureDSL> where TFeatureDSL : ModuleDSL<TFeatureDSL> {
     protected IAccountRepository accountRepository = null!;
     protected IHasher hasher = null!;
-    protected IClock clock = null!;
     protected IGuidGenerator guidGenerator = null!;
+    protected IClock clock = null!;
     protected CancellationToken token;
     protected CancellationTokenSource tokenSource = new();
+
     protected Exception? exception;
 
-    protected virtual void ProdLikeDependencies() {
+    protected virtual void ProdLike() {
         TokenFactory = () => tokenSource.Token;
 
         GuidFactory = () => new GuidGenerator();
@@ -48,7 +49,8 @@ public abstract class ModuleDSL<TFeatureDSL> where TFeatureDSL : ModuleDSL<TFeat
         RolesFactory = () => ["Trader", "RiskManager"];
     }
 
-    protected virtual void FastDeterministicDependencies() {
+    protected virtual void FastAndDeterministicDependencies() {
+
         GuidFactory = () => {
             var mock = Substitute.For<IGuidGenerator>();
             mock.New().Returns(Guid.Parse("11111111-1111-1111-1111-111111111111"));
@@ -102,6 +104,8 @@ public abstract class ModuleDSL<TFeatureDSL> where TFeatureDSL : ModuleDSL<TFeat
     protected Func<string> EmailFactory { get; set; } = null!;
     protected Func<IReadOnlyCollection<string>> RolesFactory { get; set; } = null!;
 
+    protected void A() { }
+    protected void With() { }
     protected void But() { }
 
     protected void And() { }

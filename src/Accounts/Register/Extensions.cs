@@ -11,8 +11,7 @@ internal static class Extensions {
             sp.GetRequiredService<IAccountRepository>(),
             sp.GetRequiredService<IHasher>(),
             sp.GetRequiredService<IClock>(),
-            sp.GetRequiredService<IGuidGenerator>(),
-            sp.GetRequiredService<ILogger<UserStory>>()));
+            sp.GetRequiredService<IGuidGenerator>()));
 
         services.AddScoped<IRegisterAdapter>(sp => new RegisterUserStoryAdapter(
             sp.GetRequiredService<UserStory>()));
