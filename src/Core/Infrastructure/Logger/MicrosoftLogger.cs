@@ -35,9 +35,11 @@ internal class MicrosoftLogger<T>(ILoggerFactory loggerFactory) : ILogger<T> {
             logger.LogError(exception, messageTemplate, args);
     }
 
-    public ILogger<K> As<K>() => new MicrosoftLogger<K>(loggerFactory);
+    public ILogger<K> CloneAs<K>() => new MicrosoftLogger<K>(loggerFactory);
 }
 
 public static class LoggerFactory {
-    public static ILogger<T> Create<T>() => default;
+    private static readonly ILoggerFactory factory = Microsoft.Extensions.Logging.LoggerFactory.Create(builder => { });
+
+    public static ILogger<T> Create<T>() => new MicrosoftLogger<T>(factory);
 }

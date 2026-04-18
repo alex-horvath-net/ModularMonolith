@@ -9,5 +9,5 @@ public interface ILogger<out T> {
     void LogError(string? messageTemplate, params object?[] args);
     void LogError(Exception? exception, string? messageTemplate, params object?[] args);
 
-    ILogger<TNew> As<TNew>();
+    ILogger<TNew> CloneAs<TNew>();
 }

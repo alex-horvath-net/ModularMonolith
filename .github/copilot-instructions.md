@@ -25,3 +25,6 @@
 ## UI Correlation ID Management
 - Assign the correlation ID at the earliest point and exactly once for the lifetime of the page/request object, instead of regenerating it later.
 - Ensure that the `CorrelationId` is a business-unique identifier generated no later than submit time, with different submitted requests never sharing the same correlation ID.
+
+## Dependency Injection Preferences
+- Inject only very slow or non-deterministic dependencies; construct deterministic and fast collaborators like logging locally instead of injecting.
