@@ -28,3 +28,4 @@
 
 ## Dependency Injection Preferences
 - Inject only very slow or non-deterministic dependencies; construct deterministic and fast collaborators like logging locally instead of injecting.
+- Keep `Core.Infrastructure.Logger.LoggerFactory` minimal and clean; configure it from `Accounts.Design.ModuleDSL` for design/test flows to avoid adding extra setup noise into the logger factory itself.

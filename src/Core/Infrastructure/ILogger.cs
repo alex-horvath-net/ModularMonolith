@@ -8,6 +8,4 @@ public interface ILogger<out T> {
     void LogWarning(Exception? exception, string? messageTemplate, params object?[] args);
     void LogError(string? messageTemplate, params object?[] args);
     void LogError(Exception? exception, string? messageTemplate, params object?[] args);
-
-    ILogger<TNew> CloneAs<TNew>();
 }

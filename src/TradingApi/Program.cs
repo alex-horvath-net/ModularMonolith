@@ -18,6 +18,8 @@ builder.Services.AddScoped<CreateTokenCommandHandler>();
 
 var app = builder.Build();
 
+Core.Infrastructure.Log.LoggerProvider.Factory = app.Services.GetRequiredService<ILoggerFactory>();
+
 app.MapCore();
 app.MapDevToken();
 app.MapOrders();

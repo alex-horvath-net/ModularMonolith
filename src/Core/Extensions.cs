@@ -4,7 +4,7 @@ using Core.Infrastructure.Authentication;
 using Core.Infrastructure.Clock;
 using Core.Infrastructure.GuidNumber;
 using Core.Infrastructure.Hash;
-using Core.Infrastructure.Logger;
+using Core.Infrastructure.Log;
 using Core.Infrastructure.Random;
 using Core.Infrastructure.Version;
 using Microsoft.AspNetCore.Builder;
@@ -22,7 +22,7 @@ public static class Extensions {
         services.AddSingleton<IHasher, Pbkdf2HashGenerator>();
         services.AddSingleton<IGuidGenerator, GuidGenerator>();
         services.AddSingleton<IClock, SystemClock>();
-        services.AddSingleton(typeof(ILogger<>), typeof(MicrosoftLogger<>));
+        services.AddSingleton(typeof(ILogger<>), typeof(Logger<>));
 
         //services.AddHttps();                    // Enforce Https via HSTS in non-development environments          
         //services.AddClientHeadersInProxy();     // Preserve client headers behind proxy, so ratelimiting and redirects can use them

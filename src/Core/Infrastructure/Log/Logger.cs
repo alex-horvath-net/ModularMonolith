@@ -1,8 +1,8 @@
 ﻿using Microsoft.Extensions.Logging;
 
-namespace Core.Infrastructure.Logger;
+namespace Core.Infrastructure.Log;
 
-internal class MicrosoftLogger<T>(ILoggerFactory loggerFactory) : ILogger<T> {
+internal class Logger<T>(ILoggerFactory loggerFactory) : ILogger<T> {
 
     private readonly Microsoft.Extensions.Logging.ILogger<T> logger = loggerFactory.CreateLogger<T>();
     public void LogDebug(string? messageTemplate, params object?[] args) {
@@ -34,12 +34,4 @@ internal class MicrosoftLogger<T>(ILoggerFactory loggerFactory) : ILogger<T> {
         if (logger.IsEnabled(LogLevel.Error))
             logger.LogError(exception, messageTemplate, args);
     }
-
-    public ILogger<K> CloneAs<K>() => new MicrosoftLogger<K>(loggerFactory);
-}
-
-public static class LoggerFactory {
-    private static readonly ILoggerFactory factory = Microsoft.Extensions.Logging.LoggerFactory.Create(builder => { });
-
-    public static ILogger<T> Create<T>() => new MicrosoftLogger<T>(factory);
 }
