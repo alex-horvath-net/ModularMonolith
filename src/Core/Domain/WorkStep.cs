@@ -7,7 +7,7 @@ public abstract class WorkStep<TContext>(
     IClock clock,
     IGuidGenerator guidGenerator) where TContext : ContextBase {
 
-    private readonly ILogger<WorkStep<TContext>> logger = LoggerProvider.Create<WorkStep<TContext>>();
+    private readonly ILogger<WorkStep<TContext>> logger = LoggerFactory.Create<WorkStep<TContext>>();
 
     private const string MessageTemplate = "WorkStep {WorkStep} is {Status} at {Time}. CorellationId is {CorellationId}. RequestId is {RequestId}.";
 
@@ -21,7 +21,7 @@ public abstract class WorkStep<TContext>(
 
             await Run(context);
 
-            logger.LogInformation(MessageTemplate, context.WorkSteps.Last(), "Completed", clock.UtcNow, context.CorellationId, context.RequestId);
+            logger.LogDebug(MessageTemplate, context.WorkSteps.Last(), "Completed", clock.UtcNow, context.CorellationId, context.RequestId);
 
         } catch (OperationCanceledException oce) {
             logger.LogWarning(oce, MessageTemplate, context.WorkSteps.Last(), "Canceled", clock.UtcNow, context.CorellationId, context.RequestId);

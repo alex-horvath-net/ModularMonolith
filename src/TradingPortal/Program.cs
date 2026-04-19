@@ -53,7 +53,7 @@ builder.Services.AddApiVersioning(o => o.ReportApiVersions = true)
 
 var app = builder.Build();
 
-Core.Infrastructure.Log.LoggerProvider.Factory = app.Services.GetRequiredService<ILoggerFactory>();
+Core.Infrastructure.Log.LoggerFactory.Factory = app.Services.GetRequiredService<ILoggerFactory>();
 
 SeedSecurityOfficerAccounts(app);
 
