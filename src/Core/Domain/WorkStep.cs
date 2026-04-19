@@ -9,7 +9,7 @@ public abstract class WorkStep<TContext>(
 
     private readonly ILogger<WorkStep<TContext>> logger = LoggerFactory.Create<WorkStep<TContext>>();
 
-    private const string MessageTemplate = "WorkStep {WorkStep} is {Status} at {Time}. CorellationId is {CorellationId}. RequestId is {RequestId}.";
+    private const string MessageTemplate = "WorkStep {WorkStep} is {Status} at {Time:dd/MM/yyyy HH:mm:ss.fff} UTC. CorellationId is {CorellationId}. RequestId is {RequestId}.";
 
     public async Task Execute(TContext context) {
         try {

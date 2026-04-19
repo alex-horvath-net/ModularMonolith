@@ -9,8 +9,6 @@ internal sealed class PreventDuplication(
     IClock clock,
     IGuidGenerator guid) : WorkStep<Context>(clock, guid) {
     protected override async Task Run(Context context) {
-        context.ExecutedBusinessWorkSteps.Add(RegistrationWorkStep.PreventDuplication);
-
         context.MachingAccount = await repository.FindAccountByEmail(context.NormalizedRequest!.Email, context.Token);
         if (context.MachingAccount is not null)
             throw new InvalidOperationException(Constants.AccountAlreadyExists);

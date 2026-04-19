@@ -137,3 +137,7 @@ public abstract class ModuleDSL<TFeatureDSL> where TFeatureDSL : ModuleDSL<TFeat
          exception.ShouldBeNull();
 
 }
+
+public static class Extensions {
+    public static IEnumerable<string> Add<T>(this IEnumerable<string> list) => list.Append(typeof(T).Name);
+}

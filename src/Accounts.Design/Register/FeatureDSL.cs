@@ -4,12 +4,12 @@ using Accounts.Register;
 
 namespace Accounts.Design.Register;
 
-public abstract class DSL : ModuleDSL<DSL> {
+public abstract class FeatureDSL : ModuleDSL<FeatureDSL> {
     private UserStory userStory = null!;
     private Request request = null!;
     private Response response = null!;
 
-    protected IReadOnlyList<RegistrationWorkStep> workSteps = [];
+    protected IReadOnlyList<string> workSteps = [];
 
     protected async Task Run() {
         userStory = new UserStory(accountRepository, hasher, clock, guidGenerator);
@@ -21,7 +21,7 @@ public abstract class DSL : ModuleDSL<DSL> {
         } catch (Exception ex) {
             exception = ex;
         } finally {
-            workSteps = context.ExecutedBusinessWorkSteps;
+            workSteps = context.WorkSteps;
         }
     }
     protected override void ProdLike() {

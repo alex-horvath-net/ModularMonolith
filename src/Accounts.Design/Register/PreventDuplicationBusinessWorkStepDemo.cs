@@ -4,7 +4,7 @@ using Core.Domain.Tasks;
 
 namespace Accounts.Design.Register;
 
-public sealed class PreventDuplicationBusinessWorkStepDemo : DSL {
+public sealed class PreventDuplicationBusinessWorkStepDemo : FeatureDSL {
     [Fact]
     public Task ProductOwner_Can_Start_The_Register_User_Story_When_No_Similar_Identity_Exists() =>
         Given(ProdLike).

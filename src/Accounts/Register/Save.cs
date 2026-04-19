@@ -8,8 +8,6 @@ internal sealed class Save(
     IAccountRepository repsoitory,
     IClock clock,
     IGuidGenerator guid) : WorkStep<Context>(clock, guid) {
-    protected override async Task Run(Context context) {
-        context.ExecutedBusinessWorkSteps.Add(RegistrationWorkStep.SaveIdentity);
-        await repsoitory.CreateAccount(context.Account!, context.Token);
-    }
+    protected override Task Run(Context context) =>
+        repsoitory.CreateAccount(context.Account!, context.Token);
 }

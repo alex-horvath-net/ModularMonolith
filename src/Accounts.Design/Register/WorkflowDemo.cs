@@ -3,7 +3,7 @@ using Core.Domain.Tasks;
 
 namespace Accounts.Design.Register;
 
-public sealed class WorkflowDemo : DSL {
+public sealed class WorkflowDemo : FeatureDSL {
     [Fact]
     public Task ProductOwner_Should_Receive_A_Usable_Identity_When_The_Register_User_Story_Succeeds() =>
         Given(ProdLike).
@@ -17,7 +17,8 @@ public sealed class WorkflowDemo : DSL {
         When(Run).
         Then(ProductOwnerShouldBeTold).
         Then(() => workSteps.ShouldBe([
-            RegistrationWorkStep.Validation]));
+            nameof(UserStory),
+            nameof(Validate)]));
 
     [Fact]
     public Task The_Register_User_Story_BusinessWorkflow_Should_Stop_Before_Later_BusinessWorkSteps_When_A_Similar_Identity_Already_Exists() =>
@@ -25,9 +26,10 @@ public sealed class WorkflowDemo : DSL {
         When(Run).
         Then(() => ProductOwnerShouldBeTold(Constants.AccountAlreadyExists)).
         Then(() => workSteps.ShouldBe([
-            RegistrationWorkStep.Validation,
-            RegistrationWorkStep.Normalization,
-            RegistrationWorkStep.PreventDuplication ]));
+            nameof(UserStory),
+            nameof(Validate),
+            nameof(Normalize),
+            nameof(PreventDuplication) ]));
 
     [Fact]
     public Task The_Register_User_Story_Should_Follow_The_Promised_BusinessWorkflow() =>
@@ -35,9 +37,10 @@ public sealed class WorkflowDemo : DSL {
         When(Run).
         Then(RegisterUserStoryShouldBeAccepted).
         Then(() => workSteps.ShouldBe([
-            RegistrationWorkStep.Validation,
-            RegistrationWorkStep.Normalization,
-            RegistrationWorkStep.PreventDuplication,
-            RegistrationWorkStep.CreateIdentity,
-            RegistrationWorkStep.SaveIdentity ]));
+            nameof(UserStory),
+            nameof(Validate),
+            nameof(Normalize),
+            nameof(PreventDuplication),
+            nameof(Create),
+            nameof(Save )]));
 }

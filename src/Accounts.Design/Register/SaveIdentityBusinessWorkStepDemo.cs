@@ -3,7 +3,7 @@ using Core.Domain.Tasks;
 
 namespace Accounts.Design.Register;
 
-public sealed class SaveIdentityBusinessWorkStepDemo : DSL {
+public sealed class SaveIdentityBusinessWorkStepDemo : FeatureDSL {
     [Fact]
     public Task The_SaveIdentity_BusinessWorkStep_Should_Store_The_New_Identity_For_Future_Work() =>
         Given(ProdLike).

@@ -3,14 +3,6 @@ using Core.Domain;
 
 namespace Accounts.Register;
 
-public enum RegistrationWorkStep {
-    Validation,
-    Normalization,
-    PreventDuplication,
-    CreateIdentity,
-    SaveIdentity,
-}
-
 internal sealed record Context : ContextBase {
     public Context(Request? request, CancellationToken token) {
         Request = request;
@@ -24,8 +16,6 @@ internal sealed record Context : ContextBase {
     internal Request? NormalizedRequest { get; set; }
     internal Account? MachingAccount { get; set; }
     internal Account? Account { get; set; }
-    internal List<RegistrationWorkStep> ExecutedBusinessWorkSteps { get; } = [];
-
     internal Response ToResponse() => new(
         ErrorMessage: null,
         Account!.Id,

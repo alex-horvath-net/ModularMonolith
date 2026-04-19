@@ -8,8 +8,6 @@ internal sealed class Create(
     IClock clock,
     IGuidGenerator guid) : WorkStep<Context>(clock, guid) {
     protected override Task Run(Context context) {
-        context.ExecutedBusinessWorkSteps.Add(RegistrationWorkStep.CreateIdentity);
-
         context.Account = new(
             Id: Guid.NewGuid(),
             Email: context.NormalizedRequest!.Email,

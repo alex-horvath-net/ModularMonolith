@@ -7,8 +7,6 @@ internal sealed class Normalize(
     IClock clock,
     IGuidGenerator guid) : WorkStep<Context>(clock, guid) {
     protected override Task Run(Context context) {
-        context.ExecutedBusinessWorkSteps.Add(RegistrationWorkStep.Normalization);
-
         context.NormalizedRequest = context.Request with {
             Email = NormalizeEmai(context),
             UserName = NormalizeUserName(context),

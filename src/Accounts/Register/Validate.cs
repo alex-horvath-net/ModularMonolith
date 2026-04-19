@@ -8,8 +8,6 @@ internal sealed class Validate(
     IClock clock,
     IGuidGenerator guid) : WorkStep<Context>(clock, guid) {
     protected override Task Run(Context context) {
-        context.ExecutedBusinessWorkSteps.Add(RegistrationWorkStep.Validation);
-
         if (context.Request is null) {
             throw new InvalidOperationException(Constants.RequestCanNotBeNull);
         }

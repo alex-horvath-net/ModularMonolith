@@ -2,7 +2,7 @@ using Core.Domain.Tasks;
 
 namespace Accounts.Design.Register;
 
-public sealed class NormalizationBusinessWorkStepDemo : DSL {
+public sealed class NormalizationBusinessWorkStepDemo : FeatureDSL {
     [Fact]
     public Task ProductOwner_Should_Receive_A_Normalized_Email_From_The_Product() =>
         Given(ProdLike, But, FastAndDeterministicDependencies, With, EmailIsNotNormalized).

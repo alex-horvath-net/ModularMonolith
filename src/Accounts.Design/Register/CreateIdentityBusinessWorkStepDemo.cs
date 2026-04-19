@@ -4,7 +4,7 @@ using Core.Domain.Tasks;
 
 namespace Accounts.Design.Register;
 
-public sealed class CreateIdentityBusinessWorkStepDemo : DSL {
+public sealed class CreateIdentityBusinessWorkStepDemo : FeatureDSL {
     [Fact]
     public Task The_CreateIdentity_BusinessWorkStep_Should_Protect_ProductOwner_Credentials() =>
         Given(ProdLike).
