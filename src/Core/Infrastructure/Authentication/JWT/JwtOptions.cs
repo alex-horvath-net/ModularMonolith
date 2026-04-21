@@ -1,7 +1,7 @@
 ﻿using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Options;
 
-namespace Core.Infrastructure.Authentication;
+namespace Core.Infrastructure.Authentication.JWT;
 
 public sealed class JwtOptions {
     public static string SectionName => "Authentication";

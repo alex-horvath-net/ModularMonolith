@@ -1,4 +1,5 @@
 ﻿using Core.Infrastructure.Authentication;
+using Core.Infrastructure.Authentication.JWT;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Builder;
@@ -11,7 +12,7 @@ using Microsoft.Extensions.Options;
 
 namespace Core.Infrastructure.Authentication;
 
-internal static class AuthenticationExtensions {
+internal static class BasicAuthenticationExtensions {
 
     public static IServiceCollection AddAuthentication(this IServiceCollection services, IConfiguration configuration, IHostEnvironment env) {
 

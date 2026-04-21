@@ -6,7 +6,7 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 
-namespace Core.Infrastructure.Authentication;
+namespace Core.Infrastructure.Authentication.JWT;
 
 internal sealed class JwtBearerPostConfigure(IOptions<JwtOptions> jwtOptions, IJwtSigningCredentialProvider provider, IHostEnvironment env, ILogger<JwtBearerPostConfigure> logger) : IPostConfigureOptions<JwtBearerOptions> {
     private readonly JwtOptions _jwtOptions = jwtOptions?.Value ?? throw new ArgumentNullException(nameof(jwtOptions));

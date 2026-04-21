@@ -4,7 +4,7 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 
-namespace Core.Infrastructure.Authentication;
+namespace Core.Infrastructure.Authentication.JWT;
 
 internal interface IJwtSigningCredentialProvider {
     SecurityKey GetValidationKey();
