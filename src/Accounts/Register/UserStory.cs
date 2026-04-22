@@ -4,12 +4,7 @@ using Core.Infrastructure;
 
 namespace Accounts.Register;
 
-internal sealed class UserStory(
-    IAccountRepository repository,
-    IHasher hasher,
-    IClock clock,
-    IGuidGenerator guid) : WorkStep<Context>(clock, guid) {
-
+internal sealed class UserStory(IAccountRepository repository, IHasher hasher, IClock clock) : WorkStep<Context>(clock) {
     protected override async Task Run(Context context) {
         await validate.Execute(context);
         await normalize.Execute(context);
@@ -18,9 +13,9 @@ internal sealed class UserStory(
         await save.Execute(context);
     }
 
-    private readonly Validate validate = new(clock, guid);
-    private readonly Normalize normalize = new(clock, guid);
-    private readonly PreventDuplication preventDuplication = new(repository, clock, guid);
-    private readonly Create create = new(hasher, clock, guid);
-    private readonly Save save = new(repository, clock, guid);
+    private readonly Validate validate = new(clock);
+    private readonly Normalize normalize = new(clock);
+    private readonly PreventDuplication preventDuplication = new(repository, clock);
+    private readonly Create create = new(hasher, clock);
+    private readonly Save save = new(repository, clock);
 }

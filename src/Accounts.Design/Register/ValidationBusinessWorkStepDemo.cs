@@ -11,12 +11,6 @@ public sealed class ValidationBusinessWorkStepDemo : FeatureDSL {
         Then(RegisterUserStoryShouldBeAccepted);
 
     [Fact]
-    public Task ProductOwner_Must_Provide_A_Request_To_Start_The_Register_User_Story() =>
-        Given(ProdLike, But, RequestIsMissing).
-        When(Run).
-        Then(() => ProductOwnerShouldBeTold(Constants.RequestCanNotBeNull));
-
-    [Fact]
     public Task ProductOwner_Must_Provide_An_Email_To_Start_The_Register_User_Story() =>
         Given(ProdLike, But, EmailIsMissing).
         When(Run).

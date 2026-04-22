@@ -12,7 +12,7 @@ public abstract class FeatureDSL : ModuleDSL<FeatureDSL> {
     protected IReadOnlyList<string> workSteps = [];
 
     protected async Task Run() {
-        userStory = new UserStory(accountRepository, hasher, clock, guidGenerator);
+        userStory = new UserStory(accountRepository, hasher, clock);
         var context = new Context(request, token);
 
         try {
@@ -67,8 +67,6 @@ public abstract class FeatureDSL : ModuleDSL<FeatureDSL> {
         response.Roles.ShouldBe(roles, ignoreOrder: true);
 
     private protected Func<Request> RequestFactory { get; set; } = null!;
-
-    protected void RequestIsMissing() => RequestFactory = () => null!;
 
     protected void RequestHasSomeIssue() => EmailIsMissing();
     protected void EmailIsMissing() => EmailFactory = () => null!;

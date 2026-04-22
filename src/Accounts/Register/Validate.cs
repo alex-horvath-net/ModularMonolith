@@ -4,9 +4,7 @@ using Core.Infrastructure;
 
 namespace Accounts.Register;
 
-internal sealed class Validate(
-    IClock clock,
-    IGuidGenerator guid) : WorkStep<Context>(clock, guid) {
+internal sealed class Validate(IClock clock) : WorkStep<Context>(clock) {
     protected override Task Run(Context context) {
         if (context.Request is null) {
             throw new InvalidOperationException(Constants.RequestCanNotBeNull);

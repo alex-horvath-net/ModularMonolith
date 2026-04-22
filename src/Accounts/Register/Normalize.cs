@@ -3,9 +3,7 @@ using Core.Infrastructure;
 
 namespace Accounts.Register;
 
-internal sealed class Normalize(
-    IClock clock,
-    IGuidGenerator guid) : WorkStep<Context>(clock, guid) {
+internal sealed class Normalize(IClock clock) : WorkStep<Context>(clock) {
     protected override Task Run(Context context) {
         context.NormalizedRequest = context.Request with {
             Email = NormalizeEmai(context),

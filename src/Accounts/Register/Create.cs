@@ -3,10 +3,7 @@ using Core.Infrastructure;
 
 namespace Accounts.Register;
 
-internal sealed class Create(
-    IHasher hasher,
-    IClock clock,
-    IGuidGenerator guid) : WorkStep<Context>(clock, guid) {
+internal sealed class Create(IHasher hasher, IClock clock) : WorkStep<Context>(clock) {
     protected override Task Run(Context context) {
         context.Account = new(
             Id: Guid.NewGuid(),

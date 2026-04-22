@@ -4,7 +4,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Accounts.Core.Infrastructure.Data.Rrepositories;
 
-public sealed class AccountRepository(SecurityDbContext db) : IAccountRepository {
+public sealed class AccountRepository(AccountDbContext db) : IAccountRepository {
     public async Task<Domain.Account?> FindAccountByEmail(string email, CancellationToken token) => await db.Accounts
         .Include(account => account.Roles)
         .AsNoTracking()

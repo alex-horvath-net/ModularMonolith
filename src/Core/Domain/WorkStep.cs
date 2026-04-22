@@ -3,9 +3,7 @@ using Core.Infrastructure.Log;
 
 namespace Core.Domain;
 
-public abstract class WorkStep<TContext>(
-    IClock clock,
-    IGuidGenerator guidGenerator) where TContext : ContextBase {
+public abstract class WorkStep<TContext>(IClock clock) where TContext : ContextBase {
 
     private readonly ILogger<WorkStep<TContext>> logger = LoggerFactory.Create<WorkStep<TContext>>();
 
@@ -13,8 +11,6 @@ public abstract class WorkStep<TContext>(
 
     public async Task Execute(TContext context) {
         try {
-            context.CorellationId ??= guidGenerator.New();
-            context.RequestId ??= guidGenerator.New();
             context.WorkSteps.Add(GetType().Name);
 
             logger.LogInformation(MessageTemplate, context.WorkSteps.Last(), "Started", clock.UtcNow, context.CorellationId, context.RequestId);

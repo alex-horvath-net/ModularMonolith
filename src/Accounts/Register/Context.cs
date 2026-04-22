@@ -3,16 +3,7 @@ using Core.Domain;
 
 namespace Accounts.Register;
 
-internal sealed record Context : ContextBase {
-    public Context(Request? request, CancellationToken token) {
-        Request = request;
-        Token = token;
-        CorellationId = request?.CorrelationId ?? Guid.Empty;
-        RequestId = request?.RequestId;
-    }
-
-    internal Request? Request { get; }
-    internal CancellationToken Token { get; }
+internal sealed record Context(Request Request, CancellationToken Token) : ContextBase(Request.CorrelationId, Request.RequestId) {
     internal Request? NormalizedRequest { get; set; }
     internal Account? MachingAccount { get; set; }
     internal Account? Account { get; set; }

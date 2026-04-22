@@ -1,8 +1,6 @@
 namespace Core.Domain;
 
-public abstract record ContextBase() {
-    public Guid? CorellationId { get; protected internal set; }
-    public Guid? RequestId { get; protected internal set; }
+public abstract record ContextBase(Guid CorellationId, Guid RequestId) {
     public List<string> WorkSteps { get; internal set; } = [];
     public Exception? Exception { get; internal set; }
 }

@@ -9,7 +9,7 @@ namespace Accounts.Core.Infrastructure;
 public static class Extensions {
     public static IServiceCollection AddInfrastructure(this IServiceCollection services, IConfiguration configuration) {
 
-        services.AddDbContext<SecurityDbContext>(options => {
+        services.AddDbContext<AccountDbContext>(options => {
             var connectionString = configuration.GetConnectionString("AppDB");
             options.UseSqlServer(connectionString);
         }); // scoped

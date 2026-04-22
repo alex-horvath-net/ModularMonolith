@@ -81,7 +81,7 @@ app.Run();
 
 static void SeedSecurityOfficerAccounts(WebApplication app) {
     using var scope = app.Services.CreateScope();
-    var db = scope.ServiceProvider.GetRequiredService<SecurityDbContext>();
+    var db = scope.ServiceProvider.GetRequiredService<AccountDbContext>();
     var register = scope.ServiceProvider.GetRequiredService<IRegisterAdapter>();
 
     db.Database.EnsureCreated();
@@ -189,7 +189,7 @@ static void SeedSecurityOfficerAccounts(WebApplication app) {
 //    .AddInteractiveServerComponents();
 
 //// AuthN/Z for Blazor server-side endpoints and auth pipeline parity
-//builder.Services.AddAuthentication(options => {
+//builder.Services.AddBasicAuthentication(options => {
 //    options.DefaultAuthenticateScheme = Microsoft.AspNetCore.Authentication.Cookies.CookieAuthenticationDefaults.AuthenticationScheme;
 //    options.DefaultChallengeScheme = Microsoft.AspNetCore.Authentication.Cookies.CookieAuthenticationDefaults.AuthenticationScheme;
 //}).AddCookie(o => {
