@@ -1,7 +1,7 @@
 ﻿namespace Accounts.Login.WorkSteps;
 
 internal sealed class Validate() {
-    public bool Run(UserStory.Context context) {
+    public bool Run(Context context) {
 
         if (context.Request.AccountType != AccountType.LocalAccount) {
             context.Response.ErrorMessage = UserStoryConstants.AccountTypeNotFound;

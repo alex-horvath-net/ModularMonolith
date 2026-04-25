@@ -4,7 +4,7 @@ using Core.Infrastructure;
 namespace Accounts.Login.WorkSteps;
 
 internal sealed class Authenticate(IAccountRepository repsository, IHasher hasher) {
-    public async Task<bool> Run(UserStory.Context context) {
+    public async Task<bool> Run(Context context) {
 
         context.Account = await repsository.FindAccountByEmail(context.NormalizedEmail!, context.Token);
 
